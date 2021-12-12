@@ -25,7 +25,7 @@ public static class SkiaInterop
         return skiaSurface.surface;
     }
 
-    public static GRContext GetBackendContext(IGraphics graphics)
+    public static GRContext GetBackendContext(IGraphicsProvider graphics)
     {
         if (graphics is not SkiaGraphics skiaGraphics)
             throw new ArgumentException("'graphics' must be a graphics context created using the SkiaSharp graphics backend!");

@@ -19,7 +19,7 @@ public abstract class Simulation : IDisposable
     /// <summary>
     /// Gets the graphics context for the current simulation
     /// </summary>
-    public IGraphics GraphicsContext => engine.GetGraphicsContext();
+    public IGraphicsProvider GraphicsProvider => engine.GetGraphicsContext();
 
     // 
     private SimulationEngine engine;

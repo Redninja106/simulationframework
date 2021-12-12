@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
-public interface IGraphicsFactory
+public static class Graphics
 {
-    IGraphicsProvider CreateGraphics();
+    internal static IGraphicsProvider Provider => Simulation.Current.GraphicsProvider; 
 }

@@ -19,7 +19,7 @@ public sealed class SkiaGraphicsFactory : IGraphicsFactory
         this.glGetProcAddress = glGetProcAddress;
     }
 
-    public IGraphics CreateGraphics()
+    public IGraphicsProvider CreateGraphics()
     {
         if (used)
         {

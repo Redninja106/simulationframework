@@ -17,7 +17,7 @@ public sealed class SimulationEngine : IDisposable
 
     private readonly ISimulationEnvironment environment;
     // private readonly IGraphicsFactory graphicsFactory;
-    private readonly IGraphics graphicsContext;
+    private readonly IGraphicsProvider graphicsContext;
 
     /// <summary>
     /// 
@@ -29,7 +29,7 @@ public sealed class SimulationEngine : IDisposable
         this.graphicsContext = environment.CreateDefaultGraphicsFactory().CreateGraphics();
     }
 
-    public IGraphics GetGraphicsContext()
+    public IGraphicsProvider GetGraphicsContext()
     {
         return this.graphicsContext;
     }
