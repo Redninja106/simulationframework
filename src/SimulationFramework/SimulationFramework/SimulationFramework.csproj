@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Silk.NET.OpenGL" Version="2.11.0" />
+    <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.11.0" />
+    <PackageReference Include="Silk.NET.Windowing.Common" Version="2.11.0" />
+    <PackageReference Include="Silk.NET.Windowing.Glfw" Version="2.11.0" />
+    <PackageReference Include="SkiaSharp" Version="2.80.3" />
+  </ItemGroup>
+
+</Project>
