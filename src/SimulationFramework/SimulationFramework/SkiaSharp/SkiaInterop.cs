@@ -17,17 +17,17 @@ public static class SkiaInterop
         return skiaCanvas.canvas;
     }
 
-    public static SKSurface GetSurface(ISurface surface)
+    public static SKBitmap GetSurface(ISurface surface)
     {
         if (surface is not SkiaSurface skiaSurface)
             throw new ArgumentException("'surface' must be a surface created using the SkiaSharp graphics backend!");
 
-        return skiaSurface.surface;
+        return skiaSurface.bitmap;
     }
 
-    public static GRContext GetBackendContext(IGraphics graphics)
+    public static GRContext GetBackendContext(IGraphicsProvider graphics)
     {
-        if (graphics is not SkiaGraphics skiaGraphics)
+        if (graphics is not SkiaGraphicsProvider skiaGraphics)
             throw new ArgumentException("'graphics' must be a graphics context created using the SkiaSharp graphics backend!");
 
         return skiaGraphics.backendContext;

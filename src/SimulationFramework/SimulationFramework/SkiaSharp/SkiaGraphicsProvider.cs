@@ -8,7 +8,7 @@ using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
 
-internal sealed class SkiaGraphics : IGraphics
+internal sealed class SkiaGraphicsProvider : IGraphicsProvider
 {
     internal readonly GRGlInterface glInterface;
     internal readonly GRContext backendContext;
@@ -17,7 +17,7 @@ internal sealed class SkiaGraphics : IGraphics
     internal readonly SkiaSurface frameSurfaceAdapter;
     internal SkiaCanvas frameCanvas;
 
-    public SkiaGraphics(GRGlGetProcedureAddressDelegate getProcAddress, ISkiaFrameProvider frameProvider)
+    public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate getProcAddress)
     {
         this.frameProvider = frameProvider;
 
@@ -27,22 +27,6 @@ internal sealed class SkiaGraphics : IGraphics
         frameProvider.SetContext(this.backendContext);
 
         frameSurfaceAdapter = new SkiaSurface(this, null, false);
-    }
-
-    public IBitmap CreateBitmap(int width, int height)
-    {
-        return CreateBitmap(width, height, null);
-    }
-
-    public IBitmap CreateBitmap(int width, int height, Span<Color> data)
-    {
-        var bitmap = new SkiaBitmap(this, width, height);
-
-        if (!data.IsEmpty)
-        {
-        }
-
-        return bitmap;
     }
 
     public ICanvas GetFrameCanvas()
@@ -63,8 +47,33 @@ internal sealed class SkiaGraphics : IGraphics
         throw new NotImplementedException();
     }
 
-    public ISurface LoadSurface(Span<byte> encodedData)
+    public ISurface LoadBitmap(Span<byte> encodedData)
     {
         throw new NotImplementedException();
+    }
+
+    public ISurface CreateSurface(int width, int height, Span<Color> data)
+    {
+        var bitmap = new SkiaSurface(this, new SKBitmap(width, height), true);
+
+        if (!data.IsEmpty)
+        {
+        }
+
+        return bitmap;
+    }
+
+    public ISurface CreateSurface(Span<byte> encodedData)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Apply(Simulation simulation)
+    {
+        
+    }
+
+    public void Dispose()
+    {
     }
 }

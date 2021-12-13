@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
-public interface IGraphicsFactory
+public interface ISimulationComponent : IDisposable
 {
-    IGraphics CreateGraphics();
+    void Apply(Simulation simulation);
 }

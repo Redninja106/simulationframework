@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
+/// <summary>
+/// A 2D bitmap.
+/// </summary>
 public interface ISurface : IDisposable
 {
     // surface properties 
@@ -15,4 +18,8 @@ public interface ISurface : IDisposable
 
     // drawing to the surface
     ICanvas OpenCanvas();
+
+    // pixels
+    Span<Color> GetPixels();
+    IntPtr GetPixelData(out int rowSize, out int rowCount);
 }

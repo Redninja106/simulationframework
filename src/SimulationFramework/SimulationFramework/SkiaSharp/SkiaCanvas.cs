@@ -144,8 +144,8 @@ internal sealed class SkiaCanvas : ICanvas
 
     public void DrawSurface(ISurface surface, Rectangle source, Rectangle destination)
     {
-        if (surface is SkiaBitmap skBitmap)
-            canvas.DrawBitmap(skBitmap.bitmap, source.AsSKRect(), destination.AsSKRect());
+        if (surface is SkiaSurface skiaSurface)
+            canvas.DrawBitmap(skiaSurface.bitmap, source.AsSKRect(), destination.AsSKRect());
     }
 
     public struct CanvasState
