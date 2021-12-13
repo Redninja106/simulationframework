@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
-public interface IInputHandler
+public enum MouseButton
 {
-    Vector2 GetMousePosition(Key key);
-    bool IsKeyPressed(Key key);
-    bool WasKeyPressed(Key key);
+    Left,
+    Right,
+    Middle,
+    X1,
+    X2,
 }

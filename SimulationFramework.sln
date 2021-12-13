@@ -13,12 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlankSimulation", "examples
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Tests", "tests\SimulationFramework.Tests\SimulationFramework.Tests.csproj", "{DB1DEA95-9159-4379-843B-4BD6EB3CDCAF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Spec", "Spec", "{4CD73E60-855E-408E-BAFA-C0E1CBE4E19B}"
-	ProjectSection(SolutionItems) = preProject
-		docs\spec.md = docs\spec.md
-		docs\todo.md = docs\todo.md
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

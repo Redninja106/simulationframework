@@ -9,11 +9,6 @@ namespace SimulationFramework;
 public enum Key
 {
     Unknown,
-    LeftMouse,
-    RightMouse,
-    MiddleMouse,
-    MouseX1,
-    MouseX2,
     A,
     B,
     C,

@@ -8,15 +8,17 @@ namespace SimulationFramework;
 
 public sealed class AppConfig
 {
+    private readonly Simulation simulation;
+
     internal AppConfig(Simulation simulation)
     {
-        simulation.SetEnvironment(new WindowEnvironment());
+        this.simulation = simulation;
     }
 
     public void EnableImGui() { }
     public void EnableSimulationPane(int width, int height, bool scaling = true) { }
     public void OpenWindow(int width, int height, string title) 
     { 
-    
+        simulation.SetEnvironment(new WindowEnvironment(width, height, title));
     }
 }
