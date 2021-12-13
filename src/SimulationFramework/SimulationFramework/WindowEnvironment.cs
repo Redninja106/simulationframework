@@ -9,6 +9,9 @@ using SimulationFramework.SkiaSharp;
 using SkiaSharp;
 using SilkKey = Silk.NET.Input.Key;
 using SilkButton = Silk.NET.Input.MouseButton;
+using Silk.NET.OpenGL.Extensions.ImGui;
+using ImGuiNET;
+using Silk.NET.OpenGL;
 
 namespace SimulationFramework;
 
@@ -57,6 +60,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
         });
 
         yield return new WindowInputProvider(window);
+        yield return new ImGuiNETProvider(new WindowImGuiBackend(window));
     }
 
     public void ProcessEvents()
@@ -303,6 +307,31 @@ public sealed class WindowEnvironment : ISimulationEnvironment
                 MouseButton.Middle => SilkButton.Middle,
                 _ => SilkButton.Unknown,
             };
+        }
+    }
+
+    private class WindowImGuiBackend : IImGuiBackend
+    {
+        private ImGuiController imguiController;
+
+        public WindowImGuiBackend(IWindow window)
+        {
+            imguiController = new ImGuiController(window.CreateOpenGL(), window, window.CreateInput());
+        }
+
+        public void Dispose()
+        {
+            imguiController.Dispose();
+        }
+
+        public void NewFrame()
+        {
+            imguiController.Update(Time.DeltaTime);
+        }
+
+        public void Render()
+        {
+            imguiController.Render();
         }
     }
 }
