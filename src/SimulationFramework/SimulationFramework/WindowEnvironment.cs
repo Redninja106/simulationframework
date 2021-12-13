@@ -34,6 +34,8 @@ public sealed class WindowEnvironment : ISimulationEnvironment
 
     public IEnumerable<ISimulationComponent> CreateSupportedComponents()
     {
+        yield return new RealtimeProvider();
+
         var frameProvider = new WindowFrameProvider(window.Size.X, window.Size.Y);
 
         window.FramebufferResize += size =>
@@ -63,7 +65,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
         window.GLContext.SwapBuffers();
     }
 
-    public class WindowFrameProvider : ISkiaFrameProvider
+    private class WindowFrameProvider : ISkiaFrameProvider
     {
         private GRContext context;
         private int width;

@@ -15,11 +15,12 @@ class MySimulation : Simulation
         canvas.Clear((0,0,0));
         canvas.DrawEllipse(0, 0, 100, 100, Color.Red, Alignment.TopLeft);
     }
-
+    float d;
     public override void OnRender(ICanvas canvas)
     {
         canvas.Clear(Color.CornflowerBlue);
-        canvas.DrawRect(100,100,100,100, Color.Red, Alignment.BottomRight);
+        canvas.DrawRect(d,100,100,100, Color.Red, Alignment.BottomRight);
+        d += Time.DeltaTime * 100;
     }
 
     public override void OnUnitialize()

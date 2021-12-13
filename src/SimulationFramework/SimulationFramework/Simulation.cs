@@ -20,9 +20,9 @@ public abstract class Simulation : IDisposable
     private ISimulationEnvironment environment;
 
     public event Action Initialized;
-    public event Action BeforeRendering;
-    public event Action AfterRendering;
-    public event Action Uninitialize;
+    public event Action BeforeRender;
+    public event Action AfterRender;
+    public event Action Uninitialized;
 
     /// <summary>
     /// Called when the simulation should initialize.
@@ -50,7 +50,7 @@ public abstract class Simulation : IDisposable
 
     public T GetComponent<T>() where T : ISimulationComponent
     {
-        return (T)components.Single(c => c.GetType().GetInterfaces().Contains(typeof(T)));
+        return (T)components.SingleOrDefault(c => c is T) ?? throw new Exception("A component of the specified type was not found!");
     }
 
     /// <summary>
@@ -84,7 +84,18 @@ public abstract class Simulation : IDisposable
 
         this.environment = environment;
 
-        foreach (var component in this.environment.CreateSupportedComponents())
+        var supportedComponents = this.environment.CreateSupportedComponents();
+
+        if (supportedComponents.Count() < 0)
+            Debug.Warn("The provided environment has no components! (Most APIs won't work!");
+
+        if (!supportedComponents.Any(c => c is ITimeProvider))
+            Debug.Warn("No provided environment has no time component! (The time API won't work!)");
+
+        if (!supportedComponents.Any(c => c is IGraphicsProvider))
+            Debug.Warn("No provided environment has no graphics component! (The graphics API won't work!)");
+
+        foreach (var component in supportedComponents)
         {
             component.Apply(this);
             this.components.Add(component);
@@ -99,9 +110,13 @@ public abstract class Simulation : IDisposable
         if (environment is null)
             throw new Exception("Simulation must select an enviroment");
 
+        this.Initialized?.Invoke();
+
         while (!environment.ShouldExit())
         {
             environment.ProcessEvents();
+
+            this.BeforeRender?.Invoke();
 
             using var canvas = Graphics.GetFrameCanvas();
 
@@ -112,10 +127,14 @@ public abstract class Simulation : IDisposable
 
             canvas.Flush();
 
+            this.AfterRender?.Invoke();
+
             environment.EndFrame();
         }
 
         this.OnUnitialize();
+
+        this.Uninitialized?.Invoke();
     }
 
     /// <summary>
