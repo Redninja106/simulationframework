@@ -32,7 +32,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
     {
     }
 
-    public IGraphicsFactory CreateDefaultGraphicsFactory()
+    public IEnumerable<ISimulationComponent> CreateSupportedComponents()
     {
         var frameProvider = new WindowFrameProvider(window.Size.X, window.Size.Y);
 
@@ -41,7 +41,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
             frameProvider.Resize(size.X, size.Y);
         };
 
-        return new SkiaGraphicsFactory(frameProvider, name =>
+        yield return new SkiaGraphicsProvider(frameProvider, name =>
         {
             window.GLContext.TryGetProcAddress(name, out nint addr);
             return addr;

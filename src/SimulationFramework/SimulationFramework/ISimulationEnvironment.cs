@@ -19,5 +19,5 @@ public interface ISimulationEnvironment : IDisposable
 
     void EndFrame();
 
-    IGraphicsFactory CreateDefaultGraphicsFactory();
+    IEnumerable<ISimulationComponent> CreateSupportedComponents();
 }

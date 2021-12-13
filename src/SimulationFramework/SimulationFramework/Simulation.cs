@@ -16,13 +16,13 @@ public abstract class Simulation : IDisposable
     /// </summary>
     public static Simulation Current { get; private set; }
 
-    /// <summary>
-    /// Gets the graphics context for the current simulation
-    /// </summary>
-    public IGraphicsProvider GraphicsProvider => engine.GetGraphicsContext();
+    private readonly List<ISimulationComponent> components = new();
+    private ISimulationEnvironment environment;
 
-    // 
-    private SimulationEngine engine;
+    public event Action Initialized;
+    public event Action BeforeRendering;
+    public event Action AfterRendering;
+    public event Action Uninitialize;
 
     /// <summary>
     /// Called when the simulation should initialize.
@@ -48,6 +48,11 @@ public abstract class Simulation : IDisposable
     {
     }
 
+    public T GetComponent<T>() where T : ISimulationComponent
+    {
+        return (T)components.Single(c => c.GetType().GetInterfaces().Contains(typeof(T)));
+    }
+
     /// <summary>
     /// Destroys the simulation.
     /// </summary>
@@ -55,7 +60,7 @@ public abstract class Simulation : IDisposable
     {
         try
         {
-            engine.Dispose();
+            environment.Dispose();
         }
         finally
         {
@@ -74,10 +79,16 @@ public abstract class Simulation : IDisposable
     /// </remarks>
     public void SetEnvironment(ISimulationEnvironment environment)
     {
-        if (this.engine is not null)
+        if (this.environment is not null)
             throw new InvalidOperationException("This simulation already has an environment!");
 
-        this.engine = new SimulationEngine(environment);
+        this.environment = environment;
+
+        foreach (var component in this.environment.CreateSupportedComponents())
+        {
+            component.Apply(this);
+            this.components.Add(component);
+        }
     }
 
     // starts a simulation. This is only to be called from `Run()`.
@@ -85,13 +96,25 @@ public abstract class Simulation : IDisposable
     {
         this.OnInitialize(new AppConfig(this));
 
-        if (engine is null)
+        if (environment is null)
             throw new Exception("Simulation must select an enviroment");
 
-        engine.Drawing += canvas => this.OnRender(canvas);
+        while (!environment.ShouldExit())
+        {
+            environment.ProcessEvents();
 
-        engine.Start();
-        
+            using var canvas = Graphics.GetFrameCanvas();
+
+            using (canvas.Push())
+            {
+                this.OnRender(canvas);
+            }
+
+            canvas.Flush();
+
+            environment.EndFrame();
+        }
+
         this.OnUnitialize();
     }
 

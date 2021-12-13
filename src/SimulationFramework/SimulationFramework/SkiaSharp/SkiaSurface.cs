@@ -10,12 +10,12 @@ namespace SimulationFramework.SkiaSharp;
 
 internal sealed class SkiaSurface : ISurface
 {
-    internal SKSurface surface;
+    internal SKBitmap bitmap;
     internal readonly bool owner;
 
-    public SkiaSurface(SkiaGraphics context, SKSurface frame, bool owner)
+    public SkiaSurface(SkiaGraphicsProvider context, SKBitmap bitmap, bool owner)
     {
-        this.surface = frame;
+        this.bitmap = bitmap;
         this.owner = owner;
     }
 
@@ -25,11 +25,21 @@ internal sealed class SkiaSurface : ISurface
     public void Dispose()
     {
         if (owner)
-            surface.Dispose();
+            bitmap.Dispose();
     }
 
     public ICanvas OpenCanvas()
     {
-        return new SkiaCanvas(surface.Canvas, false);
+        return new SkiaCanvas(new SKCanvas(bitmap), false);
+    }
+
+    public Span<Color> GetPixels()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IntPtr GetPixelData(out int rowSize, out int rowCount)
+    {
+        throw new NotImplementedException();
     }
 }
