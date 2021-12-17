@@ -30,7 +30,7 @@ class MySimulation : Simulation
         d += Time.DeltaTime;
 
         ImGui.Text("Hello there!");
-        ImGui.Text("fps: " + 1f/Time.DeltaTime + (Time.IsRunningSlowly ? "Running slowly!" : ""));
+        ImGui.Text("fps: " + (int)Debug.Framerate + (Time.IsRunningSlowly ? "Running slowly!" : ""));
         ImGui.DragFloat("TIME", ref d);
         ImGui.DragFloat("POS", ref p);
     }

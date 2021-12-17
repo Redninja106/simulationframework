@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
-internal static class Debug
+public static class Debug
 {
+    public static float Framerate => Time.Provider.GetFramerate();
+
     public static bool SilenceWarnings { get; set; }
 
     [Conditional("DEBUG")]
