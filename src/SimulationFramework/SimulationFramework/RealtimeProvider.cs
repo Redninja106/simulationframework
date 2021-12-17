@@ -31,11 +31,16 @@ public sealed class RealtimeProvider : ITimeProvider
     private void Tick()
     {
         deltaTime = TimeScale * (stopwatch.ElapsedTicks / (float)Stopwatch.Frequency);
+        stopwatch.Restart();
 
         if (deltaTime > MaxDeltaTime)
         {
             isRunningSlowly = true;
             deltaTime = MaxDeltaTime;
+        }
+        else
+        {
+            isRunningSlowly = false;
         }
 
         totalTime += deltaTime;
