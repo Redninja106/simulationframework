@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlankSimulation", "examples
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Tests", "tests\SimulationFramework.Tests\SimulationFramework.Tests.csproj", "{DB1DEA95-9159-4379-843B-4BD6EB3CDCAF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FramerateGraph", "examples\FramerateGraph\FramerateGraph.csproj", "{849E7E38-9BD5-4CB3-8006-E14084E0BA11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{DB1DEA95-9159-4379-843B-4BD6EB3CDCAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB1DEA95-9159-4379-843B-4BD6EB3CDCAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB1DEA95-9159-4379-843B-4BD6EB3CDCAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{849E7E38-9BD5-4CB3-8006-E14084E0BA11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{849E7E38-9BD5-4CB3-8006-E14084E0BA11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{849E7E38-9BD5-4CB3-8006-E14084E0BA11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{849E7E38-9BD5-4CB3-8006-E14084E0BA11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,6 +44,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D5CABA70-154E-4369-A79A-57D7E341B8A7} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 		{DB1DEA95-9159-4379-843B-4BD6EB3CDCAF} = {813D5E58-CE77-4969-B74A-A724228D8F73}
+		{849E7E38-9BD5-4CB3-8006-E14084E0BA11} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09D3B2BE-AC85-48C2-835F-6B781E265873}
