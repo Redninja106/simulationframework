@@ -14,6 +14,7 @@ public interface ITimeProvider : ISimulationComponent
     float MaxDeltaTime { get; set; }
     float TimeScale { get; set; }
 
+    float GetFramerate();
     float GetTotalTime();
     float GetDeltaTime();
     bool IsRunningSlowly();
