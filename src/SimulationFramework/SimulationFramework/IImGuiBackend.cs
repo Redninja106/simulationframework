@@ -11,4 +11,5 @@ public interface IImGuiBackend : IDisposable
 {
     void NewFrame();
     void Render();
+    IntPtr GetTextureID(ISurface surface);
 }

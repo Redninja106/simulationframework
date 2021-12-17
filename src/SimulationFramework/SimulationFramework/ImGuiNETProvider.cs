@@ -47,7 +47,7 @@ public unsafe sealed class ImGuiNETProvider : IImGuiProvider
         backend.Dispose();
     }
 
-    public unsafe void Text(string text)
+    public unsafe void TextUnformatted(string text)
     {
         igText(MarshalText(text, stackalloc byte[text.Length + 1]));
     }
@@ -66,13 +66,35 @@ public unsafe sealed class ImGuiNETProvider : IImGuiProvider
         return igIsItemEdited() != 0;
     }
 
-    public bool DragFloat(string label, ref float value, float speed = 1, float min = 0, float max = 0, string format = "%.3f", SliderFlags flags = SliderFlags.None)
+    public bool DragFloat(string label, ref float value, float speed, float min, float max, string format, SliderFlags flags)
     {
         return 0 != igDragFloat(MarshalText(label, stackalloc byte[label.Length + 1]), (float*)Unsafe.AsPointer(ref value), speed, min, max, MarshalText(format, stackalloc byte[format.Length + 1]), (ImGuiSliderFlags)flags);
     }
 
-    public bool DragFloat(string label, ref Vector2 value, float speed = 1, float min = 0, float max = 0, string format = "%.3f", SliderFlags flags = SliderFlags.None)
+    public bool DragFloat(string label, ref Vector2 value, float speed, float min, float max, string format, SliderFlags flags)
     {
         return 0 != igDragFloat2(MarshalText(label, stackalloc byte[label.Length + 1]), (System.Numerics.Vector2*)Unsafe.AsPointer(ref value), speed, min, max, MarshalText(format, stackalloc byte[format.Length + 1]), (ImGuiSliderFlags)flags);
+    }
+
+    public bool DragFloat(string label, ref Vector3 value, float speed, float min, float max, string format, SliderFlags flags)
+    {
+        return 0 != igDragFloat3(MarshalText(label, stackalloc byte[label.Length + 1]), (System.Numerics.Vector3*)Unsafe.AsPointer(ref value), speed, min, max, MarshalText(format, stackalloc byte[format.Length + 1]), (ImGuiSliderFlags)flags);
+    }
+
+    public bool DragFloat(string label, ref Vector4 value, float speed, float min, float max, string format, SliderFlags flags)
+    {
+        return 0 != igDragFloat4(MarshalText(label, stackalloc byte[label.Length + 1]), (System.Numerics.Vector4*)Unsafe.AsPointer(ref value), speed, min, max, MarshalText(format, stackalloc byte[format.Length + 1]), (ImGuiSliderFlags)flags);
+    }
+
+    public bool Button(string label, Vector2 size)
+    {
+        return 0 != igButton(MarshalText(label, stackalloc byte[label.Length + 1]), size);
+    }
+
+    public void Image(ISurface surface, Vector2 size, Vector2 uv0, Vector2 uv1, Color tintColor, Color borderColor)
+    {
+        var id = backend.GetTextureID(surface);
+
+        igImage(id, size, uv0, uv1, tintColor.ToVector4(), borderColor.ToVector4());
     }
 }

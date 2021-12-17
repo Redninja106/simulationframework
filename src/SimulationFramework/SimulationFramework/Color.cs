@@ -794,4 +794,14 @@ public readonly struct Color : IEquatable<Color>
     {
         return !(left == right);
     }
+
+    public Vector3 ToVector3()
+    {
+        return new Vector3(this.r, this.g, this.b);
+    }
+
+    public Vector4 ToVector4()
+    {
+        return new Vector4(this.r, this.g, this.b, this.a);
+    }
 }

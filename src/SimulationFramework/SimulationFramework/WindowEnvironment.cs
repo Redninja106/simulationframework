@@ -321,6 +321,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
 
         public void Dispose()
         {
+            
             imguiController.Dispose();
         }
 
@@ -332,6 +333,11 @@ public sealed class WindowEnvironment : ISimulationEnvironment
         public void Render()
         {
             imguiController.Render();
+        }
+
+        public IntPtr GetTextureID(ISurface surface)
+        {
+            return IntPtr.Zero;
         }
     }
 }

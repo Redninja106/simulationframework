@@ -16,14 +16,21 @@ class MySimulation : Simulation
     public override void OnRender(ICanvas canvas)
     {
         canvas.Clear(Color.CornflowerBlue);
-        canvas.DrawRect(d % 1920,100,100,100, Color.Black, Alignment.BottomRight);
-        canvas.DrawRect((d * 2) % 1920,300,100,100, Color.Black, Alignment.BottomRight);
-        canvas.DrawRect(p, (100, 100), Color.Purple);
-        canvas.DrawEllipse(Mouse.Position, (250, 250), Mouse.IsButtonDown(MouseButton.Left) ? (255,0,0,123) : Color.OrangeRed);
+        canvas.DrawRect((d * 100) % 1920,100,100,100, Color.Black, Alignment.BottomRight);
+        canvas.DrawRect((d * 200) % 1920,300,100,100, Color.Black, Alignment.BottomRight);
 
-        d += Time.DeltaTime * 100;
+        using (canvas.Push())
+        {
+            canvas.Translate(p.X, p.Y);
+            canvas.DrawRect((0, 0), (100, 100), Color.Purple, Alignment.Center);
+        }
+        
+        canvas.DrawEllipse(Mouse.Position, (250, 250), Mouse.IsButtonDown(MouseButton.Left) ? (255,0,0,123) : Color.OrangeRed);
+        
+        d += Time.DeltaTime;
 
         ImGui.Text("Hello there!");
+        ImGui.Text("fps: " + Time.DeltaTime + (Time.IsRunningSlowly ? "Running slowly!" : ""));
         ImGui.DragFloat("TIME", ref d);
         ImGui.DragFloat("POS", ref p);
     }
