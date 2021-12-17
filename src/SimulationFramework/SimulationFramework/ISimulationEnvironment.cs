@@ -19,5 +19,7 @@ public interface ISimulationEnvironment : IDisposable
 
     void EndFrame();
 
+    (int, int) GetOutputSize();
+
     IEnumerable<ISimulationComponent> CreateSupportedComponents();
 }

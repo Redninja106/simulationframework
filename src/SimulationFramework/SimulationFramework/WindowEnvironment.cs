@@ -78,6 +78,11 @@ public sealed class WindowEnvironment : ISimulationEnvironment
         window.GLContext.SwapBuffers();
     }
 
+    public (int, int) GetOutputSize()
+    {
+        return (window.Size.X, window.Size.Y);
+    }
+
     private class WindowFrameProvider : ISkiaFrameProvider
     {
         private GRContext context;

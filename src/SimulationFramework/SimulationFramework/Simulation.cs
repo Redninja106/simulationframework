@@ -16,6 +16,9 @@ public abstract class Simulation : IDisposable
     /// </summary>
     public static Simulation Current { get; private set; }
 
+    public int Width => environment.GetOutputSize().Item1;
+    public int Height => environment.GetOutputSize().Item2;
+
     private readonly List<ISimulationComponent> components = new();
     private ISimulationEnvironment environment;
 
