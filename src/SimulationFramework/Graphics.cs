@@ -24,15 +24,35 @@ public static class Graphics
     }
 
     /// <summary>
-    /// Creates a surface and loads its data from a file.
+    /// Loads a surface from a file.
     /// </summary>
-    /// <param name="file">The .PNG image file to load the image from.</param>
+    /// <param name="file">The path to a .PNG image file.</param>
     /// <returns>The new surface.</returns>
-    public static ISurface CreateSurface(string file)
+    public static ISurface LoadSurface(string file)
     {
         var fileData = File.ReadAllBytes(file);
 
-        return Provider.CreateSurface(fileData.AsSpan());
+        return LoadSurface(fileData);
+    }
+
+    /// <summary>
+    /// Loads a surface from raw, encoded file data.
+    /// </summary>
+    /// <param name="file">An arrot of the bytes of a .PNG image file.</param>
+    /// <returns>The new surface.</returns>
+    public static ISurface LoadSurface(byte[] encodedBytes)
+    {
+        return LoadSurface(encodedBytes.AsSpan());
+    }
+
+    /// <summary>
+    /// Loads a surface from raw, encoded file data.
+    /// </summary>
+    /// <param name="file">A span of the bytes of a .PNG image file.</param>
+    /// <returns>The new surface.</returns>
+    public static ISurface LoadSurface(Span<byte> encodedBytes)
+    {
+        return Provider.CreateSurface(encodedBytes);
     }
 
     /// <summary>
