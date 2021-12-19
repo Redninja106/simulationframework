@@ -14,9 +14,9 @@ namespace SimulationFramework;
 /// </summary>
 public unsafe sealed class ImGuiNETProvider : IImGuiProvider
 {
-    private readonly IImGuiBackend backend;
+    private readonly IImGuiNETBackend backend;
 
-    public ImGuiNETProvider(IImGuiBackend backend)
+    public ImGuiNETProvider(IImGuiNETBackend backend)
     {
         this.backend = backend;
 

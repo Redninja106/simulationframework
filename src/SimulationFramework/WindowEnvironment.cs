@@ -315,7 +315,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
         }
     }
 
-    private class WindowImGuiBackend : IImGuiBackend
+    private class WindowImGuiBackend : IImGuiNETBackend
     {
         private ImGuiController imguiController;
 

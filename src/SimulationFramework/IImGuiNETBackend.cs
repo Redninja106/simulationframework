@@ -10,7 +10,7 @@ namespace SimulationFramework;
 /// <summary>
 /// Defines a the api for an ImGui Backend.
 /// </summary>
-public interface IImGuiBackend : IDisposable
+public interface IImGuiNETBackend : IDisposable
 {
     /// <summary>
     /// Called at the start of a new frame.
