@@ -24,4 +24,10 @@ public static class Debug
         Console.WriteLine("Warning: " + message);
         Console.ForegroundColor = oldCol;
     }
+
+    [Conditional("DEBUG")]
+    public static void Log(string message)
+    {
+        Console.WriteLine(message);
+    }
 }

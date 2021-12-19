@@ -15,7 +15,6 @@ internal interface IImGuiProvider : ISimulationComponent
     //void Indent(float width = 0.0f);
     //void Unindent(float width = 0.0f);
 
-
     void TextUnformatted(string text);
 
     bool Button(string label, Vector2 size);

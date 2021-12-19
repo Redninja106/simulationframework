@@ -89,17 +89,18 @@ public abstract class Simulation : IDisposable
 
         var supportedComponents = this.environment.CreateSupportedComponents();
 
+        // check for common issues and emit warnings
         if (supportedComponents.Count() < 0)
-            Debug.Warn("The provided environment has no components! (Most APIs won't work!");
-
+            Debug.Warn("The provided environment has no components! (Most APIs won't work!"); 
         if (!supportedComponents.Any(c => c is ITimeProvider))
             Debug.Warn("No provided environment has no time component! (The time API won't work!)");
-
         if (!supportedComponents.Any(c => c is IGraphicsProvider))
             Debug.Warn("No provided environment has no graphics component! (The graphics API won't work!)");
 
+        // apply all the components to this simulation
         foreach (var component in supportedComponents)
         {
+            Debug.Log("Applied component");
             component.Apply(this);
             this.components.Add(component);
         }

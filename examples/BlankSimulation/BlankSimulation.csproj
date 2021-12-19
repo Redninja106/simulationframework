@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\SimulationFramework\SimulationFramework.csproj" />
     <ProjectReference Include="..\..\src\SimulationFramework\SimulationFramework\SimulationFramework.csproj" />
   </ItemGroup>
 

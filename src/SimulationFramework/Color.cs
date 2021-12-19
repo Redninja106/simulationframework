@@ -731,10 +731,26 @@ public readonly struct Color : IEquatable<Color>
     [FieldOffset(0)]
     private readonly byte a;
 
+    /// <summary>
+    /// The 32-bit, RGBA value of this color.
+    /// </summary>
     public uint Value { readonly get => this.value; init => this.value = value; }
+    
+    /// <summary>
+    /// The 8-bit value of the red component of this color.
+    /// </summary>
     public byte R { readonly get => this.r; init => this.r = value; }
+    /// <summary>
+    /// The 8-bit value of the green component of this color.
+    /// </summary>
     public byte G { readonly get => this.g; init => this.g = value; }
+    /// <summary>
+    /// The 8-bit value of the blue component of this color.
+    /// </summary>
     public byte B { readonly get => this.b; init => this.b = value; }
+    /// <summary>
+    /// The 8-bit value of the alpha component of this color.
+    /// </summary>
     public byte A { readonly get => this.a; init => this.a = value; }
 
     public Color()
@@ -744,7 +760,21 @@ public readonly struct Color : IEquatable<Color>
 
     public Color(uint value) : this() => this.value = value;
 
+    /// <summary>
+    /// Creates a new color with the provided RGB values, and an alpha of 255.
+    /// </summary>
+    /// <param name="r">The red component of the color.</param>
+    /// <param name="g">The green component of the color.</param>
+    /// <param name="b">The blue component of the color.</param>
     public Color(byte r, byte g, byte b) : this(r, g, b, 255) { }
+
+    /// <summary>
+    /// Creates a new color with the provided values.
+    /// </summary>
+    /// <param name="r">The red component of the color.</param>
+    /// <param name="g">The green component of the color.</param>
+    /// <param name="b">The blue component of the color.</param>
+    /// <param name="a">The alpha component of the color.</param>
     public Color(byte r, byte g, byte b, byte a) : this()
     {
         this.r = r;
@@ -795,11 +825,17 @@ public readonly struct Color : IEquatable<Color>
         return !(left == right);
     }
 
+    /// <summary>
+    /// Returns this color as a Vector3, with its R, G, and B values as X, Y, and Z, respectively.
+    /// </summary>
     public Vector3 ToVector3()
     {
         return new Vector3(this.r, this.g, this.b);
     }
 
+    /// <summary>
+    /// Returns this color as a Vector3, with its R, G, B, and A values as X, Y, Z, and W, respectively.
+    /// </summary>
     public Vector4 ToVector4()
     {
         return new Vector4(this.r, this.g, this.b, this.a);
