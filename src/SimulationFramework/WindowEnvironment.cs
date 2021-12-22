@@ -12,6 +12,7 @@ using SilkButton = Silk.NET.Input.MouseButton;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using ImGuiNET;
 using Silk.NET.OpenGL;
+using SimulationFramework.IMGUI;
 
 namespace SimulationFramework;
 

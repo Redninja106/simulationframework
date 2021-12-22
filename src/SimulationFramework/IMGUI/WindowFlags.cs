@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
-[Flags]
-public enum SliderFlags
+public enum WindowFlags
 {
-    None = 0,
-    AlwaysClamp = 16,
-    Logarithmic = 32,
-    NoRoundToFormat = 64,
-    NoInput = 128,
 }

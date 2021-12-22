@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
 
-namespace SimulationFramework;
+namespace SimulationFramework.IMGUI;
 
 /// <summary>
 /// Defines a the api for an ImGui Backend.

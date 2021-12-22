@@ -783,6 +783,10 @@ public readonly struct Color : IEquatable<Color>
         this.a = a;
     }
 
+    public Color(Vector4 values) : this((byte)(values.X * 255), (byte)(values.Y * 255), (byte)(values.Z * 255), (byte)(values.W * 255))
+    {
+    }
+
     public static implicit operator Color((byte r, byte g, byte b) values) => new(values.r, values.g, values.b);
     public static implicit operator Color((byte r, byte g, byte b, byte a) values) => new(values.r, values.g, values.b, values.a);
 

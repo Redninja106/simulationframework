@@ -1,4 +1,5 @@
 ﻿using SimulationFramework;
+using SimulationFramework.IMGUI;
 
 using var sim = new MySimulation();
 Simulation.Run(sim); 
@@ -28,11 +29,14 @@ class MySimulation : Simulation
         canvas.DrawEllipse(Mouse.Position, (250, 250), Mouse.IsButtonDown(MouseButton.Left) ? (255,0,0,123) : Color.OrangeRed);
         
         d += Time.DeltaTime;
+        if (ImGui.BeginWindow("ImGui testing"))
+        {
 
-        ImGui.Text("Hello there!");
-        ImGui.Text("fps: " + (int)Debug.Framerate + (Time.IsRunningSlowly ? "Running slowly!" : ""));
-        ImGui.DragFloat("TIME", ref d);
-        ImGui.DragFloat("POS", ref p);
+            ImGui.Text("Hello there!");
+            ImGui.Text("fps: " + (int)Debug.Framerate + (Time.IsRunningSlowly ? "Running slowly!" : ""));
+            ImGui.DragFloat("TIME", ref d);
+            ImGui.DragFloat("POS", ref p);
+        }
     }
 
     public override void OnUnitialize()

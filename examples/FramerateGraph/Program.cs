@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 using SimulationFramework;
+using SimulationFramework.IMGUI;
 
 using var sim = new MySimulation();
 Simulation.Run(sim);
@@ -12,8 +13,6 @@ class MySimulation : Simulation
         config.OpenWindow(1920, 1080, "Simulation!");
     }
 
-    float d;
-    Vector2 p;
     Queue<float> fps = new(1921);
     float scale = 100f;
 
