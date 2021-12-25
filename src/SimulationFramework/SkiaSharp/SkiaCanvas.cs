@@ -133,7 +133,12 @@ internal sealed class SkiaCanvas : ICanvas
     public void SetClipRect(Rectangle rect)
     {
         canvas.Restore();
-        canvas.ClipRect(rect.AsSKRect(), SKClipOperation.Intersect);
+        
+        if (rect.width > 0 && rect.height > 0)
+        {
+            canvas.ClipRect(rect.AsSKRect(), SKClipOperation.Intersect);
+        }
+
         canvas.Save();
     }
 
