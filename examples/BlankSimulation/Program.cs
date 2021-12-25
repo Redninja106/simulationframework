@@ -31,12 +31,17 @@ class MySimulation : Simulation
         d += Time.DeltaTime;
         if (ImGui.BeginWindow("ImGui testing"))
         {
-
             ImGui.Text("Hello there!");
             ImGui.Text("fps: " + (int)Debug.Framerate + (Time.IsRunningSlowly ? "Running slowly!" : ""));
             ImGui.DragFloat("TIME", ref d);
             ImGui.DragFloat("POS", ref p);
         }
+
+        canvas.SetFont("arial", TextStyles.Default, 120);
+        canvas.SetDrawMode(DrawMode.Border);
+        canvas.DrawRect(Mouse.Position, canvas.MeasureText("HELLO WORLD"), Color.Orange, Alignment.BottomRight);
+        canvas.SetDrawMode(DrawMode.Fill);
+        canvas.DrawText("HELLO WORLD", Mouse.Position, Color.Orange, Alignment.BottomRight);
     }
 
     public override void OnUnitialize()

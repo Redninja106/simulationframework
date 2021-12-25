@@ -68,7 +68,7 @@ public interface ICanvas : IDisposable
     /// </summary>
     /// <param name="rect">The position and size of rectangle.</param>
     /// <param name="color">The color of the rectangle.</param>
-    void DrawRect(Rectangle rect, Color color, Alignment alignment = Alignment.TopLeft);
+    void DrawRect(Rectangle rect, Color color);
 
     /// <summary>
     /// Draws a rounded rectangle to the canvas, using the current transform, clipping, and drawing settings.
@@ -207,14 +207,24 @@ public interface ICanvas : IDisposable
     /// </summary>
     /// <param name="polygon">The vertices of the polygon.</param>
     /// <param name="closed">Whether the first and last point in <paramref name="polygon"/> should be treated as if they are connected.</param>
-    void DrawPolygon(Span<Vector2> polygon, bool closed);
+    /// <param name="color">The color of the polygon.</param>
+    void DrawPolygon(Span<Vector2> polygon, bool closed, Color color);
 
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="polygon">The vertices of the polygon.</param>
     /// <param name="closed">Whether the first and last point in <paramref name="polygon"/> should be treated as if they are connected.</param>
-    void DrawPolygon(IEnumerable<Vector2> polygon, bool closed);
+    /// <param name="color">The color of the polygon.</param>
+    void DrawPolygon(IEnumerable<Vector2> polygon, bool closed, Color color);
+
+    /// <summary>
+    /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
+    /// </summary>
+    /// <param name="polygon">The vertices of the polygon.</param>
+    /// <param name="closed">Whether the first and last point in <paramref name="polygon"/> should be treated as if they are connected.</param>
+    /// <param name="color">The color of the polygon.</param>
+    void DrawPolygon(Vector2[] polygon, bool closed, Color color);
 
     // text rendering
     /// <summary>
@@ -253,11 +263,6 @@ public interface ICanvas : IDisposable
     bool SetFont(string fontName, TextStyles styles, float size);
 
     // TODO: support for custom fonts? perhaps font objects?
-
-    /// <summary>
-    /// Frees any loaded fonts.
-    /// </summary>
-    void ClearFontCache();
 
     // configuring
 
@@ -340,6 +345,14 @@ public interface ICanvas : IDisposable
     /// </summary>
     /// <param name="angle">The angle of the rotation, in radians.</param>
     void Rotate(float angle);
+
+    /// <summary>
+    /// Rotates the current transformation matrix around the provided point by the provided angle.
+    /// </summary>
+    /// <param name="angle">The angle of the rotation, in radians.</param>
+    /// <param name="centerX">The X coordinate of the point around which the rotation occurs.</param>
+    /// <param name="centerY">The Y coordinate of the point around which the rotation occurs.</param>
+    void Rotate(float angle, float centerX, float centerY);
 
     /// <summary>
     /// Rotates the current transformation matrix around the provided point by the provided angle.

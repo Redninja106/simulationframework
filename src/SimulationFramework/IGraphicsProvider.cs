@@ -26,5 +26,10 @@ public interface IGraphicsProvider : ISimulationComponent
     /// </summary>
     /// <param name="encodedData"></param>
     /// <returns></returns>
-    ISurface CreateSurface(Span<byte> encodedData);
+    ISurface LoadSurface(Span<byte> encodedData);
+
+    /// <summary>
+    /// Clears all cached fonts.
+    /// </summary>
+    void ClearFontCache();
 }

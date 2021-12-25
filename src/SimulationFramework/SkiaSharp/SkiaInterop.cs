@@ -15,7 +15,7 @@ public static class SkiaInterop
         if (canvas is not SkiaCanvas skiaCanvas)
             throw new ArgumentException("'canvas' must be a canvas created using the SkiaSharp graphics backend!");
 
-        return skiaCanvas.canvas;
+        return skiaCanvas.GetSKCanvas();
     }
 
     public static SKBitmap GetBitmap(ISurface surface)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using SkiaSharp;
@@ -11,18 +12,36 @@ namespace SimulationFramework.SkiaSharp;
 
 internal sealed class SkiaCanvas : ICanvas
 {
-    private Stack<CanvasState> canvasStates = new();
+    private Stack<SkiaCanvasState> stateStack = new();
 
-    internal readonly SKCanvas canvas;
-    internal readonly bool owner;
-    internal SKPaint paint = new();
+    private readonly SkiaGraphicsProvider provider;
+    private readonly ISurface surface;
+    private readonly SKCanvas canvas;
+    private readonly bool owner;
+    private SKPaint paint = new();
+    private DrawMode currentMode;
+    private float currentStrokeWidth;
+    private Rectangle currentClipRect;
+    private TextStyles currentTextStyle;
+    private SKFont currentFont;
 
     public Matrix3x2 Transform { get => canvas.TotalMatrix.AsMatrix3x2(); set => canvas.SetMatrix(value.AsSKMatrix()); }
 
-    public SkiaCanvas(SKCanvas canvas, bool owner)
+    public SkiaCanvas(SkiaGraphicsProvider provider, ISurface surface, SKCanvas canvas, bool owner)
     {
+        this.provider = provider;
+        this.surface = surface;
         this.canvas = canvas;
         this.owner = owner;
+        
+        canvas.Save();
+
+        this.SetFont("arial", TextStyles.Default, 20);
+    }
+
+    internal SKCanvas GetSKCanvas()
+    {
+        return canvas;
     }
 
     public void Clear(Color color)
@@ -41,122 +60,198 @@ internal sealed class SkiaCanvas : ICanvas
         canvas.Flush();
     }
 
-    public void Mode(DrawMode mode)
-    {
-    }
-
     public CanvasSession Push()
     {
-        this.canvasStates.Push(new CanvasState(paint, Transform));
-        this.paint = this.paint.Clone();
-
+        this.stateStack.Push(new SkiaCanvasState(this));
         return new CanvasSession(this);
     }
 
     public void Pop()
     {
-        var state = this.canvasStates.Pop();
-        this.paint.Dispose();
-        this.paint = state.paint;
-        this.Transform = state.transform;
+        var state = this.stateStack.Pop();
+        state.Restore();
     }
 
-    public void Translate(float x, float y)
+    public ISurface GetSurface()
     {
-        canvas.Translate(x, y);
+        return surface;
     }
 
-    public void Rotate(float angle)
+    public void ResetState()
     {
-        canvas.RotateRadians(angle);
+        paint?.Dispose();
+        paint = new SKPaint();
+        SetDrawMode(DrawMode.Fill);
+        currentStrokeWidth = 1;
+        SetClipRect(0, 0, 0, 0);
     }
 
-    public void Scale(float scaleX, float scaleY)
+    public void SetStrokeWidth(float strokeWidth)
     {
-        canvas.Scale(scaleX, scaleY);
+        paint.StrokeWidth = strokeWidth;
+        this.currentStrokeWidth = strokeWidth;
     }
 
-    public void DrawLine(Vector2 p1, Vector2 p2, Color color)
+    public void SetDrawMode(DrawMode mode)
     {
-        DrawLine(p1.X, p1.Y, p2.X, p2.Y, color);
+        paint.Style = (SKPaintStyle)mode;
+        this.currentMode = mode;
     }
 
+    public bool SetFont(string fontName, TextStyles styles, float size)
+    {
+
+        currentTextStyle = styles;
+
+        currentFont = provider.GetFont(fontName, styles, (int)size);
+
+        paint.TextSize = (int)size;
+        paint.Typeface = currentFont.Typeface;
+
+        return true;
+    }
+
+    public Vector2 MeasureText(string text)
+    {
+        SKRect bounds = default;
+        paint.MeasureText(text, ref bounds);
+        return (bounds.Width, bounds.Height);
+    }
+
+    public void Translate(Vector2 translation) => canvas.Translate(translation.X, translation.Y);
+    public void Translate(float x, float y) => canvas.Translate(x, y);
+    
+    public void Rotate(float angle) => canvas.RotateRadians(angle);
+    public void Rotate(float angle, float centerX, float centerY) => canvas.RotateRadians(angle, centerX, centerY);
+    public void Rotate(float angle, Vector2 center) => canvas.RotateRadians(angle, center.X, center.Y);
+
+    public void Scale(float scale) => canvas.Scale(scale);
+    public void Scale(float scaleX, float scaleY) => canvas.Scale(scaleX, scaleY);
+
+    public void SetClipRect(float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => SetClipRect((x, y), (width, height), alignment);
+    public void SetClipRect(Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => SetClipRect(new Rectangle(position, size, alignment));
+    public void SetClipRect(Rectangle rect)
+    {
+        canvas.Restore();
+        canvas.ClipRect(rect.AsSKRect(), SKClipOperation.Intersect);
+        canvas.Save();
+    }
+
+    public void DrawLine(Vector2 p1, Vector2 p2, Color color) => DrawLine(p1.X, p1.Y, p2.X, p2.Y, color);
     public void DrawLine(float x1, float y1, float x2, float y2, Color color)
     {
         this.paint.Color = color.AsSKColor();
         canvas.DrawLine(x1, y1, x2, y2, this.paint);
     }
 
-    public void DrawRect(float x, float y, float width, float height, Color color, Alignment alignment = Alignment.TopLeft)
-    {
-        DrawRect(new(x, y), new(width, height), color, alignment);
-    }
-
-    public void DrawRect(Vector2 position, Vector2 size, Color color, Alignment alignment = Alignment.TopLeft)
-    {
-        DrawRect(new Rectangle(position, size), color, alignment);
-    }
-
-    public void DrawRect(Rectangle rect, Color color, Alignment alignment = Alignment.TopLeft)
+    public void DrawRect(float x, float y, float width, float height, Color color, Alignment alignment = Alignment.TopLeft) => DrawRect(new(x, y), new(width, height), color, alignment);
+    public void DrawRect(Vector2 position, Vector2 size, Color color, Alignment alignment = Alignment.TopLeft) => DrawRect(new Rectangle(position, size, alignment), color);
+    public void DrawRect(Rectangle rect, Color color)
     {
         this.paint.Color = color.AsSKColor();
         canvas.DrawRect(rect.AsSKRect(), this.paint);
     }
 
-    public void DrawEllipse(float x, float y, float radiusX, float radiusY, Color color, Alignment alignment = Alignment.Center)
-    {
-        DrawEllipse(new(x, y), new(radiusX, radiusY), color, alignment);
-    }
-
-    public void DrawEllipse(Vector2 position, Vector2 radii, Color color, Alignment alignment = Alignment.Center)
-    {
-        DrawEllipse(new Rectangle(position.X, position.Y, radii.X * 2, radii.Y * 2, alignment), color);
-    }
-
+    public void DrawEllipse(float x, float y, float radiusX, float radiusY, Color color, Alignment alignment = Alignment.Center) => DrawEllipse(new(x, y), new(radiusX, radiusY), color, alignment);
+    public void DrawEllipse(Vector2 position, Vector2 radii, Color color, Alignment alignment = Alignment.Center) => DrawEllipse(new Rectangle(position.X, position.Y, radii.X * 2, radii.Y * 2, alignment), color);
     public void DrawEllipse(Rectangle bounds, Color color)
     {
         this.paint.Color = color.AsSKColor();
         canvas.DrawOval(bounds.AsSKRect(), this.paint);
     }
 
-    public void DrawSurface(ISurface surface, Alignment alignment = Alignment.TopLeft)
+    public void DrawEllipse(float x, float y, float radiusX, float radiusY, float begin, float end, Color color, Alignment alignment = Alignment.TopLeft) => DrawEllipse((x, y), (radiusX, radiusY), begin, end, color, alignment);
+    public void DrawEllipse(Vector2 position, Vector2 radii, float begin, float end, Color color, Alignment alignment = Alignment.TopLeft) => DrawEllipse(new Rectangle(position.X, position.Y, radii.X * 2, radii.Y * 2, alignment), begin, end, color);
+    public void DrawEllipse(Rectangle bounds, float begin, float end, Color color)
     {
-        DrawSurface(surface, Vector2.Zero, new(surface?.Width ?? 0f, surface?.Height ?? 0f), alignment);
+        if (end == begin)
+            return;
+
+        if (end > begin)
+        {
+            var swap = begin;
+            begin = end;
+            end = swap;
+        }
+
+        if (end - begin >= MathF.Tau)
+            DrawEllipse(bounds, color);
+
+        this.paint.Color = color.AsSKColor();
+        canvas.DrawArc(bounds.AsSKRect(), begin, end - begin, true, this.paint);
     }
 
-    public void DrawSurface(ISurface surface, float x, float y, Alignment alignment = Alignment.TopLeft)
-    {
-        DrawSurface(surface, x, y, surface.Width, surface.Height, Alignment.Center);
-    }
-
-    public void DrawSurface(ISurface surface, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft)
-    {
-        DrawSurface(surface, position: new(x, y), size: new(width, height), alignment);
-    }
-
-    public void DrawSurface(ISurface surface, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft)
+    public void DrawSurface(ISurface surface, Alignment alignment = Alignment.TopLeft) => DrawSurface(surface, Vector2.Zero, new(surface?.Width ?? 0f, surface?.Height ?? 0f), alignment);
+    public void DrawSurface(ISurface surface, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawSurface(surface, x, y, surface?.Width ?? 0f, surface?.Height ?? 0f, Alignment.Center);
+    public void DrawSurface(ISurface surface, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => DrawSurface(surface, position: new(x, y), size: new(width, height), alignment);
+    public void DrawSurface(ISurface surface, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawSurface(surface, new Rectangle(0, 0, surface?.Width ?? 0f, surface?.Height ?? 0f), new Rectangle(position.X, position.Y, size.X, size.Y, alignment));
+    public void DrawSurface(ISurface surface, Rectangle source, Rectangle destination)
     {
         if (surface is null)
             throw new ArgumentNullException(nameof(surface));
-
-        DrawSurface(surface, new Rectangle(0, 0, surface.Width, surface.Height), new Rectangle(position.X, position.Y, size.X, size.Y, alignment));
-    }
-
-    public void DrawSurface(ISurface surface, Rectangle source, Rectangle destination)
-    {
+        
         if (surface is SkiaSurface skiaSurface)
             canvas.DrawBitmap(skiaSurface.bitmap, source.AsSKRect(), destination.AsSKRect());
     }
 
-    public struct CanvasState
+    public void DrawPolygon(Vector2[] polygon, bool closed, Color color) => DrawPolygon(polygon.AsSpan(), closed, color);
+    public void DrawPolygon(IEnumerable<Vector2> polygon, bool closed, Color color) => DrawPolygon(polygon.ToArray().AsSpan(), closed, color);
+    public unsafe void DrawPolygon(Span<Vector2> polygon, bool closed, Color color)
     {
-        public SKPaint paint;
-        public Matrix3x2 transform;
+        this.paint.Color = color.AsSKColor();
+        fixed (Vector2* p = polygon)
+            SkiaNativeApi.sk_canvas_draw_points(canvas.Handle, SKPointMode.Polygon, (IntPtr)polygon.Length, (SKPoint*)p, this.paint.Handle);
+    }
 
-        public CanvasState(SKPaint paint, Matrix3x2 transform)
+    public void DrawRoundedRect(float x, float y, float width, float height, float radius, Color color, Alignment alignment = Alignment.TopLeft) => DrawRoundedRect((x, y), (width, height), radius, color, alignment);
+    public void DrawRoundedRect(Vector2 position, Vector2 size, float radius, Color color, Alignment alignment = Alignment.TopLeft) => DrawRoundedRect(new Rectangle(position, size, alignment), radius, color);
+    public void DrawRoundedRect(Rectangle rect, float radius, Color color)
+    {
+        this.paint.Color = color.AsSKColor();
+        canvas.DrawRoundRect(rect.AsSKRect(), radius, radius, this.paint);
+    }
+
+    public void DrawText(string text, float x, float y, Color color, Alignment alignment) => DrawText(text, (x, y), color, alignment);
+    public void DrawText(string text, Vector2 position, Color color, Alignment alignment)
+    {
+        this.paint.Color = color.AsSKColor();
+
+        SKRect skbounds = default;
+        paint.MeasureText(text, ref skbounds);
+        var bounds = new Rectangle(position, (skbounds.Width, skbounds.Height), alignment);
+        var pos = bounds.GetAlignedPoint(Alignment.TopLeft);
+        
+        canvas.DrawText(text, pos.X - skbounds.Left, pos.Y - skbounds.Top, this.currentFont, this.paint);
+    }
+
+    private readonly struct SkiaCanvasState
+    {
+        private readonly SkiaCanvas canvas;
+        private readonly DrawMode mode;
+        private readonly SKPaint paint;
+        private readonly float strokeWidth;
+        private readonly Rectangle clipRect;
+        private readonly Matrix3x2 transform;
+
+        public SkiaCanvasState(SkiaCanvas canvas)
         {
-            this.paint = paint;
-            this.transform = transform;
+            this.canvas = canvas;
+            this.mode = canvas.currentMode;
+            this.paint = canvas.paint;
+            canvas.paint = this.paint.Clone();
+            this.transform = canvas.Transform;
+            this.clipRect = canvas.currentClipRect;
+            this.strokeWidth = canvas.currentStrokeWidth;
+        }
+
+        public void Restore()
+        {
+            this.canvas.currentMode = mode;
+            this.canvas.paint.Dispose();
+            this.canvas.paint = this.paint;
+            this.canvas.currentStrokeWidth = strokeWidth;
+            this.canvas.currentClipRect = clipRect;
+            this.canvas.Transform = transform;
         }
     }
 }

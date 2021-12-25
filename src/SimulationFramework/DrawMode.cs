@@ -3,4 +3,5 @@ public enum DrawMode
 {
     Fill,
     Border,
+    FillAndBorder
 }

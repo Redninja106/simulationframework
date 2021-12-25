@@ -52,7 +52,7 @@ public static class Graphics
     /// <returns>The new surface.</returns>
     public static ISurface LoadSurface(Span<byte> encodedBytes)
     {
-        return Provider.CreateSurface(encodedBytes);
+        return Provider.LoadSurface(encodedBytes);
     }
 
     /// <summary>
@@ -89,4 +89,9 @@ public static class Graphics
     {
         return Provider.CreateSurface(width, height, colors.AsSpan());
     }
+
+    /// <summary>
+    /// Clears all cached fonts.
+    /// </summary>
+    public static void ClearFontCache() => Provider.ClearFontCache();
 }

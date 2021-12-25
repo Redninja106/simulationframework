@@ -10,11 +10,13 @@ namespace SimulationFramework.SkiaSharp;
 
 internal sealed class SkiaSurface : ISurface
 {
+    internal SkiaGraphicsProvider provider;
     internal SKBitmap bitmap;
     internal readonly bool owner;
 
-    public SkiaSurface(SkiaGraphicsProvider context, SKBitmap bitmap, bool owner)
+    public SkiaSurface(SkiaGraphicsProvider provider, SKBitmap bitmap, bool owner)
     {
+        this.provider = provider;
         this.bitmap = bitmap;
         this.owner = owner;
     }
@@ -30,7 +32,7 @@ internal sealed class SkiaSurface : ISurface
 
     public ICanvas OpenCanvas()
     {
-        return new SkiaCanvas(new SKCanvas(bitmap), false);
+        return new SkiaCanvas(this.provider, this, new SKCanvas(bitmap), false);
     }
 
     public Span<Color> GetPixels()

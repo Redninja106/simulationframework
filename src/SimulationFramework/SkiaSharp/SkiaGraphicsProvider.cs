@@ -16,6 +16,7 @@ internal sealed class SkiaGraphicsProvider : IGraphicsProvider
 
     internal readonly SkiaSurface frameSurfaceAdapter;
     internal SkiaCanvas frameCanvas;
+    internal Dictionary<(string fontName, TextStyles styles, int size), SKFont> fonts = new(); 
 
     public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate getProcAddress)
     {
@@ -33,10 +34,10 @@ internal sealed class SkiaGraphicsProvider : IGraphicsProvider
     {
         var canvas = frameProvider.GetCurrentFrame();
 
-        if (frameCanvas is null || canvas != frameCanvas.canvas)
+        if (frameCanvas is null || canvas != frameCanvas.GetSKCanvas())
         {
             frameCanvas?.Dispose();
-            frameCanvas = new SkiaCanvas(canvas, false);
+            frameCanvas = new SkiaCanvas(this, null, canvas, false);
         }
 
         return frameCanvas;
@@ -63,7 +64,7 @@ internal sealed class SkiaGraphicsProvider : IGraphicsProvider
         return bitmap;
     }
 
-    public ISurface CreateSurface(Span<byte> encodedData)
+    public ISurface LoadSurface(Span<byte> encodedData)
     {
         throw new NotImplementedException();
     }
@@ -75,5 +76,40 @@ internal sealed class SkiaGraphicsProvider : IGraphicsProvider
 
     public void Dispose()
     {
+        frameCanvas.Dispose();
+        frameSurfaceAdapter.Dispose();
+        backendContext.Dispose();
+        glInterface.Dispose();
+
+        ClearFontCache();
+    }
+
+    public void ClearFontCache()
+    {
+        while (fonts.Count > 0)
+        {
+            if (fonts.Remove(fonts.Keys.Last(), out var font))
+            {
+                font.Dispose();
+            }
+        }
+    }
+
+    public SKFont GetFont(string fontName, TextStyles styles, int size)
+    {
+        if (!fonts.ContainsKey((fontName, styles, size)))
+        {
+            var fontStyle = new SKFontStyle(
+                styles.HasFlag(TextStyles.Bold) ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
+                SKFontStyleWidth.Normal,
+                styles.HasFlag(TextStyles.Italic) ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright
+                );
+
+            var typeface = SKTypeface.FromFamilyName(fontName, fontStyle);
+            
+            fonts.Add((fontName, styles, size), new SKFont(typeface, size));
+        }
+
+        return fonts[(fontName, styles, size)];
     }
 }
