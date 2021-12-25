@@ -124,6 +124,8 @@ public abstract class Simulation : IDisposable
 
             using var canvas = Graphics.GetFrameCanvas();
 
+            canvas.ResetState();
+
             using (canvas.Push())
             {
                 this.OnRender(canvas);
