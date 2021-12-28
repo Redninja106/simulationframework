@@ -21,7 +21,7 @@ public interface IImGuiProvider : ISimulationComponent
     bool CheckBoxFlags(string label, ref uint value, uint flag);
     bool RadioButton(string label, bool active);
     bool RadioButtonFlags(string label, ref uint value, uint flag);
-    void ProgressBar(float fraction, Vector2 size, string overlay);
+    void ProgressBar(float completion, Vector2 size, string overlay);
     void Bullet();
 
     bool DragScalar<T>(string label, Span<T> values, T speed, T min, T max, string format, SliderFlags flags) where T : unmanaged;
