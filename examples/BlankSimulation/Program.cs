@@ -2,13 +2,12 @@
 using SimulationFramework.IMGUI;
 
 using var sim = new MySimulation();
-Simulation.Run(sim); 
+Simulation.RunWindowed(sim, "Simulation!", 1920, 1080); 
 
 class MySimulation : Simulation
 {
     public override void OnInitialize(AppConfig config)
     {
-        config.OpenWindow(1920, 1080, "Simulation!");
     }
 
     float d;
@@ -19,7 +18,7 @@ class MySimulation : Simulation
         canvas.Clear(Color.CornflowerBlue);
         canvas.DrawRect((d * 100) % 1920,100,100,100, Color.Black, Alignment.BottomRight);
         canvas.DrawRect((d * 200) % 1920,300,100,100, Color.Black, Alignment.BottomRight);
-
+        
         using (canvas.Push())
         {
             canvas.Translate(p.X, p.Y);

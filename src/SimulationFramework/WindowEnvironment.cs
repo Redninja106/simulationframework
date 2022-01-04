@@ -23,12 +23,13 @@ public sealed class WindowEnvironment : ISimulationEnvironment
 {
     private readonly IWindow window;
 
-    public WindowEnvironment(int width, int height, string title)
+    public WindowEnvironment(string title, int width, int height, bool resizable)
     {
         window = Window.Create(WindowOptions.Default with
         {
             Size = new(width, height),
-            Title = title
+            Title = title,
+            WindowBorder = resizable ? WindowBorder.Resizable : WindowBorder.Fixed,
         });
         window.Initialize();
         MakeContextCurrent();

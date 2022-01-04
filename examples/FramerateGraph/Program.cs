@@ -4,13 +4,12 @@ using SimulationFramework;
 using SimulationFramework.IMGUI;
 
 using var sim = new MySimulation();
-Simulation.Run(sim);
+Simulation.RunWindowed(sim, "Simulation!", 1920, 1080, true);
 
 class MySimulation : Simulation
 {
     public override void OnInitialize(AppConfig config)
     {
-        config.OpenWindow(1920, 1080, "Simulation!");
     }
 
     Queue<float> fps = new(1921);
@@ -22,7 +21,7 @@ class MySimulation : Simulation
 
         fps.Enqueue(Debug.Framerate);
 
-        while (fps.Sum(x => 1f / x) * scale > Width)
+        while (fps.Sum(x => 1f / x) * scale > this.TargetWidth)
         {
             fps.Dequeue();
         }
@@ -34,7 +33,7 @@ class MySimulation : Simulation
             var entryWidth = (1 / val) * scale;
             var lineWidth = (lastEntryWidth + entryWidth) * .5f;
 
-            canvas.DrawLine(0, Height - lastval, lineWidth, Height - val, Color.Yellow);
+            canvas.DrawLine(0, TargetWidth - lastval, lineWidth, TargetHeight - val, Color.Yellow);
             canvas.Translate(lineWidth, 0);
             lastval = val;
         }
