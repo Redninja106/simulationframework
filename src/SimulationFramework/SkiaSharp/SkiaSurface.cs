@@ -21,8 +21,8 @@ internal sealed class SkiaSurface : ISurface
         this.owner = owner;
     }
 
-    public int Width { get; }
-    public int Height { get; }
+    public int Width => bitmap.Width;
+    public int Height => bitmap.Height;
 
     public void Dispose()
     {
