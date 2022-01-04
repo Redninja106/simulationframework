@@ -16,8 +16,8 @@ public abstract class Simulation : IDisposable
     /// </summary>
     public static Simulation Current { get; private set; }
 
-    public int Width => environment.GetOutputSize().Item1;
-    public int Height => environment.GetOutputSize().Item2;
+    public int TargetWidth => environment.GetOutputSize().Item1;
+    public int TargetHeight => environment.GetOutputSize().Item2;
 
     private readonly List<ISimulationComponent> components = new();
     private ISimulationEnvironment environment;
@@ -26,6 +26,11 @@ public abstract class Simulation : IDisposable
     public event Action BeforeRender;
     public event Action AfterRender;
     public event Action Uninitialized;
+
+    /// <summary>
+    /// Raised when the window is resized.
+    /// </summary>
+    public event Action<int, int> Resized;
 
     /// <summary>
     /// Called when the simulation should initialize.
@@ -80,7 +85,7 @@ public abstract class Simulation : IDisposable
     /// <remarks>
     /// To use a SimulationFramework-included environment, call the method for that environment on the <see cref="AppConfig"/> instance provided in <see cref="OnInitialize(AppConfig)"/>.
     /// </remarks>
-    public void SetEnvironment(ISimulationEnvironment environment)
+    private void SetEnvironment(ISimulationEnvironment environment)
     {
         if (this.environment is not null)
             throw new InvalidOperationException("This simulation already has an environment!");
@@ -100,7 +105,7 @@ public abstract class Simulation : IDisposable
         // apply all the components to this simulation
         foreach (var component in supportedComponents)
         {
-            Debug.Log("Applied component");
+            Debug.Log($"Applied Component of type '{component.GetType().Name}'");
             component.Apply(this);
             this.components.Add(component);
         }
@@ -109,12 +114,13 @@ public abstract class Simulation : IDisposable
     // starts a simulation. This is only to be called from `Run()`.
     private void Start()
     {
+        Debug.Log("OnInitialize called!");
+
         this.OnInitialize(new AppConfig(this));
 
-        if (environment is null)
-            throw new Exception("Simulation must select an enviroment");
-
         this.Initialized?.Invoke();
+
+        Debug.Log("Beginning Render loop");
 
         while (!environment.ShouldExit())
         {
@@ -138,60 +144,29 @@ public abstract class Simulation : IDisposable
             environment.EndFrame();
         }
 
+        Debug.Log("OnUninitialize called");
+
         this.OnUnitialize();
 
         this.Uninitialized?.Invoke();
     }
 
     /// <summary>
-    /// Starts the provided simulation.
+    /// Runs the provided simulation in the specified environment.
     /// </summary>
     /// <param name="simulation">The simulation to start.</param>
-    public static void Run(Simulation simulation)
+    public static void Run(Simulation simulation, ISimulationEnvironment environment)
     {
+        if (environment is null)
+            throw new Exception("Simulation must select an enviroment");
+
+        simulation.SetEnvironment(environment);
         Current = simulation;
         simulation.Start();
     }
 
-    /// <summary>
-    /// Starts a simulation using delegates in place of overridden methods.
-    /// </summary>
-    /// <param name="init">The delegate to call when simulation should initialize.</param>
-    /// <param name="draw">The delegate to call when simulation should draw.</param>
-    /// <param name="uninit">The delegate to call when simulation should uninitialize.</param>
-    public static void Run(Action<AppConfig> init, Action<ICanvas> draw, Action uninit = null)
+    public static void RunWindowed(Simulation simulation, string title, int width, int height, bool resizable = true)
     {
-        using var simulation = new DelegateSimulation(init, draw, uninit);
-        Run(simulation);
-    }
-
-    // enables use of delegates as an alterative to overrides.
-    private sealed class DelegateSimulation : Simulation
-    {
-        private readonly Action<AppConfig> init = null;
-        private readonly Action<ICanvas> draw = null; 
-        private readonly Action uninit = null;
-
-        public DelegateSimulation(Action<AppConfig> init, Action<ICanvas> draw, Action uninit)
-        {
-            this.init = init;
-            this.draw = draw;
-            this.uninit = uninit;
-        }
-
-        public override void OnRender(ICanvas canvas)
-        {
-            this.draw?.Invoke(canvas);
-        }
-
-        public override void OnInitialize(AppConfig config)
-        {
-            this.init?.Invoke(config);
-        }
-
-        public override void OnUnitialize()
-        {
-            this.uninit?.Invoke();
-        }
+        Run(simulation, new WindowEnvironment(title, width, height, resizable));
     }
 }
