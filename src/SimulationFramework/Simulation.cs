@@ -122,9 +122,17 @@ public abstract class Simulation : IDisposable
 
         Debug.Log("Beginning Render loop");
 
+        (int, int) prevSize = environment.GetOutputSize();
+
         while (!environment.ShouldExit())
         {
             environment.ProcessEvents();
+
+            if (prevSize != environment.GetOutputSize())
+            {
+                this.Resized?.Invoke(this.TargetWidth, this.TargetHeight);
+                prevSize = environment.GetOutputSize();
+            }
 
             this.BeforeRender?.Invoke();
 

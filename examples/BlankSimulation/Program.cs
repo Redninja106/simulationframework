@@ -8,6 +8,7 @@ class MySimulation : Simulation
 {
     public override void OnInitialize(AppConfig config)
     {
+        this.Resized += (x, y) => Console.WriteLine($"resized to {x},{y}");
     }
 
     float d;
