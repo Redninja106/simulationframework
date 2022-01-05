@@ -22,14 +22,11 @@ public interface ISurface : IDisposable
     /// </summary>
     int Height { get; }
 
+    Span<Color> Pixels { get; }
+    
     /// <summary>
     /// Opens a new canvas which draws to this surface.
     /// </summary>
     /// <returns>An <see cref="ICanvas"/> which draws onto this surface.</returns>
     ICanvas OpenCanvas();
-
-    /// <summary>
-    /// Gets the data of this surface.
-    /// </summary>
-    Span<Color> GetPixels();
 }

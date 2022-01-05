@@ -24,6 +24,8 @@ internal sealed class SkiaSurface : ISurface
     public int Width => bitmap.Width;
     public int Height => bitmap.Height;
 
+    public unsafe Span<Color> Pixels => new(bitmap.GetPixels().ToPointer(), Width * Height);
+
     public void Dispose()
     {
         if (owner)
@@ -33,15 +35,5 @@ internal sealed class SkiaSurface : ISurface
     public ICanvas OpenCanvas()
     {
         return new SkiaCanvas(this.provider, this, new SKCanvas(bitmap), false);
-    }
-
-    public Span<Color> GetPixels()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IntPtr GetPixelData(out int rowSize, out int rowCount)
-    {
-        throw new NotImplementedException();
     }
 }

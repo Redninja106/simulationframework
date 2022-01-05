@@ -37,8 +37,8 @@ public static class SkiaInterop
     // 
     public unsafe static int GetGLTextureID(ISurface surface)
     {
-        // there doesnt seen to be a way to do this with skiasharp...
-        throw new NotImplementedException();
+        // there doesnt seem to be a way to do this with skiasharp...
+        throw new NotSupportedException();
     }
 
     [DllImport("Kernel32")]
