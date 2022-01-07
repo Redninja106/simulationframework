@@ -30,10 +30,16 @@ public interface IInputProvider : ISimulationComponent
     /// </summary>
     /// <returns><see langword="true"/> if the mouse button is pressed, otherwise <see langword="false"/>.</returns>
     bool IsMouseButtonDown(MouseButton button);
+    bool IsMouseButtonPressed(MouseButton button);
+    bool IsMouseButtonReleased(MouseButton button);
 
     /// <summary>
     /// Gets the state of the provided key.
     /// </summary>
     /// <returns><see langword="true"/> if the key is pressed, otherwise <see langword="false"/>.</returns>
     bool IsKeyDown(Key key);
+
+    bool IsKeyPressed(Key key);
+
+    bool IsKeyReleased(Key key);
 }

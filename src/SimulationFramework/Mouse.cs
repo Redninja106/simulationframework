@@ -14,4 +14,7 @@ public static class Mouse
     public static Vector2 Delta => Provider.GetMousePosition();
     public static int ScrollWheelDelta => Provider.GetScrollWheelDelta();
     public static bool IsButtonDown(MouseButton button) => Provider.IsMouseButtonDown(button);
+    public static bool IsButtonUp(MouseButton button) => !Provider.IsMouseButtonDown(button);
+    public static bool IsButtonPressed(MouseButton button) => Provider.IsMouseButtonPressed(button);
+    public static bool IsButtonReleased(MouseButton button) => Provider.IsMouseButtonReleased(button);
 }

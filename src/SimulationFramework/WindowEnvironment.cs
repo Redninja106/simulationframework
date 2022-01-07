@@ -129,10 +129,16 @@ public sealed class WindowEnvironment : ISimulationEnvironment
     {
         private readonly IInputContext inputContext;
 
+        private bool mouseCaptured;
+        private bool keyboardCaptured;
+        private bool textCaptured;
+
         private Vector2 mouseDelta;
         private Vector2 mousePosition;
         private int scrollWheel;
+        private List<SilkKey> lastPressedKeys = new();
         private List<SilkKey> pressedKeys = new();
+        private List<SilkButton> lastPressedButtons = new();
         private List<SilkButton> pressedButtons = new();
 
         public WindowInputProvider(IWindow window)
@@ -186,6 +192,10 @@ public sealed class WindowEnvironment : ISimulationEnvironment
 
         private void BeforeRender()
         {
+            var io = ImGuiNET.ImGui.GetIO();
+            mouseCaptured = io.WantCaptureMouse;
+            keyboardCaptured = io.WantCaptureKeyboard;
+
             var mouse = inputContext.Mice.FirstOrDefault();
 
             if (mouse != null)
@@ -193,10 +203,13 @@ public sealed class WindowEnvironment : ISimulationEnvironment
                 mouseDelta = ((Vector2)mouse.Position) - mousePosition;
                 mousePosition = mouse.Position;
             }
+
         }
 
         private void AfterRender()
         {
+            lastPressedButtons = new(pressedButtons);
+            lastPressedKeys = new(pressedKeys);
         }
 
         public void Dispose()
@@ -215,16 +228,25 @@ public sealed class WindowEnvironment : ISimulationEnvironment
 
         public int GetScrollWheelDelta()
         {
+            if (mouseCaptured)
+                return 0;
+
             return scrollWheel;
         }
 
         public bool IsKeyDown(Key key)
         {
+            if (keyboardCaptured)
+                return false;
+
             return pressedKeys.Contains(ConvertKey(key));
         }
 
         public bool IsMouseButtonDown(MouseButton key)
         {
+            if (mouseCaptured)
+                return false;
+
             return this.pressedButtons.Contains(ConvertButton(key));
         }
 
@@ -314,6 +336,38 @@ public sealed class WindowEnvironment : ISimulationEnvironment
                 MouseButton.Middle => SilkButton.Middle,
                 _ => SilkButton.Unknown,
             };
+        }
+
+        public bool IsMouseButtonPressed(MouseButton button)
+        {
+            if (mouseCaptured)
+                return false;
+
+            return pressedButtons.Contains(ConvertButton(button)) && !lastPressedButtons.Contains(ConvertButton(button));
+        }
+
+        public bool IsMouseButtonReleased(MouseButton button)
+        {
+            if (mouseCaptured)
+                return false;
+
+            return !pressedButtons.Contains(ConvertButton(button)) && lastPressedButtons.Contains(ConvertButton(button));
+        }
+
+        public bool IsKeyPressed(Key key)
+        {
+            if (keyboardCaptured)
+                return false;
+
+            return pressedKeys.Contains(ConvertKey(key)) && !lastPressedKeys.Contains(ConvertKey(key));
+        }
+
+        public bool IsKeyReleased(Key key)
+        {
+            if (keyboardCaptured)
+                return false;
+
+            return !pressedKeys.Contains(ConvertKey(key)) && lastPressedKeys.Contains(ConvertKey(key));
         }
     }
 
