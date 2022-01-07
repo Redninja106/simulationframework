@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
@@ -101,9 +102,9 @@ public unsafe sealed class ImGuiNETProvider : IImGuiProvider
     public bool BeginWindow(string title, ref bool open, WindowFlags flags) => 1 == igBegin(MarshalText(title, stackalloc byte[title.Length + 1]), (byte*)Unsafe.AsPointer(ref open), (ImGuiWindowFlags)flags);
     public void EndWindow() => igEnd();
     public bool CheckBox(string label, ref bool value) => 1 == igCheckbox(MarshalText(label, stackalloc byte[label.Length + 1]), (byte*)Unsafe.AsPointer(ref value));
-    public bool CheckBoxFlags(string label, ref uint value, uint flag) => 1 == igCheckboxFlags(MarshalText(label, stackalloc byte[label.Length + 1]), (uint*)Unsafe.AsPointer(ref value), flag);
-    public bool RadioButton(string label, bool active) => 1 == igRadioButtonBool(MarshalText(label, stackalloc byte[label.Length + 1]), (byte)(active ? 1 : 0));
-    public bool RadioButtonFlags(string label, ref uint value, uint flag) => 1 == igRadioButtonIntPtr(MarshalText(label, stackalloc byte[label.Length + 1]), (int*)Unsafe.AsPointer(ref value), *(int*)&flag);
+    public bool CheckBoxFlags(string label, ref uint value, uint flag) => 1 == igCheckboxFlags_UintPtr(MarshalText(label, stackalloc byte[label.Length + 1]), (uint*)Unsafe.AsPointer(ref value), flag);
+    public bool RadioButton(string label, bool active) => 1 == igRadioButton_Bool(MarshalText(label, stackalloc byte[label.Length + 1]), (byte)(active ? 1 : 0));
+    public bool RadioButtonFlags(string label, ref uint value, uint flag) => 1 == igRadioButton_IntPtr(MarshalText(label, stackalloc byte[label.Length + 1]), (int*)Unsafe.AsPointer(ref value), *(int*)&flag);
     public void ProgressBar(float fraction, Vector2 size, string overlay) => igProgressBar(fraction, size, MarshalText(overlay, stackalloc byte[overlay.Length + 1]));
     public void Bullet() => igBullet();
     public bool DragScalar<T>(string label, Span<T> values, T speed, T min, T max, string format, SliderFlags flags) where T : unmanaged
@@ -148,8 +149,8 @@ public unsafe sealed class ImGuiNETProvider : IImGuiProvider
         color = new Color(col4);
         return result;
     }
-    public bool TreeNode(string label, TreeNodeFlags flags) => 1 == igTreeNodeExStr(MarshalText(label, stackalloc byte[label.Length + 1]), (ImGuiTreeNodeFlags)flags);
-    public void TreePush(string id) => igTreePushStr(MarshalText(id, stackalloc byte[id.Length + 1]));
+    public bool TreeNode(string label, TreeNodeFlags flags) => 1 == igTreeNodeEx_Str(MarshalText(label, stackalloc byte[label.Length + 1]), (ImGuiTreeNodeFlags)flags);
+    public void TreePush(string id) => igTreePush_Str(MarshalText(id, stackalloc byte[id.Length + 1]));
     public void TreePop() => igTreePop();
     public bool BeginMenuBar() => 1 == igBeginMenuBar();
     public void EndMenuBar() => igEndMenuBar();
@@ -158,7 +159,7 @@ public unsafe sealed class ImGuiNETProvider : IImGuiProvider
     public bool BeginMenu(string label, bool enabled) => 1 == igBeginMenu(MarshalText(label, stackalloc byte[label.Length + 1]), enabled ? (byte)1: (byte)0);
     public void EndMenu() => igEndMenu();
     public bool MenuItem(string label, string shortcut, bool selected, bool enabled) 
-        => 1 == igMenuItemBool(
+        => 1 == igMenuItem_Bool(
             MarshalText(label, stackalloc byte[label.Length + 1]),
             MarshalText(shortcut, stackalloc byte[shortcut.Length + 1]),
             selected ? (byte)1 : (byte)0, 
@@ -179,29 +180,31 @@ public unsafe sealed class ImGuiNETProvider : IImGuiProvider
     public bool IsItemClicked(MouseButton button) => 1 == igIsItemClicked((ImGuiMouseButton)button);
 
     public bool SmallButton(string label) => 1 == igSmallButton(MarshalText(label, stackalloc byte[label.Length + 1]));
-
-    public bool BeginListBox(string label, Vector2 size)
+    
+    public bool BeginListBox(string label, Vector2 size) => 1 == igBeginListBox(MarshalText(label, stackalloc byte[label.Length + 1]), size);
+    public void EndListBox() => igEndListBox();
+    public unsafe bool ListBox(string label, ref int currentItem, Span<string> items, int heightInItems)
     {
-        throw new NotImplementedException();
+        // look away plz
+        byte** pItems = stackalloc byte*[items.Length];
+        for (int i = 0; i < items.Length; i++)
+        {
+            pItems[i] = (byte*)NativeMemory.Alloc((nuint)(items[i].Length + 1));
+            MarshalText(items[i], new Span<byte>(pItems[i], items[i].Length));
+            pItems[i][items[i].Length] = 0;
+        }
+        bool result = 1 == igListBox_Str_arr(MarshalText(label, stackalloc byte[label.Length + 1]), (int*)Unsafe.AsPointer(ref currentItem), pItems, items.Length, heightInItems);
+        for (int i = 0; i < items.Length; i++)
+        {
+            NativeMemory.Free(pItems[i]);
+        }
+        return result;
     }
-
-    public void EndListBox()
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool ListBox(string label, ref int currentItem, Span<string> items, int heightInItems)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool ListBox<T>(string label, ref int currentItem, Func<int, string> itemsGetter, int itemCount, int heightInItems)
-    {
-        throw new NotImplementedException();
-    }
-    public bool Selectable(string label, bool selected, SelectableFlags flags, Vector2 size) => 1 == igSelectableBool(MarshalText(label, stackalloc byte[label.Length + 1]), selected ? (byte)1 : (byte)0, (ImGuiSelectableFlags)flags, size);
-    public unsafe bool Selectable(string label, ref bool selected, SelectableFlags flags, Vector2 size) => 1 == igSelectableBoolPtr(MarshalText(label, stackalloc byte[label.Length + 1]), (byte*)Unsafe.AsPointer(ref selected), (ImGuiSelectableFlags)flags, size);
-    public bool BeginChild(string id, Vector2 size, bool border, WindowFlags flags) => 1 == igBeginChildStr(MarshalText(id, stackalloc byte[id.Length + 1]), size, border ? (byte)1 : (byte)0, (ImGuiWindowFlags)flags);
+    public bool ListBox<T>(string label, ref int currentItem, Func<int, string> itemsGetter, int itemCount, int heightInItems) => throw new NotImplementedException("For some reason ImGui.NET doesn't have this method in it's bindings. Use the non-generic overloads");
+    
+    public bool Selectable(string label, bool selected, SelectableFlags flags, Vector2 size) => 1 == igSelectable_Bool(MarshalText(label, stackalloc byte[label.Length + 1]), selected ? (byte)1 : (byte)0, (ImGuiSelectableFlags)flags, size);
+    public unsafe bool Selectable(string label, ref bool selected, SelectableFlags flags, Vector2 size) => 1 == igSelectable_BoolPtr(MarshalText(label, stackalloc byte[label.Length + 1]), (byte*)Unsafe.AsPointer(ref selected), (ImGuiSelectableFlags)flags, size);
+    public bool BeginChild(string id, Vector2 size, bool border, WindowFlags flags) => 1 == igBeginChild_Str(MarshalText(id, stackalloc byte[id.Length + 1]), size, border ? (byte)1 : (byte)0, (ImGuiWindowFlags)flags);
     public void EndChild() => igEndChild();
     public void EndPopup() => igEndPopup();
     public bool BeginPopup(string id, WindowFlags flags) => 1 == igBeginPopup(MarshalText(id, stackalloc byte[id.Length + 1]), (ImGuiWindowFlags)flags);
@@ -217,5 +220,5 @@ public unsafe sealed class ImGuiNETProvider : IImGuiProvider
 
     public void CloseCurrentPopup() => igCloseCurrentPopup();
 
-    public void OpenPopup(string id, PopupFlags flags) => igOpenPopup(MarshalText(id, stackalloc byte[id.Length + 1]), (ImGuiPopupFlags)flags);
+    public void OpenPopup(string id, PopupFlags flags) => igOpenPopup_Str(MarshalText(id, stackalloc byte[id.Length + 1]), (ImGuiPopupFlags)flags);
 }

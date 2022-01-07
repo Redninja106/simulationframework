@@ -10,16 +10,24 @@
     <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
     <Description> SimulationFramework is a framework for writing small graphical apps, similar to the likes of Processing or OpenFrameworks.</Description>
     <AssemblyVersion>0.0.1</AssemblyVersion>
-    <Version>prerelease-0.0.1</Version>
+    <Version>0.0.1</Version>
     <Authors>Ryan A</Authors>
+    <PackageIcon>simulationframework.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ImGui.NET" Version="1.78.0" />
+    <PackageReference Include="ImGui.NET" Version="1.86.0" />
     <PackageReference Include="Silk.NET.Input" Version="2.11.0" />
     <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.11.0" />
     <PackageReference Include="Silk.NET.Windowing" Version="2.11.0" />
     <PackageReference Include="SkiaSharp" Version="2.80.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="simulationframework.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
