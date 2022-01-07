@@ -16,6 +16,7 @@ public interface IImGuiProvider : ISimulationComponent
     void TextUnformatted(string text);
 
     bool Button(string label, Vector2 size);
+    bool SmallButton(string label);
     void Image(ISurface surface, Vector2 size, Vector2 uv0, Vector2 uv1, Color tintColor, Color borderColor);
     bool CheckBox(string label, ref bool value);
     bool CheckBoxFlags(string label, ref uint value, uint flag);
@@ -61,4 +62,22 @@ public interface IImGuiProvider : ISimulationComponent
     bool IsItemHovered(HoveredFlags flags);
     bool IsItemClicked(MouseButton button);
     bool IsItemEdited();
+
+    bool BeginListBox(string label, Vector2 size);
+    void EndListBox();
+    bool ListBox(string label, ref int currentItem, Span<string> items, int heightInItems);
+    bool ListBox<T>(string label, ref int currentItem, Func<int, string> itemsGetter, int itemCount, int heightInItems);
+
+    bool Selectable(string label, bool selected, SelectableFlags flags, Vector2 size);
+    bool Selectable(string label, ref bool selected, SelectableFlags flags, Vector2 size);
+    bool BeginChild(string id, Vector2 size, bool border, WindowFlags flags);
+    void EndChild();
+    void EndPopup();
+    bool BeginPopup(string id, WindowFlags flags);
+    bool BeginPopupModal(string name, ref bool open, WindowFlags flags);
+    bool BeginPopupModal(string name, WindowFlags flags);
+    bool BeginCombo(string label, string previewValue, ComboFlags flags);
+    void EndCombo();
+    void CloseCurrentPopup();
+    void OpenPopup(string id, PopupFlags flags);
 }

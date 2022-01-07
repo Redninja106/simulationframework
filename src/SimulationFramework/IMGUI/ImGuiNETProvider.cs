@@ -177,4 +177,45 @@ public unsafe sealed class ImGuiNETProvider : IImGuiProvider
     public void EndGroup() => igEndGroup();
     public bool IsItemHovered(HoveredFlags flags) => 1 == igIsItemHovered((ImGuiHoveredFlags)flags);
     public bool IsItemClicked(MouseButton button) => 1 == igIsItemClicked((ImGuiMouseButton)button);
+
+    public bool SmallButton(string label) => 1 == igSmallButton(MarshalText(label, stackalloc byte[label.Length + 1]));
+
+    public bool BeginListBox(string label, Vector2 size)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void EndListBox()
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool ListBox(string label, ref int currentItem, Span<string> items, int heightInItems)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool ListBox<T>(string label, ref int currentItem, Func<int, string> itemsGetter, int itemCount, int heightInItems)
+    {
+        throw new NotImplementedException();
+    }
+    public bool Selectable(string label, bool selected, SelectableFlags flags, Vector2 size) => 1 == igSelectableBool(MarshalText(label, stackalloc byte[label.Length + 1]), selected ? (byte)1 : (byte)0, (ImGuiSelectableFlags)flags, size);
+    public unsafe bool Selectable(string label, ref bool selected, SelectableFlags flags, Vector2 size) => 1 == igSelectableBoolPtr(MarshalText(label, stackalloc byte[label.Length + 1]), (byte*)Unsafe.AsPointer(ref selected), (ImGuiSelectableFlags)flags, size);
+    public bool BeginChild(string id, Vector2 size, bool border, WindowFlags flags) => 1 == igBeginChildStr(MarshalText(id, stackalloc byte[id.Length + 1]), size, border ? (byte)1 : (byte)0, (ImGuiWindowFlags)flags);
+    public void EndChild() => igEndChild();
+    public void EndPopup() => igEndPopup();
+    public bool BeginPopup(string id, WindowFlags flags) => 1 == igBeginPopup(MarshalText(id, stackalloc byte[id.Length + 1]), (ImGuiWindowFlags)flags);
+    public bool BeginPopupModal(string name, ref bool open, WindowFlags flags) => 1 == igBeginPopupModal(MarshalText(name, stackalloc byte[name.Length + 1]), (byte*)Unsafe.AsPointer(ref open), (ImGuiWindowFlags)flags);
+    public bool BeginPopupModal(string name, WindowFlags flags) => 1 == igBeginPopupModal(MarshalText(name, stackalloc byte[name.Length + 1]), null, (ImGuiWindowFlags)flags);
+    public bool BeginCombo(string label, string previewValue, ComboFlags flags) => 1 == igBeginCombo(
+        MarshalText(label, stackalloc byte[label.Length + 1]), 
+        MarshalText(previewValue, stackalloc byte[previewValue.Length + 1]),
+        (ImGuiComboFlags)flags
+        );
+
+    public void EndCombo() => igEndCombo();
+
+    public void CloseCurrentPopup() => igCloseCurrentPopup();
+
+    public void OpenPopup(string id, PopupFlags flags) => igOpenPopup(MarshalText(id, stackalloc byte[id.Length + 1]), (ImGuiPopupFlags)flags);
 }

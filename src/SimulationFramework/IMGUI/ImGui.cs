@@ -52,6 +52,7 @@ public static class ImGui
 
     public static bool Button(string label) => Button(label, default);
     public static bool Button(string label, Vector2 size) => Provider.Button(label, size);
+    public static bool SmallButton(string label) => Provider.SmallButton(label);
     public static void Image(ISurface surface, Vector2 size) => Image(surface, size, (0, 0), (1, 1));
     public static void Image(ISurface surface, Vector2 size, Vector2 uv0, Vector2 uv1) => Image(surface, size, uv0, uv1, Color.White, Color.Black);
     public static void Image(ISurface surface, Vector2 size, Color tintColor, Color borderColor) => Image(surface, size, (0, 0), (1, 1), tintColor, borderColor);
@@ -320,4 +321,47 @@ public static class ImGui
     }
 
 
+    public static bool BeginMenuBar() => Provider.BeginMenuBar();
+    public static void EndMenuBar() => Provider.EndMenuBar();
+    public static bool BeginMainMenuBar() => Provider.BeginMainMenuBar();
+    public static void EndMainMenuBar() => Provider.EndMainMenuBar();
+    public static bool BeginMenu(string label, bool enabled) => Provider.BeginMenu(label, enabled);
+    public static void EndMenu() => Provider.EndMenu();
+    public static bool MenuItem(string label, string shortcut = "", bool selected = false, bool enabled = true) => Provider.MenuItem(label, shortcut, selected, enabled);
+
+    public static bool TreeNode(string label, TreeNodeFlags flags = 0) => Provider.TreeNode(label, flags);
+    public static void TreePush(string id) => Provider.TreePush(id);
+    public static void TreePop() => Provider.TreePop();
+
+    public static void Separator() => Provider.Separator();
+    public static void SameLine(float offsetFromStartX = 0, float spacing = -1) => Provider.SameLine(offsetFromStartX, spacing);
+    public static void NewLine() => Provider.NewLine();
+    public static void Spacing() => Provider.Spacing();
+    public static void Dummy(Vector2 size = default) => Provider.Dummy(size);
+    public static void Indent(float width = 0) => Provider.Indent(width);
+    public static void Unindent(float width = 0) => Provider.Unindent(width);
+    public static void BeginGroup() => Provider.BeginGroup();
+    public static void EndGroup() => Provider.EndGroup();
+    public static bool IsItemHovered(HoveredFlags flags = HoveredFlags.None) => Provider.IsItemHovered(flags);
+    public static bool IsItemClicked(MouseButton button = MouseButton.Left) => Provider.IsItemClicked(button);
+    public static bool IsItemEdited() => Provider.IsItemEdited();
+    public static bool BeginListBox(string label, Vector2 size) => Provider.BeginListBox(label, size);
+    public static void EndListBox() => Provider.EndListBox();
+    public static bool ListBox(string label, ref int currentItem, Span<string> items, int heightInItems = -1) => Provider.ListBox(label, ref currentItem, items, heightInItems);
+    public static bool ListBox<T>(string label, ref int currentItem, Func<int, string> itemsGetter, int itemCount, int heightInItems = -1) => Provider.ListBox<T>(label, ref currentItem, itemsGetter, itemCount, heightInItems);
+    public static bool Selectable(string label, bool selected = false, SelectableFlags flags = 0, Vector2 size = default) => Provider.Selectable(label, selected, flags, size);
+    public static bool Selectable(string label, ref bool selected, SelectableFlags flags = 0, Vector2 size = default) => Provider.Selectable(label, ref selected, flags, size);
+    public static bool BeginChild(string id, Vector2 size = default, bool border = false, WindowFlags flags = 0) => Provider.BeginChild(id, size, border, flags);
+    public static void EndChild() => Provider.EndChild();
+
+    public static bool BeginPopup(string id, WindowFlags flags = 0) => Provider.BeginPopup(id, flags);
+    public static bool BeginPopupModal(string name, WindowFlags flags = 0) => Provider.BeginPopupModal(name, flags);
+    public static bool BeginPopupModal(string name, ref bool open, WindowFlags flags = 0) => Provider.BeginPopupModal(name, ref open, flags);
+    public static void EndPopup() => Provider.EndPopup();
+
+    public static bool BeginCombo(string label, string previewValue, ComboFlags flags = 0) => Provider.BeginCombo(label, previewValue, flags);
+    public static void EndCombo() => Provider.EndCombo();
+
+    public static void OpenPopup(string id, PopupFlags flags = PopupFlags.None) => Provider.OpenPopup(id, flags);
+    public static void CloseCurrentPopup() => Provider.CloseCurrentPopup();
 }
