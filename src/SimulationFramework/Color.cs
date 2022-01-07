@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace SimulationFramework;
 /// <summary>
 /// Represents a 32-bit RGBA color.
 /// </summary>
-[StructLayout(LayoutKind.Explicit)]
+[StructLayout(LayoutKind.Sequential)]
 public readonly struct Color : IEquatable<Color>
 {
 
@@ -720,21 +721,28 @@ public readonly struct Color : IEquatable<Color>
     /// </summary>
     public static readonly Color DarkSalmon = (Color)0xE9967AFF;
 
-    [FieldOffset(0)]
-    private readonly uint value;
-    [FieldOffset(3)]
     private readonly byte r;
-    [FieldOffset(2)]
     private readonly byte g;
-    [FieldOffset(1)]
     private readonly byte b;
-    [FieldOffset(0)]
     private readonly byte a;
 
     /// <summary>
     /// The 32-bit, RGBA value of this color.
     /// </summary>
-    public uint Value { readonly get => this.value; init => this.value = value; }
+    public uint Value 
+    { 
+        readonly get
+        {
+            return (uint)((r << 24) | (g << 16) | (b << 8) | a);
+        }
+        init
+        {
+            r = (byte)((value & 0xFF000000) >> 24);
+            g = (byte)((value & 0x00FF0000) >> 16);
+            b = (byte)((value & 0x0000FF00) >> 8);
+            a = (byte)((value & 0x000000FF));
+        }
+    }
     
     /// <summary>
     /// The 8-bit value of the red component of this color.
@@ -755,10 +763,10 @@ public readonly struct Color : IEquatable<Color>
 
     public Color()
     {
-        value = r = g = b = a = 0;
+        r = g = b = a = 0;
     }
 
-    public Color(uint value) : this() => this.value = value;
+    public Color(uint value) : this() => this.Value = value;
 
     /// <summary>
     /// Creates a new color with the provided RGB values, and an alpha of 255.
@@ -793,12 +801,12 @@ public readonly struct Color : IEquatable<Color>
     public static implicit operator System.Drawing.Color(Color value) => System.Drawing.Color.FromArgb(value.a, value.r, value.g, value.b);
     public static implicit operator Color(System.Drawing.Color value) => new(value.R, value.G, value.B, value.A);
 
-    public static explicit operator uint(Color color) => color.value;
+    public static explicit operator uint(Color color) => color.Value;
     public static explicit operator Color(uint value) => new(value);
 
     public bool Equals(Color other)
     {
-        return other.value == this.value;
+        return other.Value == this.Value;
     }
 
     public override bool Equals([NotNullWhen(true)] object obj)
@@ -811,12 +819,12 @@ public readonly struct Color : IEquatable<Color>
 
     public override string ToString()
     {
-        return "#" + value.ToString("x8");
+        return "#" + Value.ToString("x8");
     }
 
     public override int GetHashCode()
     {
-        return unchecked((int)value);
+        return unchecked((int)Value);
     }
 
     public static bool operator ==(Color left, Color right)
