@@ -13,6 +13,7 @@
     <Version>0.0.1</Version>
     <Authors>Ryan A</Authors>
     <PackageIcon>simulationframework.png</PackageIcon>
+    <Copyright>MIT license</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
