@@ -69,6 +69,11 @@ public struct Vector2 : IEquatable<Vector2>
         return false;
     }
 
+    public static Vector2 FromAngle(float angle)
+    {
+        return (MathF.Cos(angle), MathF.Sin(angle));
+    }
+
     public static implicit operator (float, float)(Vector2 vector) => (vector.X, vector.Y);
     public static implicit operator Vector2((float, float) values) => new(values.Item1, values.Item2);
     public static implicit operator System.Numerics.Vector2(Vector2 vector) => new(vector.X, vector.Y);
