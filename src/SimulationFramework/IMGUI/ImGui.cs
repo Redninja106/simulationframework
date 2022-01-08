@@ -49,6 +49,7 @@ public static class ImGui
     /// </summary>
     /// <param name="text">The text of the widget.</param>
     public static void Text(string text) => Provider.TextUnformatted(text);
+    public static void Text(object obj) => Provider.TextUnformatted(obj.ToString());
 
     public static bool Button(string label) => Button(label, default);
     public static bool Button(string label, Vector2 size) => Provider.Button(label, size);
