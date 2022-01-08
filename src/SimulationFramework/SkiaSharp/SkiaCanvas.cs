@@ -26,6 +26,8 @@ internal sealed class SkiaCanvas : ICanvas
     private SKFont currentFont;
 
     public Matrix3x2 Transform { get => canvas.TotalMatrix.AsMatrix3x2(); set => canvas.SetMatrix(value.AsSKMatrix()); }
+    public int Width => surface?.Width ?? Simulation.Current.TargetWidth;
+    public int Height => surface?.Height ?? Simulation.Current.TargetWidth;
 
     public SkiaCanvas(SkiaGraphicsProvider provider, ISurface surface, SKCanvas canvas, bool owner)
     {

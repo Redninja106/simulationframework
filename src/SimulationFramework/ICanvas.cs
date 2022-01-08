@@ -11,6 +11,16 @@ namespace SimulationFramework;
 public interface ICanvas : IDisposable
 {
     /// <summary>
+    /// The width of the canvas, in pixels.
+    /// </summary>
+    int Width { get; }
+    
+    /// <summary>
+    /// The height of the canvas, in pixels.
+    /// </summary>
+    int Height { get; }
+
+    /// <summary>
     /// Waits for all drawing commands to finish executing.
     /// </summary>
     void Flush();
