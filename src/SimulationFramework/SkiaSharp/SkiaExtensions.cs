@@ -31,6 +31,6 @@ public static class SkiaExtensions
 
     public static SKRect AsSKRect(this Rectangle rect)
     {
-        return new SKRect(rect.x, rect.y, rect.x + rect.width, rect.y + rect.height);
+        return new SKRect(rect.X, rect.Y, rect.X + rect.Width, rect.Y + rect.Height);
     }
 }

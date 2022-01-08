@@ -136,7 +136,7 @@ internal sealed class SkiaCanvas : ICanvas
     {
         canvas.Restore();
         
-        if (rect.width > 0 && rect.height > 0)
+        if (rect.Width > 0 && rect.Height > 0)
         {
             canvas.ClipRect(rect.AsSKRect(), SKClipOperation.Intersect);
         }
