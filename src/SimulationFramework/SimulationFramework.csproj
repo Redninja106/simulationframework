@@ -17,13 +17,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\assets\simulationframework.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.86.0" />
     <PackageReference Include="Silk.NET.Input" Version="2.11.0" />
     <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.11.0" />
