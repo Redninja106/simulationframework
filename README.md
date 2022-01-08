@@ -11,7 +11,7 @@ SimulationFramework is a framework for graphical desktop apps using .NET. It is 
 
 - **Simple and Usable**: SimulationFramework is designed to be developer-friendly. It is well documented and provides flexible, intuitive, and easy-to-use APIs. 
 
-- **2D Drawing**: A powerful and performant 2D drawing API, with backends in [SkiaSharp](https://github.com/mono/SkiaSharp) and Direct2D (coming soon). 
+- **2D Drawing**: A powerful and performant 2D drawing API, with backends in [SkiaSharp](https://github.com/mono/SkiaSharp) and soon Direct2D.
 
 - **Portable**: Working entirely through interfaces, SimulationFramework can be made to run anywhere .NET can.
 
@@ -21,7 +21,12 @@ SimulationFramework is a framework for graphical desktop apps using .NET. It is 
 
 ## Getting Started
 
-To start, create a class which inherits from `Simulation`. `Simulation` has virtual methods that can be overridden to add functionality to your simulation.
+To start, create a new Console App using .NET 6. Add the SimulationFramework [Nuget Package](https://www.nuget.org/packages/SimulationFramework/0.0.2) using Visual Studio or the following command:
+```
+dotnet add package SimulationFramework --version 0.0.2
+```
+
+Next, create a class which inherits from `Simulation`. `Simulation` has virtual methods that can be overridden to add functionality to your simulation.
 ```cs
 using SimualtionFramework;
 
