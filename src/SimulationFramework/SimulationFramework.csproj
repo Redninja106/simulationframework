@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Company>Ryan A</Company>
     <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
-    <Description> SimulationFramework is a framework for writing small graphical apps, similar to the likes of Processing or OpenFrameworks.</Description>
+    <Description> SimulationFramework is a framework for writing small graphical apps, with emphasis on simplicity and usability. </Description>
     <AssemblyVersion>0.0.1</AssemblyVersion>
     <Version>0.0.1</Version>
     <Authors>Ryan A</Authors>
