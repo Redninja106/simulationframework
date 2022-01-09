@@ -36,4 +36,9 @@ internal sealed class SkiaSurface : ISurface
     {
         return new SkiaCanvas(this.provider, this, new SKCanvas(bitmap), false);
     }
+
+    public ref Color GetPixel(int x, int y)
+    {
+        return ref this.Pixels[y * Width + x];
+    }
 }
