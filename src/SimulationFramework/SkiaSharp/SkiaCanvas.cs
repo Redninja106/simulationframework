@@ -127,8 +127,14 @@ internal sealed class SkiaCanvas : ICanvas
     public void Rotate(float angle, float centerX, float centerY) => canvas.RotateRadians(angle, centerX, centerY);
     public void Rotate(float angle, Vector2 center) => canvas.RotateRadians(angle, center.X, center.Y);
 
-    public void Scale(float scale) => canvas.Scale(scale);
-    public void Scale(float scaleX, float scaleY) => canvas.Scale(scaleX, scaleY);
+    public void Scale(float scale) => Scale(scale, scale);
+    public void Scale(Vector2 scale) => Scale(scale.X, scale.Y);
+    public void Scale(float scaleX, float scaleY) => Scale(scaleX, scaleY, 0, 0);
+    public void Scale(Vector2 scale, Vector2 center) => Scale(scale.X, scale.Y, center.X, center.Y);
+    public void Scale(float scaleX, float scaleY, float centerX, float centerY)
+    {
+        canvas.Scale(scaleX, scaleX, centerX, centerY);
+    }
 
     public void SetClipRect(float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => SetClipRect((x, y), (width, height), alignment);
     public void SetClipRect(Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => SetClipRect(new Rectangle(position, size, alignment));
@@ -201,9 +207,9 @@ internal sealed class SkiaCanvas : ICanvas
             canvas.DrawBitmap(skiaSurface.bitmap, source.AsSKRect(), destination.AsSKRect());
     }
 
-    public void DrawPolygon(Vector2[] polygon, bool closed, Color color) => DrawPolygon(polygon.AsSpan(), closed, color);
-    public void DrawPolygon(IEnumerable<Vector2> polygon, bool closed, Color color) => DrawPolygon(polygon.ToArray().AsSpan(), closed, color);
-    public unsafe void DrawPolygon(Span<Vector2> polygon, bool closed, Color color)
+    public void DrawPolygon(Vector2[] polygon, Color color) => DrawPolygon(polygon.AsSpan(), color);
+    public void DrawPolygon(IEnumerable<Vector2> polygon, Color color) => DrawPolygon(polygon.ToArray().AsSpan(), color);
+    public unsafe void DrawPolygon(Span<Vector2> polygon, Color color)
     {
         this.paint.Color = color.AsSKColor();
         fixed (Vector2* p = polygon)

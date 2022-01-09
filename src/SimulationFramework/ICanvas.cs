@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
+/// <summary>
+/// Enables the rendering shapes to a surface.
+/// </summary>
 public interface ICanvas : IDisposable
 {
     /// <summary>
@@ -21,10 +24,13 @@ public interface ICanvas : IDisposable
     int Height { get; }
 
     /// <summary>
-    /// Waits for all drawing commands to finish executing.
+    /// Waits for all drawing commands to finish executing. This is called automatically at the end of each frame and shouldn't be needed most of the time.
     /// </summary>
     void Flush();
 
+    /// <summary>
+    /// Gets the surface which this canvas is drawing to. This may be null if the canvas is drawing to the window or any other graphical output.
+    /// </summary>
     ISurface GetSurface();
 
     // drawing
@@ -32,24 +38,24 @@ public interface ICanvas : IDisposable
     /// <summary>
     /// Clears the canvas.
     /// </summary>
-    /// <param name="color">The color used to clear the canvas.</param>
+    /// <param name="color">The color with which to clear the canvas.</param>
     void Clear(Color color);
 
     /// <summary>
-    /// Draws a line to the canvas, using the current transform, clipping, and drawing settings.
+    /// Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <see cref="SetStrokeWidth(float)"/>.
     /// </summary>
-    /// <param name="x1">The x-coordinate of the first point on the line.</param>
-    /// <param name="y1">The y-coordinate of the first point on the line.</param>
-    /// <param name="x2">The x-coordinate of the second point on the line.</param>
-    /// <param name="y2">The y-coordinate of the second point on the line.</param>
+    /// <param name="x1">The x-coordinate of the first point of the line.</param>
+    /// <param name="y1">The y-coordinate of the first point of the line.</param>
+    /// <param name="x2">The x-coordinate of the second point of the line.</param>
+    /// <param name="y2">The y-coordinate of the second point of the line.</param>
     /// <param name="color">The color of the line.</param>
     void DrawLine(float x1, float y1, float x2, float y2, Color color);
 
     /// <summary>
-    /// Draws a line to the canvas, using the current drawing settings.
+    /// Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <see cref="SetStrokeWidth(float)"/>.
     /// </summary>
-    /// <param name="p1">The first point on the line.</param>
-    /// <param name="p2">The second point on the line.</param>
+    /// <param name="p1">The first point of the line.</param>
+    /// <param name="p2">The second point of the line.</param>
     /// <param name="color">The color of the line.</param>
     void DrawLine(Vector2 p1, Vector2 p2, Color color);
 
@@ -61,7 +67,7 @@ public interface ICanvas : IDisposable
     /// <param name="width">The width of the rectangle.</param>
     /// <param name="height">The height of the rectangle.</param>
     /// <param name="color">The color of the rectangle.</param>
-    /// <param name="alignment">The origin of the rectangle relative to the provided <paramref name="x"/> and <paramref name="y"/> coordinates.</param>
+    /// <param name="alignment">The point on the rectangle to align to the provided position.</param>
     void DrawRect(float x, float y, float width, float height, Color color, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
@@ -70,13 +76,13 @@ public interface ICanvas : IDisposable
     /// <param name="position">The position of the rectangle.</param>
     /// <param name="size">The size of the rectangle.</param>
     /// <param name="color">The color of the rectangle.</param>
-    /// <param name="alignment">The origin of the rectangle relative to the provided <paramref name="position"/>.</param>
+    /// <param name="alignment">The point on the rectangle to align to the provided position.</param>
     void DrawRect(Vector2 position, Vector2 size, Color color, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
     /// Draws a rectangle to the canvas, using the current transform, clipping, and drawing settings.
     /// </summary>
-    /// <param name="rect">The position and size of rectangle.</param>
+    /// <param name="rect">The rectangle to draw.</param>
     /// <param name="color">The color of the rectangle.</param>
     void DrawRect(Rectangle rect, Color color);
 
@@ -89,7 +95,7 @@ public interface ICanvas : IDisposable
     /// <param name="height">The height of the rectangle.</param>
     /// <param name="radius">The radius of the rounded corners of the rectangle.</param>
     /// <param name="color">The color of the rectangle.</param>
-    /// <param name="alignment">The origin of the rectangle relative to the provided <paramref name="x"/> and <paramref name="y"/> coordinates.</param>
+    /// <param name="alignment">The point on the rectangle to align to the provided position.</param>
     void DrawRoundedRect(float x, float y, float width, float height, float radius, Color color, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
@@ -99,7 +105,7 @@ public interface ICanvas : IDisposable
     /// <param name="size">The size of the rectangle.</param>
     /// <param name="radius">The radius of the rounded corners of the rectangle.</param>
     /// <param name="color">The color of the rectangle.</param>
-    /// <param name="alignment">The origin of the rectangle relative to the provided <paramref name="x"/> and <paramref name="y"/> coordinates.</param>
+    /// <param name="alignment">The point on the rectangle to align to the provided position.</param>
     void DrawRoundedRect(Vector2 position, Vector2 size, float radius, Color color, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
@@ -118,7 +124,7 @@ public interface ICanvas : IDisposable
     /// <param name="radiusX">The radius of the ellipse on the x-axis.</param>
     /// <param name="radiusY">The radius of the ellipse on the y-axis.</param>
     /// <param name="color">The color of the ellipse.</param>
-    /// <param name="alignment">The origin of the ellipse relative to the provided <paramref name="x"/> and <paramref name="y"/> coordinates.</param>
+    /// <param name="alignment">The point on the bounding-box of the ellipse to align to the provided position</param>
     void DrawEllipse(float x, float y, float radiusX, float radiusY, Color color, Alignment alignment = Alignment.Center);
 
     /// <summary>
@@ -127,7 +133,7 @@ public interface ICanvas : IDisposable
     /// <param name="position">The position of the rectangle.</param>
     /// <param name="radii">The radii of the ellipse.</param>
     /// <param name="color">The color of the ellipse.</param>
-    /// <param name="alignment">The origin of the ellipse relative to the provided <paramref name="position"/>.</param>
+    /// <param name="alignment">The point on the bounding-box of the ellipse to align to the provided position.</param>
     void DrawEllipse(Vector2 position, Vector2 radii, Color color, Alignment alignment = Alignment.Center);
 
     /// <summary>
@@ -147,7 +153,7 @@ public interface ICanvas : IDisposable
     /// <param name="begin">The angle at which the ellipse segment begins.</param>
     /// <param name="end">The angle at which the ellipse segment begins.</param>
     /// <param name="color">The color of the ellipse.</param>
-    /// <param name="alignment">The origin of the ellipse relative to the provided <paramref name="x"/> and <paramref name="y"/> coordinates.</param>
+    /// <param name="alignment">The point on the bounding-box of the ellipse to align to the provided position</param>
     void DrawEllipse(float x, float y, float radiusX, float radiusY, float begin, float end, Color color, Alignment alignment = Alignment.TopLeft);
     /// <summary>
     /// Draws an ellipse to the canvas, using the current transform, clipping, and drawing settings.
@@ -157,7 +163,7 @@ public interface ICanvas : IDisposable
     /// <param name="begin">The angle at which the ellipse segment begins.</param>
     /// <param name="end">The angle at which the ellipse segment begins.</param>
     /// <param name="color">The color of the ellipse.</param>
-    /// <param name="alignment">The origin of the ellipse relative to the provided <paramref name="position"/>.</param>
+    /// <param name="alignment">The point on the bounding-box of the ellipse to align to the provided position.</param>
     void DrawEllipse(Vector2 position, Vector2 radii, float begin, float end, Color color, Alignment alignment = Alignment.TopLeft);
     /// <summary>
     /// Draws an ellipse to the canvas, using the current transform, clipping, and drawing settings.
@@ -172,7 +178,7 @@ public interface ICanvas : IDisposable
     /// Draws a surface to the canvas at (0, 0), using the current transform and clipping settings.
     /// </summary>
     /// <param name="surface">The surface to draw.</param>
-    /// <param name="alignment">The origin of the surface relative to (0, 0).</param>
+    /// <param name="alignment">The point on the surface to align to (0, 0).</param>
     void DrawSurface(ISurface surface, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
@@ -181,7 +187,7 @@ public interface ICanvas : IDisposable
     /// <param name="surface">The surface to draw.</param>
     /// <param name="x">The x-position of the surface's destination rectangle.</param>
     /// <param name="y">The y-position of the surface's destination rectangle.</param>
-    /// <param name="alignment">The origin of the surface relative to the provided <paramref name="x"/> and <paramref name="y"/> coordinates.</param>
+    /// <param name="alignment">The point on the surface to align to the provided position.</param>
     void DrawSurface(ISurface surface, float x, float y, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
@@ -192,7 +198,7 @@ public interface ICanvas : IDisposable
     /// <param name="y">The y-position of the surface's destination rectangle.</param>
     /// <param name="width">The width of the surface's destination rectangle.</param>
     /// <param name="height">The height of the surface's destination rectangle.</param>
-    /// <param name="alignment">The origin of the surface relative to the provided <paramref name="x"/> and <paramref name="y"/> coordinates.</param>
+    /// <param name="alignment">The point on the surface to align to the provided position.</param>
     void DrawSurface(ISurface surface, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
@@ -201,7 +207,7 @@ public interface ICanvas : IDisposable
     /// <param name="surface">The surface to draw.</param>
     /// <param name="position">The position of the surface's destination rectangle.</param>
     /// <param name="size">The size of the surface's destination rectangle.</param>
-    /// <param name="alignment">The origin of the surface relative to the provided <paramref name="x"/> and <paramref name="y"/> coordinates.</param>
+    /// <param name="alignment">The point on the surface to align to the provided position.</param>
     void DrawSurface(ISurface surface, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
@@ -216,27 +222,26 @@ public interface ICanvas : IDisposable
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="polygon">The vertices of the polygon.</param>
-    /// <param name="closed">Whether the first and last point in <paramref name="polygon"/> should be treated as if they are connected.</param>
     /// <param name="color">The color of the polygon.</param>
-    void DrawPolygon(Span<Vector2> polygon, bool closed, Color color);
+    void DrawPolygon(Span<Vector2> polygon, Color color);
 
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="polygon">The vertices of the polygon.</param>
-    /// <param name="closed">Whether the first and last point in <paramref name="polygon"/> should be treated as if they are connected.</param>
     /// <param name="color">The color of the polygon.</param>
-    void DrawPolygon(IEnumerable<Vector2> polygon, bool closed, Color color);
+    void DrawPolygon(IEnumerable<Vector2> polygon, Color color);
 
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
+    /// <para>If the current <see cref="DrawMode"/> is <see cref="DrawMode.Fill"/> or <see cref="DrawMode.Gradient"/>, the first and last vertices are connected to create a closed polygon.</para>
     /// </summary>
     /// <param name="polygon">The vertices of the polygon.</param>
-    /// <param name="closed">Whether the first and last point in <paramref name="polygon"/> should be treated as if they are connected.</param>
     /// <param name="color">The color of the polygon.</param>
-    void DrawPolygon(Vector2[] polygon, bool closed, Color color);
+    void DrawPolygon(Vector2[] polygon, Color color);
 
     // text rendering
+
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
@@ -244,7 +249,7 @@ public interface ICanvas : IDisposable
     /// <param name="x">The X position of the text.</param>
     /// <param name="y">The Y position of the text.</param>
     /// <param name="color">The color of the text.</param>
-    /// <param name="alignment">The origin of the surface relative to the provided <paramref name="x"/> and <paramref name="y"/> coordinates.</param>
+    /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
     void DrawText(string text, float x, float y, Color color, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
@@ -253,11 +258,11 @@ public interface ICanvas : IDisposable
     /// <param name="text">The text to draw.</param>
     /// <param name="position">The position of the text.</param>
     /// <param name="color">The color of the text.</param>
-    /// <param name="alignment">The origin of the text relative to the provided <paramref name="position"/>.</param>
+    /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
     void DrawText(string text, Vector2 position, Color color, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
-    /// Determines the size of the provided text based on the current font.
+    /// Determines the size of the provided text based on the current font selection.
     /// </summary>
     /// <param name="text">The text to measure.</param>
     /// <returns>The width and height of the provided text.</returns>
@@ -283,7 +288,7 @@ public interface ICanvas : IDisposable
     void SetDrawMode(DrawMode mode);
 
     /// <summary>
-    /// Sets the stroke width of the canvas. On most shapes, this value only has an effect on drawing when this canvas's <see cref="DrawMode"/> is <see cref="DrawMode.Border"/>.
+    /// Sets the stroke width of the canvas. On most shapes, this value only has an effect on drawing when drawing lines or when this canvas's <see cref="DrawMode"/> is <see cref="DrawMode.Border"/>.
     /// </summary>
     /// <param name="strokeWidth">The width, in pixels, of any line drawn by the canvas. This value must be greater than 0.</param>
     void SetStrokeWidth(float strokeWidth);
@@ -296,7 +301,7 @@ public interface ICanvas : IDisposable
     /// <param name="y">The Y position of the clipping rectangle.</param>
     /// <param name="width">The width of the clipping rectangle.</param>
     /// <param name="height">The height of the clipping rectangle.</param>
-    /// <param name="alignment">The origin of the clipping rectangle relative to the provided <paramref name="x"/> and <paramref name="y"/> coordinates.</param>
+    /// <param name="alignment">The point on the clipping rect to align to the provided position.</param>
     void SetClipRect(float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
@@ -304,7 +309,7 @@ public interface ICanvas : IDisposable
     /// </summary>
     /// <param name="position">The position of the clipping rectangle.</param>
     /// <param name="size">The size of the clipping rectangle.</param>
-    /// <param name="alignment">The origin of the clipping rectangle relative to the provided <paramref name="position"/>.</param>
+    /// <param name="alignment">The point on the clipping rect to align to the provided position.</param>
     void SetClipRect(Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
@@ -383,4 +388,26 @@ public interface ICanvas : IDisposable
     /// <param name="scaleX">The scale to transform the transformation matrix by on the x-axis.</param>
     /// <param name="scaleY">The scale to transform the transformation matrix by on the y-axis.</param>
     void Scale(float scaleX, float scaleY);
+
+    /// <summary>
+    /// Scales the current transformation matrix by the provided value.
+    /// </summary>
+    /// <param name="scale">The scales to transform the transformation matrix by on the X and Y axes.</param>
+    void Scale(Vector2 scale);
+
+    /// <summary>
+    /// Scales the current transformation matrix by the provided value.
+    /// </summary>
+    /// <param name="scaleX">The scale to transform the transformation matrix by on the x-axis.</param>
+    /// <param name="scaleY">The scale to transform the transformation matrix by on the y-axis.</param>
+    /// <param name="centerX">The X-coordinate of the point which to focus the scaling around.</param>
+    /// <param name="centerY">The Y-coordinate of the point which to focus the scaling around.</param>
+    void Scale(float scaleX, float scaleY, float centerX, float centerY);
+
+    /// <summary>
+    /// Scales the current transformation matrix by the provided value.
+    /// </summary>
+    /// <param name="scale">The scale to transform the transformation matrix by on the x and y axes.</param>
+    /// <param name="center">The center of the scaling.</param>
+    void Scale(Vector2 scale, Vector2 center);
 }
