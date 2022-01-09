@@ -12,7 +12,7 @@
     <AssemblyVersion>0.0.2</AssemblyVersion>
     <Version>0.0.2</Version>
     <Authors>Ryan A</Authors>
-    <PackageIcon>simulationframework.png</PackageIcon>
+    <PackageIcon>logo-128x128.png</PackageIcon>
     <Copyright>MIT license</Copyright>
   </PropertyGroup>
 
