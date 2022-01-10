@@ -288,12 +288,195 @@ public interface ICanvas : IDisposable
     void SetDrawMode(DrawMode mode);
 
     /// <summary>
-    /// Sets the stroke width of the canvas. On most shapes, this value only has an effect on drawing when drawing lines or when this canvas's <see cref="DrawMode"/> is <see cref="DrawMode.Border"/>.
+    /// Sets the stroke width of the canvas. This value only has an effect on drawing when drawing lines or when this canvas's <see cref="DrawMode"/> is <see cref="DrawMode.Border"/>.
     /// </summary>
     /// <param name="strokeWidth">The width, in pixels, of any line drawn by the canvas. This value must be greater than 0.</param>
     void SetStrokeWidth(float strokeWidth);
 
+    /// <summary>
+    /// Sets the active gradient to a linear gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="fromX">The X-coordinate of the beginning point of the gradient.</param>
+    /// <param name="fromY">The Y-coordinate of the beginning point of the gradient.</param>
+    /// <param name="toX">The X-coordinate of the ending point of the gradient.</param>
+    /// <param name="toY">The Y-coordinate of the ending point of the gradient.</param>
+    /// <param name="gradient">An array of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    void SetGradientLinear(float fromX, float fromY, float toX, float toY, params GradientStop[] gradient);
+
+    /// <summary>
+    /// Sets the active gradient to a linear gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="fromX">The X-coordinate of the beginning point of the gradient.</param>
+    /// <param name="fromY">The Y-coordinate of the beginning point of the gradient.</param>
+    /// <param name="toX">The X-coordinate of the ending point of the gradient.</param>
+    /// <param name="toY">The Y-coordinate of the ending point of the gradient.</param>
+    /// <param name="gradient">An <see cref="IEnumerable{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientLinear(float fromX, float fromY, float toX, float toY, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
+    /// <summary>
+    /// Sets the active gradient to a linear gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="fromX">The X-coordinate of the beginning point of the gradient.</param>
+    /// <param name="fromY">The Y-coordinate of the beginning point of the gradient.</param>
+    /// <param name="toX">The X-coordinate of the ending point of the gradient.</param>
+    /// <param name="toY">The Y-coordinate of the ending point of the gradient.</param>
+    /// <param name="gradient">A <see cref="Span{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientLinear(float fromX, float fromY, float toX, float toY, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+    
+    /// <summary>
+    /// Sets the active gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="from">The beginning point of the gradient.</param>
+    /// <param name="to">The ending point of the gradient.</param>
+    /// <param name="gradient">An array of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    void SetGradientLinear(Vector2 from, Vector2 to, params GradientStop[] gradient);
+
+    /// <summary>
+    /// Sets the active gradient to a linear gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="from">The beginning point of the gradient.</param>
+    /// <param name="to">The ending point of the gradient.</param>
+    /// <param name="gradient">An <see cref="IEnumerable{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientLinear(Vector2 from, Vector2 to, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
+    /// <summary>
+    /// Sets the active gradient to a linear gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="from">The beginning point of the gradient.</param>
+    /// <param name="to">The ending point of the gradient.</param>
+    /// <param name="gradient">A <see cref="Span{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientLinear(Vector2 from, Vector2 to, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
+    /// <summary>
+    /// Sets the active gradient to a linear gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="from">The beginning point of the gradient, defined relative to the shape the gradient is being used to draw.</param>
+    /// <param name="to">The ending point of the gradient, defined relative to the shape the gradient is being used to draw</param>
+    /// <param name="gradient">An array of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    void SetGradientLinear(Alignment from, Alignment to, params GradientStop[] gradient);
+
+    /// <summary>
+    /// Sets the active gradient to a linear gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="from">The beginning point of the gradient, defined relative to the shape the gradient is being used to draw.</param>
+    /// <param name="to">The ending point of the gradient, defined relative to the shape the gradient is being used to draw</param>
+    /// <param name="gradient">An <see cref="IEnumerable{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientLinear(Alignment from, Alignment to, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
+    /// <summary>
+    /// Sets the active gradient to a linear gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="from">The beginning point of the gradient, defined relative to the shape the gradient is being used to draw.</param>
+    /// <param name="to">The ending point of the gradient, defined relative to the shape the gradient is being used to draw</param>
+    /// <param name="gradient">A <see cref="Span{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientLinear(Alignment from, Alignment to, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
+    /// <summary>
+    /// Sets the active gradient to a radial gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="x">The X-coordinate of the center of the gradient.</param>
+    /// <param name="y">The Y-coordinate of the center of the gradient.</param>
+    /// <param name="gradient"></param>
+    void SetGradientRadial(float x, float y, params GradientStop[] gradient);
+
+    /// <summary>
+    /// Sets the active gradient to a radial gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="x">The X-coordinate of the center of the gradient.</param>
+    /// <param name="y">The Y-coordinate of the center of the gradient.</param>
+    /// <param name="gradient">An <see cref="IEnumerable{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientRadial(float x, float y, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
+    /// <summary>
+    /// Sets the active gradient to a radial gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="x">The X-coordinate of the center of the gradient.</param>
+    /// <param name="y">The Y-coordinate of the center of the gradient.</param>
+    /// <param name="gradient">A <see cref="Span{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientRadial(float x, float y, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
+    /// <summary>
+    /// Sets the active gradient to a radial gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="position">The center of the gradient.</param>
+    /// <param name="gradient">An array of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    void SetGradientRadial(Vector2 position, params GradientStop[] gradient);
+
+    /// <summary>
+    /// Sets the active gradient to a radial gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="position">The center of the gradient.</param>
+    /// <param name="gradient">An <see cref="IEnumerable{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientRadial(Vector2 position, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
+    /// <summary>
+    /// Sets the active gradient to a radial gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="position">The center of the gradient.</param>
+    /// <param name="gradient">A <see cref="Span{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientRadial(Vector2 position, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
+    /// <summary>
+    /// Sets the active gradient to a radial gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="position">The center of the gradient, relative to the shape the gradient is being used to draw.</param>
+    /// <param name="gradient">An array of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    void SetGradientRadial(Alignment position, params GradientStop[] gradient);
+
+    /// <summary>
+    /// Sets the active gradient to a radial gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="position">The center of the gradient, relative to the shape the gradient is being used to draw.</param>
+    /// <param name="gradient">An <see cref="IEnumerable{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientRadial(Alignment position, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
+    /// <summary>
+    /// Sets the active gradient to a radial gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="position">The center of the gradient, relative to the shape the gradient is being used to draw.</param>
+    /// <param name="gradient">A <see cref="Span{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientRadial(Alignment position, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
+    /// <summary>
+    /// Sets the active gradient to a radial gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="position">The base position for the center of the gradient relative to the shape the gradient is being used to draw.</param>
+    /// <param name="offset">The offset of the gradient's center from <paramref name="position"/>.</param>
+    /// <param name="gradient">An array of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    void SetGradientRadial(Alignment position, Vector2 offset, params GradientStop[] gradient);
+
+    /// <summary>
+    /// Sets the active gradient to a radial gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="position">The base position for the center of the gradient relative to the shape the gradient is being used to draw.</param>
+    /// <param name="offset">The offset of the gradient's center from <paramref name="position"/>.</param>
+    /// <param name="gradient">An <see cref="IEnumerable{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientRadial(Alignment position, Vector2 offset, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
+    /// <summary>
+    /// Sets the active gradient to a radial gradient. Gradients are only used when this canvas's current <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
+    /// </summary>
+    /// <param name="position">The base position for the center of the gradient relative to the shape the gradient is being used to draw.</param>
+    /// <param name="offset">The offset of the gradient's center from <paramref name="position"/>.</param>
+    /// <param name="gradient">A <see cref="Span{GradientStop}"/> of <see cref="GradientStop"/> values which define a gradient between the provided points.</param>
+    /// <param name="tileMode">The behavior of the gradient outside of its bounds.</param>
+    void SetGradientRadial(Alignment position, Vector2 offset, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+
     // clipping
+
     /// <summary>
     /// Sets the current clipping rectangle.
     /// </summary>

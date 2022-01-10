@@ -24,6 +24,8 @@ internal sealed class SkiaCanvas : ICanvas
     private Rectangle currentClipRect;
     private TextStyles currentTextStyle;
     private SKFont currentFont;
+    // usually used for gradients
+    private SKShader currentShader;
 
     public Matrix3x2 Transform { get => canvas.TotalMatrix.AsMatrix3x2(); set => canvas.SetMatrix(value.AsSKMatrix()); }
     public int Width => surface?.Width ?? Simulation.Current.TargetWidth;
@@ -235,6 +237,111 @@ internal sealed class SkiaCanvas : ICanvas
         var pos = bounds.GetAlignedPoint(Alignment.TopLeft);
         
         canvas.DrawText(text, pos.X - skbounds.Left, pos.Y - skbounds.Top, this.currentFont, this.paint);
+    }
+
+    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, params GradientStop[] gradient)
+    {
+        SetGradientLinear(fromX, fromY, toX, toY, gradient.AsSpan());
+    }
+
+    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        SetGradientLinear((fromX, fromY), (toX, toY), gradient, tileMode);
+    }
+
+    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        SetGradientLinear((fromX, fromY), (toX, toY), gradient, tileMode);
+    }
+
+    public void SetGradientLinear(Vector2 from, Vector2 to, params GradientStop[] gradient)
+    {
+        SetGradientLinear(from, to, gradient.AsSpan());
+    }
+
+    public void SetGradientLinear(Vector2 from, Vector2 to, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientLinear(Vector2 from, Vector2 to, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientLinear(Alignment from, Alignment to, params GradientStop[] gradient)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientLinear(Alignment from, Alignment to, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientLinear(Alignment from, Alignment to, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientRadial(float x, float y, params GradientStop[] gradient)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientRadial(float x, float y, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientRadial(float x, float y, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientRadial(Vector2 position, params GradientStop[] gradient)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientRadial(Vector2 position, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientRadial(Vector2 position, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientRadial(Alignment position, params GradientStop[] gradient)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientRadial(Alignment position, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientRadial(Alignment position, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientRadial(Alignment position, Vector2 offset, params GradientStop[] gradient)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientRadial(Alignment position, Vector2 offset, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetGradientRadial(Alignment position, Vector2 offset, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        throw new NotImplementedException();
     }
 
     private readonly struct SkiaCanvasState
