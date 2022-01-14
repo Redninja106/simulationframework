@@ -43,15 +43,6 @@ internal sealed class SkiaGraphicsProvider : IGraphicsProvider
         return frameCanvas;
     }
 
-    public ISurface LoadSurface(string path)
-    {
-        throw new NotImplementedException();
-    }
-
-    public ISurface LoadBitmap(Span<byte> encodedData)
-    {
-        throw new NotImplementedException();
-    }
 
     public ISurface CreateSurface(int width, int height, Span<Color> data)
     {
