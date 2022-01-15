@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SimulationFramework.IMGUI;
 
 namespace SimulationFramework;
 
@@ -97,16 +96,16 @@ public abstract class Simulation : IDisposable
 
         // check for common issues and emit warnings
         if (supportedComponents.Count() < 0)
-            Debug.Warn("The provided environment has no components! (Most APIs won't work!"); 
+            DebugConsole.Warn("The provided environment has no components! (Most APIs won't work!"); 
         if (!supportedComponents.Any(c => c is ITimeProvider))
-            Debug.Warn("No provided environment has no time component! (The time API won't work!)");
+            DebugConsole.Warn("No provided environment has no time component! (The time API won't work!)");
         if (!supportedComponents.Any(c => c is IGraphicsProvider))
-            Debug.Warn("No provided environment has no graphics component! (The graphics API won't work!)");
+            DebugConsole.Warn("No provided environment has no graphics component! (The graphics API won't work!)");
 
         // apply all the components to this simulation
         foreach (var component in supportedComponents)
         {
-            Debug.Log($"Applied Component of type '{component.GetType().Name}'");
+            DebugConsole.Log($"Applied Component of type '{component.GetType().Name}'");
             component.Apply(this);
             this.components.Add(component);
         }
@@ -115,13 +114,13 @@ public abstract class Simulation : IDisposable
     // starts a simulation. This is only to be called from `Run()`.
     private void Start()
     {
-        Debug.Log("OnInitialize called!");
+        DebugConsole.Log("OnInitialize called!");
 
         this.OnInitialize(new AppConfig(this));
 
         this.Initialized?.Invoke();
 
-        Debug.Log("Beginning Render loop");
+        DebugConsole.Log("Beginning Render loop");
 
         (int, int) prevSize = environment.GetOutputSize();
 
@@ -155,7 +154,7 @@ public abstract class Simulation : IDisposable
             environment.EndFrame();
         }
 
-        Debug.Log("OnUninitialize called");
+        DebugConsole.Log("OnUninitialize called");
 
         this.OnUnitialize();
 

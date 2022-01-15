@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
-public static class Debug
+public static class DebugConsole
 {
     public static float Framerate => Time.Provider.GetFramerate();
 
