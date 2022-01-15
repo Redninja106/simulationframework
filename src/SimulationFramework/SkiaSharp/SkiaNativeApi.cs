@@ -24,4 +24,9 @@ internal static class SkiaNativeApi
     [DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
     internal static unsafe extern void sk_canvas_draw_points(IntPtr param0, SKPointMode param1, /* size_t */ IntPtr param2, SKPoint* param3, IntPtr param4);
 
+    // these are exposed because SKShader.Create___Gradient() only accepts arrays
+    [DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
+    internal static unsafe extern IntPtr sk_shader_new_linear_gradient(Vector2* points, uint* colors, float* colorPos, int colorCount, SKShaderTileMode tileMode, SKMatrix* localMatrix);
+    [DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
+    internal static unsafe extern IntPtr sk_shader_new_radial_gradient(Vector2* center, Single radius, UInt32* colors, Single* colorPos, Int32 colorCount, SKShaderTileMode tileMode, SKMatrix* localMatrix);
 }

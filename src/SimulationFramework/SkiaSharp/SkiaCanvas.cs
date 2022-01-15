@@ -6,9 +6,253 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using SimulationFramework.Utilities.Implementations;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
+
+internal sealed class SkiaCanvas : CanvasBase
+{
+    private readonly SkiaGraphicsProvider provider;
+    private readonly ISurface surface;
+    private readonly SKCanvas canvas;
+    private readonly bool owner;
+    private readonly SKPaint paint = new();
+    private readonly SKShader gradientShader = SKShader.CreateEmpty();
+    private SKFont currentFont;
+
+    public SkiaCanvas(SkiaGraphicsProvider provider, ISurface surface, SKCanvas canvas, bool owner)
+    {
+        this.provider = provider;
+        this.surface = surface;
+        this.canvas = canvas;
+        this.owner = owner;
+    }
+
+    protected override void ClearCore(Color color)
+    {
+        canvas.Clear(color.AsSKColor());
+    }
+
+    protected override void DrawEllipseCore(Rectangle bounds, float begin, float end, Color color)
+    {
+        this.paint.Color = color.AsSKColor();
+
+        if (end - begin >= MathF.PI * 2)
+        {
+            canvas.DrawOval(bounds.AsSKRect(), this.paint);
+        }
+        else
+        {
+            canvas.DrawArc(bounds.AsSKRect(), begin, end, true, paint);
+        }
+    }
+
+    protected override void DrawLineCore(Vector2 p1, Vector2 p2, Color color)
+    {
+        this.paint.Color = color.AsSKColor();
+        canvas.DrawLine(p1.X, p1.Y, p2.X, p2.Y, paint);
+    }
+
+    protected override unsafe void DrawPolygonCore(Span<Vector2> polygon, Color color)
+    {
+        this.paint.Color = color.AsSKColor();
+        fixed (Vector2* p = polygon)
+            SkiaNativeApi.sk_canvas_draw_points(canvas.Handle, SKPointMode.Polygon, (IntPtr)polygon.Length, (SKPoint*)p, this.paint.Handle);
+    }
+
+    protected override void DrawRectCore(Rectangle bounds, float radius, Color color)
+    {
+        this.paint.Color = color.AsSKColor();
+
+        if (radius == 0)
+        {
+            canvas.DrawRect(bounds.AsSKRect(), paint);
+        }
+        else
+        {
+            canvas.DrawRoundRect(bounds.AsSKRect(), radius, radius, paint);
+        }
+    }
+
+    protected override void DrawSurfaceCore(ISurface surface, Rectangle source, Rectangle destination)
+    {
+        canvas.DrawBitmap((surface as SkiaSurface).bitmap, source.AsSKRect(), destination.AsSKRect(), paint);
+    }
+
+    protected override void DrawTextCore(string text, Vector2 position, Color color, Alignment alignment)
+    {
+        this.paint.Color = color.AsSKColor();
+
+        SKRect skbounds = default;
+        paint.MeasureText(text, ref skbounds);
+        var bounds = new Rectangle(position, (skbounds.Width, skbounds.Height), alignment);
+        var pos = bounds.GetAlignedPoint(Alignment.TopLeft);
+
+        canvas.DrawText(text, pos.X - skbounds.Left, pos.Y - skbounds.Top, this.currentFont, this.paint);
+    }
+
+    protected override void FlushCore()
+    {
+        canvas.Flush();
+    }
+
+    protected override ISurface GetSurfaceCore()
+    {
+        return this.surface;
+    }
+
+    protected override Vector2 MeasureTextCore(string text)
+    {
+        SKRect bounds = default;
+        paint.MeasureText(text, ref bounds);
+        return (bounds.Left, bounds.Top);
+    }
+
+    protected override bool UpdateClipRectCore(Rectangle rect)
+    {
+        canvas.ClipRect(rect.AsSKRect(), SKClipOperation.Difference, true);
+        return true;
+    }
+
+    protected override bool UpdateDrawModeCore(DrawMode mode)
+    {
+        switch (mode)
+        {
+            case DrawMode.Fill:
+                paint.Style = SKPaintStyle.Fill;
+                paint.Shader = null;
+                break;
+            case DrawMode.Border:
+                paint.Style = SKPaintStyle.Stroke;
+                paint.Shader = null;
+                break;
+            case DrawMode.Gradient:
+                paint.Style = SKPaintStyle.Fill;
+                paint.Shader = this.gradientShader;
+                break;
+            default:
+                return false;
+        }
+
+        return true;
+    }
+
+    protected override bool UpdateFontCore(string fontName, TextStyles styles, float size)
+    {
+        this.currentFont = provider.GetFont(fontName, styles, (int)size);
+        return true;
+    }
+    
+    protected unsafe override bool UpdateGradientLinearCore(Vector2 from, Vector2 to, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        // In order to prevent copying the gradient stops into arrays, we use the native method
+
+        this.gradientShader.Dispose();
+
+        float* positions = stackalloc float[gradient.Length];
+        uint* colors = stackalloc uint[gradient.Length];
+
+        for (int i = 0; i < gradient.Length; i++)
+        {
+            positions[i] = gradient[i].Position;
+            colors[i] = (uint)gradient[i].Color.AsSKColor();
+        }
+
+        SKShaderTileMode skTileMode;
+        switch (tileMode)
+        {
+            case GradientTileMode.Clamp:
+                skTileMode = SKShaderTileMode.Clamp;
+                break;
+            case GradientTileMode.Repeat:
+                skTileMode = SKShaderTileMode.Repeat;
+                break;
+            case GradientTileMode.Mirror:
+                skTileMode = SKShaderTileMode.Mirror;
+                break;
+            case GradientTileMode.Stop:
+                skTileMode = SKShaderTileMode.Decal;
+                break;
+            default:
+                throw new Exception();
+        }
+
+        var nativePointer = SkiaNativeApi.sk_shader_new_linear_gradient((Vector2*)Unsafe.AsPointer(ref from), colors, positions, gradient.Length, skTileMode, null);
+
+        // there is no proper way to create an SkShader from a handle, so just modify the handle of our instance. (it's current handle is invalid anyways, since we disposed it at the beginning of the method)
+        this.gradientShader.GetType().GetProperty("Handle").SetMethod.Invoke(this.gradientShader, new object[] { nativePointer });
+        if (this.CurrentState.DrawMode == DrawMode.Gradient)
+        {
+            paint.Shader = this.gradientShader;
+        }
+
+        return true;
+    }
+
+    protected unsafe override bool UpdateGradientRadialCore(Vector2 position, float radius, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    {
+        this.gradientShader.Dispose();
+
+        float* positions = stackalloc float[gradient.Length];
+        uint* colors = stackalloc uint[gradient.Length];
+
+        for (int i = 0; i < gradient.Length; i++)
+        {
+            positions[i] = gradient[i].Position;
+            colors[i] = (uint)gradient[i].Color.AsSKColor();
+        }
+
+        SKShaderTileMode skTileMode;
+        switch (tileMode)
+        {
+            case GradientTileMode.Clamp:
+                skTileMode = SKShaderTileMode.Clamp;
+                break;
+            case GradientTileMode.Repeat:
+                skTileMode = SKShaderTileMode.Repeat;
+                break;
+            case GradientTileMode.Mirror:
+                skTileMode = SKShaderTileMode.Mirror;
+                break;
+            case GradientTileMode.Stop:
+                skTileMode = SKShaderTileMode.Decal;
+                break;
+            default:
+                throw new Exception();
+        }
+
+        var nativePointer = SkiaNativeApi.sk_shader_new_radial_gradient((Vector2*)Unsafe.AsPointer(ref position), radius, colors, positions, gradient.Length, skTileMode, null);
+
+        // there is no proper way to create an SkShader from a handle, so just modify the handle of our instance. (it's current handle is invalid anyways, since we disposed it at the beginning of the method)
+        this.gradientShader.GetType().GetProperty("Handle").SetMethod.Invoke(this.gradientShader, new object[] { nativePointer });
+        if (this.CurrentState.DrawMode == DrawMode.Gradient)
+        {
+            paint.Shader = this.gradientShader;
+        }
+
+        return true;
+    }
+
+    protected override bool UpdateStrokeWidthCore(float strokeWidth)
+    {
+        paint.StrokeWidth = strokeWidth;
+        return true;
+    }
+
+    protected override bool UpdateTransformCore(Matrix3x2 transform)
+    {
+        canvas.SetMatrix(transform.AsSKMatrix());
+        return true;
+    }
+
+    internal SKCanvas GetSKCanvas()
+    {
+        return canvas;
+    }
+}
+
+/*
 
 internal sealed class SkiaCanvas : ICanvas
 {
@@ -375,3 +619,4 @@ internal sealed class SkiaCanvas : ICanvas
         }
     }
 }
+*/
