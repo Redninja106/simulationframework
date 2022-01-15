@@ -113,7 +113,8 @@ public abstract class CanvasBase : ICanvas
                 poly[i] = polygon.ElementAt(i);
             }
 
-            poly[count - 1] = poly[0];
+            if (extraElement)
+                poly[count - 1] = poly[0];
 
             DrawPolygon(new Span<Vector2>(poly, count), color);
 
@@ -128,8 +129,9 @@ public abstract class CanvasBase : ICanvas
             {
                 poly[i] = polygon.ElementAt(i);
             }
-
-            poly[count - 1] = poly[0];
+            
+            if (extraElement)
+                poly[count - 1] = poly[0];
 
             DrawPolygon(poly, color);
         }

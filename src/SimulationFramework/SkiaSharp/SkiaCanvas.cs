@@ -17,7 +17,7 @@ internal sealed class SkiaCanvas : CanvasBase
     private readonly ISurface surface;
     private readonly SKCanvas canvas;
     private readonly bool owner;
-    private readonly SKPaint paint = new();
+    private readonly SKPaint paint = new() { IsAntialias = true};
     private readonly SKShader gradientShader = SKShader.CreateEmpty();
     private SKFont currentFont;
 
@@ -57,8 +57,17 @@ internal sealed class SkiaCanvas : CanvasBase
     protected override unsafe void DrawPolygonCore(Span<Vector2> polygon, Color color)
     {
         this.paint.Color = color.AsSKColor();
-        fixed (Vector2* p = polygon)
-            SkiaNativeApi.sk_canvas_draw_points(canvas.Handle, SKPointMode.Polygon, (IntPtr)polygon.Length, (SKPoint*)p, this.paint.Handle);
+        using var path = new SKPath();
+
+        bool shouldClose = this.CurrentState.DrawMode == DrawMode.Fill || this.CurrentState.DrawMode == DrawMode.Gradient;
+        path.FillType = SKPathFillType.EvenOdd;
+        fixed (Vector2* poly = polygon)
+        SkiaNativeApi.sk_path_add_poly(path.Handle, poly, polygon.Length, shouldClose);
+
+        canvas.DrawPath(path, paint);
+        
+        //fixed (Vector2* p = polygon)
+        //    SkiaNativeApi.sk_canvas_draw_points(canvas.Handle, SKPointMode.Polygon, (IntPtr)polygon.Length, (SKPoint*)p, this.paint.Handle);
     }
 
     protected override void DrawRectCore(Rectangle bounds, float radius, Color color)
