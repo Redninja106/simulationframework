@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.IMGUI;
 
+/// <summary>
+/// Provides customization options for ImGui windows.
+/// </summary>
 public enum WindowFlags
 {
+    /// <summary>
+    /// Default window
+    /// </summary>
     None = 0,
     /// <summary>
     /// Disable title-bar
