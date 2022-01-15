@@ -19,7 +19,7 @@ class MySimulation : Simulation
     {
         canvas.Clear(Color.CornflowerBlue);
 
-        fps.Enqueue(Debug.Framerate);
+        fps.Enqueue(Performance.Framerate);
 
         while (fps.Sum(x => 1f / x) * scale > this.TargetWidth)
         {
