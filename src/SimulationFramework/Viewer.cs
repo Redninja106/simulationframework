@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SimulationFramework.IMGUI;
 
-namespace SimulationFramework.IMGUI;
+namespace SimulationFramework;
 
 /// <summary>
 /// Simple window to display <see cref="IViewable"/> objects.
@@ -12,9 +13,9 @@ namespace SimulationFramework.IMGUI;
 public static class Viewer
 {
     public static bool IsOpen { get => isOpen; set => isOpen = value; }
-    
+
     private static bool isOpen;
-    
+
     private static List<WeakReference<IViewable>> history = new();
     private static List<(string name, List<IViewable> objects)> lists = new();
 
@@ -54,7 +55,7 @@ public static class Viewer
             isOpen = true;
 
         history.Add(new WeakReference<IViewable>(viewable));
-        
+
         currentlySelected = viewable;
     }
 
@@ -145,7 +146,7 @@ public static class Viewer
                                 Select(item);
                             }
                         }
-                        
+
                         ImGui.EndMenu();
                     }
                 }

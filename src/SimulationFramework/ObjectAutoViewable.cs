@@ -4,8 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using SimulationFramework.IMGUI;
 
-namespace SimulationFramework.IMGUI;
+namespace SimulationFramework;
 
 /// <summary>
 /// Acts as an IViewable which generates a layout for an object using reflection.
@@ -23,7 +24,7 @@ public sealed class ObjectAutoViewable : IViewable
     /// <param name="obj">The target object.</param>
     public ObjectAutoViewable(object obj)
     {
-        this.Object = obj;
+        Object = obj;
     }
 
     /// <inheritdoc/>
@@ -31,7 +32,7 @@ public sealed class ObjectAutoViewable : IViewable
     {
         var type = Object.GetType();
         var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        
+
         foreach (var prop in props)
         {
             ImGui.Text(prop.Name + " " + prop.Name + ": " + prop.GetValue(Object).ToString());
