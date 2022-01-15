@@ -10,7 +10,7 @@ namespace SimulationFramework;
 /// <summary>
 /// Simple window to display <see cref="IViewable"/> objects.
 /// </summary>
-public static class Viewer
+public static class ObjectViewer
 {
     public static bool IsOpen { get => isOpen; set => isOpen = value; }
 
@@ -22,7 +22,7 @@ public static class Viewer
     private static IViewable currentlySelected = null;
     private static Key keybind = Key.Unknown;
 
-    static Viewer()
+    static ObjectViewer()
     {
         AddList("Pinned Objects");
     }
