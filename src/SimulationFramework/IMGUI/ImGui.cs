@@ -49,18 +49,104 @@ public static class ImGui
     /// </summary>
     /// <param name="text">The text of the widget.</param>
     public static void Text(string text) => Provider.TextUnformatted(text);
+
+    /// <summary>
+    /// A text widget with the provided object as text.
+    /// </summary>
+    /// <param name="obj">The text of the widget.</param>
     public static void Text(object obj) => Provider.TextUnformatted(obj.ToString());
 
+    /// <summary>
+    /// A button with the provided label.
+    /// </summary>
+    /// <param name="label">The label of the button.</param>
+    /// <returns><see langword="true"/> if the button was pressed, <see langword="false"/>.</returns>
     public static bool Button(string label) => Button(label, default);
+
+    /// <summary>
+    /// A button with the provided label.
+    /// </summary>
+    /// <param name="label">The label of the button.</param>
+    /// <param name="size">The size of the button.</param>
+    /// <returns><see langword="true"/> if the button was clicked, <see langword="false"/>.</returns>
     public static bool Button(string label, Vector2 size) => Provider.Button(label, size);
+
+    /// <summary>
+    /// A button with FramePadding=(0,0) to easily embed within text.
+    /// </summary>
+    /// <param name="label">The label of the button.</param>
+    /// <returns><see langword="true"/> if the button was clicked, <see langword="false"/>.</returns>
     public static bool SmallButton(string label) => Provider.SmallButton(label);
+
+    /// <summary>
+    /// An image widget.
+    /// </summary>
+    /// <param name="surface">The surface of the widget.</param>
+    /// <param name="size">The size of the image.</param>
     public static void Image(ISurface surface, Vector2 size) => Image(surface, size, (0, 0), (1, 1));
+
+    /// <summary>
+    /// An image widget.
+    /// </summary>
+    /// <param name="surface">The surface of the widget.</param>
+    /// <param name="size">The size of the image.</param>
+    /// <param name="uv0">The top left corner of the region of the surface to draw, between (0, 0) and (1, 1).</param>
+    /// <param name="uv1">The bottom right corner of the region of the surface to draw, between (0, 0) and (1, 1).</param>
     public static void Image(ISurface surface, Vector2 size, Vector2 uv0, Vector2 uv1) => Image(surface, size, uv0, uv1, Color.White, Color.Black);
+
+    /// <summary>
+    /// An image widget.
+    /// </summary>
+    /// <param name="surface">The surface of the widget.</param>
+    /// <param name="size">The size of the image.</param>
+    /// <param name="tintColor">The tint of the image.</param>
+    /// <param name="borderColor">The color of the border of the image.</param>
     public static void Image(ISurface surface, Vector2 size, Color tintColor, Color borderColor) => Image(surface, size, (0, 0), (1, 1), tintColor, borderColor);
+
+    /// <summary>
+    /// An image widget.
+    /// </summary>
+    /// <param name="surface">The surface of the widget.</param>
+    /// <param name="size">The size of the image.</param>
+    /// <param name="uv0">The top left corner of the region of the surface to draw, between (0, 0) and (1, 1).</param>
+    /// <param name="uv1">The bottom right corner of the region of the surface to draw, between (0, 0) and (1, 1).</param>
+    /// <param name="tintColor">The tint of the image.</param>
+    /// <param name="borderColor">The color of the border of the image.</param>
     public static void Image(ISurface surface, Vector2 size, Vector2 uv0, Vector2 uv1, Color tintColor, Color borderColor) => Provider.Image(surface, size, uv0, uv1, tintColor, borderColor);
+
+    /// <summary>
+    /// A checkbox widget.
+    /// </summary>
+    /// <param name="label">The label of the check box</param>
+    /// <param name="value">The checked/unchecked state of the button.</param>
+    /// <returns>If the value of the checkbox was changed.</returns>
     public static bool CheckBox(string label, ref bool value) => Provider.CheckBox(label, ref value);
+
+    /// <summary>
+    /// A radio button widget. Usage example: <code>if (RadioButton("one", my_value==1)) { my_value = 1; }</code>
+    /// </summary>
+    /// <param name="label"></param>
+    /// <param name="active"></param>
+    /// <returns></returns>
     public static bool RadioButton(string label, bool active) => Provider.RadioButton(label, active);
+
+    /// <summary>
+    /// A progress bar widget.
+    /// </summary>
+    /// <param name="completion">The completion of the progress bar, between 0 and 1.</param>
+    public static void ProgressBar(float completion) => Provider.ProgressBar(completion, (float.MinValue, 0), "");
+    
+    /// <summary>
+    /// A progress bar widget.
+    /// </summary>
+    /// <param name="completion">The completion of the progress bar, between 0 and 1.</param>
+    /// <param name="size">The size of the progress bar.</param>
+    /// <param name="overlay">Text to be drawn over the progress bar.</param>
     public static void ProgressBar(float completion, Vector2 size, string overlay) => Provider.ProgressBar(completion, size, overlay);
+
+    /// <summary>
+    /// Draws a small circle and puts the next widget on the same line.
+    /// </summary>
     public static void Bullet() => Provider.Bullet();
 
 
@@ -189,10 +275,7 @@ public static class ImGui
         return value;
     }
     public unsafe static bool DragInt(string label, int value, int speed = 1, int min = 0, int max = 0, string format = "%d", SliderFlags flags = SliderFlags.None) => DragScalar(label, ref value, speed, min, max, format, flags);
-    public unsafe static bool DragScalar<T>(string label, ref T value, T speed = default, T min = default, T max = default, string format = null, SliderFlags flags = SliderFlags.None) where T : unmanaged
-    {
-        return DragScalar(label, new Span<T>(Unsafe.AsPointer(ref value), 1), speed, min, max, format, flags);
-    }
+    public unsafe static bool DragScalar<T>(string label, ref T value, T speed = default, T min = default, T max = default, string format = null, SliderFlags flags = SliderFlags.None) where T : unmanaged => DragScalar(label, new Span<T>(Unsafe.AsPointer(ref value), 1), speed, min, max, format, flags);
     public unsafe static bool DragScalar<T>(string label, Span<T> values, T speed = default, T min = default, T max = default, string format = null, SliderFlags flags = SliderFlags.None) where T : unmanaged
     {
         return Provider.DragScalar(label, values, speed, min, max, format, flags);
@@ -321,6 +404,20 @@ public static class ImGui
         return Provider.SliderScalar(label, values, min, max, format, flags);
     }
 
+    public static bool InputText(string label, ref string value, int maxSize, InputTextFlags flags = InputTextFlags.None)
+    {
+        return Provider.InputText(label, ref value, maxSize, flags);
+    }
+
+    public unsafe static bool InputFloat(string label, ref float value, float step = 0, float stepFast = 0, string format = "%.3f", InputTextFlags flags = InputTextFlags.None) => InputScalar(label, ref value, step, stepFast, format, flags);
+    public unsafe static bool InputFloat(string label, ref Vector2 value, float step = 0, float stepFast = 0, string format = "%.3f", InputTextFlags flags = InputTextFlags.None) => InputScalar(label, new Span<float>(Unsafe.AsPointer(ref value.X), 2), step, stepFast, format, flags);
+    public unsafe static bool InputFloat(string label, ref Vector3 value, float step = 0, float stepFast = 0, string format = "%.3f", InputTextFlags flags = InputTextFlags.None) => InputScalar(label, new Span<float>(Unsafe.AsPointer(ref value.X), 3), step, stepFast, format, flags);
+    public unsafe static bool InputFloat(string label, ref Vector4 value, float step = 0, float stepFast = 0, string format = "%.3f", InputTextFlags flags = InputTextFlags.None) => InputScalar(label, new Span<float>(Unsafe.AsPointer(ref value.X), 4), step, stepFast, format, flags);
+
+    public static bool InputInt(string label, ref int value, int step, int stepFast, string format = "%d", InputTextFlags flags = InputTextFlags.None) => InputScalar(label, ref value, step, stepFast, format, flags);
+
+    public unsafe static bool InputScalar<T>(string label, ref T value, T step, T stepFast, string format, InputTextFlags flags = InputTextFlags.None) where T : unmanaged => InputScalar(label, new Span<T>(Unsafe.AsPointer(ref value), 1), step, stepFast, format, flags);
+    public unsafe static bool InputScalar<T>(string label, Span<T> value, T step, T stepFast, string format, InputTextFlags flags = InputTextFlags.None) where T : unmanaged => Provider.InputScalar(label, value, step, stepFast, format, flags);
 
     public static bool BeginMenuBar() => Provider.BeginMenuBar();
     public static void EndMenuBar() => Provider.EndMenuBar();
