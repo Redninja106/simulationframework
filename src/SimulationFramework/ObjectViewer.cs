@@ -8,40 +8,30 @@ using SimulationFramework.IMGUI;
 namespace SimulationFramework;
 
 /// <summary>
-/// Simple window to display <see cref="IViewable"/> objects.
+/// A simple window to display <see cref="IViewable"/> objects. Default keybind is Alt+F3.
 /// </summary>
-public static class ObjectViewer
+public sealed class ObjectViewer : DebugWindow
 {
-    public static bool IsOpen { get => isOpen; set => isOpen = value; }
-
-    private static bool isOpen;
+    private static ObjectViewer Window => GetWindow<ObjectViewer>();
 
     private static List<WeakReference<IViewable>> history = new();
     private static List<(string name, List<IViewable> objects)> lists = new();
 
     private static IViewable currentlySelected = null;
-    private static Key keybind = Key.Unknown;
 
     static ObjectViewer()
     {
         AddList("Pinned Objects");
     }
 
-    /// <summary>
-    /// Toggles the viewer between being open and closed.
-    /// </summary>
-    public static void ToggleOpen()
+    internal ObjectViewer() : base("Object Viewer", WindowFlags.MenuBar)
     {
-        isOpen = !isOpen;
     }
 
-    /// <summary>
-    /// Sets the keybind to open the viewer.
-    /// </summary>
-    /// <param name="key">The key to toggle the window.</param>
-    public static void SetKeybind(Key key)
+    /// <inheritdoc/>
+    protected override (Key, Key) GetDefaultKeybind()
     {
-        keybind = key;
+        return (Key.F2, Key.Unknown);
     }
 
     /// <summary>
@@ -52,7 +42,7 @@ public static class ObjectViewer
     public static void Select(IViewable viewable, bool popup = false)
     {
         if (popup)
-            isOpen = true;
+            Window.IsOpen = true;
 
         history.Add(new WeakReference<IViewable>(viewable));
 
@@ -103,65 +93,57 @@ public static class ObjectViewer
         lists.Single(l => l.name == listName).objects.Add(item);
     }
 
-    /// <summary>
-    /// Lays out the viewer window.
-    /// </summary>
-    internal static void Layout()
+    /// <inheritdoc/>
+    protected override void OnLayout()
     {
-        if (Keyboard.IsKeyPressed(keybind))
-            ToggleOpen();
-
-        if (IsOpen && ImGui.BeginWindow("Object Viewer", ref isOpen, WindowFlags.MenuBar))
+        if (ImGui.BeginMenuBar())
         {
-            if (ImGui.BeginMenuBar())
+            if (ImGui.BeginMenu("History", true))
             {
-                if (ImGui.BeginMenu("History", true))
+                foreach (var item in history)
                 {
-                    foreach (var item in history)
+                    if (item.TryGetTarget(out IViewable viewable))
                     {
-                        if (item.TryGetTarget(out IViewable viewable))
+                        if (ImGui.MenuItem(viewable.ToString()))
                         {
-                            if (ImGui.MenuItem(viewable.ToString()))
-                            {
-                                Select(viewable);
-                            }
+                            Select(viewable);
                         }
-                        else
+                    }
+                    else
+                    {
+                        history.Remove(item);
+                    }
+                }
+
+                ImGui.EndMenu();
+            }
+
+            foreach (var (name, items) in lists)
+            {
+                if (ImGui.BeginMenu(name, true))
+                {
+                    foreach (var item in items)
+                    {
+                        if (ImGui.MenuItem(item.ToString()))
                         {
-                            history.Remove(item);
+                            Select(item);
                         }
                     }
 
                     ImGui.EndMenu();
                 }
-
-                foreach (var (name, items) in lists)
-                {
-                    if (ImGui.BeginMenu(name, true))
-                    {
-                        foreach (var item in items)
-                        {
-                            if (ImGui.MenuItem(item.ToString()))
-                            {
-                                Select(item);
-                            }
-                        }
-
-                        ImGui.EndMenu();
-                    }
-                }
-
-                ImGui.EndMenuBar();
             }
 
-            if (currentlySelected is not null)
-            {
-                currentlySelected.Layout();
-            }
-            else
-            {
-                ImGui.Text("No object is currently selected! Call Viewer.Select() to selected an object.");
-            }
+            ImGui.EndMenuBar();
+        }
+
+        if (currentlySelected is not null)
+        {
+            currentlySelected.Layout();
+        }
+        else
+        {
+            ImGui.Text("No object is currently selected! Call Viewer.Select() to selected an object.");
         }
         ImGui.EndWindow();
     }

@@ -4,12 +4,17 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SimulationFramework.IMGUI;
 
 namespace SimulationFramework;
 
-public static class DebugConsole
+public sealed class DebugConsole : DebugWindow
 {
-    public static float Framerate => Time.Provider.GetFramerate();
+    static List<string> lines = new();
+
+    internal DebugConsole() : base("Debug Console")
+    {
+    }
 
     public static bool SilenceWarnings { get; set; }
 
@@ -28,6 +33,24 @@ public static class DebugConsole
     [Conditional("DEBUG")]
     public static void Log(string message)
     {
-        Console.WriteLine(message);
+        lines.Add(message);
+    }
+
+    protected override (Key, Key) GetDefaultKeybind()
+    {
+        return (Key.F3, Key.Unknown);
+    }
+
+    protected override void OnLayout()
+    {
+        if (ImGui.BeginListBox("", new Vector2(-5,-5)))
+        {
+            foreach (var l in lines)
+            {
+                ImGui.Text(l);
+            }
+
+            ImGui.EndListBox();
+        }
     }
 }

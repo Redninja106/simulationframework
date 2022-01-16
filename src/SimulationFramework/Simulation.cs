@@ -147,7 +147,7 @@ public abstract class Simulation : IDisposable
 
             canvas.Flush();
 
-            Viewer.Layout();
+            DebugWindow.Layout();
 
             this.AfterRender?.Invoke();
 
