@@ -14,7 +14,7 @@ using ImGuiNET;
 using Silk.NET.OpenGL;
 using SimulationFramework.IMGUI;
 
-namespace SimulationFramework;
+namespace SimulationFramework.Environments.Desktop;
 
 /// <summary>
 /// Implements a simulation environment which runs the simulation in a window.
