@@ -15,6 +15,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FramerateGraph", "examples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework", "src\SimulationFramework\SimulationFramework.csproj", "{950FE21C-608E-40C8-9399-D55430499170}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.SkiaSharp", "src\SimulationFramework.SkiaSharp\SimulationFramework.SkiaSharp.csproj", "{19A4C158-4CCD-4536-84A5-A0A9BED9768E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.Direct2D", "src\SimulationFramework.Direct2D\SimulationFramework.Direct2D.csproj", "{BC9DD17B-A90A-46F7-8C07-1DA405BFED02}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Graphics", "Graphics", "{70E789B1-29FB-421E-A968-1ED75F680090}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Environments", "Environments", "{93BAFE7A-2079-49AC-96EC-0214CE007265}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Environments.Desktop", "src\SimulationFramework.Environments.Desktop\SimulationFramework.Environments.Desktop.csproj", "{A10B9069-415B-409E-92C6-6C63B3EAFF86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +47,18 @@ Global
 		{950FE21C-608E-40C8-9399-D55430499170}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{950FE21C-608E-40C8-9399-D55430499170}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{950FE21C-608E-40C8-9399-D55430499170}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19A4C158-4CCD-4536-84A5-A0A9BED9768E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19A4C158-4CCD-4536-84A5-A0A9BED9768E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19A4C158-4CCD-4536-84A5-A0A9BED9768E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19A4C158-4CCD-4536-84A5-A0A9BED9768E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC9DD17B-A90A-46F7-8C07-1DA405BFED02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC9DD17B-A90A-46F7-8C07-1DA405BFED02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC9DD17B-A90A-46F7-8C07-1DA405BFED02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC9DD17B-A90A-46F7-8C07-1DA405BFED02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A10B9069-415B-409E-92C6-6C63B3EAFF86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A10B9069-415B-409E-92C6-6C63B3EAFF86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A10B9069-415B-409E-92C6-6C63B3EAFF86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A10B9069-415B-409E-92C6-6C63B3EAFF86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +67,9 @@ Global
 		{D5CABA70-154E-4369-A79A-57D7E341B8A7} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 		{DB1DEA95-9159-4379-843B-4BD6EB3CDCAF} = {813D5E58-CE77-4969-B74A-A724228D8F73}
 		{849E7E38-9BD5-4CB3-8006-E14084E0BA11} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
+		{19A4C158-4CCD-4536-84A5-A0A9BED9768E} = {70E789B1-29FB-421E-A968-1ED75F680090}
+		{BC9DD17B-A90A-46F7-8C07-1DA405BFED02} = {70E789B1-29FB-421E-A968-1ED75F680090}
+		{A10B9069-415B-409E-92C6-6C63B3EAFF86} = {93BAFE7A-2079-49AC-96EC-0214CE007265}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09D3B2BE-AC85-48C2-835F-6B781E265873}
