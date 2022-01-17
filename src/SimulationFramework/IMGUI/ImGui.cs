@@ -462,4 +462,7 @@ public static class ImGui
 
     public static void OpenPopup(string id, PopupFlags flags = PopupFlags.None) => Provider.OpenPopup(id, flags);
     public static void CloseCurrentPopup() => Provider.CloseCurrentPopup();
+
+    public static void BeginTooltip() => Provider.BeginTooltip();
+    public static void EndTooltip() => Provider.EndToolTip();
 }
