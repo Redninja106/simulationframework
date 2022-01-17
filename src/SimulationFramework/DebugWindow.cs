@@ -8,7 +8,7 @@ using SimulationFramework.IMGUI;
 namespace SimulationFramework;
 
 /// <summary>
-/// Provides a main debug window (Via F1) to the application as well as functionality for other windows via ImGui.
+/// Provides a mechanism for debug windows using ImGui.
 /// </summary>
 public abstract class DebugWindow
 {
@@ -45,6 +45,7 @@ public abstract class DebugWindow
 
     static DebugWindow()
     {
+        RegisterWindow(new MainDebugWindow());
         RegisterWindow(new ObjectViewer());
         RegisterWindow(new DebugConsole());
         RegisterWindow(new PerformanceViewer());
@@ -150,10 +151,51 @@ public abstract class DebugWindow
     }
 
     /// <summary>
-    /// Gets the windows default keybinds to revert to them in the case that they were changed.
+    /// Gets the window's default keybinds, usually to revert to them in the case that they were changed.
     /// </summary>
+    /// <returns>The key and it's modifier. To omit the modifier, return Key.Unknown.</returns>
     protected virtual (Key, Key) GetDefaultKeybind()
     {
         return (Key.Unknown, Key.Unknown);
+    }
+
+    private class MainDebugWindow : DebugWindow
+    {
+        public MainDebugWindow() : base("Debug", WindowFlags.MenuBar)
+        {
+        }
+
+        protected override (Key, Key) GetDefaultKeybind()
+        {
+            return (Key.F1, Key.Unknown);
+        }
+
+        protected override void OnLayout()
+        {
+            if (ImGui.BeginMenuBar())
+            {
+                if (ImGui.BeginMenu("Window", true))
+                {
+                    foreach (var win in windows.Values)
+                    {
+                        if (win != this && ImGui.MenuItem(win.Title))
+                        {
+                            win.ToggleOpen();
+                        }
+                    }
+
+                    ImGui.EndMenu();
+                }
+
+                ImGui.EndMenuBar();
+            }
+
+            if (ImGui.TreeNode("System Info: "))
+            {
+                ImGui.Text("Name: " + Environment.MachineName);
+                ImGui.Text("OS: " + Environment.OSVersion);
+                ImGui.TreePop();
+            }
+        }
     }
 }
