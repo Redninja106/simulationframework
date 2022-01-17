@@ -72,11 +72,11 @@ public enum WindowFlags
     /// </summary>
     NoBringToFrontOnFocus = 1 << 13,
     /// <summary>
-    /// Always show vertical scrollbar (even if ContentSize.y < Size.y)
+    /// Always show vertical scrollbar (even if ContentSize.y &gt Size.y)
     /// </summary>
     AlwaysVerticalScrollbar = 1 << 14,
     /// <summary>
-    /// Always show horizontal scrollbar (even if ContentSize.x < Size.x)
+    /// Always show horizontal scrollbar (even if ContentSize.x &lt Size.x)
     /// </summary>
     AlwaysHorizontalScrollbar = 1 << 15,
     /// <summary>
