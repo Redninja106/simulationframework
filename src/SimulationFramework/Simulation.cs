@@ -126,15 +126,20 @@ public abstract class Simulation : IDisposable
 
         while (!environment.ShouldExit())
         {
+            PerformanceViewer.BeginTaskGroup("frame");
+
             environment.ProcessEvents();
+            PerformanceViewer.MarkTaskCompleted("ProcessEvents()");
 
             if (prevSize != environment.GetOutputSize())
             {
                 this.Resized?.Invoke(this.TargetWidth, this.TargetHeight);
                 prevSize = environment.GetOutputSize();
+                PerformanceViewer.MarkTaskCompleted("resizing");
             }
 
             this.BeforeRender?.Invoke();
+            PerformanceViewer.MarkTaskCompleted("BeforeRender()");
 
             using var canvas = Graphics.GetFrameCanvas();
 
@@ -143,15 +148,21 @@ public abstract class Simulation : IDisposable
             using (canvas.Push())
             {
                 this.OnRender(canvas);
+                PerformanceViewer.MarkTaskCompleted("OnRender()");
             }
 
             canvas.Flush();
+            PerformanceViewer.MarkTaskCompleted("Canvas.Flush()");
 
             DebugWindow.Layout();
 
             this.AfterRender?.Invoke();
+            PerformanceViewer.MarkTaskCompleted("AfterRender()");
 
             environment.EndFrame();
+            PerformanceViewer.MarkTaskCompleted("EndFrame()");
+
+            PerformanceViewer.EndTaskGroup();
         }
 
         DebugConsole.Log("OnUninitialize called");
