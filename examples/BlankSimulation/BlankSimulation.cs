@@ -12,6 +12,7 @@ internal class BlankSimulation : Simulation
 
     public override void OnRender(ICanvas canvas)
     {
+        canvas.Clear(Color.Black);
     }
 
     public override void OnUnitialize()
