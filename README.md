@@ -59,8 +59,10 @@ Next, to start drawing. The `ICanvas` provided in `OnRender()` contains a variet
 ```cs
 public override void OnRender(ICanvas canvas)
 {
-    canvas.Clear(Color.CornflowerBlue); // don't forget to clear the screen each frame!
-    canvas.DrawRect(Mouse.Position, (50, 50), Color.Red, Alignment.Center); // draw a 50 pixel wide red square at the mouse position
+    // don't forget to clear the screen each frame!
+    canvas.Clear(Color.CornflowerBlue); 
+    // draw a 50 pixel wide red square at the mouse position
+    canvas.DrawRect(Mouse.Position, (50, 50), Color.Red, Alignment.Center); 
 }
 ```
 To see more, go to [the wiki](https://github.com/Redninja106/simulationframework/wiki).
