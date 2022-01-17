@@ -18,10 +18,6 @@
 
   <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.86.0" />
-    <PackageReference Include="Silk.NET.Input" Version="2.11.0" />
-    <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.11.0" />
-    <PackageReference Include="Silk.NET.Windowing" Version="2.11.0" />
-    <PackageReference Include="SkiaSharp" Version="2.80.3" />
   </ItemGroup>
 
   <ItemGroup>

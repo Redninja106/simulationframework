@@ -6,4 +6,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Silk.NET.Input" Version="2.12.0" />
+    <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.12.0" />
+    <PackageReference Include="Silk.NET.Windowing" Version="2.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
+  </ItemGroup>
+
 </Project>
