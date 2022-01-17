@@ -42,4 +42,7 @@ public interface IInputProvider : ISimulationComponent
     bool IsKeyPressed(Key key);
 
     bool IsKeyReleased(Key key);
+
+    void OverrideCaptureState(bool captured);
+    void RestoreCaptureState();
 }

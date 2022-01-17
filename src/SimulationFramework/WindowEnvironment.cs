@@ -157,7 +157,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
 
         private void Scrolled(IMouse mouse, ScrollWheel scrollWheel)
         {
-            this.scrollWheel = (int)scrollWheel.Y;
+            this.scrollWheel += (int)scrollWheel.Y;
         }
 
         private void ButtonUp(IMouse mouse, SilkButton button)
@@ -192,9 +192,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
 
         private void BeforeRender()
         {
-            var io = ImGuiNET.ImGui.GetIO();
-            mouseCaptured = io.WantCaptureMouse;
-            keyboardCaptured = io.WantCaptureKeyboard;
+            RestoreCaptureState();
 
             var mouse = inputContext.Mice.FirstOrDefault();
 
@@ -203,11 +201,11 @@ public sealed class WindowEnvironment : ISimulationEnvironment
                 mouseDelta = ((Vector2)mouse.Position) - mousePosition;
                 mousePosition = mouse.Position;
             }
-
         }
 
         private void AfterRender()
         {
+            scrollWheel = 0;
             lastPressedButtons = new(pressedButtons);
             lastPressedKeys = new(pressedKeys);
         }
@@ -368,6 +366,18 @@ public sealed class WindowEnvironment : ISimulationEnvironment
                 return false;
 
             return !pressedKeys.Contains(ConvertKey(key)) && lastPressedKeys.Contains(ConvertKey(key));
+        }
+
+        public void OverrideCaptureState(bool captured)
+        {
+            this.keyboardCaptured = this.mouseCaptured = captured;
+        }
+
+        public void RestoreCaptureState()
+        {
+            var io = ImGuiNET.ImGui.GetIO();
+            mouseCaptured = io.WantCaptureMouse;
+            keyboardCaptured = io.WantCaptureKeyboard;
         }
     }
 
