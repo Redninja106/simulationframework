@@ -173,21 +173,16 @@ public abstract class Simulation : IDisposable
     }
 
     /// <summary>
-    /// Runs the provided simulation in the specified environment.
+    /// Runs the simulation in the specified environment.
     /// </summary>
-    /// <param name="simulation">The simulation to start.</param>
-    public static void Run(Simulation simulation, ISimulationEnvironment environment)
+    /// <param name="environment">The environment in which to run the simulation</param>
+    public void Run(ISimulationEnvironment environment)
     {
         if (environment is null)
             throw new Exception("Simulation must select an enviroment");
 
-        simulation.SetEnvironment(environment);
-        Current = simulation;
-        simulation.Start();
-    }
-
-    public static void RunWindowed(Simulation simulation, string title, int width, int height, bool resizable = true)
-    {
-        Run(simulation, new WindowEnvironment(title, width, height, resizable));
+        this.SetEnvironment(environment);
+        Current = this;
+        this.Start();
     }
 }
