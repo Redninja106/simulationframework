@@ -45,7 +45,7 @@ public sealed class ObjectViewer : DebugWindow
             Window.IsOpen = true;
 
         history.Add(new WeakReference<IViewable>(viewable));
-
+        
         currentlySelected = viewable;
     }
 
@@ -90,7 +90,12 @@ public sealed class ObjectViewer : DebugWindow
         if (!lists.Any(l => l.name == listName))
             AddList(listName);
 
-        lists.Single(l => l.name == listName).objects.Add(item);
+        var list = lists.Single(l => l.name == listName);
+
+        if (!list.objects.Contains(item))
+        {
+            list.objects.Add(item);
+        }
     }
 
     /// <inheritdoc/>
