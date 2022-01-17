@@ -8,7 +8,7 @@ using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
 
-internal sealed class SkiaGraphicsProvider : IGraphicsProvider
+public sealed class SkiaGraphicsProvider : IGraphicsProvider
 {
     internal readonly GRGlInterface glInterface;
     internal readonly GRContext backendContext;
