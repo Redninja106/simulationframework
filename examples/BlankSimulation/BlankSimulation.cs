@@ -1,8 +1,8 @@
 ﻿using SimulationFramework;
-using SimulationFramework.IMGUI;
+using SimulationFramework.Environments.Desktop;
 
 using var sim = new BlankSimulation();
-Simulation.RunWindowed(sim, "This is a Blank Simulation!", 1920, 1080);
+sim.RunWindowed("This is a Blank Simulation!", 1920, 1080);
 
 internal class BlankSimulation : Simulation
 {
