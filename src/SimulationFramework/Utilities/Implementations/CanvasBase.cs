@@ -60,6 +60,7 @@ public abstract class CanvasBase : ICanvas
     public CanvasBase()
     {
         // this.ResetState();
+        this.ResetState();
     }
 
     public void Clear(Color color)
@@ -178,7 +179,7 @@ public abstract class CanvasBase : ICanvas
         if (radius < 0)
             throw new ArgumentException("Radius may not be negative!", nameof(radius));
 
-        UpdateRelativeGradient(rect);
+        RefreshRelativeGradient(rect);
 
         if (CurrentState.DrawMode == DrawMode.Gradient && CurrentState.gradientTileMode == GradientTileMode.Stop)
         {
@@ -207,7 +208,7 @@ public abstract class CanvasBase : ICanvas
     public void DrawText(string text, float x, float y, Color color, Alignment alignment = Alignment.TopLeft) => DrawText(text, (x, y), color, alignment);
     public void DrawText(string text, Vector2 position, Color color, Alignment alignment = Alignment.TopLeft)
     {
-        UpdateRelativeGradient(new Rectangle(position, MeasureText(text), alignment));
+        RefreshRelativeGradient(new Rectangle(position, MeasureText(text), alignment));
 
         DrawTextCore(text, position, color, alignment);
     }
@@ -224,6 +225,27 @@ public abstract class CanvasBase : ICanvas
     public void Pop()
     {
         stateStack.Pop();
+        ApplyState(CurrentState);
+    }
+
+    private void ApplyState(CanvasState state)
+    {
+        UpdateTransformCore(state.Transform);
+        UpdateStrokeWidthCore(state.strokeWidth);
+        UpdateClipRectCore(state.clipRect);
+        UpdateDrawModeCore(state.DrawMode);
+        UpdateFontCore(state.fontName, state.styles, state.size);
+        if (!state.isGradientRelative)
+        {
+            if (state.isGradientRadial)
+            {
+                UpdateGradientRadialCore(state.gradientFrom, state.gradientTo.X, state.GradientStops, state.gradientTileMode);
+            }
+            else
+            {
+                UpdateGradientLinearCore(state.gradientFrom, state.gradientTo, state.GradientStops, state.gradientTileMode);
+            }
+        }
     }
 
     public CanvasSession Push()
@@ -240,7 +262,7 @@ public abstract class CanvasBase : ICanvas
     }
 
     public void Rotate(float angle) => Rotate(angle, 0, 0);
-    public void Rotate(float angle, float centerX, float centerY) => Rotate(angle, centerX, centerY);
+    public void Rotate(float angle, float centerX, float centerY) => Rotate(angle, (centerX, centerY));
     public void Rotate(float angle, Vector2 center)
     {
         this.Transform *= Matrix3x2.CreateRotation(angle, center);
@@ -394,6 +416,7 @@ public abstract class CanvasBase : ICanvas
             CurrentState.isGradientRadial = true;
             CurrentState.isGradientRelative = false;
             CurrentState.gradientFrom = position;
+            CurrentState.gradientTo.X = radius;
             CurrentState.gradientTileMode = tileMode;
             CurrentState.UpdateGradient(gradient);
         }
@@ -415,7 +438,7 @@ public abstract class CanvasBase : ICanvas
         CurrentState.UpdateGradient(gradient);
     }
 
-    private unsafe void UpdateRelativeGradient(Rectangle bounds)
+    private unsafe void RefreshRelativeGradient(Rectangle bounds)
     {
         if (CurrentState.isGradientRelative)
         {
