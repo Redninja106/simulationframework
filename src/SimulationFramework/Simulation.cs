@@ -22,6 +22,11 @@ public abstract class Simulation : IDisposable
     private readonly List<ISimulationComponent> components = new();
     private ISimulationEnvironment environment;
 
+    /// <summary>
+    /// This simulation's current angle mode.
+    /// </summary>
+    public AngleMode AngleMode { get; internal set; }
+
     public event Action Initialized;
     public event Action BeforeRender;
     public event Action AfterRender;
@@ -116,7 +121,9 @@ public abstract class Simulation : IDisposable
     {
         DebugConsole.Log("OnInitialize called!");
 
-        this.OnInitialize(new AppConfig(this));
+        var appConfig = new AppConfig(this);
+        appConfig.SetAngleMode(AngleMode.Degrees);
+        this.OnInitialize(appConfig);
 
         this.Initialized?.Invoke();
 
@@ -184,5 +191,55 @@ public abstract class Simulation : IDisposable
         this.SetEnvironment(environment);
         Current = this;
         this.Start();
+    }
+
+    /// <summary>
+    /// Converts an angle from this simulation's current mode to the specified mode.
+    /// </summary>
+    /// <param name="angle">The which to convert from the current mode.</param>
+    /// <param name="targetMode">The mode to convert the angle to.</param>
+    /// <returns>An angle equivalent to <paramref name="angle"/>, in the units specified by <paramref name="targetMode"/>.</returns>
+    public static float ConvertFromCurrentAngleMode(float angle, AngleMode targetMode)
+    {
+        if (targetMode == Current.AngleMode)
+            return angle;
+
+        float degrees = Current.AngleMode switch
+        {
+            AngleMode.Radians => angle * 180 / MathF.PI,
+            AngleMode.Revolutions => angle * 360,
+            AngleMode.Gradians => angle * (365 / 400),
+            _ => angle
+        };
+
+        return targetMode switch
+        {
+            AngleMode.Radians => degrees / 180 * MathF.PI,
+            AngleMode.Revolutions => degrees / 360f,
+            AngleMode.Gradians => degrees * (400 * 365),
+            _ => degrees,
+        };
+    }
+
+    public static float ConvertToCurrrentAngleMode(float angle, AngleMode sourceMode)
+    {
+        if (sourceMode == Current.AngleMode)
+            return angle;
+
+        float degrees = sourceMode switch
+        {
+            AngleMode.Radians => angle * 180 / MathF.PI,
+            AngleMode.Revolutions => angle * 360,
+            AngleMode.Gradians => angle * (365 / 400),
+            _ => angle
+        };
+
+        return Current.AngleMode switch
+        {
+            AngleMode.Radians => degrees / 180 * MathF.PI,
+            AngleMode.Revolutions => degrees / 360f,
+            AngleMode.Gradians => degrees * (400 * 365),
+            _ => degrees,
+        };
     }
 }
