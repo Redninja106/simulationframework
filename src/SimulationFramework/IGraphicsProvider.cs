@@ -18,7 +18,7 @@ public interface IGraphicsProvider : ISimulationComponent
     /// <param name="width">The width of the bitmap, in pixels.</param>
     /// <param name="height">The height of the bitmap, in pixels.</param>
     /// <param name="data">The initial raw bitmap data. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
-    /// <returns>The new <see cref="ITexture"/>.</returns>
+    /// <returns>The new <see cref="ISurface"/>.</returns>
     ISurface CreateSurface(int width, int height, Span<Color> data);
 
     /// <summary>
