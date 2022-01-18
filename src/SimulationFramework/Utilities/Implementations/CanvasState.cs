@@ -11,7 +11,7 @@ public unsafe sealed class CanvasState : IDisposable
 {
     private readonly CanvasBase canvas;
 
-    public Matrix3x2 Transform { get; set; }
+    public Matrix3x2 Transform { get; set; } = Matrix3x2.Identity;
     public DrawMode DrawMode { get; set; }
     public float strokeWidth;
     public Rectangle clipRect;
