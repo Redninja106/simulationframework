@@ -41,7 +41,7 @@ public abstract class CanvasBase : ICanvas
 
     protected abstract void ClearCore(Color color);
     protected abstract void DrawLineCore(Vector2 p1, Vector2 p2, Color color);
-    protected abstract void DrawEllipseCore(Rectangle bounds, float begin, float end, Color color);
+    protected abstract void DrawEllipseCore(Rectangle bounds, float begin, float end, bool includeCenter, Color color);
     protected abstract void DrawPolygonCore(Span<Vector2> polygon, Color color);
     protected abstract void DrawRectCore(Rectangle bounds, float radius, Color color);
     protected abstract void DrawSurfaceCore(ISurface surface, Rectangle source, Rectangle destination);
@@ -70,21 +70,21 @@ public abstract class CanvasBase : ICanvas
     
     public void DrawEllipse(float x, float y, float radiusX, float radiusY, Color color, Alignment alignment = Alignment.Center) => DrawEllipse((x, y), (radiusX, radiusY), color, alignment);
     public void DrawEllipse(Vector2 position, Vector2 radii, Color color, Alignment alignment = Alignment.Center) => DrawEllipse(new Rectangle(position, radii * 2, alignment), color);
-    public void DrawEllipse(Rectangle bounds, Color color) => DrawEllipse(bounds, 0, MathF.PI * 2, color);
-    public void DrawEllipse(float x, float y, float radiusX, float radiusY, float begin, float end, Color color, Alignment alignment = Alignment.TopLeft) => DrawEllipse((x, y), (radiusX, radiusY), begin, end, color, alignment);
-    public void DrawEllipse(Vector2 position, Vector2 radii, float begin, float end, Color color, Alignment alignment = Alignment.TopLeft) => DrawEllipse(new Rectangle(position, radii * 2, alignment), begin, end, color);
-    public void DrawEllipse(Rectangle bounds, float begin, float end, Color color)
+    public void DrawEllipse(Rectangle bounds, Color color) => DrawEllipse(bounds, 0, Simulation.ConvertToCurrrentAngleMode(MathF.PI * 2, AngleMode.Radians), false, color);
+    public void DrawEllipse(float x, float y, float radiusX, float radiusY, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center) => DrawEllipse((x, y), (radiusX, radiusY), begin, end, includeCenter, color, alignment);
+    public void DrawEllipse(Vector2 position, Vector2 radii, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center) => DrawEllipse(new Rectangle(position, radii * 2, alignment), begin, end, includeCenter, color);
+    public void DrawEllipse(Rectangle bounds, float begin, float end, bool includeCenter, Color color)
     {
         if (CurrentState.DrawMode == DrawMode.Gradient && CurrentState.gradientTileMode == GradientTileMode.Stop)
         {
             using (this.Push())
             {
                 this.SetDrawMode(DrawMode.Fill);
-                this.DrawEllipseCore(bounds, begin, end, color);
+                this.DrawEllipseCore(bounds, begin, end, includeCenter, color);
             }
         }
 
-        DrawEllipseCore(bounds, begin, end, color);
+        DrawEllipseCore(bounds, begin, end, includeCenter, color);
     }
 
     public void DrawLine(float x1, float y1, float x2, float y2, Color color) => DrawLine((x1, y1), (x2, y2), color);

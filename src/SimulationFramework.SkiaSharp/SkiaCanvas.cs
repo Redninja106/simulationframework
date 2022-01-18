@@ -17,7 +17,7 @@ internal sealed class SkiaCanvas : CanvasBase
     private readonly ISurface surface;
     private readonly SKCanvas canvas;
     private readonly bool owner;
-    private readonly SKPaint paint = new() { IsAntialias = true};
+    private readonly SKPaint paint = new() { IsAntialias = true };
     private readonly SKShader gradientShader = SKShader.CreateEmpty();
     private SKFont currentFont;
 
@@ -34,7 +34,7 @@ internal sealed class SkiaCanvas : CanvasBase
         canvas.Clear(color.AsSKColor());
     }
 
-    protected override void DrawEllipseCore(Rectangle bounds, float begin, float end, Color color)
+    protected override void DrawEllipseCore(Rectangle bounds, float begin, float end, bool includeCenter, Color color)
     {
         this.paint.Color = color.AsSKColor();
 
@@ -44,7 +44,7 @@ internal sealed class SkiaCanvas : CanvasBase
         }
         else
         {
-            canvas.DrawArc(bounds.AsSKRect(), begin, end, true, paint);
+            canvas.DrawArc(bounds.AsSKRect(), Simulation.ConvertFromCurrentAngleMode(begin, AngleMode.Degrees), Simulation.ConvertFromCurrentAngleMode(begin - end, AngleMode.Degrees), includeCenter, paint);
         }
     }
 
@@ -62,7 +62,7 @@ internal sealed class SkiaCanvas : CanvasBase
         bool shouldClose = this.CurrentState.DrawMode == DrawMode.Fill || this.CurrentState.DrawMode == DrawMode.Gradient;
         path.FillType = SKPathFillType.EvenOdd;
         fixed (Vector2* poly = polygon)
-        SkiaNativeApi.sk_path_add_poly(path.Handle, poly, polygon.Length, shouldClose);
+            SkiaNativeApi.sk_path_add_poly(path.Handle, poly, polygon.Length, shouldClose);
 
         canvas.DrawPath(path, paint);
         
@@ -115,7 +115,7 @@ internal sealed class SkiaCanvas : CanvasBase
     {
         SKRect bounds = default;
         paint.MeasureText(text, ref bounds);
-        return (bounds.Left, bounds.Top);
+        return (bounds.Width, bounds.Height);
     }
 
     protected override bool UpdateClipRectCore(Rectangle rect)
@@ -150,6 +150,8 @@ internal sealed class SkiaCanvas : CanvasBase
     protected override bool UpdateFontCore(string fontName, TextStyles styles, float size)
     {
         this.currentFont = provider.GetFont(fontName, styles, (int)size);
+        paint.TextSize = size;
+        paint.Typeface = currentFont.Typeface;
         return true;
     }
     
