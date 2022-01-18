@@ -45,6 +45,11 @@ public struct Vector2 : IEquatable<Vector2>
         return MathF.Sqrt(LengthSquared());
     }
 
+    public readonly void Deconstruct(out float x, out float y)
+    {
+        x = this.X;
+        y = this.Y;
+    }
 
     public override int GetHashCode()
     {
@@ -73,6 +78,7 @@ public struct Vector2 : IEquatable<Vector2>
     {
         return (MathF.Cos(angle), MathF.Sin(angle));
     }
+
 
     public static implicit operator (float, float)(Vector2 vector) => (vector.X, vector.Y);
     public static implicit operator Vector2((float, float) values) => new(values.Item1, values.Item2);
