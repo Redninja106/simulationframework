@@ -264,7 +264,7 @@ public abstract class CanvasBase : ICanvas
     public void Rotate(float angle, float centerX, float centerY) => Rotate(angle, (centerX, centerY));
     public void Rotate(float angle, Vector2 center)
     {
-        this.Transform *= Matrix3x2.CreateRotation(angle, center);
+        this.Transform = Matrix3x2.CreateRotation(angle, center) * this.Transform;
     }
 
     public void Scale(float scale) => Scale(scale, scale);
@@ -273,7 +273,7 @@ public abstract class CanvasBase : ICanvas
     public void Scale(Vector2 scale) => Scale(scale.X, scale.Y, 0, 0);
     public void Scale(Vector2 scale, Vector2 center)
     {
-        this.Transform *= Matrix3x2.CreateScale(scale, center);
+        this.Transform = Matrix3x2.CreateScale(scale, center) * this.Transform;
     }
 
     public void SetClipRect(float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => SetClipRect((x, y), (width, height), alignment);
@@ -465,7 +465,7 @@ public abstract class CanvasBase : ICanvas
     public void Translate(float x, float y) => Translate((x, y));
     public void Translate(Vector2 translation)
     {
-        this.Transform *= Matrix3x2.CreateTranslation(translation);
+        this.Transform = Matrix3x2.CreateTranslation(translation) * this.Transform;
     }
 
     public virtual void Dispose()
