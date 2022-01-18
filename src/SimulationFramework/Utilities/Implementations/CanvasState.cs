@@ -13,12 +13,12 @@ public unsafe sealed class CanvasState : IDisposable
 
     public Matrix3x2 Transform { get; set; } = Matrix3x2.Identity;
     public DrawMode DrawMode { get; set; }
-    public float strokeWidth;
+    public float strokeWidth = 2;
     public Rectangle clipRect;
 
-    public string fontName;
-    public TextStyles styles;
-    public float size;
+    public string fontName = "arial";
+    public TextStyles styles = TextStyles.Default;
+    public float size = 12;
 
     public Span<GradientStop> GradientStops => gradientStops.AsSpan();
 
