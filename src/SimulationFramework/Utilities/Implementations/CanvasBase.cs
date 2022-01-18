@@ -250,8 +250,7 @@ public abstract class CanvasBase : ICanvas
 
     public CanvasSession Push()
     {
-        stateStack.Push(CurrentState);
-        CurrentState.Clone();
+        stateStack.Push(CurrentState.Clone());
         return new CanvasSession(this);
     }
 
