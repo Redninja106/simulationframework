@@ -4,6 +4,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Copyright></Copyright>
+    <Description>The desktop environment for SimulationFramework.</Description>
+    <PackageIcon>logo-128x128.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
+    <Version>0.0.3</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +22,13 @@
   <ItemGroup>
     <ProjectReference Include="..\SimulationFramework.SkiaSharp\SimulationFramework.SkiaSharp.csproj" />
     <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="logo-128x128.png">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
   </ItemGroup>
 
 </Project>
