@@ -14,7 +14,7 @@ using ImGuiNET;
 using Silk.NET.OpenGL;
 using SimulationFramework.IMGUI;
 
-namespace SimulationFramework.Environments.Desktop;
+namespace SimulationFramework.Desktop;
 
 /// <summary>
 /// Implements a simulation environment which runs the simulation in a window.
@@ -143,7 +143,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
 
         public WindowInputProvider(IWindow window)
         {
-            this.inputContext = window.CreateInput();
+            inputContext = window.CreateInput();
 
             var keyboard = inputContext.Keyboards.FirstOrDefault();
             var mouse = inputContext.Mice.FirstOrDefault();
@@ -198,7 +198,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
 
             if (mouse != null)
             {
-                mouseDelta = ((Vector2)mouse.Position) - mousePosition;
+                mouseDelta = (Vector2)mouse.Position - mousePosition;
                 mousePosition = mouse.Position;
             }
         }
@@ -245,7 +245,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
             if (mouseCaptured)
                 return false;
 
-            return this.pressedButtons.Contains(ConvertButton(key));
+            return pressedButtons.Contains(ConvertButton(key));
         }
 
         private static SilkKey ConvertKey(Key key)
@@ -317,7 +317,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
                 Key.RightArrow => SilkKey.Right,
                 Key.Insert => SilkKey.Insert,
                 Key.Home => SilkKey.Home,
-                Key.PageUp  => SilkKey.PageUp,
+                Key.PageUp => SilkKey.PageUp,
                 Key.Delete => SilkKey.Delete,
                 Key.End => SilkKey.End,
                 Key.PageDown => SilkKey.PageDown,
@@ -370,7 +370,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
 
         public void OverrideCaptureState(bool captured)
         {
-            this.keyboardCaptured = this.mouseCaptured = captured;
+            keyboardCaptured = mouseCaptured = captured;
         }
 
         public void RestoreCaptureState()
@@ -392,7 +392,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
 
         public void Dispose()
         {
-            
+
             imguiController.Dispose();
         }
 

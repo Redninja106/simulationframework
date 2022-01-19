@@ -9,8 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\SimulationFramework.Environments.Desktop\SimulationFramework.Environments.Desktop.csproj" />
-    <ProjectReference Include="..\..\src\SimulationFramework.SkiaSharp\SimulationFramework.SkiaSharp.csproj" />
+    <ProjectReference Include="..\..\src\SimulationFramework.Desktop\SimulationFramework.Desktop.csproj" />
     <ProjectReference Include="..\..\src\SimulationFramework\SimulationFramework.csproj" />
   </ItemGroup>
 

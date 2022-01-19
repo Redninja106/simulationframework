@@ -1,5 +1,5 @@
 ﻿using SimulationFramework;
-using SimulationFramework.Environments.Desktop;
+using SimulationFramework.Desktop;
 
 using var sim = new BlankSimulation();
 sim.RunWindowed("This is a Blank Simulation!", 1920, 1080);

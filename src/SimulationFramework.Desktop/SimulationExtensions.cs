@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Environments.Desktop;
+namespace SimulationFramework.Desktop;
 
 public static class SimulationExtensions
 {
