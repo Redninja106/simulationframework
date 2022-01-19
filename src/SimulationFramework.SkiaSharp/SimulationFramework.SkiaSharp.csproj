@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Description>The SkiaSharp graphics backend for SimulationFramework</Description>
+    <Description>The SkiaSharp graphics backend for SimulationFramework.</Description>
     <Copyright></Copyright>
     <PackageIcon>logo-128x128.png</PackageIcon>
     <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
@@ -13,6 +13,8 @@
     <Version>0.0.3</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Ryan Andersen</Authors>
+    <Company />
   </PropertyGroup>
 
   <ItemGroup>
