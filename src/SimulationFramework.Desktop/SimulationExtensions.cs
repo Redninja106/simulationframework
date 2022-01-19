@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SimulationFramework.Environments.Desktop;
 
-namespace SimulationFramework.Environments.Desktop;
+namespace SimulationFramework.Desktop;
 
 public static class SimulationExtensions
 {
