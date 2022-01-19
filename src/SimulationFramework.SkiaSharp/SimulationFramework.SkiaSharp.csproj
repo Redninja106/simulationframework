@@ -1,11 +1,26 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Description>The SkiaSharp graphics backend for SimulationFramework</Description>
+    <Copyright></Copyright>
+    <PackageIcon>logo-128x128.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
+    <AssemblyVersion></AssemblyVersion>
+    <Version>0.0.3</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\SimulationFramework.Desktop\logo-128x128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="SkiaSharp" Version="2.80.3" />
@@ -13,6 +28,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="logo-128x128.png">
+      <PackagePath>\</PackagePath>
+      <Pack>True</Pack>
+    </None>
   </ItemGroup>
 
 </Project>
