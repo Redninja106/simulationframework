@@ -23,7 +23,7 @@ SimulationFramework is a framework for graphical desktop apps using .NET. It is 
 
 To start, create a new Console App using .NET 6. Add the [SimulationFramework Nuget Package](https://www.nuget.org/packages/SimulationFramework/0.0.2) using Visual Studio or the following command:
 ```
-dotnet add package SimulationFramework --version 0.0.2
+dotnet add package SimulationFramework --version 0.0.3
 ```
 
 Next, create a class which inherits from `Simulation`. `Simulation` has virtual methods that can be overridden to add functionality to your simulation.
