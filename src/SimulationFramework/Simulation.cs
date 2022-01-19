@@ -52,7 +52,7 @@ public abstract class Simulation : IDisposable
     /// <summary>
     /// Called when the simulation should uninitialize.
     /// </summary>
-    public abstract void OnUnitialize();
+    public virtual void OnUnitialize() { }
 
     /// <summary>
     /// Creates a new instance of the <see cref="Simulation"/> class.
@@ -221,7 +221,7 @@ public abstract class Simulation : IDisposable
         };
     }
 
-    public static float ConvertToCurrrentAngleMode(float angle, AngleMode sourceMode)
+    public static float ConvertToCurrentAngleMode(float angle, AngleMode sourceMode)
     {
         if (sourceMode == Current.AngleMode)
             return angle;

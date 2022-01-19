@@ -70,7 +70,7 @@ public abstract class CanvasBase : ICanvas
     
     public void DrawEllipse(float x, float y, float radiusX, float radiusY, Color color, Alignment alignment = Alignment.Center) => DrawEllipse((x, y), (radiusX, radiusY), color, alignment);
     public void DrawEllipse(Vector2 position, Vector2 radii, Color color, Alignment alignment = Alignment.Center) => DrawEllipse(new Rectangle(position, radii * 2, alignment), color);
-    public void DrawEllipse(Rectangle bounds, Color color) => DrawEllipse(bounds, 0, Simulation.ConvertToCurrrentAngleMode(MathF.PI * 2, AngleMode.Radians), false, color);
+    public void DrawEllipse(Rectangle bounds, Color color) => DrawEllipse(bounds, 0, Simulation.ConvertToCurrentAngleMode(MathF.PI * 2, AngleMode.Radians), false, color);
     public void DrawEllipse(float x, float y, float radiusX, float radiusY, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center) => DrawEllipse((x, y), (radiusX, radiusY), begin, end, includeCenter, color, alignment);
     public void DrawEllipse(Vector2 position, Vector2 radii, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center) => DrawEllipse(new Rectangle(position, radii * 2, alignment), begin, end, includeCenter, color);
     public void DrawEllipse(Rectangle bounds, float begin, float end, bool includeCenter, Color color)
