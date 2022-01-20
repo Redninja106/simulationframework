@@ -58,7 +58,14 @@ class DrawingShapesSimulation : Simulation
         canvas.DrawEllipse(300, 0, 50, 50, 0, radius, true, Color.LightGray);
 
         radius = MathF.Sin(Time.TotalTime) * MathF.Tau;
+
+        canvas.SetFillTexture(surface, TileMode.Mirror);
+        canvas.SetDrawMode(DrawMode.Textured);
+
+        (x, y) = ImGui.DragFloat("pos", (x, y));
+        canvas.DrawRect(x,y , 300, 300, Color.OldLace, Alignment.Center);
     }
+    float x, y;
 
     public override void OnUnitialize()
     {

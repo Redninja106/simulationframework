@@ -609,4 +609,11 @@ public interface ICanvas : IDisposable
     /// <param name="scale">The scale to transform the transformation matrix by on the x and y axes.</param>
     /// <param name="center">The center of the scaling.</param>
     void Scale(Vector2 scale, Vector2 center);
+
+    /// <summary>
+    /// Sets the texture to use when drawing with <see cref="DrawMode.Textured"/>.
+    /// </summary>
+    /// <param name="surface">The surface to use.</param>
+    /// <param name="tileMode">Specifies how pixels outside the texture are filled.</param>
+    void SetFillTexture(ISurface surface, TileMode tileMode = TileMode.Clamp);
 }

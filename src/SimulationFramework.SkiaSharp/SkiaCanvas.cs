@@ -19,6 +19,7 @@ internal sealed class SkiaCanvas : CanvasBase
     private readonly bool owner;
     private readonly SKPaint paint = new() { IsAntialias = true };
     private readonly SKShader gradientShader = SKShader.CreateEmpty();
+    private SKShader textureShader;
     private SKFont currentFont;
 
     public SkiaCanvas(SkiaGraphicsProvider provider, ISurface surface, SKCanvas canvas, bool owner)
@@ -140,8 +141,47 @@ internal sealed class SkiaCanvas : CanvasBase
                 paint.Style = SKPaintStyle.Fill;
                 paint.Shader = this.gradientShader;
                 break;
+            case DrawMode.Textured:
+                paint.Style = SKPaintStyle.Fill;
+                this.paint.Shader = textureShader;
+                break;
             default:
                 return false;
+        }
+
+        return true;
+    }
+
+    protected override bool UpdateFillTextureCore(ISurface surface, TileMode tileMode)
+    {
+        textureShader?.Dispose();
+        
+        if (surface is null)
+            return true;
+
+        SKShaderTileMode skTileMode;
+        switch (tileMode)
+        {
+            case TileMode.Clamp:
+                skTileMode = SKShaderTileMode.Clamp;
+                break;
+            case TileMode.Repeat:
+                skTileMode = SKShaderTileMode.Repeat;
+                break;
+            case TileMode.Mirror:
+                skTileMode = SKShaderTileMode.Mirror;
+                break;
+            case TileMode.Stop:
+                skTileMode = SKShaderTileMode.Decal;
+                break;
+            default:
+                throw new Exception();
+        }
+
+        textureShader = (surface as SkiaSurface).bitmap.ToShader(skTileMode, skTileMode);
+        if (CurrentState.DrawMode == DrawMode.Textured)
+        {
+            this.paint.Shader = textureShader;
         }
 
         return true;

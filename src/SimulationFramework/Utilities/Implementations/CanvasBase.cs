@@ -53,6 +53,7 @@ public abstract class CanvasBase : ICanvas
     protected abstract bool UpdateGradientRadialCore(Vector2 position, float radius, Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp);
     protected abstract bool UpdateStrokeWidthCore(float strokeWidth);
     protected abstract bool UpdateTransformCore(Matrix3x2 transform);
+    protected abstract bool UpdateFillTextureCore(ISurface surface, TileMode tileMode);
     protected abstract Vector2 MeasureTextCore(string text);
     protected abstract void FlushCore();
     protected abstract ISurface GetSurfaceCore();
@@ -235,6 +236,7 @@ public abstract class CanvasBase : ICanvas
         UpdateClipRectCore(state.clipRect);
         UpdateDrawModeCore(state.DrawMode);
         UpdateFontCore(state.fontName, state.styles, state.size);
+        UpdateFillTextureCore(state.surface, state.surfaceTileMode);
         if (!state.isGradientRelative)
         {
             if (state.isGradientRadial)
@@ -481,4 +483,12 @@ public abstract class CanvasBase : ICanvas
         }
     }
 
+    public void SetFillTexture(ISurface surface, TileMode tileMode = TileMode.Clamp)
+    {
+        if (UpdateFillTextureCore(surface, tileMode))
+        {
+            CurrentState.surface = surface;
+            CurrentState.surfaceTileMode = tileMode;
+        }
+    }
 }

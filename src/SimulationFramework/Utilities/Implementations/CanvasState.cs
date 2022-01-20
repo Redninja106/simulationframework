@@ -30,6 +30,8 @@ public unsafe sealed class CanvasState : IDisposable
     public TileMode gradientTileMode;
     public bool isGradientRelative;
     public bool isGradientRadial;
+    public ISurface surface;
+    public TileMode surfaceTileMode;
 
     public CanvasState(CanvasBase canvas)
     {
