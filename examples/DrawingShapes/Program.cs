@@ -8,8 +8,11 @@ sim.RunWindowed("Shapes!", 1920, 1080);
 
 class DrawingShapesSimulation : Simulation
 {
+    ISurface surface;
+
     public override void OnInitialize(AppConfig config)
     {
+        surface = Graphics.LoadSurface("logo-512x512.png");
         config.SetAngleMode(AngleMode.Radians);
     }
 
@@ -18,6 +21,8 @@ class DrawingShapesSimulation : Simulation
     {
         canvas.Clear(Color.GreenYellow);
 
+        canvas.DrawSurface(surface, Alignment.TopLeft);
+       
         canvas.Translate(canvas.Width / 2, canvas.Height / 2);
 
         canvas.DrawRect((10, 10), (100, 100), Color.OrangeRed);
