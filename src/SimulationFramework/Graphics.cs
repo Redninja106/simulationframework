@@ -38,7 +38,7 @@ public static class Graphics
     /// <summary>
     /// Loads a surface from raw, encoded file data.
     /// </summary>
-    /// <param name="file">An arrot of the bytes of a .PNG image file.</param>
+    /// <param name="encodedBytes">An array of the bytes of a supported image file.</param>
     /// <returns>The new surface.</returns>
     public static ISurface LoadSurface(byte[] encodedBytes)
     {
@@ -48,7 +48,7 @@ public static class Graphics
     /// <summary>
     /// Loads a surface from raw, encoded file data.
     /// </summary>
-    /// <param name="file">A span of the bytes of a .PNG image file.</param>
+    /// <param name="encodedBytes">A span of the bytes of a supported image file.</param>
     /// <returns>The new surface.</returns>
     public static ISurface LoadSurface(Span<byte> encodedBytes)
     {
