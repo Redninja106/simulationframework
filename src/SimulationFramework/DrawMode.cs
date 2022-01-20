@@ -16,7 +16,11 @@ public enum DrawMode
     /// </summary>
     Border,
     /// <summary>
-    /// Shapes should be filled With a gradient.
+    /// Shapes should be filled with a gradient.
     /// </summary>
     Gradient,
+    /// <summary>
+    /// Shapes should be filled with a surface. 
+    /// </summary>
+    Textured
 }
