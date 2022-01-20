@@ -616,4 +616,12 @@ public interface ICanvas : IDisposable
     /// <param name="surface">The surface to use.</param>
     /// <param name="tileMode">Specifies how pixels outside the texture are filled.</param>
     void SetFillTexture(ISurface surface, TileMode tileMode = TileMode.Clamp);
+
+    /// <summary>
+    /// Sets the texture to use when drawing with <see cref="DrawMode.Textured"/>.
+    /// </summary>
+    /// <param name="surface">The surface to use.</param>
+    /// <param name="transform">The transformation to apply to the image before a shape is filled.</param>
+    /// <param name="tileMode">Specifies how pixels outside the texture are filled.</param>
+    void SetFillTexture(ISurface surface, Matrix3x2 transform, TileMode tileMode = TileMode.Clamp);
 }

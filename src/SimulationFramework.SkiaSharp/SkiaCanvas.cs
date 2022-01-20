@@ -152,7 +152,7 @@ internal sealed class SkiaCanvas : CanvasBase
         return true;
     }
 
-    protected override bool UpdateFillTextureCore(ISurface surface, TileMode tileMode)
+    protected override bool UpdateFillTextureCore(ISurface surface, Matrix3x2 transform, TileMode tileMode)
     {
         textureShader?.Dispose();
         
@@ -178,7 +178,7 @@ internal sealed class SkiaCanvas : CanvasBase
                 throw new Exception();
         }
 
-        textureShader = (surface as SkiaSurface).bitmap.ToShader(skTileMode, skTileMode);
+        textureShader = (surface as SkiaSurface).bitmap.ToShader(skTileMode, skTileMode, transform.AsSKMatrix());
         if (CurrentState.DrawMode == DrawMode.Textured)
         {
             this.paint.Shader = textureShader;
