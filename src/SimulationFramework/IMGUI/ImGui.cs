@@ -149,18 +149,17 @@ public static class ImGui
     /// </summary>
     public static void Bullet() => Provider.Bullet();
 
-
     /// <summary>
     /// A 1-dimensional floating-point slider widget. CTRL+Click to turn it into an input box (unless <see cref="SliderFlags.AlwaysClamp"/> is specified).
     /// </summary>
     /// <param name="label">The slider's label.</param>
     /// <param name="value">A reference to the value which the slider should display.</param>
     /// <param name="speed">The amount which the slider should change for each pixel the mouse moves while dragging.</param>
-    /// <param name="min">The minimum value the slider will allow. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display the value of the slider.</param>
     /// <param name="flags">A set of <see cref="SliderFlags"/> value which effect the behavior of the slider.</param>
-    /// <returns><see langword="true"/> if the slider's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/>if the slider was modified, otherwise <see langword="false"/>.</returns>
     public unsafe static bool DragFloat(string label, ref float value, float speed = 1.0f, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None)
     {
         return Provider.DragScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 1), speed, min, max, format, flags);
@@ -171,8 +170,8 @@ public static class ImGui
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">The value which the slider should display.</param>
     /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display the value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns><see langword="true"/> if the slider's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>
@@ -187,11 +186,11 @@ public static class ImGui
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">A reference to the value which the slider should display.</param>
     /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
-    /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
+    /// <returns><see langword="true"/>if the slider was modified, otherwise <see langword="false"/>.</returns>
     public unsafe static bool DragFloat(string label, ref Vector2 value, float speed = 1.0f, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None)
     {
         return Provider.DragScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 2), speed, min, max, format, flags);
@@ -202,8 +201,8 @@ public static class ImGui
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">The value which the slider should display.</param>
     /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
@@ -218,11 +217,11 @@ public static class ImGui
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">A reference to the value which the slider should display.</param>
     /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
-    /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
+    /// <returns><see langword="true"/>if the slider was modified, otherwise <see langword="false"/>.</returns>
     public unsafe static bool DragFloat(string label, ref Vector3 value, float speed = 1.0f, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None)
     {
         return Provider.DragScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 3), speed, min, max, format, flags);
@@ -233,8 +232,8 @@ public static class ImGui
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">The value which the slider should display.</param>
     /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
@@ -249,11 +248,11 @@ public static class ImGui
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">A reference to the value which the slider should display.</param>
     /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
-    /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
+    /// <returns><see langword="true"/>if the slider was modified, otherwise <see langword="false"/>.</returns>
     public unsafe static bool DragFloat(string label, ref Vector4 value, float speed = 1.0f, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None)
     {
         return Provider.DragScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 4), speed, min, max, format, flags);
@@ -264,8 +263,8 @@ public static class ImGui
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">The value which the slider should display.</param>
     /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
@@ -274,34 +273,98 @@ public static class ImGui
         DragFloat(label, ref value, speed, min, max, format, flags);
         return value;
     }
-    public unsafe static bool DragInt(string label, int value, int speed = 1, int min = 0, int max = 0, string format = "%d", SliderFlags flags = SliderFlags.None) => DragScalar(label, ref value, speed, min, max, format, flags);
+
+    /// <summary>
+    /// A 1-dimensional int slider widget. CTRL+Click to turn it into an input box.
+    /// </summary>
+    /// <param name="label">The label of the slider.</param>
+    /// <param name="value">The value which the slider should display.</param>
+    /// <param name="speed">The change in value of the slider for every pixel.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
+    /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
+    /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
+    public unsafe static int DragInt(string label, ref int value, int speed = 1, int min = 0, int max = 0, string format = "%d", SliderFlags flags = SliderFlags.None)
+    {
+        DragScalar(label, ref value, speed, min, max, format, flags);
+        return value;
+    }
+
+    /// <summary>
+    /// A 1-dimensional numerical slider widget. CTRL+Click to turn it into an input box.
+    /// <para>
+    /// Supported types are <see langword="sbyte"/>, <see langword="short"/>, <see langword="int"/>, <see langword="long"/>, <see langword="byte"/>, <see langword="ushort"/>, <see langword="uint"/>, <see langword="ulong"/>, <see langword="float"/>, <see langword="double"/>.
+    /// </para>
+    /// </summary>
+    /// <param name="label">The label of the slider.</param>
+    /// <param name="value">The value which the slider should display.</param>
+    /// <param name="speed">The change in value of the slider for every pixel.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
+    /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
+    /// <returns><see langword="true"/>if the slider was modified, otherwise <see langword="false"/>.</returns>
     public unsafe static bool DragScalar<T>(string label, ref T value, T speed = default, T min = default, T max = default, string format = null, SliderFlags flags = SliderFlags.None) where T : unmanaged => DragScalar(label, new Span<T>(Unsafe.AsPointer(ref value), 1), speed, min, max, format, flags);
+
+    /// <summary>
+    /// A 1-dimensional numerical slider widget. CTRL+Click to turn it into an input box.
+    /// <para>
+    /// Supported types are <see langword="sbyte"/>, <see langword="short"/>, <see langword="int"/>, <see langword="long"/>, <see langword="byte"/>, <see langword="ushort"/>, <see langword="uint"/>, <see langword="ulong"/>, <see langword="float"/>, <see langword="double"/>.
+    /// </para>
+    /// </summary>
+    /// <param name="label">The label of the slider.</param>
+    /// <param name="value">The value which the slider should display.</param>
+    /// <param name="speed">The change in value of the slider for every pixel.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
+    /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
+    /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
+    public unsafe static T DragScalar<T>(string label, T value, T speed = default, T min = default, T max = default, string format = null, SliderFlags flags = SliderFlags.None) where T : unmanaged
+    {
+        DragScalar(label, new Span<T>(Unsafe.AsPointer(ref value), 1), speed, min, max, format, flags);
+        return value;
+    }
+
+    /// <summary>
+    /// A multi-dimensional numerical slider widget. CTRL+Click to turn it into an input box.
+    /// <para>
+    /// Supported types are <see langword="sbyte"/>, <see langword="short"/>, <see langword="int"/>, <see langword="long"/>, <see langword="byte"/>, <see langword="ushort"/>, <see langword="uint"/>, <see langword="ulong"/>, <see langword="float"/>, <see langword="double"/>.
+    /// </para>
+    /// </summary>
+    /// <param name="label">The label of the slider.</param>
+    /// <param name="values">The values which the slider should display.</param>
+    /// <param name="speed">The change in value of the slider for every pixel.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
+    /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
+    /// <returns><see langword="true"/>if the slider was modified, otherwise <see langword="false"/>.</returns>
     public unsafe static bool DragScalar<T>(string label, Span<T> values, T speed = default, T min = default, T max = default, string format = null, SliderFlags flags = SliderFlags.None) where T : unmanaged
     {
         return Provider.DragScalar(label, values, speed, min, max, format, flags);
     }
 
-
     /// <summary>
-    /// A 1-dimensional floating-point slider widget. CTRL+Click to turn it into an input box (unless <see cref="SliderFlags.AlwaysClamp"/> is specified).
+    /// A 1-dimensional floating-point slider widget. CTRL+Click to turn it into an input box.
     /// </summary>
     /// <param name="label">The slider's label.</param>
     /// <param name="value">A reference to the value which the slider should display.</param>
-    /// <param name="speed">The amount which the slider should change for each pixel the mouse moves while dragging.</param>
-    /// <param name="min">The minimum value the slider will allow. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display the value of the slider.</param>
     /// <param name="flags">A set of <see cref="SliderFlags"/> value which effect the behavior of the slider.</param>
     /// <returns><see langword="true"/> if the slider's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>
     public unsafe static bool SliderFloat(string label, ref float value, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None) => Provider.SliderScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 1), min, max, format, flags);
+    
     /// <summary>
     /// A 1-dimensional floating-point slider widget. CTRL+Click to turn it into an input box (unless <see cref="SliderFlags.AlwaysClamp"/> is specified).
     /// </summary>
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">The value which the slider should display.</param>
-    /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display the value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns><see langword="true"/> if the slider's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>
@@ -310,26 +373,26 @@ public static class ImGui
         SliderFloat(label, ref value, min, max, format, flags);
         return value;
     }
+    
     /// <summary>
-    /// A 2-dimensional floating-point slider widget. CTRL+Click to turn it into an input box (unless <see cref="SliderFlags.AlwaysClamp"/> is specified).
+    /// A 2-dimensional floating-point slider widget. CTRL+Click to turn it into an input box.
     /// </summary>
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">A reference to the value which the slider should display.</param>
-    /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
     public unsafe static bool SliderFloat(string label, ref Vector2 value, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None) => Provider.SliderScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 2), min, max, format, flags);
+    
     /// <summary>
     /// A 2-dimensional floating-point slider widget. CTRL+Click to turn it into an input box (unless <see cref="SliderFlags.AlwaysClamp"/> is specified).
     /// </summary>
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">The value which the slider should display.</param>
-    /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
@@ -338,26 +401,26 @@ public static class ImGui
         SliderFloat(label, ref value, min, max, format, flags);
         return value;
     }
+    
     /// <summary>
-    /// A 3-dimensional floating-point slider widget. CTRL+Click to turn it into an input box (unless <see cref="SliderFlags.AlwaysClamp"/> is specified).
+    /// A 3-dimensional floating-point slider widget. CTRL+Click to turn it into an input box.
     /// </summary>
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">A reference to the value which the slider should display.</param>
-    /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
     public unsafe static bool SliderFloat(string label, ref Vector3 value, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None) => Provider.SliderScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 3), min, max, format, flags);
+    
     /// <summary>
     /// A 3-dimensional floating-point slider widget. CTRL+Click to turn it into an input box (unless <see cref="SliderFlags.AlwaysClamp"/> is specified).
     /// </summary>
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">The value which the slider should display.</param>
-    /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
@@ -366,14 +429,14 @@ public static class ImGui
         SliderFloat(label, ref value, min, max, format, flags);
         return value;
     }
+    
     /// <summary>
-    /// A 4-dimensional floating-point slider widget. CTRL+Click to turn it into an input box (unless <see cref="SliderFlags.AlwaysClamp"/> is specified).
+    /// A 4-dimensional floating-point slider widget. CTRL+Click to turn it into an input box.
     /// </summary>
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">A reference to the value which the slider should display.</param>
-    /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
@@ -383,9 +446,8 @@ public static class ImGui
     /// </summary>
     /// <param name="label">The label of the slider.</param>
     /// <param name="value">The value which the slider should display.</param>
-    /// <param name="speed">The change in value of the slider for every pixel.</param>
-    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
-    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click unless the <see cref="SliderFlags.AlwaysClamp"/> flag is specified.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
@@ -394,21 +456,103 @@ public static class ImGui
         SliderFloat(label, ref value, min, max, format, flags);
         return value;
     }
-    public unsafe static bool SliderInt(string label, int value, int min = 0, int max = 0, string format = "%d", SliderFlags flags = SliderFlags.None) => SliderScalar(label, ref value, min, max, format, flags);
+
+    /// <summary>
+    /// A 1-dimensional integer slider widget. CTRL+Click to turn it into an input box.
+    /// </summary>
+    /// <param name="label">The label of the slider.</param>
+    /// <param name="value">The value which the slider should display.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
+    /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
+    /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
+    public unsafe static int SliderInt(string label, int value, int min = 0, int max = 0, string format = "%d", SliderFlags flags = SliderFlags.None)
+    {
+        SliderScalar(label, ref value, min, max, format, flags);
+        return value;
+    }
+
+    /// <summary>
+    /// A 1-dimensional integer slider widget. CTRL+Click to turn it into an input box.
+    /// </summary>
+    /// <param name="label">The label of the slider.</param>
+    /// <param name="value">The value which the slider should display.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
+    /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
+    /// <returns><see langword="true"/> if the slider's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>
+    public unsafe static bool SliderInt(string label, ref int value, int min = 0, int max = 0, string format = "%d", SliderFlags flags = SliderFlags.None) => SliderScalar(label, ref value, min, max, format, flags);
+
+    /// <summary>
+    /// A 1-dimensional integer slider widget. CTRL+Click to turn it into an input box.
+    /// </summary>
+    /// <param name="label">The label of the slider.</param>
+    /// <param name="value">The value which the slider should display.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
+    /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
+    /// <returns><see langword="true"/> if the slider's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>
     public unsafe static bool SliderScalar<T>(string label, ref T value, T min = default, T max = default, string format = null, SliderFlags flags = SliderFlags.None) where T : unmanaged
     {
         return SliderScalar(label, new Span<T>(Unsafe.AsPointer(ref value), 1), min, max, format, flags);
     }
+
+    /// <summary>
+    /// A 1-dimensional integer slider widget. CTRL+Click to turn it into an input box.
+    /// </summary>
+    /// <param name="label">The label of the slider.</param>
+    /// <param name="value">The value which the slider should display.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
+    /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
+    /// <returns><see langword="true"/> if the slider's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>
+    public unsafe static T SliderScalar<T>(string label, T value, T min = default, T max = default, string format = null, SliderFlags flags = SliderFlags.None) where T : unmanaged
+    {
+        SliderScalar(label, new Span<T>(Unsafe.AsPointer(ref value), 1), min, max, format, flags);
+        return value;
+    }
+
+    /// <summary>
+    /// A 1-dimensional integer slider widget. CTRL+Click to turn it into an input box.
+    /// </summary>
+    /// <param name="label">The label of the slider.</param>
+    /// <param name="values">The value which the slider should display.</param>
+    /// <param name="min">The minimum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="max">The maximum value the slider will allow for each component. This can be overridden using CTRL+Click.</param>
+    /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
+    /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
+    /// <returns><see langword="true"/> if the slider's <paramref name="values"/> was modified, otherwise <see langword="false"/>.</returns>
     public unsafe static bool SliderScalar<T>(string label, Span<T> values, T min = default, T max = default, string format = null, SliderFlags flags = SliderFlags.None) where T : unmanaged
     {
         return Provider.SliderScalar(label, values, min, max, format, flags);
     }
 
+    /// <summary>
+    /// An input box widget which accepts text input.
+    /// </summary>
+    /// <param name="label">The label of the input box.</param>
+    /// <param name="value">The string value of the text box.</param>
+    /// <param name="maxSize">The maximum number of characters allowed in <paramref name="value"/>.</param>
+    /// <param name="flags">A <see cref="InputTextFlags"/> value which effects the behavior of the slider.</param>
+    /// <returns><see langword="true"/> if the input box's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>
     public static bool InputText(string label, ref string value, int maxSize, InputTextFlags flags = InputTextFlags.None)
     {
         return Provider.InputText(label, ref value, maxSize, flags);
     }
 
+    /// <summary>
+    /// An float input box widget which accepts numeric input.
+    /// </summary>
+    /// <param name="label">The label of the input box.</param>
+    /// <param name="value">The string value of the text box.</param>
+    /// <param name="step">The step of the at which</param>
+    /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
+    /// <param name="flags">A <see cref="InputTextFlags"/> value which effects the behavior of the slider.</param>
+    /// <returns><see langword="true"/> if the input box's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>
     public unsafe static bool InputFloat(string label, ref float value, float step = 0, float stepFast = 0, string format = "%.3f", InputTextFlags flags = InputTextFlags.None) => InputScalar(label, ref value, step, stepFast, format, flags);
     public unsafe static bool InputFloat(string label, ref Vector2 value, float step = 0, float stepFast = 0, string format = "%.3f", InputTextFlags flags = InputTextFlags.None) => InputScalar(label, new Span<float>(Unsafe.AsPointer(ref value.X), 2), step, stepFast, format, flags);
     public unsafe static bool InputFloat(string label, ref Vector3 value, float step = 0, float stepFast = 0, string format = "%.3f", InputTextFlags flags = InputTextFlags.None) => InputScalar(label, new Span<float>(Unsafe.AsPointer(ref value.X), 3), step, stepFast, format, flags);

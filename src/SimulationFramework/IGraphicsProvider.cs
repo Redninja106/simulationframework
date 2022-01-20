@@ -2,6 +2,9 @@
 
 namespace SimulationFramework;
 
+/// <summary>
+/// Interface which provides graphics functionality as a component of a simulation.
+/// </summary>
 public interface IGraphicsProvider : ISimulationComponent
 {
     /// <summary>
