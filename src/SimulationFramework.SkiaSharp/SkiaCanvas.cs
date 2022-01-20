@@ -14,7 +14,7 @@ namespace SimulationFramework.SkiaSharp;
 internal sealed class SkiaCanvas : CanvasBase
 {
     private readonly SkiaGraphicsProvider provider;
-    private readonly ISurface surface;
+    private readonly ITexture texture;
     private readonly SKCanvas canvas;
     private readonly bool owner;
     private readonly SKPaint paint = new() { IsAntialias = true };
@@ -22,10 +22,10 @@ internal sealed class SkiaCanvas : CanvasBase
     private SKShader textureShader;
     private SKFont currentFont;
 
-    public SkiaCanvas(SkiaGraphicsProvider provider, ISurface surface, SKCanvas canvas, bool owner)
+    public SkiaCanvas(SkiaGraphicsProvider provider, ITexture texture, SKCanvas canvas, bool owner)
     {
         this.provider = provider;
-        this.surface = surface;
+        this.texture = texture;
         this.canvas = canvas;
         this.owner = owner;
     }
@@ -85,9 +85,9 @@ internal sealed class SkiaCanvas : CanvasBase
         }
     }
 
-    protected override void DrawSurfaceCore(ISurface surface, Rectangle source, Rectangle destination)
+    protected override void DrawSurfaceCore(ITexture texture, Rectangle source, Rectangle destination)
     {
-        canvas.DrawBitmap((surface as SkiaSurface).bitmap, source.AsSKRect(), destination.AsSKRect(), paint);
+        canvas.DrawBitmap((texture as SkiaSurface).bitmap, source.AsSKRect(), destination.AsSKRect(), paint);
     }
 
     protected override void DrawTextCore(string text, Vector2 position, Color color, Alignment alignment)
@@ -107,9 +107,9 @@ internal sealed class SkiaCanvas : CanvasBase
         canvas.Flush();
     }
 
-    protected override ISurface GetSurfaceCore()
+    protected override ITexture GetSurfaceCore()
     {
-        return this.surface;
+        return this.texture;
     }
 
     protected override Vector2 MeasureTextCore(string text)
@@ -152,11 +152,11 @@ internal sealed class SkiaCanvas : CanvasBase
         return true;
     }
 
-    protected override bool UpdateFillTextureCore(ISurface surface, Matrix3x2 transform, TileMode tileMode)
+    protected override bool UpdateFillTextureCore(ITexture texture, Matrix3x2 transform, TileMode tileMode)
     {
         textureShader?.Dispose();
         
-        if (surface is null)
+        if (texture is null)
             return true;
 
         SKShaderTileMode skTileMode;
@@ -178,7 +178,7 @@ internal sealed class SkiaCanvas : CanvasBase
                 throw new Exception();
         }
 
-        textureShader = (surface as SkiaSurface).bitmap.ToShader(skTileMode, skTileMode, transform.AsSKMatrix());
+        textureShader = (texture as SkiaSurface).bitmap.ToShader(skTileMode, skTileMode, transform.AsSKMatrix());
         if (CurrentState.DrawMode == DrawMode.Textured)
         {
             this.paint.Shader = textureShader;
@@ -310,7 +310,7 @@ internal sealed class SkiaCanvas : ICanvas
     private Stack<SkiaCanvasState> stateStack = new();
 
     private readonly SkiaGraphicsProvider provider;
-    private readonly ISurface surface;
+    private readonly ISurface texture;
     private readonly SKCanvas canvas;
     private readonly bool owner;
     private SKPaint paint = new();
@@ -323,13 +323,13 @@ internal sealed class SkiaCanvas : ICanvas
     private SKShader currentShader;
 
     public Matrix3x2 Transform { get => canvas.TotalMatrix.AsMatrix3x2(); set => canvas.SetMatrix(value.AsSKMatrix()); }
-    public int Width => surface?.Width ?? Simulation.Current.TargetWidth;
-    public int Height => surface?.Height ?? Simulation.Current.TargetWidth;
+    public int Width => texture?.Width ?? Simulation.Current.TargetWidth;
+    public int Height => texture?.Height ?? Simulation.Current.TargetWidth;
 
-    public SkiaCanvas(SkiaGraphicsProvider provider, ISurface surface, SKCanvas canvas, bool owner)
+    public SkiaCanvas(SkiaGraphicsProvider provider, ISurface texture, SKCanvas canvas, bool owner)
     {
         this.provider = provider;
-        this.surface = surface;
+        this.texture = texture;
         this.canvas = canvas;
         this.owner = owner;
         
@@ -373,7 +373,7 @@ internal sealed class SkiaCanvas : ICanvas
 
     public ISurface GetSurface()
     {
-        return surface;
+        return texture;
     }
 
     public void ResetState()
@@ -491,16 +491,16 @@ internal sealed class SkiaCanvas : ICanvas
         canvas.DrawArc(bounds.AsSKRect(), begin, end - begin, true, this.paint);
     }
 
-    public void DrawSurface(ISurface surface, Alignment alignment = Alignment.TopLeft) => DrawSurface(surface, Vector2.Zero, new(surface?.Width ?? 0f, surface?.Height ?? 0f), alignment);
-    public void DrawSurface(ISurface surface, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawSurface(surface, x, y, surface?.Width ?? 0f, surface?.Height ?? 0f, Alignment.Center);
-    public void DrawSurface(ISurface surface, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => DrawSurface(surface, position: new(x, y), size: new(width, height), alignment);
-    public void DrawSurface(ISurface surface, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawSurface(surface, new Rectangle(0, 0, surface?.Width ?? 0f, surface?.Height ?? 0f), new Rectangle(position.X, position.Y, size.X, size.Y, alignment));
-    public void DrawSurface(ISurface surface, Rectangle source, Rectangle destination)
+    public void DrawSurface(ISurface texture, Alignment alignment = Alignment.TopLeft) => DrawSurface(texture, Vector2.Zero, new(texture?.Width ?? 0f, texture?.Height ?? 0f), alignment);
+    public void DrawSurface(ISurface texture, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawSurface(texture, x, y, texture?.Width ?? 0f, texture?.Height ?? 0f, Alignment.Center);
+    public void DrawSurface(ISurface texture, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => DrawSurface(texture, position: new(x, y), size: new(width, height), alignment);
+    public void DrawSurface(ISurface texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawSurface(texture, new Rectangle(0, 0, texture?.Width ?? 0f, texture?.Height ?? 0f), new Rectangle(position.X, position.Y, size.X, size.Y, alignment));
+    public void DrawSurface(ISurface texture, Rectangle source, Rectangle destination)
     {
-        if (surface is null)
-            throw new ArgumentNullException(nameof(surface));
+        if (texture is null)
+            throw new ArgumentNullException(nameof(texture));
         
-        if (surface is SkiaSurface skiaSurface)
+        if (texture is SkiaSurface skiaSurface)
             canvas.DrawBitmap(skiaSurface.bitmap, source.AsSKRect(), destination.AsSKRect());
     }
 

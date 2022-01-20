@@ -8,7 +8,7 @@ using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
 
-internal sealed class SkiaSurface : ISurface
+internal sealed class SkiaSurface : ITexture
 {
     internal SkiaGraphicsProvider provider;
     internal SKBitmap bitmap;

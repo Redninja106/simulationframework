@@ -19,8 +19,8 @@ public abstract class CanvasBase : ICanvas
 {
     public const int MAX_STACK_ALLOCATION = 1024;
 
-    public int Width => this.GetSurface()?.Width ?? Simulation.Current.TargetWidth;
-    public int Height => this.GetSurface()?.Height ?? Simulation.Current.TargetHeight;
+    public int Width => this.GetTarget()?.Width ?? Simulation.Current.TargetWidth;
+    public int Height => this.GetTarget()?.Height ?? Simulation.Current.TargetHeight;
     public Matrix3x2 Transform
     {
         get
@@ -44,7 +44,7 @@ public abstract class CanvasBase : ICanvas
     protected abstract void DrawEllipseCore(Rectangle bounds, float begin, float end, bool includeCenter, Color color);
     protected abstract void DrawPolygonCore(Span<Vector2> polygon, Color color);
     protected abstract void DrawRectCore(Rectangle bounds, float radius, Color color);
-    protected abstract void DrawSurfaceCore(ISurface surface, Rectangle source, Rectangle destination);
+    protected abstract void DrawSurfaceCore(ITexture texture, Rectangle source, Rectangle destination);
     protected abstract void DrawTextCore(string text, Vector2 position, Color color, Alignment alignment);
     protected abstract bool UpdateClipRectCore(Rectangle rect);
     protected abstract bool UpdateDrawModeCore(DrawMode mode);
@@ -53,10 +53,10 @@ public abstract class CanvasBase : ICanvas
     protected abstract bool UpdateGradientRadialCore(Vector2 position, float radius, Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp);
     protected abstract bool UpdateStrokeWidthCore(float strokeWidth);
     protected abstract bool UpdateTransformCore(Matrix3x2 transform);
-    protected abstract bool UpdateFillTextureCore(ISurface surface, Matrix3x2 transform, TileMode tileMode);
+    protected abstract bool UpdateFillTextureCore(ITexture texture, Matrix3x2 transform, TileMode tileMode);
     protected abstract Vector2 MeasureTextCore(string text);
     protected abstract void FlushCore();
-    protected abstract ISurface GetSurfaceCore();
+    protected abstract ITexture GetSurfaceCore();
 
     public CanvasBase()
     {
@@ -94,7 +94,7 @@ public abstract class CanvasBase : ICanvas
         DrawLineCore(p1, p2, color);
     }
 
-    public ISurface GetSurface()
+    public ITexture GetTarget()
     {
         return this.GetSurfaceCore();
     }
@@ -194,16 +194,16 @@ public abstract class CanvasBase : ICanvas
         DrawRectCore(rect, radius, color);
     }
 
-    public void DrawSurface(ISurface surface, Alignment alignment = Alignment.TopLeft) => DrawSurface(surface, (0,0), (surface?.Width ?? 0, surface?.Height ?? 0), alignment);
-    public void DrawSurface(ISurface surface, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawSurface(surface, (x, y), (surface?.Width ?? 0, surface?.Height ?? 0), alignment);
-    public void DrawSurface(ISurface surface, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => DrawSurface(surface, (x, y), (width, height), alignment);
-    public void DrawSurface(ISurface surface, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawSurface(surface, new(0, 0, surface?.Width ?? 0, surface?.Height ?? 0), new(position, size, alignment));
-    public void DrawSurface(ISurface surface, Rectangle source, Rectangle destination)
+    public void DrawTexture(ITexture texture, Alignment alignment = Alignment.TopLeft) => DrawSurface(texture, (0,0), (texture?.Width ?? 0, texture?.Height ?? 0), alignment);
+    public void DrawSurface(ITexture texture, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawSurface(texture, (x, y), (texture?.Width ?? 0, texture?.Height ?? 0), alignment);
+    public void DrawSurface(ITexture texture, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => DrawSurface(texture, (x, y), (width, height), alignment);
+    public void DrawSurface(ITexture texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawSurface(texture, new(0, 0, texture?.Width ?? 0, texture?.Height ?? 0), new(position, size, alignment));
+    public void DrawSurface(ITexture texture, Rectangle source, Rectangle destination)
     {
-        if (surface is null)
-            throw new ArgumentNullException(nameof(surface));
+        if (texture is null)
+            throw new ArgumentNullException(nameof(texture));
 
-        DrawSurfaceCore(surface, source, destination);
+        DrawSurfaceCore(texture, source, destination);
     }
 
     public void DrawText(string text, float x, float y, Color color, Alignment alignment = Alignment.TopLeft) => DrawText(text, (x, y), color, alignment);
@@ -236,7 +236,7 @@ public abstract class CanvasBase : ICanvas
         UpdateClipRectCore(state.clipRect);
         UpdateDrawModeCore(state.DrawMode);
         UpdateFontCore(state.fontName, state.styles, state.size);
-        UpdateFillTextureCore(state.surface, state.surfaceTransform, state.surfaceTileMode);
+        UpdateFillTextureCore(state.texture, state.textureTransform, state.textureTileMode);
         if (!state.isGradientRelative)
         {
             if (state.isGradientRadial)
@@ -483,18 +483,18 @@ public abstract class CanvasBase : ICanvas
         }
     }
 
-    public void SetFillTexture(ISurface surface, TileMode tileMode = TileMode.Clamp)
+    public void SetFillTexture(ITexture texture, TileMode tileMode = TileMode.Clamp)
     {
-        SetFillTexture(surface, Matrix3x2.Identity, tileMode);
+        SetFillTexture(texture, Matrix3x2.Identity, tileMode);
     }
 
-    public void SetFillTexture(ISurface surface, Matrix3x2 transform, TileMode tileMode = TileMode.Clamp)
+    public void SetFillTexture(ITexture texture, Matrix3x2 transform, TileMode tileMode = TileMode.Clamp)
     {
-        if (UpdateFillTextureCore(surface, transform, tileMode))
+        if (UpdateFillTextureCore(texture, transform, tileMode))
         {
-            CurrentState.surface = surface;
-            CurrentState.surfaceTransform = transform;
-            CurrentState.surfaceTileMode = tileMode;
+            CurrentState.texture = texture;
+            CurrentState.textureTransform = transform;
+            CurrentState.textureTileMode = tileMode;
         }
     }
 }

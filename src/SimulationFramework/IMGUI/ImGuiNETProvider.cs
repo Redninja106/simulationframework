@@ -94,9 +94,9 @@ public unsafe sealed class ImGuiNETProvider : IImGuiProvider
 
     public bool IsItemEdited() => 1 == igIsItemEdited();
     public bool Button(string label, Vector2 size) => 1 == igButton(MarshalText(label, stackalloc byte[label.Length + 1]), size);
-    public void Image(ISurface surface, Vector2 size, Vector2 uv0, Vector2 uv1, Color tintColor, Color borderColor)
+    public void Image(ITexture texture, Vector2 size, Vector2 uv0, Vector2 uv1, Color tintColor, Color borderColor)
     {
-        var id = backend.GetTextureID(surface);
+        var id = backend.GetTextureID(texture);
         igImage(id, size, uv0, uv1, tintColor.ToVector4(), borderColor.ToVector4());
     }
     public bool BeginWindow(string title, ref bool open, WindowFlags flags) => 1 == igBegin(MarshalText(title, stackalloc byte[title.Length + 1]), (byte*)Unsafe.AsPointer(ref open), (ImGuiWindowFlags)flags);

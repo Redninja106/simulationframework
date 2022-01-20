@@ -406,7 +406,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
             imguiController.Render();
         }
 
-        public IntPtr GetTextureID(ISurface surface)
+        public IntPtr GetTextureID(ITexture texture)
         {
             return IntPtr.Zero;
         }

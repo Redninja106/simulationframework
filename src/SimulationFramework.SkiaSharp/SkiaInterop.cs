@@ -18,10 +18,10 @@ public static class SkiaInterop
         return skiaCanvas.GetSKCanvas();
     }
 
-    public static SKBitmap GetBitmap(ISurface surface)
+    public static SKBitmap GetBitmap(ITexture texture)
     {
-        if (surface is not SkiaSurface skiaSurface)
-            throw new ArgumentException("'surface' must be a surface created using the SkiaSharp graphics backend!");
+        if (texture is not SkiaSurface skiaSurface)
+            throw new ArgumentException("'texture' must be a texture created using the SkiaSharp graphics backend!");
 
         return skiaSurface.bitmap;
     }
@@ -35,7 +35,7 @@ public static class SkiaInterop
     }
 
     // 
-    public unsafe static int GetGLTextureID(ISurface surface)
+    public unsafe static int GetGLTextureID(ITexture texture)
     {
         // there doesnt seem to be a way to do this with skiasharp...
         throw new NotSupportedException();
@@ -45,5 +45,5 @@ public static class SkiaInterop
     internal static unsafe extern int GetModuleFileNameW(IntPtr hModule, char* lpFilename, int nSize);
 
     [DllImport("libSkiaSharp", CallingConvention = CallingConvention.Cdecl)]
-    internal static extern IntPtr sk_surface_get_texture_handle(int param1);
+    internal static extern IntPtr sk_texture_get_texture_handle(int param1);
 }

@@ -24,70 +24,70 @@ public static class Graphics
     }
 
     /// <summary>
-    /// Loads a surface from a file.
+    /// Loads a texture from a file.
     /// </summary>
     /// <param name="file">The path to a .PNG image file.</param>
-    /// <returns>The new surface.</returns>
-    public static ISurface LoadSurface(string file)
+    /// <returns>The new texture.</returns>
+    public static ITexture LoadTexture(string file)
     {
         var fileData = File.ReadAllBytes(file);
 
-        return LoadSurface(fileData);
+        return LoadTexture(fileData);
     }
 
     /// <summary>
-    /// Loads a surface from raw, encoded file data.
+    /// Loads a texture from raw, encoded file data.
     /// </summary>
     /// <param name="encodedBytes">An array of the bytes of a supported image file.</param>
-    /// <returns>The new surface.</returns>
-    public static ISurface LoadSurface(byte[] encodedBytes)
+    /// <returns>The new texture.</returns>
+    public static ITexture LoadTexture(byte[] encodedBytes)
     {
-        return LoadSurface(encodedBytes.AsSpan());
+        return LoadTexture(encodedBytes.AsSpan());
     }
 
     /// <summary>
-    /// Loads a surface from raw, encoded file data.
+    /// Loads a texture from raw, encoded file data.
     /// </summary>
     /// <param name="encodedBytes">A span of the bytes of a supported image file.</param>
-    /// <returns>The new surface.</returns>
-    public static ISurface LoadSurface(Span<byte> encodedBytes)
+    /// <returns>The new texture.</returns>
+    public static ITexture LoadTexture(Span<byte> encodedBytes)
     {
-        return Provider.LoadSurface(encodedBytes);
+        return Provider.LoadTexture(encodedBytes);
     }
 
     /// <summary>
-    /// Creates a blank surface of the provided size.
+    /// Creates a blank texture of the provided size.
     /// </summary>
-    /// <param name="width">The width of the surface, in pixels.</param>
-    /// <param name="height">The height of the surface, in pixels.</param>
-    /// <returns>THe new surface.</returns>
-    public static ISurface CreateSurface(int width, int height)
+    /// <param name="width">The width of the texture, in pixels.</param>
+    /// <param name="height">The height of the texture, in pixels.</param>
+    /// <returns>The new texture.</returns>
+    public static ITexture CreateTexture(int width, int height)
     {
-        return Provider.CreateSurface(width, height, null);
+        return Provider.CreateTexture(width, height, null);
     }
 
     /// <summary>
-    /// Creates a surface of the provided size and fills it with the provided colors.
+    /// Creates a texture of the provided size and fills it with the provided colors.
     /// </summary>
-    /// <param name="width">The width of the surface, in pixels.</param>
-    /// <param name="height">The height of the surface, in pixels.</param>
-    /// <param name="colors">The data of to fill the surface with. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
-    /// <returns>The new surface.</returns>
-    public static ISurface CreateSurface(int width, int height, Span<Color> colors)
+    /// <param name="width">The width of the texture, in pixels.</param>
+    /// <param name="height">The height of the texture, in pixels.</param>
+    /// <param name="colors">The data of to fill the texture with. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
+    /// <returns>The new texture.</returns>
+    public static ITexture CreateTexture(int width, int height, Span<Color> colors)
     {
-        return Provider.CreateSurface(width, height, colors);
+        return Provider.CreateTexture(width, height, colors);
     }
 
     /// <summary>
-    /// Creates a surface of the provided size and fills it with the provided colors.
+    /// Creates a texture of the provided size and fills it with the provided colors.
     /// </summary>
-    /// <param name="width">The width of the surface, in pixels.</param>
-    /// <param name="height">The height of the surface, in pixels.</param>
-    /// <param name="colors">The data of to fill the surface with. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
-    /// <returns>The new surface.</returns>
-    public static ISurface CreateSurface(int width, int height, Color[] colors)
+    /// <param name="width">The width of the texture, in pixels.</param>
+    /// <param name="height">The height of the texture, in pixels.</param>
+    /// <param name="colors">The data of to fill the texture with. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
+    /// <returns>The new texture.</returns>
+    public static ITexture CreateTexture(int width, int height, Color[] colors)
     {
-        return Provider.CreateSurface(width, height, colors.AsSpan());
+        return Provider.CreateTexture(width, height, colors.AsSpan());
     }
 
     /// <summary>

@@ -21,8 +21,8 @@ public interface IImGuiNETBackend : IDisposable
     /// </summary>
     void Render();
     /// <summary>
-    /// Gets the texture ID that should be provided to ImGui for <see cref="ISurface"/>.
+    /// Gets the texture ID that should be provided to ImGui for <see cref="ITexture"/>.
     /// </summary>
-    /// <returns>The ImGui texture ID of the surface.</returns>
-    IntPtr GetTextureID(ISurface surface);
+    /// <returns>The ImGui texture ID of the texture.</returns>
+    IntPtr GetTextureID(ITexture texture);
 }

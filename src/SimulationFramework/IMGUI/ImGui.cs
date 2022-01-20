@@ -81,38 +81,38 @@ public static class ImGui
     /// <summary>
     /// An image widget.
     /// </summary>
-    /// <param name="surface">The surface of the widget.</param>
+    /// <param name="texture">The texture of the widget.</param>
     /// <param name="size">The size of the image.</param>
-    public static void Image(ISurface surface, Vector2 size) => Image(surface, size, (0, 0), (1, 1));
+    public static void Image(ITexture texture, Vector2 size) => Image(texture, size, (0, 0), (1, 1));
 
     /// <summary>
     /// An image widget.
     /// </summary>
-    /// <param name="surface">The surface of the widget.</param>
+    /// <param name="texture">The texture of the widget.</param>
     /// <param name="size">The size of the image.</param>
-    /// <param name="uv0">The top left corner of the region of the surface to draw, between (0, 0) and (1, 1).</param>
-    /// <param name="uv1">The bottom right corner of the region of the surface to draw, between (0, 0) and (1, 1).</param>
-    public static void Image(ISurface surface, Vector2 size, Vector2 uv0, Vector2 uv1) => Image(surface, size, uv0, uv1, Color.White, Color.Black);
+    /// <param name="uv0">The top left corner of the region of the texture to draw, between (0, 0) and (1, 1).</param>
+    /// <param name="uv1">The bottom right corner of the region of the texture to draw, between (0, 0) and (1, 1).</param>
+    public static void Image(ITexture texture, Vector2 size, Vector2 uv0, Vector2 uv1) => Image(texture, size, uv0, uv1, Color.White, Color.Black);
 
     /// <summary>
     /// An image widget.
     /// </summary>
-    /// <param name="surface">The surface of the widget.</param>
+    /// <param name="texture">The texture of the widget.</param>
     /// <param name="size">The size of the image.</param>
     /// <param name="tintColor">The tint of the image.</param>
     /// <param name="borderColor">The color of the border of the image.</param>
-    public static void Image(ISurface surface, Vector2 size, Color tintColor, Color borderColor) => Image(surface, size, (0, 0), (1, 1), tintColor, borderColor);
+    public static void Image(ITexture texture, Vector2 size, Color tintColor, Color borderColor) => Image(texture, size, (0, 0), (1, 1), tintColor, borderColor);
 
     /// <summary>
     /// An image widget.
     /// </summary>
-    /// <param name="surface">The surface of the widget.</param>
+    /// <param name="texture">The texture of the widget.</param>
     /// <param name="size">The size of the image.</param>
-    /// <param name="uv0">The top left corner of the region of the surface to draw, between (0, 0) and (1, 1).</param>
-    /// <param name="uv1">The bottom right corner of the region of the surface to draw, between (0, 0) and (1, 1).</param>
+    /// <param name="uv0">The top left corner of the region of the texture to draw, between (0, 0) and (1, 1).</param>
+    /// <param name="uv1">The bottom right corner of the region of the texture to draw, between (0, 0) and (1, 1).</param>
     /// <param name="tintColor">The tint of the image.</param>
     /// <param name="borderColor">The color of the border of the image.</param>
-    public static void Image(ISurface surface, Vector2 size, Vector2 uv0, Vector2 uv1, Color tintColor, Color borderColor) => Provider.Image(surface, size, uv0, uv1, tintColor, borderColor);
+    public static void Image(ITexture texture, Vector2 size, Vector2 uv0, Vector2 uv1, Color tintColor, Color borderColor) => Provider.Image(texture, size, uv0, uv1, tintColor, borderColor);
 
     /// <summary>
     /// A checkbox widget.

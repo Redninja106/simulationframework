@@ -8,11 +8,11 @@ sim.RunWindowed("Shapes!", 1920, 1080);
 
 class DrawingShapesSimulation : Simulation
 {
-    ISurface surface;
+    ITexture texture;
 
     public override void OnInitialize(AppConfig config)
     {
-        surface = Graphics.LoadSurface("logo-512x512.png");
+        texture = Graphics.LoadTexture("logo-512x512.png");
         config.SetAngleMode(AngleMode.Radians);
     }
 
@@ -21,7 +21,7 @@ class DrawingShapesSimulation : Simulation
     {
         canvas.Clear(Color.GreenYellow);
 
-        canvas.DrawSurface(surface, Alignment.TopLeft);
+        canvas.DrawTexture(texture, Alignment.TopLeft);
        
         canvas.Translate(canvas.Width / 2, canvas.Height / 2);
 
@@ -59,7 +59,7 @@ class DrawingShapesSimulation : Simulation
 
         radius = MathF.Sin(Time.TotalTime) * MathF.Tau;
 
-        canvas.SetFillTexture(surface, TileMode.Mirror);
+        canvas.SetFillTexture(texture, TileMode.Mirror);
         canvas.SetDrawMode(DrawMode.Textured);
 
         (x, y) = ImGui.DragFloat("pos", (x, y));

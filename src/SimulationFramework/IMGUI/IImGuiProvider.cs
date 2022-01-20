@@ -17,7 +17,7 @@ public interface IImGuiProvider : ISimulationComponent
 
     bool Button(string label, Vector2 size);
     bool SmallButton(string label);
-    void Image(ISurface surface, Vector2 size, Vector2 uv0, Vector2 uv1, Color tintColor, Color borderColor);
+    void Image(ITexture texture, Vector2 size, Vector2 uv0, Vector2 uv1, Color tintColor, Color borderColor);
     bool CheckBox(string label, ref bool value);
     bool CheckBoxFlags(string label, ref uint value, uint flag);
     bool RadioButton(string label, bool active);

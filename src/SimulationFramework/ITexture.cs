@@ -10,20 +10,20 @@ namespace SimulationFramework;
 /// <summary>
 /// A 2D bitmap that can be rendered, or rendered to.
 /// </summary>
-public interface ISurface : IDisposable
+public interface ITexture : IDisposable
 {
     /// <summary>
-    /// The width of the surface, in pixels.
+    /// The width of the texture, in pixels.
     /// </summary>
     int Width { get; }
 
     /// <summary>
-    /// The height of the surface, in pixels.
+    /// The height of the texture, in pixels.
     /// </summary>
     int Height { get; }
 
     /// <summary>
-    /// A span of colors making up surface's data
+    /// A span of colors making up texture's data
     /// </summary>
     Span<Color> Pixels { get; }
 
@@ -35,8 +35,8 @@ public interface ISurface : IDisposable
     ref Color GetPixel(int x, int y);
 
     /// <summary>
-    /// Opens a new canvas which draws to this surface.
+    /// Opens a new canvas which draws to this texture.
     /// </summary>
-    /// <returns>An <see cref="ICanvas"/> which draws onto this surface.</returns>
+    /// <returns>An <see cref="ICanvas"/> which draws onto this texture.</returns>
     ICanvas OpenCanvas();
 }

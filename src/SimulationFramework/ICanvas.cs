@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework;
 
 /// <summary>
-/// Enables the rendering shapes to a surface.
+/// Enables the rendering shapes to a texture.
 /// </summary>
 public interface ICanvas : IDisposable
 {
@@ -29,9 +29,9 @@ public interface ICanvas : IDisposable
     void Flush();
 
     /// <summary>
-    /// Gets the surface which this canvas is drawing to. This may be null if the canvas is drawing to the window or any other graphical output.
+    /// Gets the texture which this canvas is drawing to. This may be null if the canvas is drawing to the window or any other graphical output.
     /// </summary>
-    ISurface GetSurface();
+    ITexture GetTarget();
 
     // drawing
 
@@ -179,48 +179,48 @@ public interface ICanvas : IDisposable
     void DrawEllipse(Rectangle bounds, float begin, float end, bool includeCenter, Color color);
 
     /// <summary>
-    /// Draws a surface to the canvas at (0, 0), using the current transform and clipping settings.
+    /// Draws a texture to the canvas at (0, 0), using the current transform and clipping settings.
     /// </summary>
-    /// <param name="surface">The surface to draw.</param>
-    /// <param name="alignment">The point on the surface to align to (0, 0).</param>
-    void DrawSurface(ISurface surface, Alignment alignment = Alignment.TopLeft);
+    /// <param name="texture">The texture to draw.</param>
+    /// <param name="alignment">The point on the texture to align to (0, 0).</param>
+    void DrawTexture(ITexture texture, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
-    /// Draws a surface to the canvas, using the current transform and clipping settings.
+    /// Draws a texture to the canvas, using the current transform and clipping settings.
     /// </summary>
-    /// <param name="surface">The surface to draw.</param>
-    /// <param name="x">The x-position of the surface's destination rectangle.</param>
-    /// <param name="y">The y-position of the surface's destination rectangle.</param>
-    /// <param name="alignment">The point on the surface to align to the provided position.</param>
-    void DrawSurface(ISurface surface, float x, float y, Alignment alignment = Alignment.TopLeft);
+    /// <param name="texture">The texture to draw.</param>
+    /// <param name="x">The x-position of the texture's destination rectangle.</param>
+    /// <param name="y">The y-position of the texture's destination rectangle.</param>
+    /// <param name="alignment">The point on the texture to align to the provided position.</param>
+    void DrawSurface(ITexture texture, float x, float y, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
-    /// Draws a surface to the canvas, using the current transform and clipping settings.
+    /// Draws a texture to the canvas, using the current transform and clipping settings.
     /// </summary>
-    /// <param name="surface">The surface to draw.</param>
-    /// <param name="x">The x-position of the surface's destination rectangle.</param>
-    /// <param name="y">The y-position of the surface's destination rectangle.</param>
-    /// <param name="width">The width of the surface's destination rectangle.</param>
-    /// <param name="height">The height of the surface's destination rectangle.</param>
-    /// <param name="alignment">The point on the surface to align to the provided position.</param>
-    void DrawSurface(ISurface surface, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft);
+    /// <param name="texture">The texture to draw.</param>
+    /// <param name="x">The x-position of the texture's destination rectangle.</param>
+    /// <param name="y">The y-position of the texture's destination rectangle.</param>
+    /// <param name="width">The width of the texture's destination rectangle.</param>
+    /// <param name="height">The height of the texture's destination rectangle.</param>
+    /// <param name="alignment">The point on the texture to align to the provided position.</param>
+    void DrawSurface(ITexture texture, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
-    /// Draws a surface to the canvas, using the current transform and clipping settings.
+    /// Draws a texture to the canvas, using the current transform and clipping settings.
     /// </summary>
-    /// <param name="surface">The surface to draw.</param>
-    /// <param name="position">The position of the surface's destination rectangle.</param>
-    /// <param name="size">The size of the surface's destination rectangle.</param>
-    /// <param name="alignment">The point on the surface to align to the provided position.</param>
-    void DrawSurface(ISurface surface, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft);
+    /// <param name="texture">The texture to draw.</param>
+    /// <param name="position">The position of the texture's destination rectangle.</param>
+    /// <param name="size">The size of the texture's destination rectangle.</param>
+    /// <param name="alignment">The point on the texture to align to the provided position.</param>
+    void DrawSurface(ITexture texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
-    /// Draws a surface to the canvas, using the current transform and clipping settings.
+    /// Draws a texture to the canvas, using the current transform and clipping settings.
     /// </summary>
-    /// <param name="surface">The surface to draw.</param>
-    /// <param name="source">The source bounds of the surface.</param>
-    /// <param name="destination">The destination bounds of the surface.</param>
-    void DrawSurface(ISurface surface, Rectangle source, Rectangle destination);
+    /// <param name="texture">The texture to draw.</param>
+    /// <param name="source">The source bounds of the texture.</param>
+    /// <param name="destination">The destination bounds of the texture.</param>
+    void DrawSurface(ITexture texture, Rectangle source, Rectangle destination);
 
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
@@ -613,15 +613,15 @@ public interface ICanvas : IDisposable
     /// <summary>
     /// Sets the texture to use when drawing with <see cref="DrawMode.Textured"/>.
     /// </summary>
-    /// <param name="surface">The surface to use.</param>
+    /// <param name="texture">The texture to use.</param>
     /// <param name="tileMode">Specifies how pixels outside the texture are filled.</param>
-    void SetFillTexture(ISurface surface, TileMode tileMode = TileMode.Clamp);
+    void SetFillTexture(ITexture texture, TileMode tileMode = TileMode.Clamp);
 
     /// <summary>
     /// Sets the texture to use when drawing with <see cref="DrawMode.Textured"/>.
     /// </summary>
-    /// <param name="surface">The surface to use.</param>
+    /// <param name="texture">The texture to use.</param>
     /// <param name="transform">The transformation to apply to the image before a shape is filled.</param>
     /// <param name="tileMode">Specifies how pixels outside the texture are filled.</param>
-    void SetFillTexture(ISurface surface, Matrix3x2 transform, TileMode tileMode = TileMode.Clamp);
+    void SetFillTexture(ITexture texture, Matrix3x2 transform, TileMode tileMode = TileMode.Clamp);
 }
