@@ -57,7 +57,7 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
 
     public ISurface LoadSurface(Span<byte> encodedData)
     {
-        throw new NotImplementedException();
+        return new SkiaSurface(this, SKBitmap.Decode(encodedData), true);
     }
 
     public void Apply(Simulation simulation)
