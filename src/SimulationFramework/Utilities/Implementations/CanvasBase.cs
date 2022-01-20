@@ -49,8 +49,8 @@ public abstract class CanvasBase : ICanvas
     protected abstract bool UpdateClipRectCore(Rectangle rect);
     protected abstract bool UpdateDrawModeCore(DrawMode mode);
     protected abstract bool UpdateFontCore(string fontName, TextStyles styles, float size);
-    protected abstract bool UpdateGradientLinearCore(Vector2 from, Vector2 to, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
-    protected abstract bool UpdateGradientRadialCore(Vector2 position, float radius, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp);
+    protected abstract bool UpdateGradientLinearCore(Vector2 from, Vector2 to, Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp);
+    protected abstract bool UpdateGradientRadialCore(Vector2 position, float radius, Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp);
     protected abstract bool UpdateStrokeWidthCore(float strokeWidth);
     protected abstract bool UpdateTransformCore(Matrix3x2 transform);
     protected abstract Vector2 MeasureTextCore(string text);
@@ -75,7 +75,7 @@ public abstract class CanvasBase : ICanvas
     public void DrawEllipse(Vector2 position, Vector2 radii, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center) => DrawEllipse(new Rectangle(position, radii * 2, alignment), begin, end, includeCenter, color);
     public void DrawEllipse(Rectangle bounds, float begin, float end, bool includeCenter, Color color)
     {
-        if (CurrentState.DrawMode == DrawMode.Gradient && CurrentState.gradientTileMode == GradientTileMode.Stop)
+        if (CurrentState.DrawMode == DrawMode.Gradient && CurrentState.gradientTileMode == TileMode.Stop)
         {
             using (this.Push())
             {
@@ -149,7 +149,7 @@ public abstract class CanvasBase : ICanvas
             throw new ArgumentException("Polygon must have at least 3 vertices!");
 
 
-        if (CurrentState.DrawMode == DrawMode.Gradient && CurrentState.gradientTileMode == GradientTileMode.Stop)
+        if (CurrentState.DrawMode == DrawMode.Gradient && CurrentState.gradientTileMode == TileMode.Stop)
         {
             using (this.Push())
             {
@@ -181,7 +181,7 @@ public abstract class CanvasBase : ICanvas
 
         RefreshRelativeGradient(rect);
 
-        if (CurrentState.DrawMode == DrawMode.Gradient && CurrentState.gradientTileMode == GradientTileMode.Stop)
+        if (CurrentState.DrawMode == DrawMode.Gradient && CurrentState.gradientTileMode == TileMode.Stop)
         {
             using (this.Push())
             {
@@ -373,12 +373,12 @@ public abstract class CanvasBase : ICanvas
     }
 
     public void SetGradientLinear(float fromX, float fromY, float toX, float toY, params GradientStop[] gradient) => SetGradientLinear((fromX, fromY), (toX, toY), gradient);
-    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp) => SetGradientLinear((fromX, fromY), (toX, toY), gradient, tileMode);
-    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp) => SetGradientLinear((fromX, fromY), (toX, toY), gradient, tileMode);
+    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, IEnumerable<GradientStop> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientLinear((fromX, fromY), (toX, toY), gradient, tileMode);
+    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientLinear((fromX, fromY), (toX, toY), gradient, tileMode);
     
     public void SetGradientLinear(Vector2 from, Vector2 to, params GradientStop[] gradient) => SetGradientLinear(from, to, gradient.AsSpan());
-    public void SetGradientLinear(Vector2 from, Vector2 to, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp) => SetGradientLinear(from, to, GradientStopEnumerableToSpan(gradient, stackalloc GradientStop[gradient.Count()]));
-    public void SetGradientLinear(Vector2 from, Vector2 to, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    public void SetGradientLinear(Vector2 from, Vector2 to, IEnumerable<GradientStop> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientLinear(from, to, GradientStopEnumerableToSpan(gradient, stackalloc GradientStop[gradient.Count()]));
+    public void SetGradientLinear(Vector2 from, Vector2 to, Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp)
     {
         if (UpdateGradientLinearCore(from, to, gradient, tileMode))
         {
@@ -392,8 +392,8 @@ public abstract class CanvasBase : ICanvas
     }
 
     public void SetGradientLinear(Alignment from, Alignment to, params GradientStop[] gradient) => SetGradientLinear(from, to, gradient.AsSpan());
-    public void SetGradientLinear(Alignment from, Alignment to, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp) => SetGradientLinear(from, to, GradientStopEnumerableToSpan(gradient, stackalloc GradientStop[gradient.Count()]));
-    public void SetGradientLinear(Alignment from, Alignment to, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    public void SetGradientLinear(Alignment from, Alignment to, IEnumerable<GradientStop> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientLinear(from, to, GradientStopEnumerableToSpan(gradient, stackalloc GradientStop[gradient.Count()]));
+    public void SetGradientLinear(Alignment from, Alignment to, Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp)
     {
         CurrentState.isGradientRadial = false;
         CurrentState.isGradientRelative = true;
@@ -404,11 +404,11 @@ public abstract class CanvasBase : ICanvas
     }
 
     public void SetGradientRadial(float x, float y, float radius, params GradientStop[] gradient) => SetGradientRadial(x, y, radius, gradient.AsSpan());
-    public void SetGradientRadial(float x, float y, float radius, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp) => SetGradientRadial((x,y), radius, gradient, tileMode);
-    public void SetGradientRadial(float x, float y, float radius, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp) => SetGradientRadial((x,y), radius, gradient, tileMode);
+    public void SetGradientRadial(float x, float y, float radius, IEnumerable<GradientStop> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial((x,y), radius, gradient, tileMode);
+    public void SetGradientRadial(float x, float y, float radius, Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial((x,y), radius, gradient, tileMode);
     public void SetGradientRadial(Vector2 position, float radius, params GradientStop[] gradient) => SetGradientRadial(position, radius, gradient.AsSpan());
-    public void SetGradientRadial(Vector2 position, float radius, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp) => SetGradientRadial((position.X, position.Y), radius, GradientStopEnumerableToSpan(gradient, stackalloc GradientStop[gradient.Count()]), tileMode);
-    public void SetGradientRadial(Vector2 position, float radius, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    public void SetGradientRadial(Vector2 position, float radius, IEnumerable<GradientStop> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial((position.X, position.Y), radius, GradientStopEnumerableToSpan(gradient, stackalloc GradientStop[gradient.Count()]), tileMode);
+    public void SetGradientRadial(Vector2 position, float radius, Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp)
     {
         if (UpdateGradientRadialCore(position, radius, gradient, tileMode))
         {
@@ -422,11 +422,11 @@ public abstract class CanvasBase : ICanvas
     }
 
     public void SetGradientRadial(Alignment position, float radius, params GradientStop[] gradient) => SetGradientRadial(position, (0, 0), radius, gradient);
-    public void SetGradientRadial(Alignment position, float radius, IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp) => SetGradientRadial(position, radius, GradientStopEnumerableToSpan(gradient, stackalloc GradientStop[gradient.Count()]), tileMode);
-    public void SetGradientRadial(Alignment position, float radius, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp) => SetGradientRadial(position, (0, 0), radius, gradient, tileMode);
+    public void SetGradientRadial(Alignment position, float radius, IEnumerable<GradientStop> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial(position, radius, GradientStopEnumerableToSpan(gradient, stackalloc GradientStop[gradient.Count()]), tileMode);
+    public void SetGradientRadial(Alignment position, float radius, Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial(position, (0, 0), radius, gradient, tileMode);
     public void SetGradientRadial(Alignment position, Vector2 offset, float radius, params GradientStop[] gradient) => SetGradientRadial(position, offset, radius, gradient.AsSpan());
-    public void SetGradientRadial(Alignment position, Vector2 offset, float radius,  IEnumerable<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp) => SetGradientRadial(position, offset, radius, GradientStopEnumerableToSpan(gradient, stackalloc GradientStop[gradient.Count()]), tileMode);
-    public void SetGradientRadial(Alignment position, Vector2 offset, float radius,  Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    public void SetGradientRadial(Alignment position, Vector2 offset, float radius,  IEnumerable<GradientStop> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial(position, offset, radius, GradientStopEnumerableToSpan(gradient, stackalloc GradientStop[gradient.Count()]), tileMode);
+    public void SetGradientRadial(Alignment position, Vector2 offset, float radius,  Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp)
     {
         CurrentState.isGradientRadial = true;
         CurrentState.isGradientRelative = true;

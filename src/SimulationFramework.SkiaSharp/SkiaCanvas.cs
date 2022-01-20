@@ -155,7 +155,7 @@ internal sealed class SkiaCanvas : CanvasBase
         return true;
     }
     
-    protected unsafe override bool UpdateGradientLinearCore(Vector2 from, Vector2 to, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    protected unsafe override bool UpdateGradientLinearCore(Vector2 from, Vector2 to, Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp)
     {
         // In order to prevent copying the gradient stops into arrays, we use the native method
 
@@ -173,16 +173,16 @@ internal sealed class SkiaCanvas : CanvasBase
         SKShaderTileMode skTileMode;
         switch (tileMode)
         {
-            case GradientTileMode.Clamp:
+            case TileMode.Clamp:
                 skTileMode = SKShaderTileMode.Clamp;
                 break;
-            case GradientTileMode.Repeat:
+            case TileMode.Repeat:
                 skTileMode = SKShaderTileMode.Repeat;
                 break;
-            case GradientTileMode.Mirror:
+            case TileMode.Mirror:
                 skTileMode = SKShaderTileMode.Mirror;
                 break;
-            case GradientTileMode.Stop:
+            case TileMode.Stop:
                 skTileMode = SKShaderTileMode.Decal;
                 break;
             default:
@@ -201,7 +201,7 @@ internal sealed class SkiaCanvas : CanvasBase
         return true;
     }
 
-    protected unsafe override bool UpdateGradientRadialCore(Vector2 position, float radius, Span<GradientStop> gradient, GradientTileMode tileMode = GradientTileMode.Clamp)
+    protected unsafe override bool UpdateGradientRadialCore(Vector2 position, float radius, Span<GradientStop> gradient, TileMode tileMode = TileMode.Clamp)
     {
         this.gradientShader.Dispose();
 
@@ -217,16 +217,16 @@ internal sealed class SkiaCanvas : CanvasBase
         SKShaderTileMode skTileMode;
         switch (tileMode)
         {
-            case GradientTileMode.Clamp:
+            case TileMode.Clamp:
                 skTileMode = SKShaderTileMode.Clamp;
                 break;
-            case GradientTileMode.Repeat:
+            case TileMode.Repeat:
                 skTileMode = SKShaderTileMode.Repeat;
                 break;
-            case GradientTileMode.Mirror:
+            case TileMode.Mirror:
                 skTileMode = SKShaderTileMode.Mirror;
                 break;
-            case GradientTileMode.Stop:
+            case TileMode.Stop:
                 skTileMode = SKShaderTileMode.Decal;
                 break;
             default:

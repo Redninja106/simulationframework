@@ -27,7 +27,7 @@ public unsafe sealed class CanvasState : IDisposable
     public Vector2 gradientTo;
     public Alignment relativeGradientFrom;
     public Alignment relativeGradientTo;
-    public GradientTileMode gradientTileMode;
+    public TileMode gradientTileMode;
     public bool isGradientRelative;
     public bool isGradientRadial;
 
