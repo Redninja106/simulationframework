@@ -314,8 +314,8 @@ public abstract class CanvasBase : ICanvas
         var enumerator = enumerable.GetEnumerator();
         for (int i = 0; i < enumerable.Count(); i++)
         {
-            buffer[i] = enumerator.Current;
             enumerator.MoveNext();
+            buffer[i] = enumerator.Current;
         }
 
         return buffer;
