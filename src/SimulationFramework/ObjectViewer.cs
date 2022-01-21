@@ -44,6 +44,11 @@ public sealed class ObjectViewer : DebugWindow
         if (popup)
             Window.IsOpen = true;
 
+        history.RemoveAll(v =>
+        {
+            return !v.TryGetTarget(out IViewable target) || target == viewable;
+        });
+
         history.Add(new WeakReference<IViewable>(viewable));
         
         currentlySelected = viewable;
