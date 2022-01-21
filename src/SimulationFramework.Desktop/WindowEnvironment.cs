@@ -140,6 +140,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
         private List<SilkKey> pressedKeys = new();
         private List<SilkButton> lastPressedButtons = new();
         private List<SilkButton> pressedButtons = new();
+        private List<char> typedChars = new();
 
         public WindowInputProvider(IWindow window)
         {
@@ -150,9 +151,15 @@ public sealed class WindowEnvironment : ISimulationEnvironment
 
             keyboard.KeyDown += KeyDown;
             keyboard.KeyUp += KeyUp;
+            keyboard.KeyChar += KeyTyped;
             mouse.MouseDown += ButtonDown;
             mouse.MouseUp += ButtonUp;
             mouse.Scroll += Scrolled;
+        }
+
+        private void KeyTyped(IKeyboard arg1, char arg2)
+        {
+            typedChars.Add(arg2);
         }
 
         private void Scrolled(IMouse mouse, ScrollWheel scrollWheel)
@@ -208,6 +215,7 @@ public sealed class WindowEnvironment : ISimulationEnvironment
             scrollWheel = 0;
             lastPressedButtons = new(pressedButtons);
             lastPressedKeys = new(pressedKeys);
+            typedChars = new();
         }
 
         public void Dispose()
@@ -378,6 +386,11 @@ public sealed class WindowEnvironment : ISimulationEnvironment
             var io = ImGuiNET.ImGui.GetIO();
             mouseCaptured = io.WantCaptureMouse;
             keyboardCaptured = io.WantCaptureKeyboard;
+        }
+
+        public char[] GetChars()
+        {
+            return typedChars.ToArray();
         }
     }
 

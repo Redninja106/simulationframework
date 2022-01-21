@@ -38,7 +38,7 @@ public interface IInputProvider : ISimulationComponent
     /// </summary>
     /// <returns><see langword="true"/> if the key is pressed, otherwise <see langword="false"/>.</returns>
     bool IsKeyDown(Key key);
-
+    char[] GetChars();
     bool IsKeyPressed(Key key);
 
     bool IsKeyReleased(Key key);

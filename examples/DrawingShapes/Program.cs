@@ -9,7 +9,7 @@ sim.RunWindowed("Shapes!", 1920, 1080);
 class DrawingShapesSimulation : Simulation
 {
     ITexture texture;
-
+    string text = "Hello world!";
     public override void OnInitialize(AppConfig config)
     {
         texture = Graphics.LoadTexture("logo-512x512.png");
@@ -35,7 +35,8 @@ class DrawingShapesSimulation : Simulation
 
         canvas.SetDrawMode(DrawMode.Fill);
         canvas.SetFont("verdana", TextStyles.Underline, 40);
-        canvas.DrawText("Hello, World!", (0, -TargetHeight / 4), Color.Indigo, Alignment.Center);
+        canvas.DrawText(text, (0, -TargetHeight / 4), Color.Indigo, Alignment.Center);
+        Keyboard.InputText(ref text, 4);
 
         canvas.SetDrawMode(DrawMode.Border);
         canvas.SetStrokeWidth(2);
