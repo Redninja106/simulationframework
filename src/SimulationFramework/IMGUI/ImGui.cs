@@ -356,7 +356,7 @@ public static class ImGui
     /// <param name="format">The C-Style format string to use to display the value of the slider.</param>
     /// <param name="flags">A set of <see cref="SliderFlags"/> value which effect the behavior of the slider.</param>
     /// <returns><see langword="true"/> if the slider's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>
-    public unsafe static bool SliderFloat(string label, ref float value, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None) => Provider.SliderScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 1), min, max, format, flags);
+    public unsafe static bool SliderFloat(string label, ref float value, float min = 0.0f, float max = 1.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None) => Provider.SliderScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 1), min, max, format, flags);
     
     /// <summary>
     /// A 1-dimensional floating-point slider widget. CTRL+Click to turn it into an input box (unless <see cref="SliderFlags.AlwaysClamp"/> is specified).
@@ -368,7 +368,7 @@ public static class ImGui
     /// <param name="format">The C-Style format string to use to display the value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns><see langword="true"/> if the slider's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>
-    public static float SliderFloat(string label, float value, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None)
+    public static float SliderFloat(string label, float value, float min = 0.0f, float max = 1.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None)
     {
         SliderFloat(label, ref value, min, max, format, flags);
         return value;
@@ -384,7 +384,7 @@ public static class ImGui
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
-    public unsafe static bool SliderFloat(string label, ref Vector2 value, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None) => Provider.SliderScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 2), min, max, format, flags);
+    public unsafe static bool SliderFloat(string label, ref Vector2 value, float min = 0.0f, float max = 1.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None) => Provider.SliderScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 2), min, max, format, flags);
     
     /// <summary>
     /// A 2-dimensional floating-point slider widget. CTRL+Click to turn it into an input box (unless <see cref="SliderFlags.AlwaysClamp"/> is specified).
@@ -396,7 +396,7 @@ public static class ImGui
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
-    public static Vector2 SliderFloat(string label, Vector2 value, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None)
+    public static Vector2 SliderFloat(string label, Vector2 value, float min = 0.0f, float max = 1.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None)
     {
         SliderFloat(label, ref value, min, max, format, flags);
         return value;
@@ -412,7 +412,7 @@ public static class ImGui
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
-    public unsafe static bool SliderFloat(string label, ref Vector3 value, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None) => Provider.SliderScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 3), min, max, format, flags);
+    public unsafe static bool SliderFloat(string label, ref Vector3 value, float min = 0.0f, float max = 1.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None) => Provider.SliderScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 3), min, max, format, flags);
     
     /// <summary>
     /// A 3-dimensional floating-point slider widget. CTRL+Click to turn it into an input box (unless <see cref="SliderFlags.AlwaysClamp"/> is specified).
@@ -424,7 +424,7 @@ public static class ImGui
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
-    public static Vector3 SliderFloat(string label, Vector3 value, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None)
+    public static Vector3 SliderFloat(string label, Vector3 value, float min = 0.0f, float max = 1.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None)
     {
         SliderFloat(label, ref value, min, max, format, flags);
         return value;
@@ -440,7 +440,7 @@ public static class ImGui
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
-    public unsafe static bool SliderFloat(string label, ref Vector4 value, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None) => Provider.SliderScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 4), min, max, format, flags);
+    public unsafe static bool SliderFloat(string label, ref Vector4 value, float min = 0.0f, float max = 1.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None) => Provider.SliderScalar(label, new Span<float>((float*)Unsafe.AsPointer(ref value), 4), min, max, format, flags);
     /// <summary>
     /// A 4-dimensional floating-point slider widget. CTRL+Click to turn it into an input box (unless <see cref="SliderFlags.AlwaysClamp"/> is specified).
     /// </summary>
@@ -451,7 +451,7 @@ public static class ImGui
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
-    public static Vector4 SliderFloat(string label, Vector4 value, float min = 0.0f, float max = 0.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None)
+    public static Vector4 SliderFloat(string label, Vector4 value, float min = 0.0f, float max = 1.0f, string format = "%.3f", SliderFlags flags = SliderFlags.None)
     {
         SliderFloat(label, ref value, min, max, format, flags);
         return value;
@@ -467,7 +467,7 @@ public static class ImGui
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns>The new value of the slider. This may be the same as <paramref name="value"/> if the slider was not modified. To see if the slider was modified, use <see cref="IsItemEdited"/>.</returns>
-    public unsafe static int SliderInt(string label, int value, int min = 0, int max = 0, string format = "%d", SliderFlags flags = SliderFlags.None)
+    public unsafe static int SliderInt(string label, int value, int min = 0, int max = 10, string format = "%d", SliderFlags flags = SliderFlags.None)
     {
         SliderScalar(label, ref value, min, max, format, flags);
         return value;
@@ -483,7 +483,7 @@ public static class ImGui
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="SliderFlags"/> value which effects the behavior of the slider.</param>
     /// <returns><see langword="true"/> if the slider's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>
-    public unsafe static bool SliderInt(string label, ref int value, int min = 0, int max = 0, string format = "%d", SliderFlags flags = SliderFlags.None) => SliderScalar(label, ref value, min, max, format, flags);
+    public unsafe static bool SliderInt(string label, ref int value, int min = 0, int max = 10, string format = "%d", SliderFlags flags = SliderFlags.None) => SliderScalar(label, ref value, min, max, format, flags);
 
     /// <summary>
     /// A 1-dimensional integer slider widget. CTRL+Click to turn it into an input box.
