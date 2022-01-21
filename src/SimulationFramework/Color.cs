@@ -842,7 +842,7 @@ public readonly struct Color : IEquatable<Color>
     /// </summary>
     public Vector3 ToVector3()
     {
-        return new Vector3(this.r, this.g, this.b);
+        return new Vector3(this.r / 255f, this.g / 255f, this.b / 255f);
     }
 
     /// <summary>
@@ -850,6 +850,6 @@ public readonly struct Color : IEquatable<Color>
     /// </summary>
     public Vector4 ToVector4()
     {
-        return new Vector4(this.r, this.g, this.b, this.a);
+        return new Vector4(this.r / 255f, this.g / 255f, this.B / 255f, this.a / 255f);
     }
 }
