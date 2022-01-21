@@ -76,6 +76,8 @@ public abstract class CanvasBase : ICanvas
     public void DrawEllipse(Vector2 position, Vector2 radii, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center) => DrawEllipse(new Rectangle(position, radii * 2, alignment), begin, end, includeCenter, color);
     public void DrawEllipse(Rectangle bounds, float begin, float end, bool includeCenter, Color color)
     {
+        RefreshRelativeGradient(bounds);
+
         if (CurrentState.DrawMode == DrawMode.Gradient && CurrentState.gradientTileMode == TileMode.Stop)
         {
             using (this.Push())
