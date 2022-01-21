@@ -609,4 +609,18 @@ public static class ImGui
 
     public static void BeginTooltip() => Provider.BeginTooltip();
     public static void EndTooltip() => Provider.EndToolTip();
+
+    public static bool ColorEdit(string label, ref Color color, ColorEditFlags flags = ColorEditFlags.None) => Provider.ColorEdit(label, ref color, flags);
+    public static Color ColorEdit(string label, Color color, ColorEditFlags flags = ColorEditFlags.None)
+    {
+        Provider.ColorEdit(label, ref color, flags);
+        return color;
+    }
+
+    public static bool ColorPicker(string label, ref Color color, ColorEditFlags flags = ColorEditFlags.None) => Provider.ColorPicker(label, ref color, flags);
+    public static Color ColorPicker(string label, Color color, ColorEditFlags flags = ColorEditFlags.None)
+    {
+        Provider.ColorPicker(label, ref color, flags);
+        return color;
+    }
 }
