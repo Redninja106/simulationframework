@@ -37,7 +37,7 @@ class DrawingShapesSimulation : Simulation
         canvas.SetFont("verdana", TextStyles.Underline, 40);
         canvas.DrawText(text, (0, -TargetHeight / 4), Color.Indigo, Alignment.Center);
         Keyboard.InputText(ref text, 4);
-
+        
         canvas.SetDrawMode(DrawMode.Border);
         canvas.SetStrokeWidth(2);
 
@@ -60,11 +60,15 @@ class DrawingShapesSimulation : Simulation
 
         radius = MathF.Sin(Time.TotalTime) * MathF.Tau;
 
-        canvas.SetFillTexture(texture, TileMode.Mirror);
+        canvas.SetFillTexture(texture, System.Numerics.Matrix3x2.CreateTranslation(x,y), TileMode.Stop);
         canvas.SetDrawMode(DrawMode.Textured);
 
         (x, y) = ImGui.DragFloat("pos", (x, y));
         canvas.DrawRect(x,y , 300, 300, Color.OldLace, Alignment.Center);
+
+        canvas.SetDrawMode(DrawMode.Gradient);
+        canvas.SetGradientRadial(Alignment.Center, 50f, (Color.Orange, 0), (Color.Green, 1));
+        canvas.DrawEllipse(0, 0, 50, 50, Color.Black, Alignment.Center);
     }
     float x, y;
 
