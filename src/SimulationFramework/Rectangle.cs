@@ -31,10 +31,13 @@ public struct Rectangle : IEquatable<Rectangle>
     public float Height;
 
     /// <summary>
-    /// The size of the rectangle
+    /// The size of the rectangle.
     /// </summary>
     public Vector2 Size { get => (Width, Height); set => (Width, Height) = value; }
 
+    /// <summary>
+    /// The position of the rectangle.
+    /// </summary>
     public Vector2 Position { get => (X, Y); set => (X, Y) = value; }
 
     /// <summary>
@@ -59,22 +62,9 @@ public struct Rectangle : IEquatable<Rectangle>
     {
         this.Width = width;
         this.Height = height;
+        this.X = this.Y = 0;
 
-        this.X = alignment switch
-        {
-            Alignment.TopLeft or Alignment.CenterLeft or Alignment.BottomLeft => x,
-            Alignment.TopCenter or Alignment.Center or Alignment.BottomCenter => x - .5f * width,
-            Alignment.TopRight or Alignment.CenterRight or Alignment.BottomRight => x - width,
-            _ => throw new ArgumentException("Unrecognized alignment!")
-        };
-
-        this.Y = alignment switch
-        {
-            Alignment.TopLeft or Alignment.TopCenter or Alignment.TopRight => y,
-            Alignment.CenterLeft or Alignment.Center or Alignment.CenterRight => y - .5f * height,
-            Alignment.BottomLeft or Alignment.BottomCenter or Alignment.BottomRight => y - height,
-            _ => throw new ArgumentException("Unrecognized alignment!")
-        };
+        SetAlignedPosition((x, y), alignment);
     }
 
     /// <summary>
@@ -94,6 +84,30 @@ public struct Rectangle : IEquatable<Rectangle>
             Alignment.BottomCenter => new Vector2(X + .5f * Width, Y + Height),
             Alignment.BottomRight => new Vector2(X + Width, Y + Height),
             _ => throw new ArgumentException("Unrecognized alignment!"),
+        };
+    }
+
+    /// <summary>
+    /// Moves the rectangle such that the provided point is at the specified position.
+    /// </summary>
+    /// <param name="position">The position to align to.</param>
+    /// <param name="alignment">The point on the rectangle to align to position.</param>
+    public void SetAlignedPosition(Vector2 position, Alignment alignment)
+    {
+        this.X = alignment switch
+        {
+            Alignment.TopLeft or Alignment.CenterLeft or Alignment.BottomLeft => position.X,
+            Alignment.TopCenter or Alignment.Center or Alignment.BottomCenter => position.X - .5f * this.Width,
+            Alignment.TopRight or Alignment.CenterRight or Alignment.BottomRight => position.X - this.Width,
+            _ => throw new ArgumentException("Unrecognized alignment!")
+        };
+
+        this.Y = alignment switch
+        {
+            Alignment.TopLeft or Alignment.TopCenter or Alignment.TopRight => position.Y,
+            Alignment.CenterLeft or Alignment.Center or Alignment.CenterRight => position.Y - .5f * Height,
+            Alignment.BottomLeft or Alignment.BottomCenter or Alignment.BottomRight => position.Y - Height,
+            _ => throw new ArgumentException("Unrecognized alignment!")
         };
     }
 
@@ -128,7 +142,7 @@ public struct Rectangle : IEquatable<Rectangle>
     {
         float x1 = MathF.Max(this.X, other.X);
         float x2 = MathF.Min(this.X + this.Width, other.X + other.Width);
-        float y1 = MathF.Max(this.Y, other.X);
+        float y1 = MathF.Max(this.Y, other.Y);
         float y2 = MathF.Min(this.Y + this.Height, other.Y + other.Height);
         var intersects = x2 >= x1 && y2 >= y1;
 
@@ -142,21 +156,33 @@ public struct Rectangle : IEquatable<Rectangle>
         return false;
     }
 
+    /// <summary>
+    /// Casts from a recangle to a tuple of floats.
+    /// </summary>
     public static implicit operator (float, float, float, float)(Rectangle rectangle)
     {
         return (rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
     }
 
+    /// <summary>
+    /// Casts from a tuple of floats to a rectangle.
+    /// </summary>
     public static implicit operator Rectangle((float x, float y, float width, float height) rectangle)
     {
         return new(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
     }
 
+    /// <summary>
+    /// Casts from a rectangle to a tuple of (position, size).
+    /// </summary>
     public static implicit operator (Vector2, Vector2)(Rectangle rectangle)
     {
         return (rectangle.Position, rectangle.Size);
     }
 
+    /// <summary>
+    /// Casts from a tuple of (position, size) to a rectangle.
+    /// </summary>
     public static implicit operator Rectangle((Vector2 position, Vector2 size) rectangle)
     {
         return new(rectangle.position, rectangle.size);
@@ -177,7 +203,7 @@ public struct Rectangle : IEquatable<Rectangle>
         return false;
     }
 
-    ///
+    /// Returns this rectangle in the format "{x, y, width, height}".
     public override string ToString()
     {
         return $"{{{X}, {Y}, {Width}, {Height}}}";
