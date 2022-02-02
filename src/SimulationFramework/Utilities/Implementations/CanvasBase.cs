@@ -497,4 +497,9 @@ public abstract class CanvasBase : ICanvas
             CurrentState.textureTileMode = tileMode;
         }
     }
+
+    public void TransformBy(Matrix3x2 transformation)
+    {
+        this.Transform = transformation * this.Transform;
+    }
 }

@@ -542,6 +542,11 @@ public interface ICanvas : IDisposable
     Matrix3x2 Transform { get; set; }
 
     /// <summary>
+    /// Composes the provided transformation with the canvas' current transform.
+    /// </summary>
+    void TransformBy(Matrix3x2 transformation);
+
+    /// <summary>
     /// Translates the current transformation matrix by the provided translation.
     /// </summary>
     /// <param name="x">The X value of the translation.</param>
