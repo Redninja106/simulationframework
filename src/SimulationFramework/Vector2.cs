@@ -10,10 +10,8 @@ public struct Vector2 : IEquatable<Vector2>
 {
     public static readonly Vector2 Zero = (0, 0);
     public static readonly Vector2 One = (1, 1);
-    public static readonly Vector2 Up = (0,-1);
-    public static readonly Vector2 Down = (0, 1);
-    public static readonly Vector2 Left = (-1, 0);
-    public static readonly Vector2 Right = (1, 0);
+    public static readonly Vector2 UnitY = (0, 1);
+    public static readonly Vector2 UnitX = (1, 0);
 
     public float X;
     public float Y;

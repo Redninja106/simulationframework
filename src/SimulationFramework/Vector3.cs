@@ -10,12 +10,9 @@ public struct Vector3 : IEquatable<Vector3>
 {
     public static readonly Vector3 Zero = (0, 0, 0);
     public static readonly Vector3 One = (1, 1, 1);
-    public static readonly Vector3 Up = (0, -1, 0);
-    public static readonly Vector3 Down = (0, 1, 0);
-    public static readonly Vector3 Left = (-1, 0, 0);
-    public static readonly Vector3 Right = (1, 0, 0);
-    public static readonly Vector3 Forward = (0, 0, 1);
-    public static readonly Vector3 Backward = (0, 0, -1);
+    public static readonly Vector3 UnitY = (0, 1, 0);
+    public static readonly Vector3 UnitX = (1, 0, 0);
+    public static readonly Vector3 UnitZ = (0, 0, 1);
 
     public float X;
     public float Y;
