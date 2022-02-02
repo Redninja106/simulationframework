@@ -72,11 +72,37 @@ public struct Vector2 : IEquatable<Vector2>
         return false;
     }
 
+    /// <summary>
+    /// Creates a unit vector from the provided angle.
+    /// </summary>
     public static Vector2 FromAngle(float angle)
     {
         return (MathF.Cos(angle), MathF.Sin(angle));
     }
 
+    /// <summary>
+    /// Transforms a point by the provided transformation.
+    /// </summary>
+    public static Vector2 Transform(Vector2 point, Matrix3x2 transform)
+    {
+        return (point.X * transform.M11 + point.Y * transform.M21 + transform.M31, point.X * transform.M12 + point.Y * transform.M22 + transform.M32);
+    }
+
+    /// <summary>
+    /// Reflects a vector across a normal.
+    /// </summary>
+    public static Vector2 Reflect(Vector2 vector, Vector2 normal)
+    {
+        return vector - (2 * Dot(vector, normal) * normal);
+    }
+
+    /// <summary>
+    /// Determines the dot product between two vectors.
+    /// </summary>
+    public static float Dot(Vector2 a, Vector2 b)
+    {
+        return a.X * b.X + a.Y * b.Y;
+    }
 
     public static implicit operator (float, float)(Vector2 vector) => (vector.X, vector.Y);
     public static implicit operator Vector2((float, float) values) => new(values.Item1, values.Item2);
