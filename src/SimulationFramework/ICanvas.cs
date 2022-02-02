@@ -595,22 +595,6 @@ public interface ICanvas : IDisposable
     void Scale(Vector2 scale);
 
     /// <summary>
-    /// Scales the current transformation matrix by the provided value.
-    /// </summary>
-    /// <param name="scaleX">The scale to transform the transformation matrix by on the x-axis.</param>
-    /// <param name="scaleY">The scale to transform the transformation matrix by on the y-axis.</param>
-    /// <param name="centerX">The X-coordinate of the point which to focus the scaling around.</param>
-    /// <param name="centerY">The Y-coordinate of the point which to focus the scaling around.</param>
-    void Scale(float scaleX, float scaleY, float centerX, float centerY);
-
-    /// <summary>
-    /// Scales the current transformation matrix by the provided value.
-    /// </summary>
-    /// <param name="scale">The scale to transform the transformation matrix by on the x and y axes.</param>
-    /// <param name="center">The center of the scaling.</param>
-    void Scale(Vector2 scale, Vector2 center);
-
-    /// <summary>
     /// Sets the texture to use when drawing with <see cref="DrawMode.Textured"/>.
     /// </summary>
     /// <param name="texture">The texture to use.</param>

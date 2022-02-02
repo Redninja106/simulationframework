@@ -273,11 +273,9 @@ public abstract class CanvasBase : ICanvas
 
     public void Scale(float scale) => Scale(scale, scale);
     public void Scale(float scaleX, float scaleY) => Scale((scaleX, scaleY));
-    public void Scale(float scaleX, float scaleY, float centerX, float centerY) => Scale((scaleX, scaleY), (centerX, centerY));
-    public void Scale(Vector2 scale) => Scale(scale.X, scale.Y, 0, 0);
-    public void Scale(Vector2 scale, Vector2 center)
+    public void Scale(Vector2 scale)
     {
-        this.Transform = Matrix3x2.CreateScale(scale, center) * this.Transform;
+        this.Transform = Matrix3x2.CreateScale(scale) * this.Transform;
     }
 
     public void SetClipRect(float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => SetClipRect((x, y), (width, height), alignment);

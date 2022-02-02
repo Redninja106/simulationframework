@@ -60,7 +60,7 @@ class DrawingShapesSimulation : Simulation
 
         radius = MathF.Sin(Time.TotalTime) * MathF.Tau;
 
-        canvas.SetFillTexture(texture, System.Numerics.Matrix3x2.CreateTranslation(x,y), TileMode.Stop);
+        canvas.SetFillTexture(texture, Matrix3x2.CreateTranslation(x,y), TileMode.Stop);
         canvas.SetDrawMode(DrawMode.Textured);
 
         (x, y) = ImGui.DragFloat("pos", (x, y));
