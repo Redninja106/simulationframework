@@ -16,9 +16,6 @@ public abstract class Simulation : IDisposable
     /// </summary>
     public static Simulation Current { get; private set; }
 
-    public int TargetWidth => environment.GetOutputSize().Item1;
-    public int TargetHeight => environment.GetOutputSize().Item2;
-
     private readonly List<ISimulationComponent> components = new();
     private ISimulationEnvironment environment;
 
@@ -147,7 +144,7 @@ public abstract class Simulation : IDisposable
 
             if (prevSize != environment.GetOutputSize())
             {
-                this.Resized?.Invoke(this.TargetWidth, this.TargetHeight);
+                this.Resized?.Invoke(environment.GetOutputSize().Item1, environment.GetOutputSize().Item2);
                 prevSize = environment.GetOutputSize();
                 PerformanceViewer.MarkTaskCompleted("resizing");
             }

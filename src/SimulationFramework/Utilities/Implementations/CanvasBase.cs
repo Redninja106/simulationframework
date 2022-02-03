@@ -19,8 +19,8 @@ public abstract class CanvasBase : ICanvas
 {
     public const int MAX_STACK_ALLOCATION = 1024;
 
-    public int Width => this.GetTarget()?.Width ?? Simulation.Current.TargetWidth;
-    public int Height => this.GetTarget()?.Height ?? Simulation.Current.TargetHeight;
+    public int Width => this.GetTarget().Width;
+    public int Height => this.GetTarget().Height;
     public Matrix3x2 Transform
     {
         get
