@@ -20,9 +20,9 @@ public unsafe sealed class CanvasState : IDisposable
     public TextStyles styles = TextStyles.Default;
     public float size = 12;
 
-    public Span<GradientStop> GradientStops => gradientStops.AsSpan();
+    public Span<Color> Colors => gradientStops.AsSpan();
 
-    private GradientStop[] gradientStops;
+    private Color[] gradientStops;
     public Vector2 gradientFrom;
     public Vector2 gradientTo;
     public Alignment relativeGradientFrom;
@@ -39,9 +39,9 @@ public unsafe sealed class CanvasState : IDisposable
         this.canvas = canvas;
     }
 
-    public void UpdateGradient(Span<GradientStop> gradient)
+    public void UpdateGradient(Span<Color> gradient)
     {
-        this.gradientStops = new GradientStop[gradient.Length];
+        this.gradientStops = new Color[gradient.Length];
         gradient.CopyTo(this.gradientStops);
     }
 
@@ -58,7 +58,7 @@ public unsafe sealed class CanvasState : IDisposable
             styles = this.styles,
             size = this.size,
 
-            gradientStops = this.gradientStops?.Clone() as GradientStop[] ?? Array.Empty<GradientStop>(),
+            gradientStops = this.gradientStops?.Clone() as Color[] ?? Array.Empty<Color>(),
             gradientTileMode = this.gradientTileMode,
 
             gradientFrom = this.gradientFrom,

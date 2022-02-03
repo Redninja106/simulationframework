@@ -67,7 +67,7 @@ class DrawingShapesSimulation : Simulation
         canvas.DrawRect(x,y , 300, 300, Color.OldLace, Alignment.Center);
 
         canvas.SetDrawMode(DrawMode.Gradient);
-        canvas.SetGradientRadial(Alignment.Center, 50f, (Color.Orange, 0), (Color.Green, 1));
+        canvas.SetGradientRadial(Alignment.Center, 50f, Color.Orange, Color.Green);
         canvas.DrawEllipse(0, 0, 50, 50, Color.Black, Alignment.Center);
     }
     float x, y;
