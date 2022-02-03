@@ -9,9 +9,9 @@ using SimulationFramework.IMGUI;
 namespace SimulationFramework;
 
 /// <summary>
-/// Acts as an IViewable which generates a layout for an object using reflection.
+/// An IViewable which generates a layout for an object using reflection.
 /// </summary>
-public sealed class ObjectAutoViewable : IViewable
+public sealed class ObjectAutoViewer : IViewable
 {
     /// <summary>
     /// The target object.
@@ -22,7 +22,7 @@ public sealed class ObjectAutoViewable : IViewable
     /// Creates a new ObjectAutoViewable targeting the provided object.
     /// </summary>
     /// <param name="obj">The target object.</param>
-    public ObjectAutoViewable(object obj)
+    public ObjectAutoViewer(object obj)
     {
         Object = obj;
     }
