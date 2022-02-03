@@ -55,6 +55,13 @@ public abstract class Simulation : IDisposable
     public virtual void OnUnitialize() { }
 
     /// <summary>
+    /// Called when the simulation's video output is resized.
+    /// </summary>
+    /// <param name="width">The new width of the simulation's video output.</param>
+    /// <param name="height">The new height of the simulation's video output.</param>
+    public virtual void OnResize(int width, int height) { }
+
+    /// <summary>
     /// Creates a new instance of the <see cref="Simulation"/> class.
     /// </summary>
     public Simulation()
