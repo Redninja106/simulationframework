@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
+public delegate void KeyEvent(Key key);
+
 /// <summary>
 /// Provides keyboard input to the simulation.
 /// </summary>
@@ -36,19 +38,15 @@ public static class Keyboard
     /// </summary>
     public static char[] GetChars() => Provider.GetChars();
 
-    /// <summary>
-    /// Modifies the provided text based off the typed chars this frame.
-    /// </summary>
-    /// <param name="text"></param>
-    /// <param name="charFilter"></param>
-    public static void InputText(ref string text, int cursorPosition, Func<char, bool> charFilter = null)
+    public static event KeyEvent KeyPressed 
+    { 
+        add { Provider.KeyPressed += value; }
+        remove { Provider.KeyPressed -= value; }
+    }
+
+    public static event KeyEvent KeyReleased
     {
-        foreach (var c in GetChars())
-        {
-            if (charFilter is null || charFilter(c))
-            {
-                text = text.Insert(cursorPosition, c.ToString());
-            }
-        }
+        add { Provider.KeyReleased += value; }
+        remove { Provider.KeyReleased -= value; }
     }
 }
