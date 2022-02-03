@@ -27,32 +27,35 @@ public static class Graphics
     /// Loads a texture from a file.
     /// </summary>
     /// <param name="file">The path to a .PNG image file.</param>
+    /// <param name="flags">A <see cref="TextureFlags"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture LoadTexture(string file)
+    public static ITexture LoadTexture(string file, TextureFlags flags = TextureFlags.None)
     {
         var fileData = File.ReadAllBytes(file);
 
-        return LoadTexture(fileData);
+        return LoadTexture(fileData, flags);
     }
 
     /// <summary>
     /// Loads a texture from raw, encoded file data.
     /// </summary>
     /// <param name="encodedBytes">An array of the bytes of a supported image file.</param>
+    /// <param name="flags">A <see cref="TextureFlags"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture LoadTexture(byte[] encodedBytes)
+    public static ITexture LoadTexture(byte[] encodedBytes, TextureFlags flags = TextureFlags.None)
     {
-        return LoadTexture(encodedBytes.AsSpan());
+        return LoadTexture(encodedBytes.AsSpan(), flags);
     }
 
     /// <summary>
     /// Loads a texture from raw, encoded file data.
     /// </summary>
     /// <param name="encodedBytes">A span of the bytes of a supported image file.</param>
+    /// <param name="flags">A <see cref="TextureFlags"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture LoadTexture(Span<byte> encodedBytes)
+    public static ITexture LoadTexture(Span<byte> encodedBytes, TextureFlags flags = TextureFlags.None)
     {
-        return Provider.LoadTexture(encodedBytes);
+        return Provider.LoadTexture(encodedBytes, flags);
     }
 
     /// <summary>
@@ -60,10 +63,11 @@ public static class Graphics
     /// </summary>
     /// <param name="width">The width of the texture, in pixels.</param>
     /// <param name="height">The height of the texture, in pixels.</param>
+    /// <param name="flags">A <see cref="TextureFlags"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture CreateTexture(int width, int height)
+    public static ITexture CreateTexture(int width, int height, TextureFlags flags = TextureFlags.None)
     {
-        return Provider.CreateTexture(width, height, null);
+        return Provider.CreateTexture(width, height, null, flags);
     }
 
     /// <summary>
@@ -72,10 +76,11 @@ public static class Graphics
     /// <param name="width">The width of the texture, in pixels.</param>
     /// <param name="height">The height of the texture, in pixels.</param>
     /// <param name="colors">The data of to fill the texture with. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
+    /// <param name="flags">A <see cref="TextureFlags"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture CreateTexture(int width, int height, Span<Color> colors)
+    public static ITexture CreateTexture(int width, int height, Span<Color> colors, TextureFlags flags = TextureFlags.None)
     {
-        return Provider.CreateTexture(width, height, colors);
+        return Provider.CreateTexture(width, height, colors, flags);
     }
 
     /// <summary>
@@ -84,10 +89,11 @@ public static class Graphics
     /// <param name="width">The width of the texture, in pixels.</param>
     /// <param name="height">The height of the texture, in pixels.</param>
     /// <param name="colors">The data of to fill the texture with. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
+    /// <param name="flags">A <see cref="TextureFlags"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture CreateTexture(int width, int height, Color[] colors)
+    public static ITexture CreateTexture(int width, int height, Color[] colors, TextureFlags flags = TextureFlags.None)
     {
-        return Provider.CreateTexture(width, height, colors.AsSpan());
+        return Provider.CreateTexture(width, height, colors.AsSpan(), flags);
     }
 
     /// <summary>
