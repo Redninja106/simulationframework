@@ -64,10 +64,8 @@ public sealed class PerformanceViewer : DebugWindow
 
                 var input = Simulation.Current.GetComponent<IInputProvider>();
                 
-                input.OverrideCaptureState(false);
                 fpsUpdateInterval = MathF.Max(fpsUpdateInterval + 0.05f * Mouse.ScrollWheelDelta, 0);
-                input.RestoreCaptureState();
-                
+
                 ImGui.SliderFloat("", ref fpsUpdateInterval, 0, 2.5f, format: "%.2f");
                 
                 ImGui.Text($"Exact Values: {Performance.Framerate}FPS, {(1000f / Performance.Framerate):f2}ms per frame");

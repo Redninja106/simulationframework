@@ -17,14 +17,6 @@ public sealed partial class WindowEnvironment
         {
             silkInputDevice = window.CreateInput();
 
-            silkInputDevice.Mice[0].MouseUp += MouseUp;
-            silkInputDevice.Mice[0].MouseDown += MouseDown;
-            silkInputDevice.Mice[0].MouseMove += MouseMove;
-            silkInputDevice.Mice[0].Scroll += Scroll;
-            
-            silkInputDevice.Keyboards[0].KeyDown += KeyDown;
-            silkInputDevice.Keyboards[0].KeyUp += KeyUp;
-            silkInputDevice.Keyboards[0].KeyChar += KeyChar;
         }
 
         private void Scroll(IMouse arg1, ScrollWheel arg2)
@@ -67,6 +59,15 @@ public sealed partial class WindowEnvironment
         public void Apply(Simulation simulation)
         {
             this.Context = simulation.InputContext;
+
+            silkInputDevice.Mice[0].MouseUp += MouseUp;
+            silkInputDevice.Mice[0].MouseDown += MouseDown;
+            silkInputDevice.Mice[0].MouseMove += MouseMove;
+            silkInputDevice.Mice[0].Scroll += Scroll;
+
+            silkInputDevice.Keyboards[0].KeyDown += KeyDown;
+            silkInputDevice.Keyboards[0].KeyUp += KeyUp;
+            silkInputDevice.Keyboards[0].KeyChar += KeyChar;
         }
 
         public void Dispose()

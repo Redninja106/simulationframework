@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
+/// <summary>
+/// A delegate for key up/down events.
+/// </summary>
 public delegate void KeyEvent(Key key);
 
 /// <summary>
@@ -13,40 +16,41 @@ public delegate void KeyEvent(Key key);
 /// </summary>
 public static class Keyboard
 {
-    internal static IInputProvider Provider => Simulation.Current.GetComponent<IInputProvider>();
+    internal static InputContext Context => Simulation.Current.InputContext;
 
     /// <summary>
     /// Returns true if the provided key is pressed.
     /// </summary>
-    public static bool IsKeyDown(Key key) => Provider.IsKeyDown(key);
+    public static bool IsKeyDown(Key key) => Context.pressedKeys.Contains(key);
+    
     /// <summary>
     /// Returns true if the provided key is not pressed.
     /// </summary>
-    public static bool IsKeyUp(Key key) => !Provider.IsKeyDown(key);
+    public static bool IsKeyUp(Key key) => !Context.pressedKeys.Contains(key);
 
     /// <summary>
     /// Returns true if the provided key is pressed this frame and was not pressed the frame before.
     /// </summary>
-    public static bool IsKeyPressed(Key key) => Provider.IsKeyPressed(key);
+    public static bool IsKeyPressed(Key key) => Context.pressedKeys.Contains(key) && !Context.lastPressedKeys.Contains(key);
     /// <summary>
     /// Returns true if the provided key is not pressed this frame and was pressed the frame before.
     /// </summary>
-    public static bool IsKeyReleased(Key key) => Provider.IsKeyReleased(key);
+    public static bool IsKeyReleased(Key key) => !Context.pressedKeys.Contains(key) && Context.lastPressedKeys.Contains(key);
 
     /// <summary>
     /// Gets the keys typed this frame.
     /// </summary>
-    public static char[] GetChars() => Provider.GetChars();
+    public static IEnumerable<char> GetChars() => Context.typedKeys;
 
     public static event KeyEvent KeyPressed 
     { 
-        add { Provider.KeyPressed += value; }
-        remove { Provider.KeyPressed -= value; }
+        add { Context.KeyDown += value; }
+        remove { Context.KeyUp -= value; }
     }
 
     public static event KeyEvent KeyReleased
     {
-        add { Provider.KeyReleased += value; }
-        remove { Provider.KeyReleased -= value; }
+        add { Context.KeyDown += value; }
+        remove { Context.KeyUp -= value; }
     }
 }

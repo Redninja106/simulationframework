@@ -29,6 +29,8 @@ public abstract class Simulation : IDisposable
     public event Action AfterRender;
     public event Action Uninitialized;
 
+    public InputContext InputContext { get; } = new();
+
     /// <summary>
     /// Raised when the window is resized.
     /// </summary>

@@ -8,13 +8,13 @@ namespace SimulationFramework;
 
 public static class Mouse
 {
-    internal static IInputProvider Provider => Simulation.Current.GetComponent<IInputProvider>();
+    internal static InputContext Context => Simulation.Current.InputContext;
 
-    public static Vector2 Position => Provider.GetMousePosition();
-    public static Vector2 DeltaPosition => Provider.GetMousePosition();
-    public static int ScrollWheelDelta => Provider.GetScrollWheelDelta();
-    public static bool IsButtonDown(MouseButton button) => Provider.IsMouseButtonDown(button);
-    public static bool IsButtonUp(MouseButton button) => !Provider.IsMouseButtonDown(button);
-    public static bool IsButtonPressed(MouseButton button) => Provider.IsMouseButtonPressed(button);
-    public static bool IsButtonReleased(MouseButton button) => Provider.IsMouseButtonReleased(button);
+    public static Vector2 Position => Context.mousePosition;
+    public static Vector2 DeltaPosition => Context.lastMousePosition - Context.mousePosition;
+    public static int ScrollWheelDelta => Context.scrollDelta;
+    public static bool IsButtonDown(MouseButton button) => Context.pressedMouseButtons.Contains(button);
+    public static bool IsButtonUp(MouseButton button) => !Context.pressedMouseButtons.Contains(button);
+    public static bool IsButtonPressed(MouseButton button) => Context.pressedMouseButtons.Contains(button) && !Context.lastPressedMouseButtons.Contains(button);
+    public static bool IsButtonReleased(MouseButton button) => !Context.pressedMouseButtons.Contains(button) && Context.lastPressedMouseButtons.Contains(button);
 }

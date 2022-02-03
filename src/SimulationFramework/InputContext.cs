@@ -1,0 +1,80 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SimulationFramework;
+
+/// <summary>
+/// Controls the input sent to a simulation.
+/// </summary>
+public sealed class InputContext
+{
+    internal event KeyEvent KeyDown;
+    internal event KeyEvent KeyUp;
+
+    internal readonly List<char> typedKeys = new();
+
+    internal readonly List<Key> lastPressedKeys = new();
+    internal readonly List<Key> pressedKeys = new();
+
+    internal readonly List<MouseButton> lastPressedMouseButtons = new();
+    internal readonly List<MouseButton> pressedMouseButtons = new();
+
+    internal Vector2 mousePosition;
+    internal Vector2 lastMousePosition;
+
+    internal int scrollDelta;
+
+    public void UpdateKey(Key key, bool isDown)
+    {
+        if (key == Key.Unknown)
+            throw new ArgumentException("Invalid key value!");
+
+        if (isDown == pressedKeys.Contains(key))
+            return;
+
+        if (isDown)
+            pressedKeys.Add(key);
+        else
+            pressedKeys.Remove(key);
+    }
+
+    public void UpdateMouseButton(MouseButton button, bool isDown)
+    {
+        if (isDown == pressedMouseButtons.Contains(button))
+            return;
+
+        if (isDown)
+            pressedMouseButtons.Add(button);
+        else
+            pressedMouseButtons.Remove(button);
+    }
+
+    public void UpdateMousePosition(Vector2 position)
+    {
+        this.mousePosition = position;
+    }
+
+    public void UpdateMouseScroll(int scrollDelta)
+    {
+        this.scrollDelta = scrollDelta;
+    }
+
+    public void SendChar(char keycode)
+    {
+        typedKeys.Add(keycode);
+    }
+
+    internal void NewFrame()
+    {
+        lastPressedKeys.Clear();
+        lastPressedKeys.AddRange(this.pressedKeys);
+
+        lastPressedMouseButtons.Clear();
+        lastPressedMouseButtons.AddRange(this.pressedMouseButtons);
+
+        lastMousePosition = mousePosition;
+    }
+}

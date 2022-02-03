@@ -22,7 +22,7 @@ class MySimulation : Simulation
 
         fps.Enqueue(Performance.Framerate);
 
-        while (fps.Sum(x => 1f / x) * scale > this.TargetWidth)
+        while (fps.Sum(x => 1f / x) * scale > canvas.Width)
         {
             fps.Dequeue();
         }
@@ -34,7 +34,7 @@ class MySimulation : Simulation
             var entryWidth = (1 / val) * scale;
             var lineWidth = (lastEntryWidth + entryWidth) * .5f;
 
-            canvas.DrawLine(0, TargetWidth - lastval, lineWidth, TargetHeight - val, Color.Yellow);
+            canvas.DrawLine(0, canvas.Width - lastval, lineWidth, canvas.Height - val, Color.Yellow);
             canvas.Translate(lineWidth, 0);
             lastval = val;
         }

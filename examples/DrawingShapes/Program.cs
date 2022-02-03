@@ -35,9 +35,8 @@ class DrawingShapesSimulation : Simulation
 
         canvas.SetDrawMode(DrawMode.Fill);
         canvas.SetFont("verdana", TextStyles.Underline, 40);
-        canvas.DrawText(text, (0, -TargetHeight / 4), Color.Indigo, Alignment.Center);
-        Keyboard.InputText(ref text, 4);
-        
+        canvas.DrawText(text, (0, -canvas.Height / 4), Color.Indigo, Alignment.Center);
+
         canvas.SetDrawMode(DrawMode.Border);
         canvas.SetStrokeWidth(2);
 
@@ -47,7 +46,7 @@ class DrawingShapesSimulation : Simulation
         canvas.DrawRect((0, 100), (50, 50), Color.White, Alignment.TopRight);
         canvas.DrawRect((0, 100), (50, 50), Color.DarkGray, Alignment.TopLeft);
 
-        canvas.DrawRoundedRect((0, -TargetHeight / 5), (90, 90), 25, Color.Bisque);
+        canvas.DrawRoundedRect((0, -canvas.Height / 5), (90, 90), 25, Color.Bisque);
 
         canvas.DrawLine(100, 100, -110, -100, Color.White);
 
@@ -69,6 +68,9 @@ class DrawingShapesSimulation : Simulation
         canvas.SetDrawMode(DrawMode.Gradient);
         canvas.SetGradientRadial(Alignment.Center, 50f, Color.Orange, Color.Green);
         canvas.DrawEllipse(0, 0, 50, 50, Color.Black, Alignment.Center);
+
+        canvas.SetDrawMode(DrawMode.Fill);
+        canvas.DrawEllipse(Mouse.Position - (canvas.Width / 2f, canvas.Height / 2f), (100, 100), Keyboard.IsKeyDown(Key.G) ? Color.Purple : Color.Peru);
     }
     float x, y;
 
