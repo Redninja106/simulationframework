@@ -7,272 +7,159 @@ namespace SimulationFramework.Desktop;
 
 public sealed partial class WindowEnvironment
 {
-    private class WindowInputProvider : IInputProvider
+    private class WindowInputProvider : ISimulationComponent
     {
-        private readonly IInputContext inputContext;
-
-        private bool mouseCaptured;
-        private bool keyboardCaptured;
-        private bool textCaptured;
-
-        private Vector2 mouseDelta;
-        private Vector2 mousePosition;
-        private int scrollWheel;
-        private List<SilkKey> lastPressedKeys = new();
-        private List<SilkKey> pressedKeys = new();
-        private List<SilkButton> lastPressedButtons = new();
-        private List<SilkButton> pressedButtons = new();
-        private List<char> typedChars = new();
+        private readonly IInputContext silkInputDevice;
+        private InputContext Context;
+        private float lastScrollPos;
 
         public WindowInputProvider(IWindow window)
         {
-            inputContext = window.CreateInput();
+            silkInputDevice = window.CreateInput();
 
-            var keyboard = inputContext.Keyboards.FirstOrDefault();
-            var mouse = inputContext.Mice.FirstOrDefault();
-
-            keyboard.KeyDown += KeyDown;
-            keyboard.KeyUp += KeyUp;
-            keyboard.KeyChar += KeyTyped;
-            mouse.MouseDown += ButtonDown;
-            mouse.MouseUp += ButtonUp;
-            mouse.Scroll += Scrolled;
+            silkInputDevice.Mice[0].MouseUp += MouseUp;
+            silkInputDevice.Mice[0].MouseDown += MouseDown;
+            silkInputDevice.Mice[0].MouseMove += MouseMove;
+            silkInputDevice.Mice[0].Scroll += Scroll;
+            
+            silkInputDevice.Keyboards[0].KeyDown += KeyDown;
+            silkInputDevice.Keyboards[0].KeyUp += KeyUp;
+            silkInputDevice.Keyboards[0].KeyChar += KeyChar;
         }
 
-        private void KeyTyped(IKeyboard arg1, char arg2)
+        private void Scroll(IMouse arg1, ScrollWheel arg2)
         {
-            typedChars.Add(arg2);
+            Context.UpdateMouseScroll((int)(arg2.Y - lastScrollPos));
+            lastScrollPos = arg2.Y;
         }
 
-        private void Scrolled(IMouse mouse, ScrollWheel scrollWheel)
+        private void MouseMove(IMouse arg1, System.Numerics.Vector2 arg2)
         {
-            this.scrollWheel += (int)scrollWheel.Y;
+            Context.UpdateMousePosition(arg2);
         }
 
-        private void ButtonUp(IMouse mouse, SilkButton button)
+        private void KeyChar(IKeyboard arg1, char arg2)
         {
-            if (pressedButtons.Contains(button))
-                pressedButtons.Remove(button);
+            Context.SendChar(arg2);
         }
 
-        private void ButtonDown(IMouse mouse, SilkButton button)
+        private void KeyUp(IKeyboard arg1, SilkKey arg2, int arg3)
         {
-            if (!pressedButtons.Contains(button))
-                pressedButtons.Add(button);
+            Context.UpdateKey(ConvertKey(arg2), false);
         }
 
-        private void KeyUp(IKeyboard keyboard, SilkKey key, int arg3)
+        private void KeyDown(IKeyboard arg1, SilkKey arg2, int arg3)
         {
-            if (pressedKeys.Contains(key))
-                pressedKeys.Remove(key);
+            Context.UpdateKey(ConvertKey(arg2), true);
         }
 
-        private void KeyDown(IKeyboard keyboard, SilkKey key, int arg3)
+        private void MouseDown(IMouse arg1, SilkButton arg2)
         {
-            if (!pressedKeys.Contains(key))
-                pressedKeys.Add(key);
+            Context.UpdateMouseButton(ConvertButton(arg2), true);
+        }
+
+        private void MouseUp(IMouse arg1, SilkButton arg2)
+        {
+            Context.UpdateMouseButton(ConvertButton(arg2), false);
+
         }
 
         public void Apply(Simulation simulation)
         {
-            simulation.BeforeRender += BeforeRender;
-            simulation.AfterRender += AfterRender;
-        }
-
-        private void BeforeRender()
-        {
-            RestoreCaptureState();
-
-            var mouse = inputContext.Mice.FirstOrDefault();
-
-            if (mouse != null)
-            {
-                mouseDelta = (Vector2)mouse.Position - mousePosition;
-                mousePosition = mouse.Position;
-            }
-        }
-
-        private void AfterRender()
-        {
-            scrollWheel = 0;
-            lastPressedButtons = new(pressedButtons);
-            lastPressedKeys = new(pressedKeys);
-            typedChars = new();
+            this.Context = simulation.InputContext;
         }
 
         public void Dispose()
         {
         }
 
-        public Vector2 GetMouseDelta()
+        private static Key ConvertKey(SilkKey key)
         {
-            return mouseDelta;
-        }
-
-        public Vector2 GetMousePosition()
-        {
-            return mousePosition;
-        }
-
-        public int GetScrollWheelDelta()
-        {
-            if (mouseCaptured)
-                return 0;
-
-            return scrollWheel;
-        }
-
-        public bool IsKeyDown(Key key)
-        {
-            if (keyboardCaptured)
-                return false;
-
-            return pressedKeys.Contains(ConvertKey(key));
-        }
-
-        public bool IsMouseButtonDown(MouseButton key)
-        {
-            if (mouseCaptured)
-                return false;
-
-            return pressedButtons.Contains(ConvertButton(key));
-        }
-
-        private static SilkKey ConvertKey(Key key)
-        {
-            if (key >= Key.A && key <= Key.Z)
-                return (SilkKey)(key + 64);
+            if (key >= SilkKey.A && key <= SilkKey.Z)
+                return (Key)(key - 64);
 
             return key switch
             {
-                Key.Key0 => SilkKey.Number0,
-                Key.Key1 => SilkKey.Number1,
-                Key.Key2 => SilkKey.Number2,
-                Key.Key3 => SilkKey.Number3,
-                Key.Key4 => SilkKey.Number4,
-                Key.Key5 => SilkKey.Number5,
-                Key.Key6 => SilkKey.Number6,
-                Key.Key7 => SilkKey.Number7,
-                Key.Key8 => SilkKey.Number8,
-                Key.Key9 => SilkKey.Number9,
-                Key.Numpad0 => SilkKey.Keypad0,
-                Key.Numpad1 => SilkKey.Keypad1,
-                Key.Numpad2 => SilkKey.Keypad2,
-                Key.Numpad3 => SilkKey.Keypad3,
-                Key.Numpad4 => SilkKey.Keypad4,
-                Key.Numpad5 => SilkKey.Keypad5,
-                Key.Numpad6 => SilkKey.Keypad6,
-                Key.Numpad7 => SilkKey.Keypad7,
-                Key.Numpad8 => SilkKey.Keypad8,
-                Key.Numpad9 => SilkKey.Keypad9,
-                Key.F1 => SilkKey.F1,
-                Key.F2 => SilkKey.F2,
-                Key.F3 => SilkKey.F3,
-                Key.F4 => SilkKey.F4,
-                Key.F5 => SilkKey.F5,
-                Key.F6 => SilkKey.F6,
-                Key.F7 => SilkKey.F7,
-                Key.F8 => SilkKey.F8,
-                Key.F9 => SilkKey.F9,
-                Key.F10 => SilkKey.F10,
-                Key.F11 => SilkKey.F11,
-                Key.F12 => SilkKey.F12,
-                Key.Space => SilkKey.Space,
-                Key.LAlt => SilkKey.AltLeft,
-                Key.LCtrl => SilkKey.ControlLeft,
-                Key.LShift => SilkKey.ShiftLeft,
-                Key.CapsLock => SilkKey.CapsLock,
-                Key.Tab => SilkKey.Tab,
-                Key.Tilde => SilkKey.GraveAccent,
-                Key.Esc => SilkKey.Escape,
-                Key.RAlt => SilkKey.AltRight,
-                Key.Menu => SilkKey.Menu,
-                Key.RCtrl => SilkKey.ControlRight,
-                Key.RShift => SilkKey.ShiftRight,
-                Key.Enter => SilkKey.Enter,
-                Key.Backspace => SilkKey.Backspace,
-                Key.Comma => SilkKey.Comma,
-                Key.Period => SilkKey.Period,
-                Key.Slash => SilkKey.Slash,
-                Key.Semicolon => SilkKey.Semicolon,
-                Key.Apostrophe => SilkKey.Apostrophe,
-                Key.LBracket => SilkKey.LeftBracket,
-                Key.RBracket => SilkKey.RightBracket,
-                Key.BackSlash => SilkKey.BackSlash,
-                Key.Minus => SilkKey.Minus,
-                Key.Plus => SilkKey.Equal,
-                Key.UpArrow => SilkKey.Up,
-                Key.LeftArrow => SilkKey.Left,
-                Key.DownArrow => SilkKey.Down,
-                Key.RightArrow => SilkKey.Right,
-                Key.Insert => SilkKey.Insert,
-                Key.Home => SilkKey.Home,
-                Key.PageUp => SilkKey.PageUp,
-                Key.Delete => SilkKey.Delete,
-                Key.End => SilkKey.End,
-                Key.PageDown => SilkKey.PageDown,
-                _ => SilkKey.Unknown,
+                SilkKey.Number0 => Key.Key0 ,
+                SilkKey.Number1 => Key.Key1 ,
+                SilkKey.Number2 => Key.Key2 ,
+                SilkKey.Number3 => Key.Key3 ,
+                SilkKey.Number4 => Key.Key4 ,
+                SilkKey.Number5 => Key.Key5 ,
+                SilkKey.Number6 => Key.Key6 ,
+                SilkKey.Number7 => Key.Key7 ,
+                SilkKey.Number8 => Key.Key8 ,
+                SilkKey.Number9 => Key.Key9 ,
+                SilkKey.Keypad0 => Key.Numpad0 ,
+                SilkKey.Keypad1 => Key.Numpad1 ,
+                SilkKey.Keypad2 => Key.Numpad2 ,
+                SilkKey.Keypad3 => Key.Numpad3 ,
+                SilkKey.Keypad4 => Key.Numpad4 ,
+                SilkKey.Keypad5 => Key.Numpad5 ,
+                SilkKey.Keypad6 => Key.Numpad6 ,
+                SilkKey.Keypad7 => Key.Numpad7 ,
+                SilkKey.Keypad8 => Key.Numpad8 ,
+                SilkKey.Keypad9 => Key.Numpad9 ,
+                SilkKey.F1 => Key.F1 ,
+                SilkKey.F2 => Key.F2 ,
+                SilkKey.F3 => Key.F3 ,
+                SilkKey.F4 => Key.F4 ,
+                SilkKey.F5 => Key.F5 ,
+                SilkKey.F6 => Key.F6 ,
+                SilkKey.F7 => Key.F7 ,
+                SilkKey.F8 => Key.F8 ,
+                SilkKey.F9 => Key.F9 ,
+                SilkKey.F10 => Key.F10 ,
+                SilkKey.F11 => Key.F11 ,
+                SilkKey.F12 => Key.F12 ,
+                SilkKey.Space => Key.Space ,
+                SilkKey.AltLeft => Key.LAlt ,
+                SilkKey.ControlLeft => Key.LCtrl ,
+                SilkKey.ShiftLeft => Key.LShift ,
+                SilkKey.CapsLock => Key.CapsLock ,
+                SilkKey.Tab => Key.Tab ,
+                SilkKey.GraveAccent => Key.Tilde ,
+                SilkKey.Escape => Key.Esc ,
+                SilkKey.AltRight => Key.RAlt ,
+                SilkKey.Menu => Key.Menu ,
+                SilkKey.ControlRight => Key.RCtrl ,
+                SilkKey.ShiftRight => Key.RShift ,
+                SilkKey.Enter => Key.Enter ,
+                SilkKey.Backspace => Key.Backspace ,
+                SilkKey.Comma => Key.Comma ,
+                SilkKey.Period => Key.Period ,
+                SilkKey.Slash => Key.Slash ,
+                SilkKey.Semicolon => Key.Semicolon ,
+                SilkKey.Apostrophe => Key.Apostrophe ,
+                SilkKey.LeftBracket => Key.LBracket ,
+                SilkKey.RightBracket => Key.RBracket ,
+                SilkKey.BackSlash => Key.BackSlash ,
+                SilkKey.Minus => Key.Minus ,
+                SilkKey.Equal => Key.Plus ,
+                SilkKey.Up => Key.UpArrow ,
+                SilkKey.Left => Key.LeftArrow ,
+                SilkKey.Down => Key.DownArrow ,
+                SilkKey.Right => Key.RightArrow ,
+                SilkKey.Insert => Key.Insert ,
+                SilkKey.Home => Key.Home ,
+                SilkKey.PageUp => Key.PageUp ,
+                SilkKey.Delete => Key.Delete ,
+                SilkKey.End => Key.End ,
+                SilkKey.PageDown => Key.PageDown,
+                _ => Key.Unknown,
             };
         }
 
-        private static SilkButton ConvertButton(MouseButton button)
+        private static MouseButton ConvertButton(SilkButton button)
         {
             return button switch
             {
-                MouseButton.Left => SilkButton.Left,
-                MouseButton.Right => SilkButton.Right,
-                MouseButton.Middle => SilkButton.Middle,
-                _ => SilkButton.Unknown,
+                SilkButton.Left => MouseButton.Left,
+                SilkButton.Right => MouseButton.Right ,
+                SilkButton.Middle => MouseButton.Middle ,
+                _ => throw new Exception(),
             };
         }
 
-        public bool IsMouseButtonPressed(MouseButton button)
-        {
-            if (mouseCaptured)
-                return false;
-
-            return pressedButtons.Contains(ConvertButton(button)) && !lastPressedButtons.Contains(ConvertButton(button));
-        }
-
-        public bool IsMouseButtonReleased(MouseButton button)
-        {
-            if (mouseCaptured)
-                return false;
-
-            return !pressedButtons.Contains(ConvertButton(button)) && lastPressedButtons.Contains(ConvertButton(button));
-        }
-
-        public bool IsKeyPressed(Key key)
-        {
-            if (keyboardCaptured)
-                return false;
-
-            return pressedKeys.Contains(ConvertKey(key)) && !lastPressedKeys.Contains(ConvertKey(key));
-        }
-
-        public bool IsKeyReleased(Key key)
-        {
-            if (keyboardCaptured)
-                return false;
-
-            return !pressedKeys.Contains(ConvertKey(key)) && lastPressedKeys.Contains(ConvertKey(key));
-        }
-
-        public void OverrideCaptureState(bool captured)
-        {
-            keyboardCaptured = mouseCaptured = captured;
-        }
-
-        public void RestoreCaptureState()
-        {
-            var io = ImGuiNET.ImGui.GetIO();
-            mouseCaptured = io.WantCaptureMouse;
-            keyboardCaptured = io.WantCaptureKeyboard;
-        }
-
-        public char[] GetChars()
-        {
-            return typedChars.ToArray();
-        }
     }
 }

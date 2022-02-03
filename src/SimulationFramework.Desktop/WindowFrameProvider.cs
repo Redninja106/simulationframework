@@ -43,5 +43,11 @@ public sealed partial class WindowEnvironment
             this.context = context;
             Resize(width, height);
         }
+
+        public void GetCurrentFrameSize(out int width, out int height)
+        {
+            width = this.width;
+            height = this.height;
+        }
     }
 }

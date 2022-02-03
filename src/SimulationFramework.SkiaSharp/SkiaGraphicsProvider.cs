@@ -14,7 +14,6 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
     internal readonly GRContext backendContext;
     internal readonly ISkiaFrameProvider frameProvider;
 
-    internal readonly SkiaSurface frameSurfaceAdapter;
     internal SkiaCanvas frameCanvas;
     internal Dictionary<(string fontName, TextStyles styles, int size), SKFont> fonts = new(); 
 
@@ -26,8 +25,6 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         backendContext = GRContext.CreateGl(glInterface);
 
         frameProvider.SetContext(this.backendContext);
-
-        frameSurfaceAdapter = new SkiaSurface(this, null, false);
     }
 
     public ICanvas GetFrameCanvas()
@@ -37,7 +34,8 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         if (frameCanvas is null || canvas != frameCanvas.GetSKCanvas())
         {
             frameCanvas?.Dispose();
-            frameCanvas = new SkiaCanvas(this, null, canvas, false);
+            frameProvider.GetCurrentFrameSize(out int width, out int height);
+            frameCanvas = new SkiaCanvas(this, new SkiaFrame(width, height), canvas, false);
         }
 
         return frameCanvas;
@@ -68,7 +66,6 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
     public void Dispose()
     {
         frameCanvas.Dispose();
-        frameSurfaceAdapter.Dispose();
         backendContext.Dispose();
         glInterface.Dispose();
 
