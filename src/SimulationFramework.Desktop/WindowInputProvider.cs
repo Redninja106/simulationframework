@@ -2,6 +2,7 @@
 using Silk.NET.Input;
 using SilkKey = Silk.NET.Input.Key;
 using SilkButton = Silk.NET.Input.MouseButton;
+using SimulationFramework.IMGUI;
 
 namespace SimulationFramework.Desktop;
 
@@ -53,7 +54,6 @@ public sealed partial class WindowEnvironment
         private void MouseUp(IMouse arg1, SilkButton arg2)
         {
             Context.UpdateMouseButton(ConvertButton(arg2), false);
-
         }
 
         public void Apply(Simulation simulation)
@@ -68,10 +68,29 @@ public sealed partial class WindowEnvironment
             silkInputDevice.Keyboards[0].KeyDown += KeyDown;
             silkInputDevice.Keyboards[0].KeyUp += KeyUp;
             silkInputDevice.Keyboards[0].KeyChar += KeyChar;
+
+            simulation.Render += Simulation_BeforeRender;
+        }
+
+        private void Simulation_BeforeRender()
+        {
+            if (ImGui.BeginListBox("", default))
+            {
+                foreach (var gamepad in silkInputDevice.Gamepads)
+                {
+                    if (ImGui.Button(gamepad.Name))
+                    {
+                        ObjectViewer.Select(new ObjectAutoViewer(gamepad), true);
+                    }
+                }
+
+                ImGui.EndListBox();
+            }
         }
 
         public void Dispose()
         {
+            silkInputDevice.Dispose();
         }
 
         private static Key ConvertKey(SilkKey key)

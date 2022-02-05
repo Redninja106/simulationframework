@@ -24,13 +24,18 @@ public sealed class InputContext
 
     internal Vector2 mousePosition;
     internal Vector2 lastMousePosition;
-
     internal int scrollDelta;
+
+    internal readonly List<GamepadButton> lastGamepadButtons = new();
+    internal readonly List<GamepadButton> gamepadButtons = new();
+
+    internal float rightTrigger, leftTrigger;
+    internal Vector2 rightJoystick, leftJoystick;
 
     public void UpdateKey(Key key, bool isDown)
     {
         if (key == Key.Unknown)
-            throw new ArgumentException("Invalid key value!");
+            return;
 
         if (isDown == pressedKeys.Contains(key))
             return;
@@ -62,6 +67,18 @@ public sealed class InputContext
         this.scrollDelta = scrollDelta;
     }
 
+    public void UpdateGamepadTriggers(float rightTrigger, float leftTrigger)
+    {
+        this.rightTrigger = rightTrigger;
+        this.leftTrigger = leftTrigger;
+    }
+
+    public void UpdateGamepadJoysticks(Vector2 rightJoystick, Vector2 leftJoystick)
+    {
+        this.rightJoystick = rightJoystick;
+        this.leftJoystick = leftJoystick;
+    }
+
     public void SendChar(char keycode)
     {
         typedKeys.Add(keycode);
@@ -74,6 +91,9 @@ public sealed class InputContext
 
         lastPressedMouseButtons.Clear();
         lastPressedMouseButtons.AddRange(this.pressedMouseButtons);
+
+        lastGamepadButtons.Clear();
+        lastGamepadButtons.AddRange(gamepadButtons);
 
         lastMousePosition = mousePosition;
     }

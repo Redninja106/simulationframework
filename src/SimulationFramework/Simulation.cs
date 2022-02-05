@@ -26,6 +26,7 @@ public abstract class Simulation : IDisposable
 
     public event Action Initialized;
     public event Action BeforeRender;
+    public event Action Render;
     public event Action AfterRender;
     public event Action Uninitialized;
 
@@ -141,6 +142,8 @@ public abstract class Simulation : IDisposable
         {
             PerformanceViewer.BeginTaskGroup("frame");
 
+            InputContext.NewFrame();
+
             environment.ProcessEvents();
             PerformanceViewer.MarkTaskCompleted("ProcessEvents()");
 
@@ -157,6 +160,8 @@ public abstract class Simulation : IDisposable
             using var canvas = Graphics.GetFrameCanvas();
 
             canvas.ResetState();
+
+            Render?.Invoke();
 
             using (canvas.Push())
             {
