@@ -32,6 +32,8 @@ public sealed class InputContext
     internal float rightTrigger, leftTrigger;
     internal Vector2 rightJoystick, leftJoystick;
 
+    public Action<int> SelectedGamepadUpdated;
+
     public void UpdateKey(Key key, bool isDown)
     {
         if (key == Key.Unknown)
@@ -77,6 +79,17 @@ public sealed class InputContext
     {
         this.rightJoystick = rightJoystick;
         this.leftJoystick = leftJoystick;
+    }
+
+    public void UpdateGamepadButton(GamepadButton button, bool isDown)
+    {
+        if (isDown == gamepadButtons.Contains(button))
+            return;
+
+        if (isDown)
+            gamepadButtons.Add(button);
+        else
+            gamepadButtons.Remove(button);
     }
 
     public void SendChar(char keycode)

@@ -57,14 +57,66 @@ public sealed partial class WindowEnvironment
         {
             this.Context = simulation.InputContext;
 
-            silkInputDevice.Mice[0].MouseUp += MouseUp;
-            silkInputDevice.Mice[0].MouseDown += MouseDown;
-            silkInputDevice.Mice[0].MouseMove += MouseMove;
-            silkInputDevice.Mice[0].Scroll += Scroll;
+            if (silkInputDevice.Mice.Count > 0)
+            {
+                silkInputDevice.Mice[0].MouseUp += MouseUp;
+                silkInputDevice.Mice[0].MouseDown += MouseDown;
+                silkInputDevice.Mice[0].MouseMove += MouseMove;
+                silkInputDevice.Mice[0].Scroll += Scroll;
+            }
 
-            silkInputDevice.Keyboards[0].KeyDown += KeyDown;
-            silkInputDevice.Keyboards[0].KeyUp += KeyUp;
-            silkInputDevice.Keyboards[0].KeyChar += KeyChar;
+            if (silkInputDevice.Keyboards.Count > 0)
+            {
+                silkInputDevice.Keyboards[0].KeyDown += KeyDown;
+                silkInputDevice.Keyboards[0].KeyUp += KeyUp;
+                silkInputDevice.Keyboards[0].KeyChar += KeyChar;
+            }
+
+            if (silkInputDevice.Gamepads.Count > 0)
+            {
+            }
+
+            simulation.BeforeRender += BeforeRender;
+        }
+
+        private void BeforeRender()
+        {
+            if (silkInputDevice.Gamepads.Count > 0)
+            {
+                var gamepad = silkInputDevice.Gamepads[0];
+                gamepad.ButtonUp += GamepadButtonUp;
+                gamepad.ButtonDown += GamepadButtonDown; ;
+                
+                Context.UpdateGamepadJoysticks(
+                    (gamepad.Thumbsticks[1].X, gamepad.Thumbsticks[1].Y),
+                    (gamepad.Thumbsticks[0].X, gamepad.Thumbsticks[0].Y)
+                    );
+
+                Context.UpdateGamepadTriggers(gamepad.Triggers[0].Position, gamepad.Triggers[1].Position);
+
+                Context.UpdateGamepadButton(GamepadButton.A, gamepad.A().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.B, gamepad.B().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.X, gamepad.X().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.Y, gamepad.Y().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.Back, gamepad.Back().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.Start, gamepad.Start().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.RightStick, gamepad.RightStick().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.LeftStick, gamepad.LeftStick().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.DPadRight, gamepad.DPadRight().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.DPadLeft, gamepad.DPadLeft().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.DPadUp, gamepad.DPadUp().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.DPadDown, gamepad.DPadDown().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.RightBumper, gamepad.RightBumper().Pressed);
+                Context.UpdateGamepadButton(GamepadButton.LeftBumper, gamepad.LeftBumper().Pressed);
+            }
+        }
+
+        private void GamepadButtonDown(IGamepad arg1, Button arg2)
+        {
+        }
+
+        private void GamepadButtonUp(IGamepad arg1, Button arg2)
+        {
         }
 
         public void Dispose()
