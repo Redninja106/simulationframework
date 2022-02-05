@@ -12,18 +12,15 @@ public sealed partial class WindowEnvironment
     {
         private readonly IInputContext silkInputDevice;
         private InputContext Context;
-        private float lastScrollPos;
 
         public WindowInputProvider(IWindow window)
         {
             silkInputDevice = window.CreateInput();
-
         }
 
         private void Scroll(IMouse arg1, ScrollWheel arg2)
         {
-            Context.UpdateMouseScroll((int)(arg2.Y - lastScrollPos));
-            lastScrollPos = arg2.Y;
+            Context.UpdateMouseScroll((int)arg2.Y);
         }
 
         private void MouseMove(IMouse arg1, System.Numerics.Vector2 arg2)

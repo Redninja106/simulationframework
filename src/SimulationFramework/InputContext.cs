@@ -96,5 +96,6 @@ public sealed class InputContext
         lastGamepadButtons.AddRange(gamepadButtons);
 
         lastMousePosition = mousePosition;
+        scrollDelta = 0;
     }
 }
