@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -30,12 +31,37 @@ public sealed class ObjectAutoViewer : IViewable
     /// <inheritdoc/>
     public void Layout()
     {
-        var type = Object.GetType();
+        LayoutRecurse(this.Object);
+    }
+
+    private void LayoutRecurse(object obj)
+    {
+        var type = obj.GetType();
+        
         var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
         foreach (var prop in props)
         {
-            ImGui.Text(prop.Name + " " + prop.Name + ": " + prop.GetValue(Object).ToString());
+            if (prop.GetValue(obj) is IEnumerable enumerable)
+            {
+                if (ImGui.TreeNode(prop.Name))
+                {
+                    foreach (var item in enumerable)
+                    {
+                        if (ImGui.TreeNode(item.ToString()))
+                        {
+                            LayoutRecurse(item);
+                            ImGui.TreePop();
+                        }
+                    }
+
+                    ImGui.TreePop();
+                }
+            }
+            else
+            {
+                ImGui.Text(prop.Name + ": " + prop.GetValue(obj).ToString());
+            }
         }
     }
 }
