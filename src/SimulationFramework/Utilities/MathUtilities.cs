@@ -41,4 +41,9 @@ public static class MathUtilities
 
         return new Rectangle(minX, minY, maxX - minX, maxY - minY);
     }
+
+    public static float Lerp(float a, float b, float t)
+    {
+        return a + (b - a) * t;
+    }
 }
