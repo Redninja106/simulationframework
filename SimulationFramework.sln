@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FramerateGraph", "examples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework", "src\SimulationFramework\SimulationFramework.csproj", "{950FE21C-608E-40C8-9399-D55430499170}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.SkiaSharp", "src\SimulationFramework.SkiaSharp\SimulationFramework.SkiaSharp.csproj", "{19A4C158-4CCD-4536-84A5-A0A9BED9768E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.SkiaSharp", "src\SimulationFramework.SkiaSharp\SimulationFramework.SkiaSharp.csproj", "{19A4C158-4CCD-4536-84A5-A0A9BED9768E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Direct2D", "src\SimulationFramework.Direct2D\SimulationFramework.Direct2D.csproj", "{BC9DD17B-A90A-46F7-8C07-1DA405BFED02}"
 EndProject
@@ -26,6 +26,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Desktop", "src\SimulationFramework.Desktop\SimulationFramework.Desktop.csproj", "{48F547C6-E87D-48F8-B9D2-9E48CC44C364}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrawingShapes", "examples\DrawingShapes\DrawingShapes.csproj", "{0E53B18E-B1F8-4571-A8A9-CEC7300F5BE3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interactive", "Interactive", "{917A8B5B-FF49-4DE8-9524-E84BB7580060}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.Tests.Interactive.Input", "src\SimulationFramework.Tests.Interactive.Input\SimulationFramework.Tests.Interactive.Input.csproj", "{79D2B445-74E3-4DEC-8DD6-49BE86507669}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +69,10 @@ Global
 		{0E53B18E-B1F8-4571-A8A9-CEC7300F5BE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E53B18E-B1F8-4571-A8A9-CEC7300F5BE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E53B18E-B1F8-4571-A8A9-CEC7300F5BE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79D2B445-74E3-4DEC-8DD6-49BE86507669}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79D2B445-74E3-4DEC-8DD6-49BE86507669}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79D2B445-74E3-4DEC-8DD6-49BE86507669}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79D2B445-74E3-4DEC-8DD6-49BE86507669}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +85,8 @@ Global
 		{BC9DD17B-A90A-46F7-8C07-1DA405BFED02} = {70E789B1-29FB-421E-A968-1ED75F680090}
 		{48F547C6-E87D-48F8-B9D2-9E48CC44C364} = {93BAFE7A-2079-49AC-96EC-0214CE007265}
 		{0E53B18E-B1F8-4571-A8A9-CEC7300F5BE3} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
+		{917A8B5B-FF49-4DE8-9524-E84BB7580060} = {813D5E58-CE77-4969-B74A-A724228D8F73}
+		{79D2B445-74E3-4DEC-8DD6-49BE86507669} = {917A8B5B-FF49-4DE8-9524-E84BB7580060}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09D3B2BE-AC85-48C2-835F-6B781E265873}
