@@ -68,24 +68,6 @@ public sealed partial class WindowEnvironment
             silkInputDevice.Keyboards[0].KeyDown += KeyDown;
             silkInputDevice.Keyboards[0].KeyUp += KeyUp;
             silkInputDevice.Keyboards[0].KeyChar += KeyChar;
-
-            simulation.Render += Simulation_BeforeRender;
-        }
-
-        private void Simulation_BeforeRender()
-        {
-            if (ImGui.BeginListBox("", default))
-            {
-                foreach (var gamepad in silkInputDevice.Gamepads)
-                {
-                    if (ImGui.Button(gamepad.Name))
-                    {
-                        ObjectViewer.Select(new ObjectAutoViewer(gamepad), true);
-                    }
-                }
-
-                ImGui.EndListBox();
-            }
         }
 
         public void Dispose()
