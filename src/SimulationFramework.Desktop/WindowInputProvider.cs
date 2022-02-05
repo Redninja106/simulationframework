@@ -158,10 +158,11 @@ public sealed partial class WindowEnvironment
             {
                 SilkButton.Left => MouseButton.Left,
                 SilkButton.Right => MouseButton.Right ,
-                SilkButton.Middle => MouseButton.Middle ,
+                SilkButton.Middle => MouseButton.Middle,
+                SilkButton.Button4 => MouseButton.X1,
+                SilkButton.Button5 => MouseButton.X2,
                 _ => throw new Exception(),
             };
         }
-
     }
 }
