@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SimulationFramework.Utilities;
 
 namespace SimulationFramework;
 
@@ -102,6 +103,14 @@ public struct Vector2 : IEquatable<Vector2>
     public static float Dot(Vector2 a, Vector2 b)
     {
         return a.X * b.X + a.Y * b.Y;
+    }
+
+    /// <summary>
+    /// Performs a linear interpolation between two vectors.
+    /// </summary>
+    public static Vector2 Lerp(Vector2 a, Vector2 b, float t)
+    {
+        return (MathUtilities.Lerp(a.X, b.X, t), MathUtilities.Lerp(a.Y, b.Y, t));
     }
 
     public static implicit operator (float, float)(Vector2 vector) => (vector.X, vector.Y);
