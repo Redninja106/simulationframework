@@ -50,12 +50,12 @@ class DrawingShapesSimulation : Simulation
 
         canvas.DrawLine(100, 100, -110, -100, Color.White);
 
-        canvas.DrawEllipse(300, 0, 100, 100, 0, radius, true, Color.LightGray);
-        canvas.DrawEllipse(300, 0, 90, 90, 0, radius, true, Color.SteelBlue);
+        canvas.DrawArc(300, 0, 100, 100, 0, radius, true, Color.LightGray);
+        canvas.DrawArc(300, 0, 90, 90, 0, radius, true, Color.SteelBlue);
         canvas.SetDrawMode(DrawMode.Border);
-        canvas.DrawEllipse(300, 0, 70, 70, 0, radius, false, Color.LightGray);
+        canvas.DrawArc(300, 0, 70, 70, 0, radius, false, Color.LightGray);
         canvas.SetDrawMode(DrawMode.Fill);
-        canvas.DrawEllipse(300, 0, 50, 50, 0, radius, true, Color.LightGray);
+        canvas.DrawArc(300, 0, 50, 50, 0, radius, true, Color.LightGray);
 
         radius = MathF.Sin(Time.TotalTime) * MathF.Tau;
 

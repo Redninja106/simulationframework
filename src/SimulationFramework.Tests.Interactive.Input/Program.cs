@@ -38,10 +38,10 @@ class Program : Simulation
             Alignment.TopCenter);
 
         canvas.SetDrawMode(DrawMode.Fill);
-        canvas.DrawEllipse(mouseBounds, 180, 90, true, Mouse.IsButtonDown(MouseButton.Left) ? (20, 20, 20) : background);
-        canvas.DrawEllipse(mouseBounds, 270, 180, true, Mouse.IsButtonDown(MouseButton.Right) ? (20, 20, 20) : background);
-        canvas.DrawEllipse(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), (mouseBounds.Width / 16f, mouseBounds.Height / 8f), 90, 0, true, Mouse.IsButtonDown(MouseButton.X1) ? (20,20,20) : background);
-        canvas.DrawEllipse(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), (mouseBounds.Width / 16f, mouseBounds.Height / 8f), 180, 90, true, Mouse.IsButtonDown(MouseButton.X2) ? (20,20,20) : background);
+        canvas.DrawArc(mouseBounds, 180, 90, true, Mouse.IsButtonDown(MouseButton.Left) ? (20, 20, 20) : background);
+        canvas.DrawArc(mouseBounds, 270, 180, true, Mouse.IsButtonDown(MouseButton.Right) ? (20, 20, 20) : background);
+        canvas.DrawArc(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), (mouseBounds.Width / 16f, mouseBounds.Height / 8f), 90, 0, true, Mouse.IsButtonDown(MouseButton.X1) ? (20,20,20) : background);
+        canvas.DrawArc(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), (mouseBounds.Width / 16f, mouseBounds.Height / 8f), 180, 90, true, Mouse.IsButtonDown(MouseButton.X2) ? (20,20,20) : background);
         canvas.DrawEllipse(mouseWheelBounds, Mouse.IsButtonDown(MouseButton.Middle) ? (20, 20, 20) : background);
 
         mouseScroll += Mouse.ScrollWheelDelta;
@@ -52,7 +52,7 @@ class Program : Simulation
 
         canvas.SetDrawMode(DrawMode.Border);
 
-        canvas.DrawEllipse(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), (mouseBounds.Width / 16f, mouseBounds.Height / 8f), 80, -120, true, shapeBorderCol);
+        canvas.DrawArc(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), (mouseBounds.Width / 16f, mouseBounds.Height / 8f), 80, -120, true, shapeBorderCol);
         canvas.DrawEllipse(mouseBounds, shapeBorderCol);
         canvas.DrawLine(mouseBounds.GetAlignedPoint(Alignment.CenterLeft) - (mouseBounds.Width / 16f, 0), mouseBounds.GetAlignedPoint(Alignment.CenterRight),  shapeBorderCol);
         canvas.DrawLine(mouseBounds.GetAlignedPoint(Alignment.TopCenter), mouseWheelBounds.GetAlignedPoint(Alignment.TopCenter),  shapeBorderCol);

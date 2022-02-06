@@ -116,6 +116,9 @@ public interface ICanvas : IDisposable
     /// <param name="color">The color of the rectangle.</param>
     void DrawRoundedRect(Rectangle rect, float radius, Color color);
 
+    void DrawCircle(float x, float y, float radius, Color color, Alignment alignment = Alignment.Center);
+    void DrawCircle(Vector2 position, float radius, Color color, Alignment alignment = Alignment.Center);
+
     /// <summary>
     /// Draws an ellipse to the canvas, using the current transform, clipping, and drawing settings.
     /// </summary>
@@ -155,7 +158,7 @@ public interface ICanvas : IDisposable
     /// <param name="end">The angle at which the ellipse segment begins.</param>
     /// <param name="color">The color of the ellipse.</param>
     /// <param name="alignment">The point on the bounding-box of the ellipse to align to the provided position</param>
-    void DrawEllipse(float x, float y, float radiusX, float radiusY, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center);
+    void DrawArc(float x, float y, float radiusX, float radiusY, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center);
 
     /// <summary>
     /// Draws a segment of an ellipse to the canvas to form an arc, using the current transform, clipping, and drawing settings.
@@ -167,7 +170,7 @@ public interface ICanvas : IDisposable
     /// <param name="includeCenter">Whether the arc's endpoints include its center or just connect its endpoints.</param>
     /// <param name="color">The color of the ellipse.</param>
     /// <param name="alignment">The point on the bounding-box of the ellipse to align to the provided position.</param>
-    void DrawEllipse(Vector2 position, Vector2 radii, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center);
+    void DrawArc(Vector2 position, Vector2 radii, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center);
 
     /// <summary>
     /// Draws a segment of an ellipse to the canvas to form an arc, using the current transform, clipping, and drawing settings.
@@ -175,8 +178,9 @@ public interface ICanvas : IDisposable
     /// <param name="bounds">The bounds of the ellipse.</param>
     /// <param name="begin">The angle at which the ellipse segment begins.</param>
     /// <param name="end">The angle at which the ellipse segment begins.</param>
+    /// <param name="includeCenter">Whether the arc's endpoints include its center or just connect its endpoints.</param>
     /// <param name="color">The color of the ellipse.</param>
-    void DrawEllipse(Rectangle bounds, float begin, float end, bool includeCenter, Color color);
+    void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter, Color color);
 
     /// <summary>
     /// Draws a texture to the canvas at (0, 0), using the current transform and clipping settings.
