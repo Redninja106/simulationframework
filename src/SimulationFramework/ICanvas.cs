@@ -116,7 +116,23 @@ public interface ICanvas : IDisposable
     /// <param name="color">The color of the rectangle.</param>
     void DrawRoundedRect(Rectangle rect, float radius, Color color);
 
+    /// <summary>
+    /// Draws an ellipse to the canvas, using the current transform, clipping, and drawing settings.
+    /// </summary>
+    /// <param name="x">The x-coordinate of the ellipse.</param>
+    /// <param name="y">The y-coordinate of the ellipse.</param>
+    /// <param name="radius">The radius of the ellipse on the x-axis.</param>
+    /// <param name="color">The color of the ellipse.</param>
+    /// <param name="alignment">The point on the bounding-box of the ellipse to align to the provided position</param>
     void DrawCircle(float x, float y, float radius, Color color, Alignment alignment = Alignment.Center);
+
+    /// <summary>
+    /// Draws an ellipse to the canvas, using the current transform, clipping, and drawing settings.
+    /// </summary>
+    /// <param name="position">The position of the ellipse.</param>
+    /// <param name="radius">The radius of the ellipse on the x-axis.</param>
+    /// <param name="color">The color of the ellipse.</param>
+    /// <param name="alignment">The point on the bounding-box of the ellipse to align to the provided position</param>
     void DrawCircle(Vector2 position, float radius, Color color, Alignment alignment = Alignment.Center);
 
     /// <summary>
