@@ -24,11 +24,6 @@ public static class Keyboard
     public static bool IsKeyDown(Key key) => Context.pressedKeys.Contains(key);
     
     /// <summary>
-    /// Returns true if the provided key is not pressed.
-    /// </summary>
-    public static bool IsKeyUp(Key key) => !Context.pressedKeys.Contains(key);
-
-    /// <summary>
     /// Returns true if the provided key is pressed this frame and was not pressed the frame before.
     /// </summary>
     public static bool IsKeyPressed(Key key) => Context.pressedKeys.Contains(key) && !Context.lastPressedKeys.Contains(key);
