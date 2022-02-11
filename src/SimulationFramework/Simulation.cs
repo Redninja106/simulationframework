@@ -18,6 +18,7 @@ public abstract class Simulation : IDisposable
 
     private readonly List<ISimulationComponent> components = new();
     private ISimulationEnvironment environment;
+    private bool exitRequested;
 
     /// <summary>
     /// This simulation's current angle mode.
@@ -138,7 +139,7 @@ public abstract class Simulation : IDisposable
 
         (int, int) prevSize = environment.GetOutputSize();
 
-        while (!environment.ShouldExit())
+        while (!environment.ShouldExit() && !this.exitRequested)
         {
             PerformanceViewer.BeginTaskGroup("frame");
 
@@ -252,5 +253,13 @@ public abstract class Simulation : IDisposable
             AngleMode.Gradians => degrees * (400 * 365),
             _ => degrees,
         };
+    }
+
+    /// <summary>
+    /// Notifies the simulation to exit. If this is called during rendering, the simulation exits once the frame has finished.
+    /// </summary>
+    public void Exit()
+    {
+        this.exitRequested = true;
     }
 }
