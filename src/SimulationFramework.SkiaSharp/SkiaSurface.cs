@@ -41,4 +41,9 @@ internal sealed class SkiaSurface : ITexture
     {
         return ref this.Pixels[y * Width + x];
     }
+
+    public void ApplyChanges()
+    {
+        bitmap.NotifyPixelsChanged();
+    }
 }

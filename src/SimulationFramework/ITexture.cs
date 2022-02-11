@@ -24,11 +24,17 @@ public interface ITexture : IDisposable
 
     /// <summary>
     /// A span of colors making up texture's data
+    /// <para>
+    /// If changes are made to the texture's data, they may not be applied until <see cref="ApplyChanges"/> is called.
+    /// </para>
     /// </summary>
     Span<Color> Pixels { get; }
 
     /// <summary>
     /// Gets a reference to the element of <see cref="Pixels"/> at the provided <paramref name="x"/> and <paramref name="y"/> coordinates.
+    /// <para>
+    /// If changes are made to the texture's data, they may not be applied until <see cref="ApplyChanges"/> is called.
+    /// </para>
     /// </summary>
     /// <param name="x">The x-coordinate of the pixel.</param>
     /// <param name="y">The y-coordinate of the pixel.</param>
@@ -39,4 +45,9 @@ public interface ITexture : IDisposable
     /// </summary>
     /// <returns>An <see cref="ICanvas"/> which draws onto this texture.</returns>
     ICanvas OpenCanvas();
+
+    /// <summary>
+    /// Applies any changes made do the bitmap's data using <see cref="Pixels"/> or <see cref="GetPixel(int, int)"/>.
+    /// </summary>
+    void ApplyChanges();
 }

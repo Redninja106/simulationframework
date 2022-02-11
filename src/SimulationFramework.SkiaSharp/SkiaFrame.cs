@@ -17,7 +17,12 @@ namespace SimulationFramework.SkiaSharp
         public int Width { get; }
         public int Height { get; }
 
-        public Span<Color> Pixels { get => throw new NotImplementedException("This operation is not support on the main frame texture!"); }
+        public Span<Color> Pixels { get => throw new NotSupportedException(); }
+
+        public void ApplyChanges()
+        {
+            throw new NotSupportedException();
+        }
 
         public void Dispose()
         {
