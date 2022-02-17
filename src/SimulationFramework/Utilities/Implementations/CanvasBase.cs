@@ -267,7 +267,9 @@ public abstract class CanvasBase : ICanvas
 
     public void ResetState()
     {
-        this.stateStack.Pop();
+        if (stateStack.Any())
+            this.stateStack.Pop();
+        
         this.stateStack.Push(new CanvasState(this));
     }
 
