@@ -10,6 +10,9 @@ using static ImGuiNET.ImGuiNative;
 
 namespace SimulationFramework.IMGUI;
 
+// imgui won't be comment as it will be replace by a custom gui solution
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 /// <summary>
 /// Basic ImGui provider which user ImGui.NET's ImGuiNative api.
 /// </summary>

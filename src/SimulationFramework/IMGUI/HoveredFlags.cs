@@ -1,5 +1,8 @@
 ﻿namespace SimulationFramework.IMGUI;
 
+// imgui won't be comment as it will be replace by a custom gui solution
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 public enum HoveredFlags
 {
     None = 0,        // Return true if directly over the item/window, not obstructed by another window, not obstructed by an active popup or modal blocking inputs under them.

@@ -7,9 +7,17 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
+/// <summary>
+/// Feeds real time values into a simulation.
+/// </summary>
 public sealed class RealtimeProvider : ITimeProvider
 {
+    /// <summary>
+    /// </summary>
     public float MaxDeltaTime { get; set; } = 1 / 30f;
+
+    /// <summary>
+    /// </summary>
     public float TimeScale { get; set; } = 1.0f;
 
     private readonly Stopwatch stopwatch;
@@ -19,16 +27,20 @@ public sealed class RealtimeProvider : ITimeProvider
     private bool isRunningSlowly;
     private float framerate;
 
+    /// <summary>
+    /// </summary>
     public RealtimeProvider()
     {
         stopwatch = Stopwatch.StartNew();
     }
 
+    /// <inheritdoc/>
     public void Apply(Simulation simulation)
     {
         simulation.BeforeRender += Tick;
     }
 
+    /// <inheritdoc/>
     public float GetFramerate()
     {
         return framerate;
@@ -53,26 +65,31 @@ public sealed class RealtimeProvider : ITimeProvider
         totalTime += deltaTime;
     }
 
+    /// <inheritdoc/>
     public float GetTotalTime()
     {
         return totalTime;
     }
 
+    /// <inheritdoc/>
     public float GetDeltaTime()
     {
         return deltaTime;
     }
 
+    /// <inheritdoc/>
     public bool IsRunningSlowly()
     {
         return isRunningSlowly;
     }
 
+    /// <inheritdoc/>
     public void SetMaxDeltaTime(float maxDeltaTime)
     {
         this.MaxDeltaTime = maxDeltaTime;
     }
 
+    /// <inheritdoc/>
     public void Dispose()
     {
     }

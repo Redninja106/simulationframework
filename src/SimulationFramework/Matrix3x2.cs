@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,6 +58,7 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
     /// </summary>
     public bool IsIdentity => this == Identity;
 
+    ///
     public Matrix3x2(float m11, float m12, float m21, float m22, float m31, float m32)
     {
         M11 = m11;
@@ -67,6 +69,7 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
         M32 = m32;
     }
 
+    ///
     public bool Equals(Matrix3x2 other)
     {
         return
@@ -75,6 +78,7 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
             M31 == other.M31 && M32 == other.M32;
     }
 
+    ///
     public override bool Equals([NotNullWhen(true)] object obj)
     {
         if (obj is Matrix3x2 matrix)
@@ -83,11 +87,13 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
         return false;
     }
 
+    ///
     public static bool operator ==(Matrix3x2 a, Matrix3x2 b)
     {
         return a.Equals(b);
     }
 
+    /// 
     public static bool operator !=(Matrix3x2 a, Matrix3x2 b)
     {
         return a.Equals(b);
@@ -137,6 +143,22 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
         m.M32 = a.M32 * b;
 
         return m;
+    }
+
+    /// <summary>
+    /// Casts from this matrix type to the one in System.Numerics.
+    /// </summary>
+    public static implicit operator Matrix3x2(System.Numerics.Matrix3x2 matrix)
+    {
+        return Unsafe.As<System.Numerics.Matrix3x2, Matrix3x2>(ref matrix);
+    }
+
+    /// <summary>
+    /// Casts from the System.Numerics matrix type to this one.
+    /// </summary>
+    public static implicit operator System.Numerics.Matrix3x2(Matrix3x2 matrix)
+    {
+        return Unsafe.As<Matrix3x2, System.Numerics.Matrix3x2>(ref matrix);
     }
 
     /// <summary>

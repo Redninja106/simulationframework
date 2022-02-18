@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.IMGUI;
 
+// imgui won't be comment as it will be replace by a custom gui solution
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 /// <summary>
 /// Provides Immediate mode GUI Functionality to the application.
 /// </summary>
@@ -550,6 +553,7 @@ public static class ImGui
     /// <param name="label">The label of the input box.</param>
     /// <param name="value">The string value of the text box.</param>
     /// <param name="step">The step of the at which</param>
+    /// <param name="stepFast"></param>
     /// <param name="format">The C-Style format string to use to display each value of the slider.</param>
     /// <param name="flags">A <see cref="InputTextFlags"/> value which effects the behavior of the slider.</param>
     /// <returns><see langword="true"/> if the input box's <paramref name="value"/> was modified, otherwise <see langword="false"/>.</returns>

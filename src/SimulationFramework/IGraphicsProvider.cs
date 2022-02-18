@@ -21,6 +21,7 @@ public interface IGraphicsProvider : ISimulationComponent
     /// <param name="width">The width of the bitmap, in pixels.</param>
     /// <param name="height">The height of the bitmap, in pixels.</param>
     /// <param name="data">The initial raw bitmap data. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
+    /// <param name="flags"></param>
     /// <returns>The new <see cref="ITexture"/>.</returns>
     ITexture CreateTexture(int width, int height, Span<Color> data, TextureFlags flags);
 
@@ -28,6 +29,7 @@ public interface IGraphicsProvider : ISimulationComponent
     /// Loads a bitmap from it's raw encoded data.
     /// </summary>
     /// <param name="encodedData"></param>
+    /// <param name="flags"></param>
     /// <returns></returns>
     ITexture LoadTexture(Span<byte> encodedData, TextureFlags flags = TextureFlags.None);
 

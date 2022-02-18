@@ -6,17 +6,36 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
+/// <summary>
+/// Provides time values to the simulation.
+/// </summary>
 public static class Time
 {
     internal static ITimeProvider Provider => Simulation.Current.GetComponent<ITimeProvider>();
+    
+    /// <summary>
+    /// The number of seconds since the last frame.
+    /// </summary>
     public static float DeltaTime => Provider.GetDeltaTime();
+    
+    /// <summary>
+    /// The number of seconds since the start of the simulation.
+    /// </summary>
     public static float TotalTime => Provider.GetTotalTime();
 
     /// <summary>
     /// <see langword="true"/> if duration of the previous frame exceeded <see cref="MaxDeltaTime"/>.
     /// </summary>
     public static bool IsRunningSlowly => Provider.IsRunningSlowly();
+
+    /// <summary>
+    /// The highest allowed value of <see cref="DeltaTime"/>.
+    /// </summary>
     public static float MaxDeltaTime { get => Provider.MaxDeltaTime; set => Provider.MaxDeltaTime = value; }
+    
+    /// <summary>
+    /// A value which time is scaled by.
+    /// </summary>
     public static float TimeScale { get => Provider.TimeScale; set => Provider.TimeScale = value; }
 
 }

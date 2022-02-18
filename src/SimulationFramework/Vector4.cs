@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
+// math types will be commented later
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 public struct Vector4 : IEquatable<Vector4>
 {
     public static readonly Vector4 Zero = (0, 0, 0, 0);

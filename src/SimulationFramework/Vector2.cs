@@ -7,6 +7,9 @@ using SimulationFramework.Utilities;
 
 namespace SimulationFramework;
 
+// math types will be commented later
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 public struct Vector2 : IEquatable<Vector2>
 {
     public static readonly Vector2 Zero = (0, 0);
