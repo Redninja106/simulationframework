@@ -245,7 +245,7 @@ public abstract class CanvasBase : ICanvas
     {
         UpdateTransformCore(state.Transform);
         UpdateStrokeWidthCore(state.strokeWidth);
-        //UpdateClipRectCore(state.clipRect);
+        UpdateClipRectCore(state.clipRect);
         UpdateDrawModeCore(state.DrawMode);
         UpdateFontCore(state.fontName, state.styles, state.size);
         UpdateFillTextureCore(state.texture, state.textureTransform, state.textureTileMode);

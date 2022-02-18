@@ -121,8 +121,7 @@ internal sealed class SkiaCanvas : CanvasBase
 
     protected override bool UpdateClipRectCore(Rectangle rect)
     {
-        canvas.ClipRect(rect.AsSKRect(), SKClipOperation.Difference, true);
-        return true;
+        return false;
     }
 
     protected override bool UpdateDrawModeCore(DrawMode mode)
