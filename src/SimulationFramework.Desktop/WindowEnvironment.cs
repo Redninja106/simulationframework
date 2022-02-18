@@ -19,7 +19,7 @@ public sealed partial class WindowEnvironment : ISimulationEnvironment
 
     public WindowEnvironment(string title, int width, int height, bool resizable)
     {
-        window = Window.Create(WindowOptions.Default with
+        window = Silk.NET.Windowing.Window.Create(WindowOptions.Default with
         {
             Size = new(width, height),
             Title = title,
@@ -42,21 +42,25 @@ public sealed partial class WindowEnvironment : ISimulationEnvironment
     {
         yield return new RealtimeProvider();
 
-        var frameProvider = new WindowFrameProvider(window.Size.X, window.Size.Y);
-
-        window.FramebufferResize += size =>
+        var graphicsEnabled = Window.graphicsEnabled;
+        if (graphicsEnabled)
         {
-            frameProvider.Resize(size.X, size.Y);
-        };
+            var frameProvider = new WindowFrameProvider(window.Size.X, window.Size.Y);
 
-        yield return new SkiaGraphicsProvider(frameProvider, name =>
-        {
-            window.GLContext.TryGetProcAddress(name, out nint addr);
-            return addr;
-        });
+            window.FramebufferResize += size =>
+            {
+                frameProvider.Resize(size.X, size.Y);
+            };
+
+            yield return new SkiaGraphicsProvider(frameProvider, name =>
+            {
+                window.GLContext.TryGetProcAddress(name, out nint addr);
+                return addr;
+            });
+            yield return new ImGuiNETProvider(new WindowImGuiBackend(window));
+        }
 
         yield return new WindowInputProvider(window);
-        yield return new ImGuiNETProvider(new WindowImGuiBackend(window));
     }
 
     public void ProcessEvents()
