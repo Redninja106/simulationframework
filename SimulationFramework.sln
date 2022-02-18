@@ -31,7 +31,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interactive", "Interactive"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Tests.Interactive.Input", "src\SimulationFramework.Tests.Interactive.Input\SimulationFramework.Tests.Interactive.Input.csproj", "{79D2B445-74E3-4DEC-8DD6-49BE86507669}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.Tests.Interactive.Gradients", "src\SimulationFramework.Tests.Interactive.Gradients\SimulationFramework.Tests.Interactive.Gradients.csproj", "{0C2DF737-5DD6-4756-94BF-380D63BA4230}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Tests.Interactive.Gradients", "src\SimulationFramework.Tests.Interactive.Gradients\SimulationFramework.Tests.Interactive.Gradients.csproj", "{0C2DF737-5DD6-4756-94BF-380D63BA4230}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.Tests.Interactive.CanvasStateStack", "SimulationFramework.Tests.Interactive.CanvasStateStack\SimulationFramework.Tests.Interactive.CanvasStateStack.csproj", "{7EEF9E4E-36A5-47AD-9550-4E813A1525C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +81,10 @@ Global
 		{0C2DF737-5DD6-4756-94BF-380D63BA4230}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C2DF737-5DD6-4756-94BF-380D63BA4230}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C2DF737-5DD6-4756-94BF-380D63BA4230}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EEF9E4E-36A5-47AD-9550-4E813A1525C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EEF9E4E-36A5-47AD-9550-4E813A1525C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EEF9E4E-36A5-47AD-9550-4E813A1525C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EEF9E4E-36A5-47AD-9550-4E813A1525C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +100,7 @@ Global
 		{917A8B5B-FF49-4DE8-9524-E84BB7580060} = {813D5E58-CE77-4969-B74A-A724228D8F73}
 		{79D2B445-74E3-4DEC-8DD6-49BE86507669} = {917A8B5B-FF49-4DE8-9524-E84BB7580060}
 		{0C2DF737-5DD6-4756-94BF-380D63BA4230} = {917A8B5B-FF49-4DE8-9524-E84BB7580060}
+		{7EEF9E4E-36A5-47AD-9550-4E813A1525C9} = {917A8B5B-FF49-4DE8-9524-E84BB7580060}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09D3B2BE-AC85-48C2-835F-6B781E265873}
