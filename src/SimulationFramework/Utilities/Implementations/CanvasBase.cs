@@ -17,10 +17,14 @@ namespace SimulationFramework.Utilities.Implementations;
 /// </summary>
 public abstract class CanvasBase : ICanvas
 {
+    // The CanvasBase class is designed to implement common behavior between all canvas implementations.
+
+
     public const int MAX_STACK_ALLOCATION = 1024;
 
     public int Width => this.GetTarget().Width;
     public int Height => this.GetTarget().Height;
+    
     public Matrix3x2 Transform
     {
         get
@@ -60,7 +64,6 @@ public abstract class CanvasBase : ICanvas
 
     public CanvasBase()
     {
-        // this.ResetState();
         this.ResetState();
     }
 
@@ -242,7 +245,7 @@ public abstract class CanvasBase : ICanvas
     {
         UpdateTransformCore(state.Transform);
         UpdateStrokeWidthCore(state.strokeWidth);
-        UpdateClipRectCore(state.clipRect);
+        //UpdateClipRectCore(state.clipRect);
         UpdateDrawModeCore(state.DrawMode);
         UpdateFontCore(state.fontName, state.styles, state.size);
         UpdateFillTextureCore(state.texture, state.textureTransform, state.textureTileMode);
