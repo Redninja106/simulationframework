@@ -3,7 +3,7 @@ using System;
 namespace SimulationFramework;
 
 /// <summary>
-/// Provides of control over the functionality of a texture. Passed to <see cref="Graphics.Create"/>
+/// Provides of control over the functionality of a texture. Used by <see cref="Graphics.CreateTexture(int, int, SimulationFramework.TextureFlags)"/>.
 /// </summary>
 [Flags]
 public enum TextureFlags
