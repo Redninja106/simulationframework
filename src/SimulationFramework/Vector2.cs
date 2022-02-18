@@ -104,6 +104,14 @@ public struct Vector2 : IEquatable<Vector2>
     {
         return a.X * b.X + a.Y * b.Y;
     }
+    
+    /// <summary>
+    /// Determines the angle between two vectors.
+    /// </summary>
+    public static float AngleBetween(Vector2 a, Vector2 b)
+    {
+        return MathF.Acos(Dot(a, b) / a.Length() * b.Length());
+    }
 
     /// <summary>
     /// Performs a linear interpolation between two vectors.
