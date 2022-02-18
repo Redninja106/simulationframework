@@ -43,9 +43,15 @@ public sealed class InputContext
             return;
 
         if (isDown)
+        {
             pressedKeys.Add(key);
+            KeyDown?.Invoke(key);
+        }
         else
+        {
             pressedKeys.Remove(key);
+            KeyUp?.Invoke(key);
+        }
     }
 
     public void UpdateMouseButton(MouseButton button, bool isDown)
