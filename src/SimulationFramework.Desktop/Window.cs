@@ -8,7 +8,7 @@ namespace SimulationFramework.Desktop;
 
 internal static class Window
 {
-    internal static bool graphicsEnabled;
+    internal static bool graphicsEnabled = true;
 
     public static void SetGraphicsEnabled(bool enabled)
     {
