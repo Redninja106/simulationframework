@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using SimulationFramework;
 using SimulationFramework.IMGUI;
 using SimulationFramework.Desktop;
+using SimulationFramework.Drawing;
 
 using var sim = new MySimulation();
 sim.RunWindowed("Framerate graph!", 1920, 1080);

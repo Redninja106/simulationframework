@@ -1,6 +1,8 @@
-﻿using System;
+﻿using SimulationFramework.Drawing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -105,7 +107,7 @@ public abstract class Simulation : IDisposable
 
         this.environment = environment;
 
-        var supportedComponents = this.environment.CreateSupportedComponents();
+        var supportedComponents = this.environment.CreateSupportedComponents().ToList();
 
         // check for common issues and emit warnings
         if (supportedComponents.Count() < 0)
@@ -158,19 +160,19 @@ public abstract class Simulation : IDisposable
             this.BeforeRender?.Invoke();
             PerformanceViewer.MarkTaskCompleted("BeforeRender()");
 
-            using var canvas = Graphics.GetFrameCanvas();
+            using var canvas = Graphics.GetFrameTexture().OpenCanvas();
 
-            canvas.ResetState();
+            canvas?.ResetState();
 
             Render?.Invoke();
 
-            using (canvas.Push())
+            using (canvas?.Push())
             {
                 this.OnRender(canvas);
                 PerformanceViewer.MarkTaskCompleted("OnRender()");
             }
-
-            canvas.Flush();
+            
+            canvas?.Flush();
             PerformanceViewer.MarkTaskCompleted("Canvas.Flush()");
 
             DebugWindow.Layout();

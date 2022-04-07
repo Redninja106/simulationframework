@@ -7,6 +7,7 @@ using Silk.NET.Windowing;
 using SimulationFramework.SkiaSharp;
 using ImGuiNET;
 using SimulationFramework.IMGUI;
+using SimulationFramework.Drawing.Direct3D11;
 
 namespace SimulationFramework.Desktop;
 
@@ -24,6 +25,7 @@ public sealed partial class WindowEnvironment : ISimulationEnvironment
             Size = new(width, height),
             Title = title,
             WindowBorder = resizable ? WindowBorder.Resizable : WindowBorder.Fixed,
+            API = GraphicsAPI.None,
         });
         window.Initialize();
         MakeContextCurrent();
@@ -31,7 +33,7 @@ public sealed partial class WindowEnvironment : ISimulationEnvironment
 
     public void MakeContextCurrent()
     {
-        window.MakeCurrent();
+        //window.MakeCurrent();
     }
 
     public void Dispose()
@@ -45,19 +47,15 @@ public sealed partial class WindowEnvironment : ISimulationEnvironment
         var graphicsEnabled = Window.graphicsEnabled;
         if (graphicsEnabled)
         {
-            var frameProvider = new WindowFrameProvider(window.Size.X, window.Size.Y);
+            //var frameProvider = new WindowFrameProvider(window.Size.X, window.Size.Y);
 
             window.FramebufferResize += size =>
             {
-                frameProvider.Resize(size.X, size.Y);
+                //frameProvider.Resize(size.X, size.Y);
             };
 
-            yield return new SkiaGraphicsProvider(frameProvider, name =>
-            {
-                window.GLContext.TryGetProcAddress(name, out nint addr);
-                return addr;
-            });
-            yield return new ImGuiNETProvider(new WindowImGuiBackend(window));
+            yield return new D3D11GraphicsProvider(window.Native.Win32.Value.Hwnd);
+            //yield return new ImGuiNETProvider(new WindowImGuiBackend(window));
         }
 
         yield return new WindowInputProvider(window);
@@ -75,7 +73,7 @@ public sealed partial class WindowEnvironment : ISimulationEnvironment
 
     public void EndFrame()
     {
-        window.GLContext.SwapBuffers();
+        //window.GLContext.SwapBuffers();
     }
 
     public (int, int) GetOutputSize()

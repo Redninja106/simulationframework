@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
+using SimulationFramework.Drawing;
 
 namespace SimulationFramework.IMGUI;
 

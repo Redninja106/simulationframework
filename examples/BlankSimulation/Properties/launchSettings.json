@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BlankSimulation": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

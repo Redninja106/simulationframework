@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
+using SimulationFramework.Drawing;
 using static ImGuiNET.ImGuiNative;
 
 namespace SimulationFramework.IMGUI;

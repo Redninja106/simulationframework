@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using SimulationFramework.Drawing;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
@@ -42,7 +43,7 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
     }
 
 
-    public ITexture CreateTexture(int width, int height, Span<Color> data, TextureFlags flags = TextureFlags.None)
+    public ITexture CreateTexture(int width, int height, Span<Color> data, ResourceOptions flags = ResourceOptions.None)
     {
         var bitmap = new SkiaSurface(this, new SKBitmap(width, height), true);
 
@@ -53,7 +54,7 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         return bitmap;
     }
 
-    public ITexture LoadTexture(Span<byte> encodedData, TextureFlags flags = TextureFlags.None)
+    public ITexture LoadTexture(Span<byte> encodedData, ResourceOptions flags = ResourceOptions.None)
     {
         return new SkiaSurface(this, SKBitmap.Decode(encodedData), true);
     }
@@ -99,5 +100,30 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         }
 
         return fonts[(fontName, styles, size)];
+    }
+
+    public ITexture GetFrameTexture()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged
+    {
+        throw new NotImplementedException();
+    }
+
+    public IShader CreateShader(ShaderKind kind, string source)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetResourceLifetime(int lifetimeInFrames)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IRenderer GetRenderer()
+    {
+        throw new NotImplementedException();
     }
 }

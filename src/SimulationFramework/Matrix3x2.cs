@@ -210,4 +210,34 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
     {
         return Identity with { Translation = translation };
     }
+
+    public bool Invert(out Matrix3x2 result)
+    {
+        float determinant = GetDeterminant(); ;
+
+        if (MathF.Abs(determinant) < float.Epsilon)
+        {
+            result = new Matrix3x2(float.NaN, float.NaN, float.NaN, float.NaN, float.NaN, float.NaN);
+            return false;
+        }
+
+        float invDeterminant = 1.0f / determinant;
+
+        result.M11 = M22 * invDeterminant;
+        result.M12 = -M12 * invDeterminant;
+
+        result.M21 = -M21 * invDeterminant;
+        result.M22 = M11 * invDeterminant;
+
+        result.M31 = (M21 * M32 - M31 * M22) * invDeterminant;
+        result.M32 = (M31 * M12 - M11 * M32) * invDeterminant;
+
+        return true;
+    }
+
+    public float GetDeterminant()
+    {
+        // :) https://www.mathsisfun.com/algebra/matrix-determinant.html
+        return M11 * M22 - M21 * M12;
+    }
 }

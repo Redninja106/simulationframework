@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using SimulationFramework;
 using SimulationFramework.Desktop;
+using SimulationFramework.Drawing;
 using SimulationFramework.IMGUI;
 
 using var sim = new DrawingShapesSimulation();
