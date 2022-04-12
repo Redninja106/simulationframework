@@ -10,7 +10,7 @@ public enum PrimitiveKind
 {
     Triangles,
     TriangleStrip,
-    LineList,
+    Lines,
     LineStrip,
     Point
 }

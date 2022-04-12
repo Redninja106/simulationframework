@@ -54,7 +54,7 @@ public sealed partial class WindowEnvironment : ISimulationEnvironment
                 //frameProvider.Resize(size.X, size.Y);
             };
 
-            yield return new D3D11GraphicsProvider(window.Native.Win32.Value.Hwnd);
+            yield return new D3D11Graphics(window.Native.Win32.Value.Hwnd);
             //yield return new ImGuiNETProvider(new WindowImGuiBackend(window));
         }
 

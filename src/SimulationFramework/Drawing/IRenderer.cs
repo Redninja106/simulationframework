@@ -11,10 +11,10 @@ public interface IRenderer
     void SetRenderTarget(ITexture renderTarget);
 
     void Clear(Color color);
+    
+    void UseBuffers<T>(IBuffer<T> vertexBuffer, IBuffer<int> indexBuffer) where T : unmanaged;
 
-    void SetShader(IShader shader);
-    void SetVertexBuffer<T>(IBuffer<T> buffer) where T : unmanaged;
-    void SetIndexBuffer(IBuffer<int> buffer);
+    void UseShader(IShader shader);
 
     void DrawPrimitives(PrimitiveKind kind, int count, int offset);
     void DrawIndexedPrimitives(PrimitiveKind kind, int count, int vertexOffset, int indexOffset);

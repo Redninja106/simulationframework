@@ -10,7 +10,12 @@ public interface IShader : IDisposable
 {
     ShaderKind Kind { get; }
 
-    void SetBuffer<T>(string name, IBuffer<T> buffer) where T : unmanaged;
+    void Apply(IRenderer renderer);
+
+    // void SetBuffer<T>(string name, IBuffer<T> buffer) where T : unmanaged;
     void SetTexture(string name, ITexture texture, TileMode tileMode);
     void SetVariable<T>(string name, T value) where T : unmanaged;
+
+    T GetVariable<T>(string name) where T : unmanaged;
+    ITexture GetTexture(string name);
 }

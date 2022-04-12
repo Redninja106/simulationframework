@@ -1,5 +1,6 @@
 ﻿using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Direct3D11.Buffers;
+using SimulationFramework.Drawing.Direct3D11.Shaders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +31,7 @@ internal sealed class D3D11Renderer : IRenderer
 
         if (vp.Width == 0 || vp.Height == 0)
         {
-            DeviceContext.RSSetViewport(0, 0, 1920, 1080);
+            DeviceContext.RSSetViewport(0, 0, this.currentRenderTarget.Width, this.currentRenderTarget.Height, 0, 1);
         }
 
         if (rs == null)
@@ -55,39 +56,9 @@ internal sealed class D3D11Renderer : IRenderer
         DeviceContext.Draw(kind.GetVertexCount(count), offset);
     }
 
-    public void SetIndexBuffer(IBuffer<int> buffer)
+    public void UseShader(IShader shader)
     {
-        throw new NotImplementedException();
-    }
-
-    public void SetShader(IShader shader)
-    {
-        if (shader is not D3D11Shader d3dShader)
-            throw new ArgumentException(null, nameof(shader));
-
-        switch (shader.Kind)
-        {
-            case ShaderKind.Vertex:
-                DeviceContext.VSSetShader(d3dShader.InternalShader as ID3D11VertexShader, null, 0);
-                DeviceContext.IASetInputLayout(d3dShader.InputLayout);
-                DeviceContext.VSSetConstantBuffer(0, d3dShader.varConstBuffer);
-                break;
-            case ShaderKind.Fragment:
-                DeviceContext.PSSetShader(d3dShader.InternalShader as ID3D11PixelShader, null, 0);
-                DeviceContext.PSSetConstantBuffer(0, d3dShader.varConstBuffer);
-                break;
-            case ShaderKind.Compute:
-            default:
-                throw new NotImplementedException();
-        }
-    }
-
-    public void SetVertexBuffer<T>(IBuffer<T> buffer) where T : unmanaged
-    {
-        if (buffer is not D3D11Buffer<T> d3dBuffer)
-            throw new ArgumentException(null, nameof(buffer));
-
-        DeviceContext.IASetVertexBuffer(0, d3dBuffer.GetInternalbuffer(BufferUsage.VertexBuffer), d3dBuffer.Stride);
+        shader.Apply(this);
     }
 
     public void SetRenderTarget(ITexture renderTarget)
@@ -96,11 +67,19 @@ internal sealed class D3D11Renderer : IRenderer
             throw new ArgumentException(null, nameof(renderTarget));
 
         currentRenderTarget = d3dTexture;
-        DeviceContext.OMSetRenderTargets(d3dTexture.GetRenderTargetView());
+        DeviceContext.OMSetRenderTargets(d3dTexture.RenderTargetView);
     }
 
     public void Clear(Color color)
     {
-        DeviceContext.ClearRenderTargetView(currentRenderTarget.GetRenderTargetView(), new(color.ToVector4()));
+        DeviceContext.ClearRenderTargetView(currentRenderTarget.RenderTargetView, new(color.ToVector4()));
+    }
+
+    public void UseBuffers<T>(IBuffer<T> vertexBuffer, IBuffer<int> indexBuffer) where T : unmanaged
+    {
+        if (vertexBuffer is not D3D11Buffer<T> d3dBuffer)
+            throw new ArgumentException(null, nameof(vertexBuffer));
+
+        DeviceContext.IASetVertexBuffer(0, d3dBuffer.GetInternalbuffer(BufferUsage.VertexBuffer), d3dBuffer.Stride);
     }
 }

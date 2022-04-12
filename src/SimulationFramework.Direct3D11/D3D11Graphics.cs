@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Drawing.Direct3D11.Buffers;
+using SimulationFramework.Drawing.Direct3D11.Shaders;
 using System.Runtime.CompilerServices;
 using Vortice.D3DCompiler;
 using Vortice.Direct3D;
@@ -7,11 +8,11 @@ using Vortice.DXGI;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
-public class D3D11GraphicsProvider : IGraphicsProvider
+public class D3D11Graphics : IGraphicsProvider
 {
     private DeviceResources resources;
 
-    public D3D11GraphicsProvider(IntPtr hwnd)
+    public D3D11Graphics(IntPtr hwnd)
     {
         resources = new DeviceResources(hwnd);
     }
@@ -33,17 +34,25 @@ public class D3D11GraphicsProvider : IGraphicsProvider
 
     public IShader CreateShader(ShaderKind kind, string source)
     {
-        return new D3D11Shader(resources, kind, source);
+        switch (kind)
+        {
+            case ShaderKind.Vertex:
+                return new D3D11VertexShader(resources, source);
+            case ShaderKind.Fragment:
+                return new D3D11FragmentShader(resources, source);
+            case ShaderKind.Compute:
+            default:
+                throw new NotImplementedException();
+        }
     }
 
     public ITexture CreateTexture(int width, int height, Span<Color> data, ResourceOptions flags)
     {
-        throw new NotImplementedException();
+        return new D3D11Texture(this.resources, width, height, data, flags);
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
     }
 
     public ITexture GetFrameTexture()

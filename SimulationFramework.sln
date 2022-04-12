@@ -39,9 +39,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SFSL", "SFSL", "{5B6B7067-3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.SFSL", "src\SimulationFramework.SFSL\SimulationFramework.SFSL.csproj", "{1032A552-BAC4-4E6D-8084-16268DA305F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.Drawing.Direct3D11", "src\SimulationFramework.Direct3D11\SimulationFramework.Drawing.Direct3D11.csproj", "{E7C179E1-5A7D-4F6E-A61F-E72150AEE7B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Drawing.Direct3D11", "src\SimulationFramework.Direct3D11\SimulationFramework.Drawing.Direct3D11.csproj", "{E7C179E1-5A7D-4F6E-A61F-E72150AEE7B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.Drawing.OpenGL", "src\SimulationFramework.Drawing.OpenGL\SimulationFramework.Drawing.OpenGL.csproj", "{CC652CA6-0AEE-490A-BF3C-25A8791DACB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Drawing.OpenGL", "src\SimulationFramework.Drawing.OpenGL\SimulationFramework.Drawing.OpenGL.csproj", "{CC652CA6-0AEE-490A-BF3C-25A8791DACB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

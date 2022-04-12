@@ -14,7 +14,12 @@ public unsafe struct Matrix4x4
     /// <summary>
     /// The identity matrix.
     /// </summary>
-    public static readonly Matrix4x4 Identity = new();
+    public static readonly Matrix4x4 Identity = new(
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+        );
 
     private unsafe fixed float values[ELEMENT_COUNT];
 
@@ -105,7 +110,7 @@ public unsafe struct Matrix4x4
 
     public float GetDeterminant()
     {
-        
+        throw new NotImplementedException();
     }
     
     public static Matrix4x4 Invert(Matrix4x4 matrix)

@@ -14,7 +14,7 @@ public enum ResourceOptions
     /// </summary>
     None = 0,
     /// <summary>
-    /// The resource's data may not be written to or read from after creation.
+    /// The resource's data may not be written to or read from by the cpu after creation.
     /// </summary>
     NoAccess = 1 << 0
 }

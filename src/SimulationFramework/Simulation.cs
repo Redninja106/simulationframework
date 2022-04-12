@@ -18,6 +18,8 @@ public abstract class Simulation : IDisposable
     /// </summary>
     public static Simulation Current { get; private set; }
 
+    public long Frame { get; private set; }
+
     private readonly List<ISimulationComponent> components = new();
     private ISimulationEnvironment environment;
     private bool exitRequested;
@@ -184,6 +186,8 @@ public abstract class Simulation : IDisposable
             PerformanceViewer.MarkTaskCompleted("EndFrame()");
 
             PerformanceViewer.EndTaskGroup();
+
+            Frame++;
         }
 
         DebugConsole.Log("OnUninitialize called");
