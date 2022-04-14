@@ -3,7 +3,7 @@
 <br>SimulationFramework</br>
 </h1>
 
-SimulationFramework is a framework for graphical desktop apps using .NET. It is designed with simplicity and ease of use in mind in order to cut down on development time for rapid prototyping. Making heavy use of interfaces, all major features are abstracted to make SimulationFramework completely dependency free and by extension completely cross-platform.
+SimulationFramework is a framework for graphical desktop apps using .NET. Designed with simplicity and ease of use in mind, it cuts down on development time while enabling rapid prototyping. Making heavy use of interfaces, all major features are abstracted to make SimulationFramework completely dependency free and cross-platform.
 
 ⚠️ Currently, SimulationFramework is in a very early state of development. ⚠️
 
@@ -12,6 +12,8 @@ SimulationFramework is a framework for graphical desktop apps using .NET. It is 
 - **Simple and Usable**: SimulationFramework is designed to be developer-friendly. It is well documented and provides flexible, intuitive, and easy-to-use APIs. 
 
 - **2D Drawing**: A powerful and performant 2D drawing API, with backends in [SkiaSharp](https://github.com/mono/SkiaSharp) and soon Direct2D.
+
+- **3D Drawing**: SimulationFramework provides a high level 3D rendering system using models and materials, as well a low level direct3d style api.
 
 - **Portable**: Working entirely through interfaces, SimulationFramework can be made to run anywhere .NET can.
 
