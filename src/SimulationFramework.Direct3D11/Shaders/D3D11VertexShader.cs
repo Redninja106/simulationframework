@@ -84,6 +84,7 @@ internal class D3D11VertexShader : D3D11ShaderBase<ID3D11VertexShader>
     private protected override void Apply(ID3D11DeviceContext context, ID3D11VertexShader shader)
     {
         context.VSSetShader(shader);
+        context.IASetInputLayout(this.inputLayout);
     }
 
     private protected override void Apply(ID3D11DeviceContext context, int slot, ID3D11Buffer constantBuffer)

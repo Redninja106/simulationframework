@@ -44,7 +44,7 @@ internal class BlankSimulation : Simulation
         }");
 
         fragmentShader = Graphics.CreateShader(ShaderKind.Fragment, @"
-Texture2D    texture_texture : register(t0);
+Texture2D    texture : register(t0);
 SamplerState texture_sampler : register(s0);
 
 cbuffer cb : register(b0)

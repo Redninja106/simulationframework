@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Vortice.Direct3D;
@@ -41,7 +42,7 @@ internal class D3D11Texture : D3D11Object, ITexture
 
         fixed (void* dataPtr = data)
         {
-            Texture = resources.Device.CreateTexture2D(desc, new[] { new SubresourceData(dataPtr, width * 4) });
+            Texture = resources.Device.CreateTexture2D(desc, new[] { new SubresourceData(dataPtr, width * Unsafe.SizeOf<Color>()) });
         }
     }
 

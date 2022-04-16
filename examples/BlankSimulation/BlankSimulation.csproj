@@ -9,6 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="logo-512x512.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="logo-512x512.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\SimulationFramework.Desktop\SimulationFramework.Desktop.csproj" />
     <ProjectReference Include="..\..\src\SimulationFramework\SimulationFramework.csproj" />
   </ItemGroup>
