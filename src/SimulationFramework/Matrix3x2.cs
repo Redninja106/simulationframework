@@ -16,7 +16,7 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
     /// <summary>
     /// The identity matrix.
     /// </summary>
-    public static readonly Matrix3x2 Identity = new(1,0,0,1,0,0);
+    public static readonly Matrix3x2 Identity = new(1, 0, 0, 1, 0, 0);
 
     /// <summary>
     /// The top-left value of the matrix.
@@ -32,7 +32,7 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
     /// The top-center value of the matrix.
     /// </summary>
     public float M21;
-    
+
     /// <summary>
     /// The bottom-center value of the matrix.
     /// </summary>
@@ -165,7 +165,7 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
     /// Creates a scaling matrix.
     /// </summary>
     public static Matrix3x2 CreateScale(float scale) => CreateScale(scale, scale);
-    
+
     /// <summary>
     /// Creates a scaling matrix.
     /// </summary>
@@ -188,7 +188,7 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
     /// Creates a rotation matrix around the provided center point.
     /// </summary>
     public static Matrix3x2 CreateRotation(float rotation, float centerX, float centerY) => CreateRotation(rotation, (centerX, centerY));
-    
+
     /// <summary>
     /// Creates a rotation matrix around the provided center point.
     /// </summary>
@@ -209,5 +209,35 @@ public struct Matrix3x2 : IEquatable<Matrix3x2>
     public static Matrix3x2 CreateTranslation(Vector2 translation)
     {
         return Identity with { Translation = translation };
+    }
+
+    public bool Invert(out Matrix3x2 result)
+    {
+        float determinant = GetDeterminant(); ;
+
+        if (MathF.Abs(determinant) < float.Epsilon)
+        {
+            result = new Matrix3x2(float.NaN, float.NaN, float.NaN, float.NaN, float.NaN, float.NaN);
+            return false;
+        }
+
+        float invDeterminant = 1.0f / determinant;
+
+        result.M11 = M22 * invDeterminant;
+        result.M12 = -M12 * invDeterminant;
+
+        result.M21 = -M21 * invDeterminant;
+        result.M22 = M11 * invDeterminant;
+
+        result.M31 = (M21 * M32 - M31 * M22) * invDeterminant;
+        result.M32 = (M31 * M12 - M11 * M32) * invDeterminant;
+
+        return true;
+    }
+
+    public float GetDeterminant()
+    {
+        // :) https://www.mathsisfun.com/algebra/matrix-determinant.html
+        return M11 * M22 - M21 * M12;
     }
 }
