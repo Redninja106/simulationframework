@@ -212,7 +212,7 @@ public interface ICanvas : IDisposable
     /// <param name="x">The x-position of the texture's destination rectangle.</param>
     /// <param name="y">The y-position of the texture's destination rectangle.</param>
     /// <param name="alignment">The point on the texture to align to the provided position.</param>
-    void DrawSurface(ITexture texture, float x, float y, Alignment alignment = Alignment.TopLeft);
+    void DrawTexture(ITexture texture, float x, float y, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
     /// Draws a texture to the canvas, using the current transform and clipping settings.
@@ -223,7 +223,7 @@ public interface ICanvas : IDisposable
     /// <param name="width">The width of the texture's destination rectangle.</param>
     /// <param name="height">The height of the texture's destination rectangle.</param>
     /// <param name="alignment">The point on the texture to align to the provided position.</param>
-    void DrawSurface(ITexture texture, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft);
+    void DrawTexture(ITexture texture, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
     /// Draws a texture to the canvas, using the current transform and clipping settings.
@@ -232,7 +232,7 @@ public interface ICanvas : IDisposable
     /// <param name="position">The position of the texture's destination rectangle.</param>
     /// <param name="size">The size of the texture's destination rectangle.</param>
     /// <param name="alignment">The point on the texture to align to the provided position.</param>
-    void DrawSurface(ITexture texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft);
+    void DrawTexture(ITexture texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
     /// Draws a texture to the canvas, using the current transform and clipping settings.
@@ -240,7 +240,7 @@ public interface ICanvas : IDisposable
     /// <param name="texture">The texture to draw.</param>
     /// <param name="source">The source bounds of the texture.</param>
     /// <param name="destination">The destination bounds of the texture.</param>
-    void DrawSurface(ITexture texture, Rectangle source, Rectangle destination);
+    void DrawTexture(ITexture texture, Rectangle source, Rectangle destination);
 
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.

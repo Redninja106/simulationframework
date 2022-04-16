@@ -206,11 +206,11 @@ public abstract class CanvasBase : ICanvas
         DrawRectCore(rect, radius, color);
     }
 
-    public void DrawTexture(ITexture texture, Alignment alignment = Alignment.TopLeft) => DrawSurface(texture, (0,0), (texture?.Width ?? 0, texture?.Height ?? 0), alignment);
-    public void DrawSurface(ITexture texture, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawSurface(texture, (x, y), (texture?.Width ?? 0, texture?.Height ?? 0), alignment);
-    public void DrawSurface(ITexture texture, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => DrawSurface(texture, (x, y), (width, height), alignment);
-    public void DrawSurface(ITexture texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawSurface(texture, new(0, 0, texture?.Width ?? 0, texture?.Height ?? 0), new(position, size, alignment));
-    public void DrawSurface(ITexture texture, Rectangle source, Rectangle destination)
+    public void DrawTexture(ITexture texture, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, (0,0), (texture?.Width ?? 0, texture?.Height ?? 0), alignment);
+    public void DrawTexture(ITexture texture, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, (x, y), (texture?.Width ?? 0, texture?.Height ?? 0), alignment);
+    public void DrawTexture(ITexture texture, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, (x, y), (width, height), alignment);
+    public void DrawTexture(ITexture texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, new(0, 0, texture?.Width ?? 0, texture?.Height ?? 0), new(position, size, alignment));
+    public void DrawTexture(ITexture texture, Rectangle source, Rectangle destination)
     {
         if (texture is null)
             throw new ArgumentNullException(nameof(texture));
