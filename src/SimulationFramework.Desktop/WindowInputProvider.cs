@@ -3,6 +3,7 @@ using Silk.NET.Input;
 using SilkKey = Silk.NET.Input.Key;
 using SilkButton = Silk.NET.Input.MouseButton;
 using SimulationFramework.IMGUI;
+using System.Numerics;
 
 namespace SimulationFramework.Desktop;
 
@@ -88,8 +89,8 @@ public sealed partial class WindowEnvironment
                 gamepad.ButtonDown += GamepadButtonDown; ;
                 
                 Context.UpdateGamepadJoysticks(
-                    (gamepad.Thumbsticks[1].X, gamepad.Thumbsticks[1].Y),
-                    (gamepad.Thumbsticks[0].X, gamepad.Thumbsticks[0].Y)
+                    new Vector2(gamepad.Thumbsticks[1].X, gamepad.Thumbsticks[1].Y),
+                    new Vector2(gamepad.Thumbsticks[0].X, gamepad.Thumbsticks[0].Y)
                     );
 
                 Context.UpdateGamepadTriggers(gamepad.Triggers[0].Position, gamepad.Triggers[1].Position);

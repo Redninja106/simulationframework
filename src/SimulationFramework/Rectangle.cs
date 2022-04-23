@@ -33,12 +33,12 @@ public struct Rectangle : IEquatable<Rectangle>
     /// <summary>
     /// The size of the rectangle.
     /// </summary>
-    public Vector2 Size { get => (Width, Height); set => (Width, Height) = value; }
+    public Vector2 Size { get => new Vector2(Width, Height); set => (Width, Height) = (value.X, value.Y); }
 
     /// <summary>
     /// The position of the rectangle.
     /// </summary>
-    public Vector2 Position { get => (X, Y); set => (X, Y) = value; }
+    public Vector2 Position { get => new Vector2(X, Y); set => (X, Y) = (value.X, value.Y); }
 
     /// <summary>
     /// Creates a new rectangle from the provided position and size.
@@ -64,7 +64,7 @@ public struct Rectangle : IEquatable<Rectangle>
         this.Height = height;
         this.X = this.Y = 0;
 
-        SetAlignedPosition((x, y), alignment);
+        SetAlignedPosition(new Vector2(x, y), alignment);
     }
 
     /// <summary>

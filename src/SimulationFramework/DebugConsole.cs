@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using SimulationFramework.IMGUI;
@@ -99,7 +100,7 @@ public sealed class DebugConsole : DebugWindow
         {
             if (ImGui.TreeNode("Available Commands:")) 
             {
-                if (ImGui.BeginListBox("", (-5, 300)))
+                if (ImGui.BeginListBox("", new Vector2(-5, 300)))
                 {
                     foreach (var cmd in commands.Keys)
                     {

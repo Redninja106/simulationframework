@@ -96,7 +96,7 @@ internal sealed class SkiaCanvas : CanvasBase
 
         SKRect skbounds = default;
         paint.MeasureText(text, ref skbounds);
-        var bounds = new Rectangle(position, (skbounds.Width, skbounds.Height), alignment);
+        var bounds = new Rectangle(position, new Vector2(skbounds.Width, skbounds.Height), alignment);
         var pos = bounds.GetAlignedPoint(Alignment.TopLeft);
 
         canvas.DrawText(text, pos.X - skbounds.Left, pos.Y - skbounds.Top, this.currentFont, this.paint);
@@ -116,7 +116,7 @@ internal sealed class SkiaCanvas : CanvasBase
     {
         SKRect bounds = default;
         paint.MeasureText(text, ref bounds);
-        return (bounds.Width, bounds.Height);
+        return new Vector2(bounds.Width, bounds.Height);
     }
 
     protected override bool UpdateClipRectCore(Rectangle rect)

@@ -72,17 +72,17 @@ public abstract class CanvasBase : ICanvas
         ClearCore(color);
     }
     
-    public void DrawCircle(float x, float y, float radius, Color color, Alignment alignment = Alignment.Center) => DrawCircle((x, y), radius, color, alignment);
+    public void DrawCircle(float x, float y, float radius, Color color, Alignment alignment = Alignment.Center) => DrawCircle(new Vector2(x, y), radius, color, alignment);
     public void DrawCircle(Vector2 position, float radius, Color color, Alignment alignment = Alignment.Center)
     {
-        DrawEllipse(position, (radius, radius), color, alignment);
+        DrawEllipse(position, new Vector2(radius, radius), color, alignment);
     }
 
-    public void DrawEllipse(float x, float y, float radiusX, float radiusY, Color color, Alignment alignment = Alignment.Center) => DrawEllipse((x, y), (radiusX, radiusY), color, alignment);
+    public void DrawEllipse(float x, float y, float radiusX, float radiusY, Color color, Alignment alignment = Alignment.Center) => DrawEllipse(new Vector2(x, y), new Vector2(radiusX, radiusY), color, alignment);
     public void DrawEllipse(Vector2 position, Vector2 radii, Color color, Alignment alignment = Alignment.Center) => DrawEllipse(new Rectangle(position, radii * 2, alignment), color);
     public void DrawEllipse(Rectangle bounds, Color color) => DrawArc(bounds, 0, Simulation.ConvertToCurrentAngleMode(MathF.PI * 2, AngleMode.Radians), false, color);
    
-    public void DrawArc(float x, float y, float radiusX, float radiusY, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center) => DrawArc((x, y), (radiusX, radiusY), begin, end, includeCenter, color, alignment);
+    public void DrawArc(float x, float y, float radiusX, float radiusY, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center) => DrawArc(new Vector2(x, y), new Vector2(radiusX, radiusY), begin, end, includeCenter, color, alignment);
     public void DrawArc(Vector2 position, Vector2 radii, float begin, float end, bool includeCenter, Color color, Alignment alignment = Alignment.Center) => DrawArc(new Rectangle(position, radii * 2, alignment), begin, end, includeCenter, color);
     public void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter, Color color)
     {
@@ -100,7 +100,7 @@ public abstract class CanvasBase : ICanvas
         DrawEllipseCore(bounds, begin, end, includeCenter, color);
     }
 
-    public void DrawLine(float x1, float y1, float x2, float y2, Color color) => DrawLine((x1, y1), (x2, y2), color);
+    public void DrawLine(float x1, float y1, float x2, float y2, Color color) => DrawLine(new Vector2(x1, y1), new Vector2(x2, y2), color);
     public void DrawLine(Vector2 p1, Vector2 p2, Color color)
     {
         DrawLineCore(p1, p2, color);
@@ -175,14 +175,14 @@ public abstract class CanvasBase : ICanvas
     }
 
 
-    public void DrawRect(float x, float y, float width, float height, Color color, Alignment alignment = Alignment.TopLeft) => DrawRect((x, y), (width, height), color, alignment);
+    public void DrawRect(float x, float y, float width, float height, Color color, Alignment alignment = Alignment.TopLeft) => DrawRect(new Vector2(x, y), new Vector2(width, height), color, alignment);
     public void DrawRect(Vector2 position, Vector2 size, Color color, Alignment alignment = Alignment.TopLeft) => DrawRect(new(position, size, alignment), color);
     public void DrawRect(Rectangle rect, Color color)
     {
         DrawRoundedRect(rect, 0, color);
     }
 
-    public void DrawRoundedRect(float x, float y, float width, float height, float radius, Color color, Alignment alignment = Alignment.TopLeft) => DrawRoundedRect((x, y), (width, height), radius, color, alignment);
+    public void DrawRoundedRect(float x, float y, float width, float height, float radius, Color color, Alignment alignment = Alignment.TopLeft) => DrawRoundedRect(new Vector2(x, y), new Vector2(width, height), radius, color, alignment);
     public void DrawRoundedRect(Vector2 position, Vector2 size, float radius, Color color, Alignment alignment = Alignment.TopLeft) => DrawRoundedRect(new(position, size, alignment), radius, color);
     public void DrawRoundedRect(Rectangle rect, float radius, Color color)
     {
@@ -206,9 +206,9 @@ public abstract class CanvasBase : ICanvas
         DrawRectCore(rect, radius, color);
     }
 
-    public void DrawTexture(ITexture texture, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, (0,0), (texture?.Width ?? 0, texture?.Height ?? 0), alignment);
-    public void DrawTexture(ITexture texture, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, (x, y), (texture?.Width ?? 0, texture?.Height ?? 0), alignment);
-    public void DrawTexture(ITexture texture, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, (x, y), (width, height), alignment);
+    public void DrawTexture(ITexture texture, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, new Vector2(0,0), new Vector2(texture?.Width ?? 0, texture?.Height ?? 0), alignment);
+    public void DrawTexture(ITexture texture, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, new Vector2(x, y), new Vector2(texture?.Width ?? 0, texture?.Height ?? 0), alignment);
+    public void DrawTexture(ITexture texture, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, new Vector2(x, y), new Vector2(width, height), alignment);
     public void DrawTexture(ITexture texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, new(0, 0, texture?.Width ?? 0, texture?.Height ?? 0), new(position, size, alignment));
     public void DrawTexture(ITexture texture, Rectangle source, Rectangle destination)
     {
@@ -218,7 +218,7 @@ public abstract class CanvasBase : ICanvas
         DrawSurfaceCore(texture, source, destination);
     }
 
-    public void DrawText(string text, float x, float y, Color color, Alignment alignment = Alignment.TopLeft) => DrawText(text, (x, y), color, alignment);
+    public void DrawText(string text, float x, float y, Color color, Alignment alignment = Alignment.TopLeft) => DrawText(text, new Vector2(x, y), color, alignment);
     public void DrawText(string text, Vector2 position, Color color, Alignment alignment = Alignment.TopLeft)
     {
         RefreshRelativeGradient(new Rectangle(position, MeasureText(text), alignment));
@@ -277,20 +277,20 @@ public abstract class CanvasBase : ICanvas
     }
 
     public void Rotate(float angle) => Rotate(angle, 0, 0);
-    public void Rotate(float angle, float centerX, float centerY) => Rotate(angle, (centerX, centerY));
+    public void Rotate(float angle, float centerX, float centerY) => Rotate(angle, new Vector2(centerX, centerY));
     public void Rotate(float angle, Vector2 center)
     {
         this.Transform = Matrix3x2.CreateRotation(angle, center) * this.Transform;
     }
 
     public void Scale(float scale) => Scale(scale, scale);
-    public void Scale(float scaleX, float scaleY) => Scale((scaleX, scaleY));
+    public void Scale(float scaleX, float scaleY) => Scale(new Vector2(scaleX, scaleY));
     public void Scale(Vector2 scale)
     {
         this.Transform = Matrix3x2.CreateScale(scale) * this.Transform;
     }
 
-    public void SetClipRect(float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => SetClipRect((x, y), (width, height), alignment);
+    public void SetClipRect(float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => SetClipRect(new Vector2(x, y), new Vector2(width, height), alignment);
     public void SetClipRect(Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => SetClipRect(position, size, alignment);
     public void SetClipRect(Rectangle rect)
     {
@@ -331,9 +331,9 @@ public abstract class CanvasBase : ICanvas
         return buffer;
     }
 
-    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, params Color[] gradient) => SetGradientLinear((fromX, fromY), (toX, toY), gradient);
-    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, IEnumerable<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientLinear((fromX, fromY), (toX, toY), gradient, tileMode);
-    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, Span<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientLinear((fromX, fromY), (toX, toY), gradient, tileMode);
+    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, params Color[] gradient) => SetGradientLinear(new Vector2(fromX, fromY), new Vector2(toX, toY), gradient);
+    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, IEnumerable<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientLinear(new Vector2(fromX, fromY), new Vector2(toX, toY), gradient, tileMode);
+    public void SetGradientLinear(float fromX, float fromY, float toX, float toY, Span<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientLinear(new Vector2(fromX, fromY), new Vector2(toX, toY), gradient, tileMode);
     
     public void SetGradientLinear(Vector2 from, Vector2 to, params Color[] gradient) => SetGradientLinear(from, to, gradient.AsSpan());
     public void SetGradientLinear(Vector2 from, Vector2 to, IEnumerable<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientLinear(from, to, ColorEnumerableToSpan(gradient, stackalloc Color[gradient.Count()]));
@@ -363,10 +363,10 @@ public abstract class CanvasBase : ICanvas
     }
 
     public void SetGradientRadial(float x, float y, float radius, params Color[] gradient) => SetGradientRadial(x, y, radius, gradient.AsSpan());
-    public void SetGradientRadial(float x, float y, float radius, IEnumerable<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial((x,y), radius, gradient, tileMode);
-    public void SetGradientRadial(float x, float y, float radius, Span<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial((x,y), radius, gradient, tileMode);
+    public void SetGradientRadial(float x, float y, float radius, IEnumerable<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial(new Vector2(x,y), radius, gradient, tileMode);
+    public void SetGradientRadial(float x, float y, float radius, Span<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial(new Vector2(x,y), radius, gradient, tileMode);
     public void SetGradientRadial(Vector2 position, float radius, params Color[] gradient) => SetGradientRadial(position, radius, gradient.AsSpan());
-    public void SetGradientRadial(Vector2 position, float radius, IEnumerable<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial((position.X, position.Y), radius, ColorEnumerableToSpan(gradient, stackalloc Color[gradient.Count()]), tileMode);
+    public void SetGradientRadial(Vector2 position, float radius, IEnumerable<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial(new Vector2(position.X, position.Y), radius, ColorEnumerableToSpan(gradient, stackalloc Color[gradient.Count()]), tileMode);
     public void SetGradientRadial(Vector2 position, float radius, Span<Color> gradient, TileMode tileMode = TileMode.Clamp)
     {
         if (UpdateGradientRadialCore(position, radius, gradient, tileMode))
@@ -380,9 +380,9 @@ public abstract class CanvasBase : ICanvas
         }
     }
 
-    public void SetGradientRadial(Alignment position, float radius, params Color[] gradient) => SetGradientRadial(position, (0, 0), radius, gradient);
+    public void SetGradientRadial(Alignment position, float radius, params Color[] gradient) => SetGradientRadial(position, new Vector2(0, 0), radius, gradient);
     public void SetGradientRadial(Alignment position, float radius, IEnumerable<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial(position, radius, ColorEnumerableToSpan(gradient, stackalloc Color[gradient.Count()]), tileMode);
-    public void SetGradientRadial(Alignment position, float radius, Span<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial(position, (0, 0), radius, gradient, tileMode);
+    public void SetGradientRadial(Alignment position, float radius, Span<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial(position, new Vector2(0, 0), radius, gradient, tileMode);
     public void SetGradientRadial(Alignment position, Vector2 offset, float radius, params Color[] gradient) => SetGradientRadial(position, offset, radius, gradient.AsSpan());
     public void SetGradientRadial(Alignment position, Vector2 offset, float radius,  IEnumerable<Color> gradient, TileMode tileMode = TileMode.Clamp) => SetGradientRadial(position, offset, radius, ColorEnumerableToSpan(gradient, stackalloc Color[gradient.Count()]), tileMode);
     public void SetGradientRadial(Alignment position, Vector2 offset, float radius,  Span<Color> gradient, TileMode tileMode = TileMode.Clamp)
@@ -421,7 +421,7 @@ public abstract class CanvasBase : ICanvas
         }
     }
 
-    public void Translate(float x, float y) => Translate((x, y));
+    public void Translate(float x, float y) => Translate(new Vector2(x, y));
     public void Translate(Vector2 translation)
     {
         this.Transform = Matrix3x2.CreateTranslation(translation) * this.Transform;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using SimulationFramework.Desktop;
 using SimulationFramework.Utilities;
 
@@ -40,8 +41,8 @@ class Program : Simulation
         canvas.SetDrawMode(DrawMode.Fill);
         canvas.DrawArc(mouseBounds, 180, 90, true, Mouse.IsButtonDown(MouseButton.Left) ? (20, 20, 20) : background);
         canvas.DrawArc(mouseBounds, 270, 180, true, Mouse.IsButtonDown(MouseButton.Right) ? (20, 20, 20) : background);
-        canvas.DrawArc(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), (mouseBounds.Width / 16f, mouseBounds.Height / 8f), 90, 0, true, Mouse.IsButtonDown(MouseButton.X1) ? (20,20,20) : background);
-        canvas.DrawArc(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), (mouseBounds.Width / 16f, mouseBounds.Height / 8f), 180, 90, true, Mouse.IsButtonDown(MouseButton.X2) ? (20,20,20) : background);
+        canvas.DrawArc(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), new Vector2(mouseBounds.Width / 16f, mouseBounds.Height / 8f), 90, 0, true, Mouse.IsButtonDown(MouseButton.X1) ? (20,20,20) : background);
+        canvas.DrawArc(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), new Vector2(mouseBounds.Width / 16f, mouseBounds.Height / 8f), 180, 90, true, Mouse.IsButtonDown(MouseButton.X2) ? (20,20,20) : background);
         canvas.DrawEllipse(mouseWheelBounds, Mouse.IsButtonDown(MouseButton.Middle) ? (20, 20, 20) : background);
 
         mouseScroll += Mouse.ScrollWheelDelta;
@@ -52,9 +53,9 @@ class Program : Simulation
 
         canvas.SetDrawMode(DrawMode.Border);
 
-        canvas.DrawArc(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), (mouseBounds.Width / 16f, mouseBounds.Height / 8f), 80, -120, true, shapeBorderCol);
+        canvas.DrawArc(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), new Vector2(mouseBounds.Width / 16f, mouseBounds.Height / 8f), 80, -120, true, shapeBorderCol);
         canvas.DrawEllipse(mouseBounds, shapeBorderCol);
-        canvas.DrawLine(mouseBounds.GetAlignedPoint(Alignment.CenterLeft) - (mouseBounds.Width / 16f, 0), mouseBounds.GetAlignedPoint(Alignment.CenterRight),  shapeBorderCol);
+        canvas.DrawLine(mouseBounds.GetAlignedPoint(Alignment.CenterLeft) - new Vector2(mouseBounds.Width / 16f, 0), mouseBounds.GetAlignedPoint(Alignment.CenterRight),  shapeBorderCol);
         canvas.DrawLine(mouseBounds.GetAlignedPoint(Alignment.TopCenter), mouseWheelBounds.GetAlignedPoint(Alignment.TopCenter),  shapeBorderCol);
         canvas.DrawLine(mouseBounds.GetAlignedPoint(Alignment.Center), mouseWheelBounds.GetAlignedPoint(Alignment.BottomCenter),  shapeBorderCol);
         canvas.DrawEllipse(mouseWheelBounds, shapeBorderCol);
@@ -70,8 +71,8 @@ class Program : Simulation
         
         canvas.SetDrawMode(DrawMode.Fill);
 
-        canvas.DrawEllipse((100, 100) + 100 * Gamepad.RightJoystick, (10, 10), (20, 20, 20), Alignment.Center);
-        canvas.DrawEllipse((100, 100) + 100 * Gamepad.RightJoystick, (10, 10), (20, 20, 20), Alignment.Center);
+        canvas.DrawEllipse(new Vector2(100, 100) + 100 * Gamepad.RightJoystick, new Vector2(10, 10), (20, 20, 20), Alignment.Center);
+        canvas.DrawEllipse(new Vector2(100, 100) + 100 * Gamepad.RightJoystick, new Vector2(10, 10), (20, 20, 20), Alignment.Center);
 
         canvas.DrawRect(200, 0, 25, 200 * Gamepad.LeftTrigger, Color.Orange);
 
@@ -84,7 +85,7 @@ class Program : Simulation
         DrawRegion(canvas, (canvas.Width / 2f, 0, canvas.Width / 2f, canvas.Height / 2f));
 
         // draw something at mouse pos
-        canvas.DrawEllipse(Mouse.Position, (5, 5), (Mouse.IsButtonDown(MouseButton.Left) ? Color.Black : (20, 20, 20)) with { A = 100 });
+        canvas.DrawEllipse(Mouse.Position, new Vector2(5, 5), (Mouse.IsButtonDown(MouseButton.Left) ? Color.Black : (20, 20, 20)) with { A = 100 });
     }
 
     public void DrawRegion(ICanvas canvas, Rectangle region)
