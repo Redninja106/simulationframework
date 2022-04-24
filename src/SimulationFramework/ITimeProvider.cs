@@ -22,11 +22,6 @@ public interface ITimeProvider : ISimulationComponent
     float TimeScale { get; set; }
 
     /// <summary>
-    /// Gets the current framerate of the application in frames per second.
-    /// </summary>
-    float GetFramerate();
-
-    /// <summary>
     /// Gets the amount time that has passed since the simulation has started, in seconds.
     /// </summary>
     float GetTotalTime();

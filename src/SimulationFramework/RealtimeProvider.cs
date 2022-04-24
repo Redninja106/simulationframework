@@ -25,7 +25,6 @@ public sealed class RealtimeProvider : ITimeProvider
     private float deltaTime;
     private float totalTime;
     private bool isRunningSlowly;
-    private float framerate;
 
     /// <summary>
     /// </summary>
@@ -40,17 +39,10 @@ public sealed class RealtimeProvider : ITimeProvider
         simulation.BeforeRender += Tick;
     }
 
-    /// <inheritdoc/>
-    public float GetFramerate()
-    {
-        return framerate;
-    }
-
     private void Tick()
     {
         deltaTime = TimeScale * (stopwatch.ElapsedTicks / (float)Stopwatch.Frequency);
         stopwatch.Restart();
-        framerate = 1f / deltaTime;
 
         if (deltaTime > MaxDeltaTime)
         {

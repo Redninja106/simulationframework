@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,5 +15,6 @@ public static class Performance
     /// <summary>
     /// The simulations current framerate.
     /// </summary>
-    public static float Framerate => Simulation.Current.GetComponent<ITimeProvider>().GetFramerate();
+    public static float Framerate => 1f / Simulation.Current.GetComponent<ITimeProvider>().GetDeltaTime();
+
 }
