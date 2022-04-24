@@ -817,10 +817,12 @@ public readonly struct Color : IEquatable<Color>
 
         return false;
     }
-
+    /// <summary>
+    /// Returns the formatted values of this color.
+    /// </summary>
     public override string ToString()
     {
-        return "#" + Value.ToString("x8");
+        return $"#{Value:x8}";
     }
 
     public override int GetHashCode()
