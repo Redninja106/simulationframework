@@ -109,16 +109,16 @@ public abstract class Simulation : IDisposable
 
         // check for common issues and emit warnings
         if (supportedComponents.Count() < 0)
-            DebugConsole.Warn("The provided environment has no components! (Most APIs won't work!"); 
+            Console.WriteLine("The provided environment has no components! (Most APIs won't work!"); 
         if (!supportedComponents.Any(c => c is ITimeProvider))
-            DebugConsole.Warn("No provided environment has no time component! (The time API won't work!)");
+            Console.WriteLine("No provided environment has no time component! (The time API won't work!)");
         if (!supportedComponents.Any(c => c is IGraphicsProvider))
-            DebugConsole.Warn("No provided environment has no graphics component! (The graphics API won't work!)");
+            Console.WriteLine("No provided environment has no graphics component! (The graphics API won't work!)");
 
         // apply all the components to this simulation
         foreach (var component in supportedComponents)
         {
-            DebugConsole.Log($"Applied Component of type '{component.GetType().Name}'");
+            Console.WriteLine($"Applied Component of type '{component.GetType().Name}'");
             component.Apply(this);
             this.components.Add(component);
         }
@@ -127,36 +127,30 @@ public abstract class Simulation : IDisposable
     // starts a simulation. This is only to be called from `Run()`.
     private void Start()
     {
-        DebugConsole.Log("OnInitialize called!");
+        Console.WriteLine("OnInitialize called!");
 
         var appConfig = new AppConfig(this);
-        appConfig.SetAngleMode(AngleMode.Degrees);
         this.OnInitialize(appConfig);
 
         this.Initialized?.Invoke();
 
-        DebugConsole.Log("Beginning Render loop");
+        Console.WriteLine("Beginning Render loop");
 
         (int, int) prevSize = environment.GetOutputSize();
 
         while (!environment.ShouldExit() && !this.exitRequested)
         {
-            PerformanceViewer.BeginTaskGroup("frame");
-
             InputContext.NewFrame();
 
             environment.ProcessEvents();
-            PerformanceViewer.MarkTaskCompleted("ProcessEvents()");
 
             if (prevSize != environment.GetOutputSize())
             {
                 this.Resized?.Invoke(environment.GetOutputSize().Item1, environment.GetOutputSize().Item2);
                 prevSize = environment.GetOutputSize();
-                PerformanceViewer.MarkTaskCompleted("resizing");
             }
 
             this.BeforeRender?.Invoke();
-            PerformanceViewer.MarkTaskCompleted("BeforeRender()");
 
             using var canvas = Graphics.GetFrameCanvas();
 
@@ -167,24 +161,16 @@ public abstract class Simulation : IDisposable
             using (canvas.Push())
             {
                 this.OnRender(canvas);
-                PerformanceViewer.MarkTaskCompleted("OnRender()");
             }
 
             canvas.Flush();
-            PerformanceViewer.MarkTaskCompleted("Canvas.Flush()");
-
-            DebugWindow.Layout();
 
             this.AfterRender?.Invoke();
-            PerformanceViewer.MarkTaskCompleted("AfterRender()");
 
             environment.EndFrame();
-            PerformanceViewer.MarkTaskCompleted("EndFrame()");
-
-            PerformanceViewer.EndTaskGroup();
         }
 
-        DebugConsole.Log("OnUninitialize called");
+        Console.WriteLine("OnUninitialize called");
 
         this.OnUnitialize();
 
@@ -203,56 +189,6 @@ public abstract class Simulation : IDisposable
         this.SetEnvironment(environment);
         Current = this;
         this.Start();
-    }
-
-    /// <summary>
-    /// Converts an angle from this simulation's current mode to the specified mode.
-    /// </summary>
-    /// <param name="angle">The which to convert from the current mode.</param>
-    /// <param name="targetMode">The mode to convert the angle to.</param>
-    /// <returns>An angle equivalent to <paramref name="angle"/>, in the units specified by <paramref name="targetMode"/>.</returns>
-    public static float ConvertFromCurrentAngleMode(float angle, AngleMode targetMode)
-    {
-        if (targetMode == Current.AngleMode)
-            return angle;
-
-        float degrees = Current.AngleMode switch
-        {
-            AngleMode.Radians => angle * 180 / MathF.PI,
-            AngleMode.Revolutions => angle * 360,
-            AngleMode.Gradians => angle * (365 / 400),
-            _ => angle
-        };
-
-        return targetMode switch
-        {
-            AngleMode.Radians => degrees / 180 * MathF.PI,
-            AngleMode.Revolutions => degrees / 360f,
-            AngleMode.Gradians => degrees * (400 * 365),
-            _ => degrees,
-        };
-    }
-
-    public static float ConvertToCurrentAngleMode(float angle, AngleMode sourceMode)
-    {
-        if (sourceMode == Current.AngleMode)
-            return angle;
-
-        float degrees = sourceMode switch
-        {
-            AngleMode.Radians => angle * 180 / MathF.PI,
-            AngleMode.Revolutions => angle * 360,
-            AngleMode.Gradians => angle * (365 / 400),
-            _ => angle
-        };
-
-        return Current.AngleMode switch
-        {
-            AngleMode.Radians => degrees / 180 * MathF.PI,
-            AngleMode.Revolutions => degrees / 360f,
-            AngleMode.Gradians => degrees * (400 * 365),
-            _ => degrees,
-        };
     }
 
     /// <summary>

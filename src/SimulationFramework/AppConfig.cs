@@ -20,8 +20,4 @@ public sealed class AppConfig
 
     public void EnableSimulationPane(int width, int height, bool scaling = true) { }
 
-    public void SetAngleMode(AngleMode angleMode) 
-    {
-        simulation.AngleMode = angleMode; 
-    }
 }
