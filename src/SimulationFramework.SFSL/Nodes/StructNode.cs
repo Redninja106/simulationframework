@@ -6,22 +6,15 @@ using System.Threading.Tasks;
 
 namespace SFSLPrototype.Nodes;
 
-public record CompilationUnitNode() : Node()
+public record StructNode(TokenNode structKeyword, TokenNode identifierNode, TokenNode openBracket, VariableNode[] Members, TokenNode closeBracket) : Node
 {
-    public List<Node> Children { get; } = new();
-
-    public void AddChild(Node child)
-    {
-        Children.Add(child);
-    }
-
     public override void Accept(DocumentVisitor visitor)
     {
         visitor.Visit(this);
 
-        foreach (var child in Children)
+        foreach (var member in Members)
         {
-            child.Accept(visitor);
+            member.Accept(visitor);
         }
     }
 }

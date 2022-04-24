@@ -43,6 +43,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Drawing
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Drawing.OpenGL", "src\SimulationFramework.Drawing.OpenGL\SimulationFramework.Drawing.OpenGL.csproj", "{CC652CA6-0AEE-490A-BF3C-25A8791DACB7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.SFSL.Tests", "tests\SimulationFramework.SFSL.Tests\SimulationFramework.SFSL.Tests.csproj", "{F5FF341F-5B6B-47AA-9F72-338D3FF494D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{CC652CA6-0AEE-490A-BF3C-25A8791DACB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC652CA6-0AEE-490A-BF3C-25A8791DACB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC652CA6-0AEE-490A-BF3C-25A8791DACB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5FF341F-5B6B-47AA-9F72-338D3FF494D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5FF341F-5B6B-47AA-9F72-338D3FF494D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5FF341F-5B6B-47AA-9F72-338D3FF494D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5FF341F-5B6B-47AA-9F72-338D3FF494D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,6 +130,7 @@ Global
 		{1032A552-BAC4-4E6D-8084-16268DA305F5} = {5B6B7067-3002-4C48-BFB1-20BE74931D0C}
 		{E7C179E1-5A7D-4F6E-A61F-E72150AEE7B5} = {70E789B1-29FB-421E-A968-1ED75F680090}
 		{CC652CA6-0AEE-490A-BF3C-25A8791DACB7} = {70E789B1-29FB-421E-A968-1ED75F680090}
+		{F5FF341F-5B6B-47AA-9F72-338D3FF494D4} = {813D5E58-CE77-4969-B74A-A724228D8F73}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09D3B2BE-AC85-48C2-835F-6B781E265873}
