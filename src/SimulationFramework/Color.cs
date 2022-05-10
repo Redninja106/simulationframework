@@ -722,6 +722,8 @@ public readonly struct Color : IEquatable<Color>
     /// </summary>
     public static readonly Color DarkSalmon = (Color)0xE9967AFF;
 
+    public static readonly Color Transparent = (Color)0x00000000;
+
     private readonly byte r;
     private readonly byte g;
     private readonly byte b;

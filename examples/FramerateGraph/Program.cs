@@ -27,14 +27,15 @@ class MySimulation : Simulation
             fps.Dequeue();
         }
 
+        canvas.Color = Color.Yellow;
         var lastval = fps.Peek();
         foreach (var val in fps)
         {
             var lastEntryWidth = (1 / lastval) * scale;
             var entryWidth = (1 / val) * scale;
             var lineWidth = (lastEntryWidth + entryWidth) * .5f;
-
-            canvas.DrawLine(0, canvas.Width - lastval, lineWidth, canvas.Height - val, Color.Yellow);
+            
+            canvas.DrawLine(0, canvas.Width - lastval, lineWidth, canvas.Height - val);
             canvas.Translate(lineWidth, 0);
             lastval = val;
         }

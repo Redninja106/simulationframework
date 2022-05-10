@@ -38,7 +38,7 @@ class Program : Simulation
             mouseBounds.Height / 5f,
             Alignment.TopCenter);
 
-        canvas.SetDrawMode(DrawMode.Fill);
+        canvas.DrawMode = DrawMode.Fill;
         canvas.DrawArc(mouseBounds, 180, 90, true, Mouse.IsButtonDown(MouseButton.Left) ? (20, 20, 20) : background);
         canvas.DrawArc(mouseBounds, 270, 180, true, Mouse.IsButtonDown(MouseButton.Right) ? (20, 20, 20) : background);
         canvas.DrawArc(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), new Vector2(mouseBounds.Width / 16f, mouseBounds.Height / 8f), 90, 0, true, Mouse.IsButtonDown(MouseButton.X1) ? (20,20,20) : background);

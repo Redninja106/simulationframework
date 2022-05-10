@@ -20,11 +20,6 @@ public abstract class Simulation : IDisposable
     private ISimulationEnvironment environment;
     private bool exitRequested;
 
-    /// <summary>
-    /// This simulation's current angle mode.
-    /// </summary>
-    public AngleMode AngleMode { get; internal set; }
-
     public event Action Initialized;
     public event Action BeforeRender;
     public event Action Render;
@@ -105,7 +100,7 @@ public abstract class Simulation : IDisposable
 
         this.environment = environment;
 
-        var supportedComponents = this.environment.CreateSupportedComponents();
+        var supportedComponents = this.environment.CreateSupportedComponents().ToArray();
 
         // check for common issues and emit warnings
         if (supportedComponents.Count() < 0)

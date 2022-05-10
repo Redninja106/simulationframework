@@ -12,7 +12,7 @@ namespace SimulationFramework;
 public interface ISimulationEnvironment : IDisposable
 {
     /// <summary>
-    /// Makes the enviroment's context current on the calling thread.
+    /// Makes the enviroment's opengl context current on the calling thread.
     /// </summary>
     void MakeContextCurrent();
 

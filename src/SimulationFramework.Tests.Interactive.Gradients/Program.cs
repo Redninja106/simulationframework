@@ -19,9 +19,9 @@ public class Program : Simulation
         canvas.Translate(canvas.Width / 2, canvas.Height / 2);
         canvas.Scale(canvas.Width / 20f);
 
-        canvas.SetDrawMode(DrawMode.Gradient);
+        canvas.DrawMode = DrawMode.Gradient;
 
         canvas.SetGradientLinear(Alignment.TopLeft, Alignment.BottomRight, Color.Red, Color.Blue);
-        canvas.DrawRect(0,0, 1, 1, Color.Black, Alignment.Center);
+        canvas.DrawRect(0, 0, 1, 1, Color.Black, Alignment.Center);
     }
 }

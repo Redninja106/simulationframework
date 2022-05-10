@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Tests.I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Tests.Interactive.Gradients", "src\SimulationFramework.Tests.Interactive.Gradients\SimulationFramework.Tests.Interactive.Gradients.csproj", "{0C2DF737-5DD6-4756-94BF-380D63BA4230}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.Tests.Interactive.CanvasStateStack", "SimulationFramework.Tests.Interactive.CanvasStateStack\SimulationFramework.Tests.Interactive.CanvasStateStack.csproj", "{7EEF9E4E-36A5-47AD-9550-4E813A1525C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Tests.Interactive.CanvasStateStack", "SimulationFramework.Tests.Interactive.CanvasStateStack\SimulationFramework.Tests.Interactive.CanvasStateStack.csproj", "{7EEF9E4E-36A5-47AD-9550-4E813A1525C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

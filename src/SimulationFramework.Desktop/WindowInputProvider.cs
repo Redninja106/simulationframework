@@ -85,9 +85,6 @@ public sealed partial class WindowEnvironment
             if (silkInputDevice.Gamepads.Count > 0)
             {
                 var gamepad = silkInputDevice.Gamepads[0];
-                gamepad.ButtonUp += GamepadButtonUp;
-                gamepad.ButtonDown += GamepadButtonDown; ;
-                
                 Context.UpdateGamepadJoysticks(
                     new Vector2(gamepad.Thumbsticks[1].X, gamepad.Thumbsticks[1].Y),
                     new Vector2(gamepad.Thumbsticks[0].X, gamepad.Thumbsticks[0].Y)
@@ -110,14 +107,6 @@ public sealed partial class WindowEnvironment
                 Context.UpdateGamepadButton(GamepadButton.RightBumper, gamepad.RightBumper().Pressed);
                 Context.UpdateGamepadButton(GamepadButton.LeftBumper, gamepad.LeftBumper().Pressed);
             }
-        }
-
-        private void GamepadButtonDown(IGamepad arg1, Button arg2)
-        {
-        }
-
-        private void GamepadButtonUp(IGamepad arg1, Button arg2)
-        {
         }
 
         public void Dispose()

@@ -6,7 +6,7 @@
 public enum TileMode
 {
     /// <summary>
-    /// Clamp the any color outside the region to that at the nearest border.
+    /// Clamp outside the region to the color at the nearest border.
     /// </summary>
     Clamp = 0,
     /// <summary>
@@ -14,11 +14,11 @@ public enum TileMode
     /// </summary>
     Repeat = 1,
     /// <summary>
-    /// Repeat the region with every other tile inverted.
+    /// Repeat the contents of the region, with every other tile inverted.
     /// </summary>
     Mirror = 2,
     /// <summary>
-    /// Stop using the region and instead fill using the shape's color.
+    /// Outside the region, fill with <see cref="Color.Transparent"/>.
     /// </summary>
-    Stop = 3,
+    None = 3,
 }
