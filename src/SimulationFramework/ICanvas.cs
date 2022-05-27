@@ -23,44 +23,14 @@ public interface ICanvas : IDisposable
     sealed int Height => Target.Height;
 
     /// <summary>
-    /// Gets or sets the drawing mode of the canvas.
-    /// </summary>
-    DrawMode DrawMode { get; set; }
-
-    /// <summary>
-    /// Gets or sets the stroke width of the canvas. This value only has an effect on drawing when drawing lines or when <see cref="DrawMode"/> is <see cref="DrawMode.Border"/>.
-    /// </summary>
-    float StrokeWidth { get; set; }
-
-    /// <summary>
     /// The texture to which this canvas is drawing to.
     /// </summary>
     ITexture Target { get; }
-
+    
     /// <summary>
-    /// Gets or sets the canvas's current transformation matrix.
+    /// The canvas's current state.
     /// </summary>
-    Matrix3x2 Transform { get; set; }
-
-    /// <summary>
-    /// Gets or sets the color used while drawing when <see cref="DrawMode"/> is <see cref="DrawMode.Fill"/> or <see cref="DrawMode.Border"/>.
-    /// </summary>
-    Color Color { get; set; }
-
-    /// <summary>
-    /// Gets or sets the texture used while drawing when <see cref="DrawMode"/> is <see cref="DrawMode.Textured"/>.
-    /// </summary>
-    FillTexture FillTexture { get; set; }
-
-    /// <summary>
-    /// Gets or sets the gradient used while drawing when <see cref="DrawMode"/> is <see cref="DrawMode.Gradient"/>.
-    /// </summary>
-    Gradient Gradient { get; set; }
-
-    /// <summary>
-    /// Gets or sets the clip region of the canvas. Set this to <see langword="null"/> to disable clipping.
-    /// </summary>
-    Rectangle? ClipRegion { get; set; }
+    CanvasState State { get; }
 
     /// <summary>
     /// Clears the canvas.
@@ -73,6 +43,47 @@ public interface ICanvas : IDisposable
     /// </summary>
     void Flush();
 
+    /// <summary>
+    /// Configures the canvas to fill shapes with the provided color.
+    /// </summary>
+    void Fill(Color color) => this.State.UpdateFillColor(color);
+
+    /// <summary>
+    /// Configures the canvas to fill shapes using the provided gradient.
+    /// </summary>
+    void Fill(Gradient gradient) => this.State.UpdateFillGradient(gradient);
+
+    /// <summary>
+    /// Configures the canvas to outline shapes with the provided color.
+    /// </summary>
+    void Stroke(Color color) => this.State.UpdateStrokeColor(color);
+
+    /// <summary>
+    /// Configures the canvas to outline shapes using the provided gradient.
+    /// </summary>
+    void Stroke(Gradient gradient) => this.State.UpdateStrokeGradient(gradient);
+    
+    /// <summary>
+    /// Sets the stroke width of the canvas.
+    /// </summary>
+    void StrokeWidth(float width) => this.State.UpdateStrokeWidth(width);
+
+    /// <summary>
+    /// Sets the clipping rectangle of the canvas.
+    /// </summary>
+    void Clip(Rectangle? rectangle) => this.State.UpdateClipRegion(rectangle);
+    
+    /// <summary>
+    /// Fills any drawn shapes with the provided texture.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    sealed void Fill(ITexture texture) => Fill(texture, Matrix3x2.Identity);
+
+    /// <summary>
+    /// Fills any drawn shapes with the provided texture.
+    /// </summary>
+    sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX = TileMode.Clamp, TileMode tileModeY = TileMode.Clamp) => State.UpdateFillTexture(texture, transform, tileModeX, tileModeY);
+    
     /// <summary>
     /// Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <see cref="SetStrokeWidth(float)"/>.
     /// </summary>
@@ -162,8 +173,7 @@ public interface ICanvas : IDisposable
     /// <param name="circle">The circle to draw.</param>
     /// <param name="alignment">The point on the bounding-box of the circle to align to the provided position.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    sealed void DrawCircle(Circle circle, Alignment alignment = Alignment.Center) => DrawCircle(circle.Position, circle.Radius, alignment);
-
+    sealed void DrawCircle(Circle circle) => DrawCircle(circle.Position, circle.Radius);
 
     /// <summary>
     /// Draws a circle to the canvas, using the current transform, clipping, and drawing settings.
@@ -334,7 +344,6 @@ public interface ICanvas : IDisposable
     /// <param name="text">The text to draw.</param>
     /// <param name="x">The X position of the text.</param>
     /// <param name="y">The Y position of the text.</param>
-    /// <param name="color">The color of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     sealed void DrawText(string text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text, new(x, y), alignment);
@@ -344,7 +353,6 @@ public interface ICanvas : IDisposable
     /// </summary>
     /// <param name="text">The text to draw.</param>
     /// <param name="position">The position of the text.</param>
-    /// <param name="color">The color of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
     void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft);
 
@@ -352,8 +360,19 @@ public interface ICanvas : IDisposable
     /// Determines the size of the provided text based on the current font selection.
     /// </summary>
     /// <param name="text">The text to measure.</param>
-    /// <returns>The width and height of the provided text.</returns>
+    /// <returns>The width and height of the provided text's bounds.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     sealed Vector2 MeasureText(string text) => MeasureText(text, 0, out _);
+
+    /// <summary>
+    /// Determines the size of the provided text based on the current font selection, 
+    /// stopping if the string's length exceeds a maximum.
+    /// </summary>
+    /// <param name="text">The text to measure.</param>
+    /// <param name="maxLength">The maximum length of the string.</param>
+    /// <param name="charsMeasured">The number of characters measured before measuring stopped, 
+    /// or the length of <paramref name="text"/> if the entire string was measured.</param>
+    /// <returns>The width and height of the provided text's bounds.</returns>
     Vector2 MeasureText(string text, float maxLength, out int charsMeasured);
 
     /// <summary>
@@ -372,13 +391,13 @@ public interface ICanvas : IDisposable
     /// <summary>
     /// Pushes the current transformation matrix, clipping rectangle, and drawing state onto the stack.
     /// </summary>
-    /// <returns>A <see cref="CanvasSession"/> which, when disposed, calls <see cref="Pop"/> on this canvas.</returns>
-    CanvasSession Push();
+    /// <returns>A <see cref="CanvasSession"/> which, when disposed, calls <see cref="PopState"/> on this canvas.</returns>
+    CanvasSession PushState();
 
     /// <summary>
     /// Pops a transformation matrix, clipping rectangle, and drawing state off the top of the stack.
     /// </summary>
-    void Pop();
+    void PopState();
 
     /// <summary>
     /// Resets the transformation matrix, clipping rectangle, and drawing state to their defaults.
@@ -386,9 +405,15 @@ public interface ICanvas : IDisposable
     void ResetState();
 
     /// <summary>
+    /// Sets the canvas' transformation matrix.
+    /// </summary>
+    sealed void SetTransform(Matrix3x2 transform) => this.State.UpdateTransform(transform);
+
+    /// <summary>
     /// Composes the provided transformation with the canvas' current transform.
     /// </summary>
-    sealed void TransformBy(Matrix3x2 transformation) => this.Transform = transformation * this.Transform;
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    sealed void Transform(Matrix3x2 transformation) => this.SetTransform(transformation * this.State.Transform);
 
     /// <summary>
     /// Translates the current transformation matrix by the provided translation.
@@ -402,7 +427,7 @@ public interface ICanvas : IDisposable
     /// Translates the current transformation matrix by the provided translation.
     /// </summary>
     /// <param name="translation">The value of the translation.</param>
-    sealed void Translate(Vector2 translation) => TransformBy(Matrix3x2.CreateTranslation(translation));
+    sealed void Translate(Vector2 translation) => Transform(Matrix3x2.CreateTranslation(translation));
 
     /// <summary>
     /// Rotates the current transformation matrix center around the current translation by the provided angle.
@@ -425,7 +450,7 @@ public interface ICanvas : IDisposable
     /// </summary>
     /// <param name="angle">The angle of the rotation, in radians.</param>
     /// <param name="center">The point around which the rotation occurs.</param>
-    sealed void Rotate(float angle, Vector2 center) => TransformBy(Matrix3x2.CreateRotation(angle, center));
+    sealed void Rotate(float angle, Vector2 center) => Transform(Matrix3x2.CreateRotation(angle, center));
 
     /// <summary>
     /// Scales the current transformation matrix by the provided value.
@@ -446,5 +471,5 @@ public interface ICanvas : IDisposable
     /// Scales the current transformation matrix by the provided value.
     /// </summary>
     /// <param name="scale">The scales to transform the transformation matrix by on the X and Y axes.</param>
-    sealed void Scale(Vector2 scale) => TransformBy(Matrix3x2.CreateScale(scale));
+    sealed void Scale(Vector2 scale) => Transform(Matrix3x2.CreateScale(scale));
 }

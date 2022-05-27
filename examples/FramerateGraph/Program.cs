@@ -27,7 +27,7 @@ class MySimulation : Simulation
             fps.Dequeue();
         }
 
-        canvas.Color = Color.Yellow;
+        canvas.Fill(Color.Yellow);
         var lastval = fps.Peek();
         foreach (var val in fps)
         {

@@ -7,12 +7,19 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
+/// <summary>
+/// 
+/// </summary>
 public struct Circle
 {
     public Vector2 Position;
     public float Radius;
 
-    public Circle(Vector2 position, float radius)
+    public Circle(float x, float y, float radius, Alignment alignment = Alignment.Center) : this(new(x, y), radius)
+    {
+    }
+
+    public Circle(Vector2 position, float radius, Alignment alignment = Alignment.Center)
     {
         Position = position;
         Radius = radius;

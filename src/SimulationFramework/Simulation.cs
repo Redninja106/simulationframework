@@ -153,7 +153,7 @@ public abstract class Simulation : IDisposable
 
             Render?.Invoke();
 
-            using (canvas.Push())
+            using (canvas.PushState())
             {
                 this.OnRender(canvas);
             }

@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Gradients;
 
+/// <summary>
+/// 
+/// </summary>
+/// <param name="Stops"></param>
+/// <param name="Transform"></param>
+/// <param name="TileMode"></param>
 public abstract record Gradient(GradientStop[] Stops, Matrix3x2 Transform, TileMode TileMode)
 {
     public abstract void Accept(IGradientVisitor inspector);

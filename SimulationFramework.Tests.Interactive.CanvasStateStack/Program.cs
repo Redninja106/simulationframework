@@ -20,14 +20,14 @@ class Program : Simulation
         const int count = 1_000_000;
 
         for (int i = 0; i < count; i++)
-            canvas.Push();
+            canvas.PushState();
 
         Thread.Sleep(500);
 
         var prevMem = Process.GetCurrentProcess().PrivateMemorySize64;
         for (int i = 0; i < count; i++)
         {
-            canvas.Pop();
+            canvas.PopState();
         }
         var postMem = Process.GetCurrentProcess().PrivateMemorySize64;
         Console.WriteLine((postMem - prevMem) / count);

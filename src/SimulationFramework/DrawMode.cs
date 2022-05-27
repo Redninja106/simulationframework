@@ -3,7 +3,7 @@
 namespace SimulationFramework;
 
 /// <summary>
-/// Options for configuring the behavior of an <see cref="ICanvas"/> when drawing shapes. See <see cref="ICanvas.SetDrawMode(DrawMode)"/>.
+/// Options for configuring the behavior of an <see cref="ICanvas"/> when drawing shapes. See <see cref="ICanvas.DrawMode"/>.
 /// </summary>
 public enum DrawMode
 {
@@ -12,13 +12,17 @@ public enum DrawMode
     /// </summary>
     Fill,
     /// <summary>
-    /// Shapes should be drawn as an outline. See <see cref="ICanvas.SetStrokeWidth(float)"/> to set the thinkness of the outline.
+    /// Shapes should be outlined. See <see cref="ICanvas.StrokeWidth"/> to set the thinkness of the outline.
     /// </summary>
-    Border,
+    Stroke,
     /// <summary>
     /// Shapes should be filled with a gradient.
     /// </summary>
-    Gradient,
+    FillGradient,
+    /// <summary>
+    /// Shapes should be outlined with a gradient.
+    /// </summary>
+    StrokeGradient,
     /// <summary>
     /// Shapes should be filled with a texture. 
     /// </summary>

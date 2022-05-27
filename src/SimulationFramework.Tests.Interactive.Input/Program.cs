@@ -28,7 +28,7 @@ class Program : Simulation
         // draw mouse
         Color shapeBorderCol = (100, 100, 100);
 
-        canvas.Push();
+        canvas.PushState();
         
         var mouseBounds = new Rectangle(canvas.Width * (3 / 4f), 0, canvas.Width / 6f, canvas.Height / 2f, Alignment.TopCenter);
         var mouseWheelBounds = new Rectangle(
@@ -51,7 +51,7 @@ class Program : Simulation
         scrollTextPos.X += canvas.Width / 18f;
         canvas.DrawText("Scroll: " + mouseScroll, scrollTextPos, shapeBorderCol);
 
-        canvas.SetDrawMode(DrawMode.Border);
+        canvas.StrokeColor(shapeBorderCol);
 
         canvas.DrawArc(mouseBounds.GetAlignedPoint(Alignment.CenterLeft), new Vector2(mouseBounds.Width / 16f, mouseBounds.Height / 8f), 80, -120, true, shapeBorderCol);
         canvas.DrawEllipse(mouseBounds, shapeBorderCol);
@@ -60,11 +60,11 @@ class Program : Simulation
         canvas.DrawLine(mouseBounds.GetAlignedPoint(Alignment.Center), mouseWheelBounds.GetAlignedPoint(Alignment.BottomCenter),  shapeBorderCol);
         canvas.DrawEllipse(mouseWheelBounds, shapeBorderCol);
 
-        canvas.Pop();
+        canvas.PopState();
 
         // draw controller
 
-        canvas.Push();
+        canvas.PushState();
 
         canvas.SetDrawMode(DrawMode.Border);
         canvas.DrawEllipse(0, 0, 100, 100, shapeBorderCol, Alignment.TopLeft);
@@ -76,7 +76,7 @@ class Program : Simulation
 
         canvas.DrawRect(200, 0, 25, 200 * Gamepad.LeftTrigger, Color.Orange);
 
-        canvas.Pop();
+        canvas.PopState();
 
         // draw keyboard
 
@@ -90,7 +90,7 @@ class Program : Simulation
 
     public void DrawRegion(ICanvas canvas, Rectangle region)
     {
-        using (canvas.Push())
+        using (canvas.PushState())
         {
             canvas.SetDrawMode(DrawMode.Border);
             canvas.SetStrokeWidth(4f);
