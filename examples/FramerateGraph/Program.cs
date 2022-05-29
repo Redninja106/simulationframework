@@ -3,14 +3,18 @@ using System.Runtime.InteropServices;
 using SimulationFramework;
 using SimulationFramework.IMGUI;
 using SimulationFramework.Desktop;
+using SimulationFramework.Drawing.Canvas;
 
-using var sim = new MySimulation();
-sim.RunWindowed("Framerate graph!", 1920, 1080);
+var sim = new MySimulation();
+sim.RunDesktop();
 
 class MySimulation : Simulation
 {
     public override void OnInitialize(AppConfig config)
     {
+        config.Title = "Framerate graph!";
+        config.Height = 1920;
+        config.Width = 1080;
     }
 
     Queue<float> fps = new(1921);
@@ -41,9 +45,5 @@ class MySimulation : Simulation
         }
 
         ImGui.DragFloat("scale", ref scale);
-    }
-
-    public override void OnUnitialize()
-    {
     }
 }

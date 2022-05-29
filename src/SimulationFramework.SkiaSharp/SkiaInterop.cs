@@ -4,6 +4,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Canvas;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;

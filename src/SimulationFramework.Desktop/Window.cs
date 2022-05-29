@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Desktop;
 
-internal static class Window
+public static class Window
 {
     internal static bool graphicsEnabled = true;
 

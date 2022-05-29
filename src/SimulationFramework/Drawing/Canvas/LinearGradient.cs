@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Gradients;
+namespace SimulationFramework.Drawing.Canvas;
 
 internal record LinearGradient(Vector2 From, Vector2 To, GradientStop[] Stops, Matrix3x2 Transform, TileMode TileMode) : Gradient(Stops, Transform, TileMode)
 {

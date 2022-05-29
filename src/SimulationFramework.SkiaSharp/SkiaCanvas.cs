@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using SimulationFramework.Gradients;
+using SimulationFramework.Drawing.Canvas;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
@@ -340,7 +340,7 @@ internal sealed class SkiaCanvas : ICanvas
 
     public void ResetState()
     {
-        currentState.Dispose();
+        currentState?.Dispose();
         currentState = new SkiaCanvasState(this.GetSKCanvas(), null);
     }
 

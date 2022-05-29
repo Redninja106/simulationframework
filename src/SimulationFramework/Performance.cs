@@ -15,6 +15,6 @@ public static class Performance
     /// <summary>
     /// The simulations current framerate.
     /// </summary>
-    public static float Framerate => 1f / Simulation.Current.GetComponent<ITimeProvider>().GetDeltaTime();
+    public static float Framerate => 1f / Application.Current.GetComponent<ITimeProvider>().GetDeltaTime();
 
 }          

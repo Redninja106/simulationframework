@@ -9,17 +9,12 @@ namespace SimulationFramework;
 /// <summary>
 /// Provider time measurements to an environment.
 /// </summary>
-public interface ITimeProvider : ISimulationComponent
+public interface ITimeProvider : IAppComponent
 {
     /// <summary>
-    /// The largest value deltaTime is permitted to reach.
+    /// The largest value deltaTime before it's clamped.
     /// </summary>
     float MaxDeltaTime { get; set; }
-
-    /// <summary>
-    /// The rate by which time is scaled.
-    /// </summary>
-    float TimeScale { get; set; }
 
     /// <summary>
     /// Gets the amount time that has passed since the simulation has started, in seconds.
@@ -32,7 +27,7 @@ public interface ITimeProvider : ISimulationComponent
     float GetDeltaTime();
 
     /// <summary>
-    /// Returns <see langword="true"/> if deltaTime had to be clamped to MaxDeltaTime.
+    /// <see langword="true"/> if deltaTime had to be clamped to MaxDeltaTime this frame.
     /// </summary>
     bool IsRunningSlowly();
 }

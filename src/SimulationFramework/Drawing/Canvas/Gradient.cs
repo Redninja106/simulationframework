@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Gradients;
+namespace SimulationFramework.Drawing.Canvas;
 
 /// <summary>
 /// 

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Canvas;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
@@ -58,11 +60,6 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         return new SkiaTexture(this, SKBitmap.Decode(encodedData), true);
     }
 
-    public void Apply(Simulation simulation)
-    {
-        
-    }
-
     public void Dispose()
     {
         frameCanvas.Dispose();
@@ -99,5 +96,9 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         }
 
         return fonts[(fontName, styles, size)];
+    }
+
+    public void Initialize(Application application)
+    {
     }
 }

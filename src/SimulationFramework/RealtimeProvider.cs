@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimulationFramework.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -31,12 +32,6 @@ public sealed class RealtimeProvider : ITimeProvider
     public RealtimeProvider()
     {
         stopwatch = Stopwatch.StartNew();
-    }
-
-    /// <inheritdoc/>
-    public void Apply(Simulation simulation)
-    {
-        simulation.BeforeRender += Tick;
     }
 
     private void Tick()
@@ -84,5 +79,13 @@ public sealed class RealtimeProvider : ITimeProvider
     /// <inheritdoc/>
     public void Dispose()
     {
+    }
+
+    public void Initialize(Application application)
+    {
+        application.Dispatcher.Subscribe<RenderMessage>(m =>
+        {
+            this.Tick();
+        }, MessagePriority.High);
     }
 }

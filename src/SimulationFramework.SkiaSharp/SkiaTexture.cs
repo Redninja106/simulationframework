@@ -1,4 +1,5 @@
 ﻿using System;
+using SimulationFramework.Drawing.Canvas;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;

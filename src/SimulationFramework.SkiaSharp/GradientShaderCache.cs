@@ -1,4 +1,4 @@
-﻿using SimulationFramework.Gradients;
+﻿using SimulationFramework.Drawing.Canvas;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -64,6 +64,9 @@ internal static class GradientShaderCache
 
     private static SKShader CreateShader(Gradient gradient)
     {
+        if (gradient is null)
+            return null;
+
         var inspector = new GradientShaderBuilder();
 
         gradient.Accept(inspector);

@@ -1,4 +1,4 @@
-﻿using SimulationFramework.Gradients;
+﻿using SimulationFramework.Drawing.Canvas;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -21,36 +21,44 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
     private SKShader fillGradientShader;
     private SKShader strokeGradientShader;
 
-    public SkiaCanvasState(SKCanvas canvas, SkiaCanvasState other = null) : base(other)
+    public SkiaCanvasState(SKCanvas canvas, SkiaCanvasState other = null)
     {
         this.canvas = canvas;
+        this.Initialize(other);
+    }
 
+    protected override void Initialize(CanvasState other)
+    {
         if (other is null)
         {
-            this.paint = other.Paint.Clone();
-
-            this.fillTextureShader = other.fillTextureShader;
-            this.fillGradientShader = other.fillGradientShader;
-            this.strokeGradientShader = other.strokeGradientShader;
+            this.paint = new SKPaint();
         }
         else
         {
-            this.paint = other.paint.Clone();
+            this.paint = ((SkiaCanvasState)other).paint.Clone();
             this.fillTextureShader = GradientShaderCache.GetShader(other.FillGradient);
             this.fillGradientShader = GradientShaderCache.GetShader(other.StrokeGradient);
             this.strokeGradientShader = GradientShaderCache.GetShader(other.StrokeGradient);
         }
+
+        base.Initialize(other);
     }
 
     public void Dispose()
     {
-        ICanvas canvas = null;
-
-        canvas.Stroke(Color.Red);
-        canvas.Fill(Color.Orange);
-        canvas.Stroke(null);
-
         paint.Dispose();
+    }
+
+    protected override void UpdateTransform(Matrix3x2 transform)
+    {
+        canvas.SetMatrix(transform.AsSKMatrix());
+        base.UpdateTransform(transform);
+    }
+
+    protected override void UpdateFillColor(Color fillColor)
+    {
+        paint.Color = fillColor.AsSKColor();
+        base.UpdateFillColor(fillColor);
     }
 }
 

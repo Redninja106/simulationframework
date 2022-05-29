@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace SimulationFramework.Gradients;
+namespace SimulationFramework.Drawing.Canvas;
 
 internal record RadialGradient(Vector2 Position, float Radius, GradientStop[] Stops, Matrix3x2 Transform, TileMode TileMode) : Gradient(Stops, Transform, TileMode)
 {

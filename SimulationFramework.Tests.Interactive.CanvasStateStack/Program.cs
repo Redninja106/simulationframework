@@ -2,17 +2,22 @@
 using System.Diagnostics;
 using SimulationFramework;
 using SimulationFramework.Desktop;
+using SimulationFramework.Drawing.Canvas;
 
 class Program : Simulation
 {
     static void Main()
     {
-        using var sim = new Program();
-        sim.RunWindowed("Canvas State Test", 1920, 1080, true);
+        var sim = new Program();
+        sim.RunDesktop();
     }
 
     public override void OnInitialize(AppConfig config)
     {
+        config.Title = "Canvas State Test";
+        config.Width = 1920;
+        config.Height = 1080;
+        config.Resizable = true;
     }
 
     public override void OnRender(ICanvas canvas)
