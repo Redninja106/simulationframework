@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SimulationFramework.Desktop\SimulationFramework.Desktop.csproj" />
-    <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
+    <ProjectReference Include="..\..\..\src\SimulationFramework.Desktop\SimulationFramework.Desktop.csproj" />
+    <ProjectReference Include="..\..\..\src\SimulationFramework\SimulationFramework.csproj" />
   </ItemGroup>
 
 </Project>
