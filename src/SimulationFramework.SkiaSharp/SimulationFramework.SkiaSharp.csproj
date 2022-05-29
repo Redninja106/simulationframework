@@ -18,25 +18,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\SimulationFramework.Desktop\logo-128x128.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="SkiaSharp" Version="2.80.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="logo-128x128.png">
-      <PackagePath>\</PackagePath>
-      <Pack>True</Pack>
-    </None>
   </ItemGroup>
 
 </Project>
