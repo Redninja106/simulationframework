@@ -2,17 +2,22 @@
 using System.Diagnostics;
 using SimulationFramework;
 using SimulationFramework.Desktop;
+using SimulationFramework.Drawing.Canvas;
 
 class Program : Simulation
 {
     static void Main()
     {
-        using var sim = new Program();
-        sim.RunWindowed("Canvas State Test", 1920, 1080, true);
+        var sim = new Program();
+        sim.RunDesktop();
     }
 
     public override void OnInitialize(AppConfig config)
     {
+        config.Title = "Canvas State Test";
+        config.Width = 1920;
+        config.Height = 1080;
+        config.Resizable = true;
     }
 
     public override void OnRender(ICanvas canvas)
@@ -20,14 +25,14 @@ class Program : Simulation
         const int count = 1_000_000;
 
         for (int i = 0; i < count; i++)
-            canvas.Push();
+            canvas.PushState();
 
         Thread.Sleep(500);
 
         var prevMem = Process.GetCurrentProcess().PrivateMemorySize64;
         for (int i = 0; i < count; i++)
         {
-            canvas.Pop();
+            canvas.PopState();
         }
         var postMem = Process.GetCurrentProcess().PrivateMemorySize64;
         Console.WriteLine((postMem - prevMem) / count);

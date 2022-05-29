@@ -2,79 +2,30 @@
 using System.Runtime.CompilerServices;
 using SimulationFramework;
 using SimulationFramework.Desktop;
+using SimulationFramework.Drawing.Canvas;
 using SimulationFramework.IMGUI;
+using SimulationFramework.Messaging;
 
-using var sim = new DrawingShapesSimulation();
-sim.RunWindowed("Shapes!", 1920, 1080);
+var sim = new DrawingShapesSimulation();
+sim.RunDesktop();
 
 class DrawingShapesSimulation : Simulation
 {
-    ITexture texture;
-    string text = "Hello world!";
     public override void OnInitialize(AppConfig config)
     {
-        texture = Graphics.LoadTexture("logo-512x512.png");
-        config.SetAngleMode(AngleMode.Radians);
+        this.Application.Dispatcher.Subscribe<ResizeMessage>(m => Console.WriteLine(m.Width + " " + m.Height));
     }
 
-    float radius = 0;
     public override void OnRender(ICanvas canvas)
     {
-        canvas.Clear(Color.GreenYellow);
+        canvas.Clear(Color.LightGray);
 
-        canvas.DrawTexture(texture, Alignment.TopLeft);
-       
         canvas.Translate(canvas.Width / 2, canvas.Height / 2);
 
-        canvas.DrawRect(new(10, 10), new(100, 100), Color.OrangeRed);
+        canvas.Fill(Color.Red);
+        canvas.DrawRect(0, 0, 100, 100);
 
-        canvas.DrawEllipse(new(90, 10), new(50, 60), Color.Purple);
-
-        canvas.SetDrawMode(DrawMode.Border);
-        canvas.SetStrokeWidth(10);
-        canvas.DrawRect(-50, -50, 110, 120, Color.HotPink);
-
-        canvas.SetDrawMode(DrawMode.Fill);
-        canvas.SetFont("verdana", TextStyles.Underline, 40);
-        canvas.DrawText(text, new(0, -canvas.Height / 4), Color.Indigo, Alignment.Center);
-
-        canvas.SetDrawMode(DrawMode.Border);
-        canvas.SetStrokeWidth(2);
-
-        canvas.SetDrawMode(DrawMode.Fill);
-        canvas.DrawRect(new(0, 100), new(50, 50), Color.Gray, Alignment.BottomRight);
-        canvas.DrawRect(new(0, 100), new(50, 50), Color.Black, Alignment.BottomLeft);
-        canvas.DrawRect(new(0, 100), new(50, 50), Color.White, Alignment.TopRight);
-        canvas.DrawRect(new(0, 100), new(50, 50), Color.DarkGray, Alignment.TopLeft);
-
-        canvas.DrawRoundedRect(new(0, -canvas.Height / 5), new(90, 90), 25, Color.Bisque);
-
-        canvas.DrawLine(100, 100, -110, -100, Color.White);
-
-        canvas.DrawArc(300, 0, 100, 100, 0, radius, true, Color.LightGray);
-        canvas.DrawArc(300, 0, 90, 90, 0, radius, true, Color.SteelBlue);
-        canvas.SetDrawMode(DrawMode.Border);
-        canvas.DrawArc(300, 0, 70, 70, 0, radius, false, Color.LightGray);
-        canvas.SetDrawMode(DrawMode.Fill);
-        canvas.DrawArc(300, 0, 50, 50, 0, radius, true, Color.LightGray);
-
-        radius = MathF.Sin(Time.TotalTime) * MathF.Tau;
-
-        canvas.SetFillTexture(texture, Matrix3x2.CreateTranslation(x,y), TileMode.Stop);
-        canvas.SetDrawMode(DrawMode.Textured);
-
-        canvas.DrawRect(x,y , 300, 300, Color.OldLace, Alignment.Center);
-
-        canvas.SetDrawMode(DrawMode.Gradient);
-        canvas.SetGradientRadial(Alignment.Center, 50f, Color.Orange, Color.Green);
-        canvas.DrawEllipse(0, 0, 50, 50, Color.Black, Alignment.Center);
-
-        canvas.SetDrawMode(DrawMode.Fill);
-        canvas.DrawEllipse(Mouse.Position - new Vector2(canvas.Width / 2f, canvas.Height / 2f), new Vector2(100, 100), Keyboard.IsKeyDown(Key.G) ? Color.Purple : Color.Peru);
-    }
-    float x, y;
-
-    public override void OnUnitialize()
-    {
+        canvas.Fill(Color.Red);
+        canvas.DrawCircle(new Circle(150, 150, 50));
     }
 }

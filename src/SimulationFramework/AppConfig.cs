@@ -9,19 +9,42 @@ namespace SimulationFramework;
 /// <summary>
 /// Provides ways to enable and disable certain functionality of the simulation.
 /// </summary>
-public sealed class AppConfig
+public class AppConfig
 {
-    private readonly Simulation simulation;
+    public string Title { get; set; }
 
-    internal AppConfig(Simulation simulation)
+    public int Width { get; set; }
+    public int Height { get; set; }
+    
+    public bool Resizable { get; set; }
+    public bool Fullscreen { get; set; }
+    public bool TitlebarHidden { get; set; }
+
+    public AppConfig()
     {
-        this.simulation = simulation;
+
     }
 
-    public void EnableSimulationPane(int width, int height, bool scaling = true) { }
-
-    public void SetAngleMode(AngleMode angleMode) 
+    public static AppConfig Open() 
     {
-        simulation.AngleMode = angleMode; 
+        var controller = Application.Current.GetComponent<IAppController>();
+        return controller.CreateConfig();
     }
+
+    public bool Apply()
+    {
+        var controller = Application.Current.GetComponent<IAppController>();
+        return controller.ApplyConfig(this);
+    }
+    
+    public void ResetToDefault()
+    {
+        Title = "Application";
+        Width = 1280;
+        Height = 720;
+        Resizable = true;
+        Fullscreen = false;
+        TitlebarHidden = false;
+    }
+    //public void EnableSimulationPane(int width, int height, bool scaling = true) { }
 }

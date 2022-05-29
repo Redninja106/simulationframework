@@ -9,7 +9,7 @@ namespace SimulationFramework;
 
 public static class Gamepad
 {
-    private static InputContext Context => Simulation.Current.InputContext;
+    private static InputContext Context => Application.Current.GetComponent<InputContext>();
     
     public static Vector2 LeftJoystick => Context.leftJoystick;
     public static Vector2 RightJoystick => Context.rightJoystick;

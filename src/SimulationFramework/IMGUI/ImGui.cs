@@ -16,7 +16,7 @@ namespace SimulationFramework.IMGUI;
 /// </summary>
 public static class ImGui
 {
-    internal static IImGuiProvider Provider => Simulation.Current.GetComponent<IImGuiProvider>();
+    internal static IImGuiProvider Provider => Application.Current.GetComponent<IImGuiProvider>();
 
     /// <summary>
     /// Pushes a window to the stack and starts appending widgets to it. 

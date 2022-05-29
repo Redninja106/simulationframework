@@ -722,6 +722,8 @@ public readonly struct Color : IEquatable<Color>
     /// </summary>
     public static readonly Color DarkSalmon = (Color)0xE9967AFF;
 
+    public static readonly Color Transparent = (Color)0x00000000;
+
     private readonly byte r;
     private readonly byte g;
     private readonly byte b;
@@ -817,10 +819,12 @@ public readonly struct Color : IEquatable<Color>
 
         return false;
     }
-
+    /// <summary>
+    /// Returns the formatted values of this color.
+    /// </summary>
     public override string ToString()
     {
-        return "#" + Value.ToString("x8");
+        return $"#{Value:x8}";
     }
 
     public override int GetHashCode()
