@@ -3,7 +3,7 @@
 <br>SimulationFramework</br>
 </h1>
 
-SimulationFramework is a framework for graphical desktop apps using .NET. It is designed with simplicity and ease of use in mind in order to cut down on development time for rapid prototyping. Making heavy use of interfaces, all major features are abstracted to make SimulationFramework completely dependency free and by extension completely cross-platform.
+SimulationFramework is a framework for creative coding, game development, and graphical apps built on .NET 6. It is designed with simplicity and ease of use in mind in order to cut down on development time for rapid prototyping. Making heavy use of interfaces, all major features are abstracted to make SimulationFramework completely dependency free and by extension completely cross-platform.
 
 ⚠️ Currently, SimulationFramework is in a very early state of development. ⚠️
 
@@ -17,11 +17,11 @@ SimulationFramework is a framework for graphical desktop apps using .NET. It is 
 
 - **Input**: A simple input API that doesn't get in the way.
 
-- **[Dear ImGui](https://github.com/ocornut/imgui) Support**: Dear ImGui is completely built-in with zero setup. (currently depends [ImGui.NET](https://github.com/mellinoe/ImGui.NET) for bindings, custom bindings are planned).
+- **[Dear ImGui](https://github.com/ocornut/imgui) Support**: Dear ImGui is completely built-in with zero setup.
 
 ## Getting Started
 
-To start, create a new Console App using .NET 6. Add the [SimulationFramework Nuget Package](https://www.nuget.org/packages/SimulationFramework/0.0.2) using Visual Studio or the following command:
+To start, create a new Console App using .NET 6. Add the [SimulationFramework Nuget Package](https://www.nuget.org/packages/SimulationFramework/) using Visual Studio or the following command:
 ```
 dotnet add package SimulationFramework
 dotnet add package SimulationFramework.Desktop
@@ -48,6 +48,8 @@ class MySimulation : Simulation
 To start the simulation, call `Simulation.RunWindowed()`:
 
 ```cs
+using SimulationFramework.Desktop;
+
 public static void Main()
 {
     MySimulation sim = new MySimulation();
