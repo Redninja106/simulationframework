@@ -1,5 +1,5 @@
 ﻿<h1 align="center">
-<img src="https://raw.githubusercontent.com/Redninja106/simulationframework/master/assets/logo.svg"/>
+<img src="https://raw.githubusercontent.com/Redninja106/simulationframework/master/assets/logo-128x128.png"/>
 <br>SimulationFramework</br>
 </h1>
 
