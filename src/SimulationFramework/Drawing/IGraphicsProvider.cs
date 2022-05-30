@@ -1,12 +1,15 @@
-﻿using System;
+﻿using SimulationFramework.Drawing.Canvas;
+using System;
 
 namespace SimulationFramework.Drawing;
 
 /// <summary>
 /// Interface which provides graphics functionality as a component of a simulation.
 /// </summary>
-public interface IGraphicsProvider : ISimulationComponent
+public interface IGraphicsProvider : IAppComponent
 {
+    ICanvas GetFrameCanvas();
+
     /// <summary>
     /// Gets the canvas for the current frame.
     /// </summary>

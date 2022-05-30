@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace SimulationFramework.IMGUI;
 /// </summary>
 public static class ImGui
 {
-    internal static IImGuiProvider Provider => Simulation.Current.GetComponent<IImGuiProvider>();
+    internal static IImGuiProvider Provider => Application.Current.GetComponent<IImGuiProvider>();
 
     /// <summary>
     /// Pushes a window to the stack and starts appending widgets to it. 
@@ -87,7 +88,7 @@ public static class ImGui
     /// </summary>
     /// <param name="texture">The texture of the widget.</param>
     /// <param name="size">The size of the image.</param>
-    public static void Image(ITexture texture, Vector2 size) => Image(texture, size, (0, 0), (1, 1));
+    public static void Image(ITexture texture, Vector2 size) => Image(texture, size, new Vector2(0, 0), new Vector2(1, 1));
 
     /// <summary>
     /// An image widget.
@@ -105,7 +106,7 @@ public static class ImGui
     /// <param name="size">The size of the image.</param>
     /// <param name="tintColor">The tint of the image.</param>
     /// <param name="borderColor">The color of the border of the image.</param>
-    public static void Image(ITexture texture, Vector2 size, Color tintColor, Color borderColor) => Image(texture, size, (0, 0), (1, 1), tintColor, borderColor);
+    public static void Image(ITexture texture, Vector2 size, Color tintColor, Color borderColor) => Image(texture, size, new(0, 0), new(1, 1), tintColor, borderColor);
 
     /// <summary>
     /// An image widget.
@@ -138,7 +139,7 @@ public static class ImGui
     /// A progress bar widget.
     /// </summary>
     /// <param name="completion">The completion of the progress bar, between 0 and 1.</param>
-    public static void ProgressBar(float completion) => Provider.ProgressBar(completion, (float.MinValue, 0), "");
+    public static void ProgressBar(float completion) => Provider.ProgressBar(completion, new(float.MinValue, 0), "");
     
     /// <summary>
     /// A progress bar widget.

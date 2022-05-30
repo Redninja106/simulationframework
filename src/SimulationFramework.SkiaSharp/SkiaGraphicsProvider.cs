@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Canvas;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
@@ -45,7 +46,7 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
 
     public ITexture CreateTexture(int width, int height, Span<Color> data, ResourceOptions flags = ResourceOptions.None)
     {
-        var bitmap = new SkiaSurface(this, new SKBitmap(width, height), true);
+        var bitmap = new SkiaTexture(this, new SKBitmap(width, height), true);
 
         if (!data.IsEmpty)
         {
@@ -56,12 +57,7 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
 
     public ITexture LoadTexture(Span<byte> encodedData, ResourceOptions flags = ResourceOptions.None)
     {
-        return new SkiaSurface(this, SKBitmap.Decode(encodedData), true);
-    }
-
-    public void Apply(Simulation simulation)
-    {
-        
+        return new SkiaTexture(this, SKBitmap.Decode(encodedData), true);
     }
 
     public void Dispose()
@@ -123,6 +119,11 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
     }
 
     public IRenderer GetRenderer()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Initialize(Application application)
     {
         throw new NotImplementedException();
     }

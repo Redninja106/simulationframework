@@ -1,9 +1,9 @@
 ﻿<h1 align="center">
-<img src="https://raw.githubusercontent.com/Redninja106/simulationframework/master/assets/logo.svg"/>
+<img src="https://raw.githubusercontent.com/Redninja106/simulationframework/master/assets/logo-128x128.png"/>
 <br>SimulationFramework</br>
 </h1>
 
-SimulationFramework is a framework for graphical desktop apps using .NET. Designed with simplicity and ease of use in mind, it cuts down on development time while enabling rapid prototyping. Making heavy use of interfaces, all major features are abstracted to make SimulationFramework completely dependency free and cross-platform.
+SimulationFramework is a framework for creative coding, game development, and graphical apps built on .NET 6. It is designed with simplicity and ease of use in mind in order to cut down on development time for rapid prototyping. Making heavy use of interfaces, all major features are abstracted to make SimulationFramework completely dependency free and by extension completely cross-platform.
 
 ⚠️ Currently, SimulationFramework is in a very early state of development. ⚠️
 
@@ -19,13 +19,14 @@ SimulationFramework is a framework for graphical desktop apps using .NET. Design
 
 - **Input**: A simple input API that doesn't get in the way.
 
-- **[Dear ImGui](https://github.com/ocornut/imgui) Support**: Dear ImGui is completely built-in with zero setup. (currently depends [ImGui.NET](https://github.com/mellinoe/ImGui.NET) for bindings, custom bindings are planned).
+- **[Dear ImGui](https://github.com/ocornut/imgui) Support**: Dear ImGui is completely built-in with zero setup.
 
 ## Getting Started
 
-To start, create a new Console App using .NET 6. Add the [SimulationFramework Nuget Package](https://www.nuget.org/packages/SimulationFramework/0.0.2) using Visual Studio or the following command:
+To start, create a new Console App using .NET 6. Add the [SimulationFramework Nuget Package](https://www.nuget.org/packages/SimulationFramework/) using Visual Studio or the following command:
 ```
-dotnet add package SimulationFramework --version 0.0.3
+dotnet add package SimulationFramework
+dotnet add package SimulationFramework.Desktop
 ```
 
 Next, create a class which inherits from `Simulation`. `Simulation` has virtual methods that can be overridden to add functionality to your simulation.
@@ -49,10 +50,12 @@ class MySimulation : Simulation
 To start the simulation, call `Simulation.RunWindowed()`:
 
 ```cs
+using SimulationFramework.Desktop;
+
 public static void Main()
 {
-    using MySimulation sim = new MySimulation();
-    Simulation.RunWindowed(sim, "Hello, World!", 1280, 720);
+    MySimulation sim = new MySimulation();
+    Simulation.RunDesktop();
 }
 ```
 

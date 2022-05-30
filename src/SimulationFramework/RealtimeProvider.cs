@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimulationFramework.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -25,7 +26,6 @@ public sealed class RealtimeProvider : ITimeProvider
     private float deltaTime;
     private float totalTime;
     private bool isRunningSlowly;
-    private float framerate;
 
     /// <summary>
     /// </summary>
@@ -34,23 +34,10 @@ public sealed class RealtimeProvider : ITimeProvider
         stopwatch = Stopwatch.StartNew();
     }
 
-    /// <inheritdoc/>
-    public void Apply(Simulation simulation)
-    {
-        simulation.BeforeRender += Tick;
-    }
-
-    /// <inheritdoc/>
-    public float GetFramerate()
-    {
-        return framerate;
-    }
-
     private void Tick()
     {
         deltaTime = TimeScale * (stopwatch.ElapsedTicks / (float)Stopwatch.Frequency);
         stopwatch.Restart();
-        framerate = 1f / deltaTime;
 
         if (deltaTime > MaxDeltaTime)
         {
@@ -92,5 +79,13 @@ public sealed class RealtimeProvider : ITimeProvider
     /// <inheritdoc/>
     public void Dispose()
     {
+    }
+
+    public void Initialize(Application application)
+    {
+        application.Dispatcher.Subscribe<RenderMessage>(m =>
+        {
+            this.Tick();
+        }, MessagePriority.High);
     }
 }

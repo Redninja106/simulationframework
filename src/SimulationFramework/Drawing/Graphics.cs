@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimulationFramework.Drawing.Canvas;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,15 +13,15 @@ namespace SimulationFramework.Drawing;
 /// </summary>
 public static class Graphics
 {
-    private static IGraphicsProvider Provider => Simulation.Current.GetComponent<IGraphicsProvider>();
+    private static IGraphicsProvider Provider => Application.Current.GetComponent<IGraphicsProvider>();
 
     /// <summary>
     /// Gets canvas which draws to the current frame.
     /// </summary>
     /// <returns></returns>
-    public static ITexture GetFrameTexture()
+    public static ICanvas GetOutputCanvas()
     {
-        return Provider.GetFrameTexture();
+        return Provider.GetFrameCanvas();
     }
 
     public static IRenderer GetRenderer()

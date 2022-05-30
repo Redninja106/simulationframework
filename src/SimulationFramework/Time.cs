@@ -11,7 +11,7 @@ namespace SimulationFramework;
 /// </summary>
 public static class Time
 {
-    internal static ITimeProvider Provider => Simulation.Current.GetComponent<ITimeProvider>();
+    internal static ITimeProvider Provider => Application.Current.GetComponent<ITimeProvider>();
     
     /// <summary>
     /// The number of seconds since the last frame.
@@ -32,10 +32,4 @@ public static class Time
     /// The highest allowed value of <see cref="DeltaTime"/>.
     /// </summary>
     public static float MaxDeltaTime { get => Provider.MaxDeltaTime; set => Provider.MaxDeltaTime = value; }
-    
-    /// <summary>
-    /// A value which time is scaled by.
-    /// </summary>
-    public static float TimeScale { get => Provider.TimeScale; set => Provider.TimeScale = value; }
-
 }

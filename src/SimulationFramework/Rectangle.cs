@@ -33,12 +33,17 @@ public struct Rectangle : IEquatable<Rectangle>
     /// <summary>
     /// The size of the rectangle.
     /// </summary>
-    public Vector2 Size { get => (Width, Height); set => (Width, Height) = value; }
+    public Vector2 Size { get => new Vector2(Width, Height); set => (Width, Height) = (value.X, value.Y); }
 
     /// <summary>
-    /// The position of the rectangle.
+    /// The top-left corner of the rectangle.
     /// </summary>
-    public Vector2 Position { get => (X, Y); set => (X, Y) = value; }
+    public Vector2 Position { get => new Vector2(X, Y); set => (X, Y) = (value.X, value.Y); }
+
+    /// <summary>
+    /// The center of the rectangle.
+    /// </summary>
+    public Vector2 Center { get => GetAlignedPoint(Alignment.Center); set => SetAlignedPosition(Center, Alignment.Center); }
 
     /// <summary>
     /// Creates a new rectangle from the provided position and size.
@@ -64,7 +69,7 @@ public struct Rectangle : IEquatable<Rectangle>
         this.Height = height;
         this.X = this.Y = 0;
 
-        SetAlignedPosition((x, y), alignment);
+        SetAlignedPosition(new Vector2(x, y), alignment);
     }
 
     /// <summary>
@@ -136,9 +141,9 @@ public struct Rectangle : IEquatable<Rectangle>
     /// Determines if the rectangle has any intersection with another.
     /// </summary>
     /// <param name="other">The rectangle to check for an intersection with.</param>
-    /// <param name="intersection">The intersection area between the two rectangles.</param>
+    /// <param name="overlap">The overlapping area between the two rectangles.</param>
     /// <returns>True if the rectangles are intersecting, otherwise false.</returns>
-    public bool Intersects(Rectangle other, out Rectangle intersection)
+    public bool Intersects(Rectangle other, out Rectangle overlap)
     {
         float x1 = MathF.Max(this.X, other.X);
         float x2 = MathF.Min(this.X + this.Width, other.X + other.Width);
@@ -148,11 +153,11 @@ public struct Rectangle : IEquatable<Rectangle>
 
         if (intersects)
         {
-            intersection = new Rectangle(x1, y1, x2 - x1, y2 - y1);
+            overlap = new Rectangle(x1, y1, x2 - x1, y2 - y1);
             return true;
         }
 
-        intersection = default;
+        overlap = default;
         return false;
     }
 

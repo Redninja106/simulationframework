@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
 using SimulationFramework.Drawing;
+using SimulationFramework.Messaging;
 using static ImGuiNET.ImGuiNative;
 
 namespace SimulationFramework.IMGUI;
@@ -29,12 +31,6 @@ public unsafe sealed class ImGuiNETProvider : IImGuiProvider
         {
             igCreateContext(null);
         }
-    }
-
-    public void Apply(Simulation simulation)
-    {
-        simulation.BeforeRender += BeforeRender;
-        simulation.AfterRender += AfterRender;
     }
 
     private static ImGuiDataType GetDataType<T>() where T : unmanaged
@@ -225,4 +221,10 @@ public unsafe sealed class ImGuiNETProvider : IImGuiProvider
     public void CloseCurrentPopup() => igCloseCurrentPopup();
 
     public void OpenPopup(string id, PopupFlags flags) => igOpenPopup_Str(MarshalText(id, stackalloc byte[id.Length + 1]), (ImGuiPopupFlags)flags);
+
+    public void Initialize(Application application)
+    {
+        application.Dispatcher.Subscribe<RenderMessage>(m => BeforeRender(), MessagePriority.Low);
+        application.Dispatcher.Subscribe<RenderMessage>(m => BeforeRender(), MessagePriority.High);
+    }
 }

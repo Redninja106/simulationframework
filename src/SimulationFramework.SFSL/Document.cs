@@ -12,6 +12,6 @@ public class Document
 
     public static void Create(string source)
     {
-        return typeof(Document).Assembly.GetType("e").
+        //return typeof(Document).Assembly.GetType("e");
     }
 }

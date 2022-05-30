@@ -10,11 +10,18 @@
     <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
     <Description> SimulationFramework is a framework for writing small graphical apps, with emphasis on simplicity and usability. </Description>
     <AssemblyVersion></AssemblyVersion>
-    <Version>0.0.6</Version>
+    <Version>0.0.9</Version>
     <Authors>Ryan Andersen</Authors>
     <PackageIcon>logo-128x128.png</PackageIcon>
     <Copyright></Copyright>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="logo-128x128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.86.0" />

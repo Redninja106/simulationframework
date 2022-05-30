@@ -9,8 +9,9 @@ namespace SimulationFramework.Desktop;
 
 public static class SimulationExtensions
 {
-    public static void RunWindowed(this Simulation simulation, string title, int width, int height, bool resizable = true)
+    public static void RunDesktop(this Simulation simulation)
     {
-        simulation.Run(new WindowEnvironment(title, width, height, resizable));
+        using var platform = new DesktopPlatform();
+        simulation.Run(platform);
     }
 }

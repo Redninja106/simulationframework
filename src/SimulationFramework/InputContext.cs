@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace SimulationFramework;
 /// <summary>
 /// Controls the input sent to a simulation.
 /// </summary>
-public sealed class InputContext
+public sealed class InputContext : IAppComponent
 {
     internal event KeyEvent KeyDown;
     internal event KeyEvent KeyUp;
@@ -116,5 +117,13 @@ public sealed class InputContext
 
         lastMousePosition = mousePosition;
         scrollDelta = 0;
+    }
+
+    public void Dispose()
+    {
+    }
+    
+    public void Initialize(Application simulation)
+    {
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace SimulationFramework;
 /// </summary>
 public static class Mouse
 {
-    internal static InputContext Context => Simulation.Current.InputContext;
+    internal static InputContext Context => Application.Current.GetComponent<InputContext>();
 
     /// <summary>
     /// The position of the mouse.

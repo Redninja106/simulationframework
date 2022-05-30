@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Canvas;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
@@ -13,6 +14,9 @@ public static class SkiaInterop
 {
     public static SKCanvas GetCanvas(ICanvas canvas)
     {
+        if (canvas is null)
+            return null; 
+        
         if (canvas is not SkiaCanvas skiaCanvas)
             throw new ArgumentException("'canvas' must be a canvas created using the SkiaSharp graphics backend!");
 
@@ -21,14 +25,20 @@ public static class SkiaInterop
 
     public static SKBitmap GetBitmap(ITexture texture)
     {
-        if (texture is not SkiaSurface skiaSurface)
+        if (texture is null) 
+            return null;
+
+        if (texture is not SkiaTexture skiaTexture)
             throw new ArgumentException("'texture' must be a texture created using the SkiaSharp graphics backend!");
 
-        return skiaSurface.bitmap;
+        return skiaTexture.GetBitmap();
     }
 
     public static GRContext GetBackendContext(IGraphicsProvider graphics)
     {
+        if (graphics is null)
+            return null;
+        
         if (graphics is not SkiaGraphicsProvider skiaGraphics)
             throw new ArgumentException("'graphics' must be a graphics context created using the SkiaSharp graphics backend!");
 
@@ -38,7 +48,7 @@ public static class SkiaInterop
     // 
     public unsafe static int GetGLTextureID(ITexture texture)
     {
-        // there doesnt seem to be a way to do this with skiasharp...
+        // there doesn't seem to be a way to do this with skiasharp...
         throw new NotSupportedException();
     }
 

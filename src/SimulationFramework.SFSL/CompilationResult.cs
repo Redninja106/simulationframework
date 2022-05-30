@@ -14,5 +14,5 @@ public class CompilationResult
 
     public string[] Results;
 
-    public TargetLanguage Language;
+    // public TargetLanguage Language;
 }

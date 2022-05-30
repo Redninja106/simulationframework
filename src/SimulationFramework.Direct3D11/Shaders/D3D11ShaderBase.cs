@@ -166,7 +166,7 @@ internal abstract class D3D11ShaderBase<T> : D3D11Object, IShader where T : ID3D
                 return TextureAddressMode.Mirror;
             case TileMode.Repeat:
                 return TextureAddressMode.Wrap;
-            case TileMode.Stop:
+            case TileMode.None:
                 return TextureAddressMode.Border;
             default:
                 throw new ArgumentException($"Unknown tile mode {tileMode}");

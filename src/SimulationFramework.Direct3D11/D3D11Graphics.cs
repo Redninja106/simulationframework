@@ -1,5 +1,7 @@
-﻿using SimulationFramework.Drawing.Direct3D11.Buffers;
+﻿using SimulationFramework.Drawing.Canvas;
+using SimulationFramework.Drawing.Direct3D11.Buffers;
 using SimulationFramework.Drawing.Direct3D11.Shaders;
+using SimulationFramework.Messaging;
 using System.Runtime.CompilerServices;
 using Vortice.D3DCompiler;
 using Vortice.Direct3D;
@@ -17,12 +19,7 @@ public class D3D11Graphics : IGraphicsProvider
         resources = new DeviceResources(hwnd);
     }
 
-    public void Apply(Simulation simulation)
-    {
-        simulation.AfterRender += Simulation_AfterRender;
-    }
-
-    private void Simulation_AfterRender()
+    private void AfterRender(RenderMessage message)
     {
         resources.SwapChain.Present(1);
     }
@@ -73,5 +70,15 @@ public class D3D11Graphics : IGraphicsProvider
     public IRenderer GetRenderer()
     {
         return resources.ImmediateRenderer;
+    }
+
+    public void Initialize(Application application)
+    {
+        application.Dispatcher.Subscribe<RenderMessage>(AfterRender, MessagePriority.Low);
+    }
+
+    public ICanvas GetFrameCanvas()
+    {
+        throw new NotImplementedException();
     }
 }

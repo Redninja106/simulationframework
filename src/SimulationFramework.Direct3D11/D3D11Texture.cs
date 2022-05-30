@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Canvas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,5 +105,10 @@ internal class D3D11Texture : D3D11Object, ITexture
     public ID3D11Texture2D GetInternalTexture()
     {
         return this.Texture;    
+    }
+
+    ICanvas ITexture.OpenCanvas()
+    {
+        throw new NotImplementedException();
     }
 }

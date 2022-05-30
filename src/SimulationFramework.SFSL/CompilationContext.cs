@@ -15,14 +15,15 @@ internal class CompilationContext
         return notifications.Count > 0;
     }
 
-    public TargetLanguage TargetLanguage { get; private set; }
+    
+    // public TargetLanguage TargetLanguage { get; private set; }
 
     public CompilationResult CreateResult()
     {
         return new CompilationResult()
         {
             Notifications = this.notifications.ToArray(),
-            Language = this.TargetLanguage,
+            // Language = this.TargetLanguage,
         };
     }
 
