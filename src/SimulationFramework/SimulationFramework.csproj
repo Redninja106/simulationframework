@@ -17,6 +17,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="logo-128x128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.86.0" />
   </ItemGroup>
 

@@ -1,4 +1,5 @@
-﻿using SimulationFramework.Drawing.Canvas;
+﻿using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Canvas;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,7 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
     public SKPaint Paint => paint ??= new SKPaint();
 
     private SKShader fillTextureShader;
-    private SKShader fillGradientShader;
-    private SKShader strokeGradientShader;
+    private SKShader gradientShader;
 
     public SkiaCanvasState(SKCanvas canvas, SkiaCanvasState other = null)
     {
@@ -36,9 +36,8 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
         else
         {
             this.paint = ((SkiaCanvasState)other).paint.Clone();
-            this.fillTextureShader = GradientShaderCache.GetShader(other.FillGradient);
-            this.fillGradientShader = GradientShaderCache.GetShader(other.StrokeGradient);
-            this.strokeGradientShader = GradientShaderCache.GetShader(other.StrokeGradient);
+            this.fillTextureShader = GradientShaderCache.GetShader(other.Gradient);
+            this.gradientShader = GradientShaderCache.GetShader(other.Gradient);
         }
 
         base.Initialize(other);
@@ -59,6 +58,73 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
     {
         paint.Color = fillColor.AsSKColor();
         base.UpdateFillColor(fillColor);
+    }
+
+    protected override void UpdateGradient(Gradient fillGradient)
+    {
+        this.gradientShader = GradientShaderCache.GetShader(fillGradient);
+        base.UpdateGradient(fillGradient);
+    }
+
+    protected override void UpdateStrokeColor(Color strokeColor)
+    {
+        paint.Color = strokeColor.AsSKColor();
+        base.UpdateStrokeColor(strokeColor);
+    }
+
+    protected override void UpdateDrawMode(DrawMode drawMode)
+    {
+        switch (drawMode)
+        {
+            case DrawMode.Fill:
+                paint.Color = FillColor.AsSKColor();
+                paint.Style = SKPaintStyle.Fill;
+                paint.Shader = null;
+                break;
+            case DrawMode.Stroke:
+                paint.Color = StrokeColor.AsSKColor();
+                paint.Style = SKPaintStyle.Stroke;
+                paint.Shader = null;
+                break;
+            case DrawMode.Gradient:
+                paint.Shader = gradientShader;
+                paint.Style = SKPaintStyle.Fill;
+                break;
+            case DrawMode.Textured:
+                paint.Shader = fillTextureShader;
+                paint.Style = SKPaintStyle.Fill;
+                break;
+            default:
+                break;
+        }
+
+        base.UpdateDrawMode(drawMode);
+    }
+
+    protected override void UpdateStrokeWidth(float strokeWidth)
+    {
+        paint.StrokeWidth = strokeWidth;
+        base.UpdateStrokeWidth(strokeWidth);
+    }
+
+    protected override void UpdateFillTexture(ITexture texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
+    {
+        if (texture is not null)
+        {
+            bool changed = false;
+            changed |= this.FillTexture != texture;
+            changed |= this.FillTextureTransform != transform;
+            changed |= this.FillTextureTileModeX != tileModeX;
+            changed |= this.FillTextureTileModeY != tileModeY;
+
+            if (changed)
+            {
+                this.fillTextureShader?.Dispose();
+                this.fillTextureShader = SKShader.CreateBitmap(SkiaInterop.GetBitmap(texture), tileModeX.AsSKShaderTileMode(), tileModeY.AsSKShaderTileMode(), transform.AsSKMatrix());
+            }
+        }
+        
+        base.UpdateFillTexture(texture, transform, tileModeX, tileModeY);
     }
 }
 

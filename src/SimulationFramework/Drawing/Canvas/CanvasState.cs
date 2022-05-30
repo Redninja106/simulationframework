@@ -20,8 +20,7 @@ public abstract class CanvasState
     public TileMode FillTextureTileModeX { get; private set; }
     public TileMode FillTextureTileModeY { get; private set; }
 
-    public Gradient FillGradient { get; private set; }
-    public Gradient StrokeGradient { get; private set; }
+    public Gradient Gradient { get; private set; }
 
     /// <summary>
     /// Gets or sets the canvas's current transformation matrix.
@@ -57,10 +56,9 @@ public abstract class CanvasState
 
             UpdateStrokeColor(Color.Black);
             UpdateStrokeWidth(1f);
-            UpdateStrokeGradient(null);
 
             UpdateFillColor(Color.White);
-            UpdateFillGradient(null);
+            UpdateGradient(null);
             UpdateFillTexture(null, Matrix3x2.Identity, TileMode.Clamp, TileMode.Clamp);
 
             UpdateDrawMode(DrawMode.Fill);
@@ -72,12 +70,11 @@ public abstract class CanvasState
             UpdateTransform(other.Transform);
 
             UpdateFillColor(other.FillColor);
-            UpdateFillGradient(other.FillGradient);
+            UpdateGradient(other.Gradient);
             UpdateFillTexture(other.FillTexture, other.FillTextureTransform, other.FillTextureTileModeX, other.FillTextureTileModeY);
 
             UpdateStrokeColor(other.StrokeColor);
             UpdateStrokeWidth(other.StrokeWidth);
-            UpdateStrokeGradient(other.StrokeGradient);
 
             UpdateDrawMode(other.DrawMode);
         }
@@ -101,14 +98,9 @@ public abstract class CanvasState
         FillColor = fillColor;
     }
 
-    internal protected virtual void UpdateFillGradient(Gradient fillGradient)
+    internal protected virtual void UpdateGradient(Gradient gradient)
     {
-        FillGradient = fillGradient;
-    }
-
-    internal protected virtual void UpdateStrokeGradient(Gradient strokeGradient)
-    {
-        StrokeGradient = strokeGradient;
+        Gradient = gradient;
     }
 
     internal protected virtual void UpdateTransform(Matrix3x2 transform)

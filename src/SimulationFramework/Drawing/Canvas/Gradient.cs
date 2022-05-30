@@ -35,7 +35,7 @@ public abstract record Gradient(GradientStop[] Stops, Matrix3x2 Transform, TileM
 
         for (var i = 0; i < colors.Length; i++)
         {
-            stops[i] = new GradientStop(colors[i], i / (float)colors.Length);
+            stops[i] = new GradientStop(colors[i], i / (float)(colors.Length - 1));
         }
 
         return stops;

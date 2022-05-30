@@ -18,11 +18,7 @@ public enum DrawMode
     /// <summary>
     /// Shapes should be filled with a gradient.
     /// </summary>
-    FillGradient,
-    /// <summary>
-    /// Shapes should be outlined with a gradient.
-    /// </summary>
-    StrokeGradient,
+    Gradient,
     /// <summary>
     /// Shapes should be filled with a texture. 
     /// </summary>

@@ -45,44 +45,55 @@ public interface ICanvas : IDisposable
     /// <summary>
     /// Configures the canvas to fill shapes with the provided color.
     /// </summary>
-    void Fill(Color color) => State.UpdateFillColor(color);
-
+    sealed void Fill(Color color)
+    {
+        State.UpdateFillColor(color);
+        State.UpdateDrawMode(DrawMode.Fill);
+    }
+    
     /// <summary>
     /// Configures the canvas to fill shapes using the provided gradient.
     /// </summary>
-    void Fill(Gradient gradient) => State.UpdateFillGradient(gradient);
+    sealed void Fill(Gradient gradient)
+    {
+        State.UpdateGradient(gradient);
+        State.UpdateDrawMode(DrawMode.Gradient);
+    }
 
     /// <summary>
     /// Configures the canvas to outline shapes with the provided color.
     /// </summary>
-    void Stroke(Color color) => State.UpdateStrokeColor(color);
-
-    /// <summary>
-    /// Configures the canvas to outline shapes using the provided gradient.
-    /// </summary>
-    void Stroke(Gradient gradient) => State.UpdateStrokeGradient(gradient);
-
+    sealed void Stroke(Color color) 
+    {
+        State.UpdateStrokeColor(color);
+        State.UpdateDrawMode(DrawMode.Stroke);
+    }
+    
     /// <summary>
     /// Sets the stroke width of the canvas.
     /// </summary>
-    void StrokeWidth(float width) => State.UpdateStrokeWidth(width);
-
+    sealed void StrokeWidth(float width) => State.UpdateStrokeWidth(width);
+    
     /// <summary>
     /// Sets the clipping rectangle of the canvas.
     /// </summary>
-    void Clip(Rectangle? rectangle) => State.UpdateClipRegion(rectangle);
+    sealed void Clip(Rectangle? rectangle) => State.UpdateClipRegion(rectangle);
 
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     sealed void Fill(ITexture texture) => Fill(texture, Matrix3x2.Identity);
-
+    
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
     /// </summary>
-    sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX = TileMode.Clamp, TileMode tileModeY = TileMode.Clamp) => State.UpdateFillTexture(texture, transform, tileModeX, tileModeY);
-
+    sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX = TileMode.Clamp, TileMode tileModeY = TileMode.Clamp)
+    {
+        State.UpdateFillTexture(texture, transform, tileModeX, tileModeY);
+        State.UpdateDrawMode(DrawMode.Textured);
+    }
+    
     /// <summary>
     /// Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <see cref="SetStrokeWidth(float)"/>.
     /// </summary>

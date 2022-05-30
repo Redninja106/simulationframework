@@ -80,7 +80,7 @@ internal static class GradientShaderCache
         private readonly GCHandle gradientHandle;
 
         public bool IsValid => gradientHandle.IsAllocated;
-        public Gradient Gradient => (Gradient)gradientHandle.Target;
+        public Gradient Gradient => gradientHandle.Target as Gradient;
         public SKShader Shader => shader;
 
         public Entry(Gradient gradient, SKShader shader)

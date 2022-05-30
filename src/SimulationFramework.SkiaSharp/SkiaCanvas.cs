@@ -300,9 +300,18 @@ internal sealed class SkiaCanvas : ICanvas
         canvas.DrawBitmap(skTexture.GetBitmap(), source.AsSKRect(), destination.AsSKRect());
     }
 
-    public void DrawPolygon(Span<Vector2> polygon)
+    public unsafe void DrawPolygon(Span<Vector2> polygon)
     {
-        throw new NotImplementedException();
+        using var path = new SKPath();
+
+        bool shouldClose = true;
+        shouldClose &= polygon[0] != polygon[polygon.Length - 1];
+        shouldClose &= (this.State.DrawMode == DrawMode.Fill || this.State.DrawMode == DrawMode.Gradient);
+
+        fixed (Vector2* polygonPtr = polygon)
+            SkiaNativeApi.sk_path_add_poly(path.Handle, polygonPtr, polygon.Length, shouldClose);
+
+        canvas.DrawPath(path, currentState.Paint);
     }
 
     public void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft)
