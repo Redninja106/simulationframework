@@ -1,31 +1,11 @@
-﻿using System.Numerics;
-using System.Runtime.CompilerServices;
-using SimulationFramework;
-using SimulationFramework.Desktop;
-using SimulationFramework.Drawing.Canvas;
-using SimulationFramework.IMGUI;
-using SimulationFramework.Messaging;
+﻿using SimulationFramework.Desktop;
+namespace DrawingShapes;
 
-var sim = new DrawingShapesSimulation();
-sim.RunDesktop();
-
-class DrawingShapesSimulation : Simulation
+internal class Program
 {
-    public override void OnInitialize(AppConfig config)
+    static void Main(string[] args)
     {
-        this.Application.Dispatcher.Subscribe<ResizeMessage>(m => Console.WriteLine(m.Width + " " + m.Height));
-    }
-
-    public override void OnRender(ICanvas canvas)
-    {
-        canvas.Clear(Color.LightGray);
-
-        canvas.Translate(canvas.Width / 2, canvas.Height / 2);
-
-        canvas.Fill(Color.Red);
-        canvas.DrawRect(0, 0, 100, 100);
-
-        canvas.Fill(Color.Red);
-        canvas.DrawCircle(new Circle(150, 150, 50));
+        var sim = new DrawingShapesSimulation();
+        sim.RunDesktop();
     }
 }
