@@ -108,7 +108,10 @@ internal class DesktopAppController : IAppController
         {
             window.DoEvents();
 
-            var canvas = Graphics.GetOutputCanvas();
+            var renderer = Graphics.GetRenderer();
+            renderer.SetRenderTarget(Graphics.GetFrameTexture());
+
+            var canvas = Graphics.GetFrameCanvas();
 
             canvas.ResetState();
 

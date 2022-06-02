@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Canvas;
+using SimulationFramework.Drawing.Pipelines;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
@@ -125,6 +126,5 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
 
     public void Initialize(Application application)
     {
-        throw new NotImplementedException();
     }
 }

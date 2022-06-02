@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
-internal class ImplicitResource<T> : D3D11Object, IDisposable where T : class, IDisposable
+internal class LazyResource<T> : D3D11Object, IDisposable where T : class, IDisposable
 {
     private Func<T> valueFactory;
     private T value;
@@ -14,24 +14,23 @@ internal class ImplicitResource<T> : D3D11Object, IDisposable where T : class, I
     /// <summary>
     /// This should not be called outside of the DeviceResources class.
     /// </summary>
-    public ImplicitResource(DeviceResources resources, Func<T> valueFactory) : base(resources)
+    public LazyResource(DeviceResources resources, Func<T> valueFactory) : base(resources)
     {
         this.valueFactory = valueFactory;
     }
 
-    public T Value
+    public T GetValue()
     {
-        get
-        {
-            if (value is null)
-                value = valueFactory();
+        if (value is null)
+            value = valueFactory();
 
-            return value;
-        }
+        return value;
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
-        value.Dispose();
+        value?.Dispose();
+        value = null;
+        base.Dispose();
     }
 }

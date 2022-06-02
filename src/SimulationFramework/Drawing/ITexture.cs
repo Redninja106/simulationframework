@@ -39,7 +39,7 @@ public interface ITexture : IDisposable
     /// </summary>
     /// <param name="x">The x-coordinate of the pixel.</param>
     /// <param name="y">The y-coordinate of the pixel.</param>
-    ref Color GetPixel(int x, int y);
+    sealed ref Color GetPixel(int x, int y) => ref Pixels[y * Width + x];
 
     /// <summary>
     /// Opens a new canvas which draws to this texture.

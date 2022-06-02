@@ -1,12 +1,13 @@
-﻿using SimulationFramework.Drawing;
-using SimulationFramework.Drawing.Direct3D11.Buffers;
+﻿using SimulationFramework.Drawing.Direct3D11.Buffers;
 using SimulationFramework.Drawing.Direct3D11.Shaders;
+using SimulationFramework.Drawing.Pipelines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Vortice.Direct3D11;
+using Vortice.Direct3D11.Debug;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
@@ -75,11 +76,26 @@ internal sealed class D3D11Renderer : IRenderer
         DeviceContext.ClearRenderTargetView(currentRenderTarget.RenderTargetView, new(color.ToVector4()));
     }
 
-    public void UseBuffers<T>(IBuffer<T> vertexBuffer, IBuffer<int> indexBuffer) where T : unmanaged
+    public void BeginFrame()
+    {
+        SetViewport(new(0, 0, 0, 0));
+    }
+
+    public void VertexBuffer<T>(IBuffer<T> vertexBuffer) where T : unmanaged
     {
         if (vertexBuffer is not D3D11Buffer<T> d3dBuffer)
             throw new ArgumentException(null, nameof(vertexBuffer));
 
         DeviceContext.IASetVertexBuffer(0, d3dBuffer.GetInternalbuffer(BufferUsage.VertexBuffer), d3dBuffer.Stride);
+    }
+
+    public void IndexBuffer(IBuffer<int> indexBuffer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetViewport(Rectangle viewport)
+    {
+        DeviceContext.RSSetViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height);
     }
 }

@@ -37,6 +37,10 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Drawing\Scenes\" />
+  </ItemGroup>
   <PropertyGroup>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>	

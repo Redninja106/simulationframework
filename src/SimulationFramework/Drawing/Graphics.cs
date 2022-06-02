@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Drawing.Canvas;
+using SimulationFramework.Drawing.Pipelines;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,9 +20,14 @@ public static class Graphics
     /// Gets canvas which draws to the current frame.
     /// </summary>
     /// <returns></returns>
-    public static ICanvas GetOutputCanvas()
+    public static ICanvas GetFrameCanvas()
     {
         return Provider.GetFrameCanvas();
+    }
+
+    public static ITexture GetFrameTexture()
+    {
+        return Provider.GetFrameTexture();
     }
 
     public static IRenderer GetRenderer()
@@ -111,4 +117,6 @@ public static class Graphics
     {
         return Provider.CreateBuffer<T>(size, 0);
     }
+
+
 }

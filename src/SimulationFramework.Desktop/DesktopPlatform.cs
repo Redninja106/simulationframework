@@ -20,7 +20,8 @@ public sealed class DesktopPlatform : IAppPlatform
     public IWindow Window { get; }
 
     private DesktopSkiaFrameProvider frameProvider;
-    
+    private Func<IntPtr, IGraphicsProvider> graphics;
+
     public IAppController CreateController()
     {
         return new DesktopAppController(this.Window);
@@ -28,17 +29,25 @@ public sealed class DesktopPlatform : IAppPlatform
 
     private IGraphicsProvider CreateGraphics()
     {
-        frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
-        return new SkiaGraphicsProvider(frameProvider, name =>
+        if (graphics is null)
         {
-            Window.GLContext.TryGetProcAddress(name, out nint addr);
-            return addr;
-        });
+            frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
+            return new SkiaGraphicsProvider(frameProvider, name =>
+            {
+                Window.GLContext.TryGetProcAddress(name, out nint addr);
+                return addr;
+            });
+        }
+        else
+        {
+            return graphics(Window.Native.Win32.Value.Hwnd);
+        }
     }
 
-    public DesktopPlatform()
+    public DesktopPlatform(Func<IntPtr, IGraphicsProvider> graphics = null)
     {
         Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default);
+        this.graphics = graphics;
     }
 
     public void Dispose()

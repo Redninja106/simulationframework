@@ -13,12 +13,12 @@ namespace SimulationFramework.Drawing.Direct3D11;
 
 internal class D3D11Texture : D3D11Object, ITexture
 {
-    private ImplicitResource<ID3D11RenderTargetView> renderTargetView;
-    private ImplicitResource<ID3D11ShaderResourceView> shaderResourceView;
+    private LazyResource<ID3D11RenderTargetView> renderTargetView;
+    private LazyResource<ID3D11ShaderResourceView> shaderResourceView;
     
     public ID3D11Texture2D Texture { get; private set; }
-    public ID3D11RenderTargetView RenderTargetView => renderTargetView.Value;
-    public ID3D11ShaderResourceView ShaderResourceView => shaderResourceView.Value;
+    public ID3D11RenderTargetView RenderTargetView => renderTargetView.GetValue();
+    public ID3D11ShaderResourceView ShaderResourceView => shaderResourceView.GetValue();
 
     public D3D11Texture(DeviceResources resources, ID3D11Texture2D tex) : base(resources)
     {
@@ -58,7 +58,9 @@ internal class D3D11Texture : D3D11Object, ITexture
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        this.shaderResourceView?.Dispose();
+        this.renderTargetView?.Dispose();
+        this.Texture.Dispose();
     }
 
     public ref Color GetPixel(int x, int y)

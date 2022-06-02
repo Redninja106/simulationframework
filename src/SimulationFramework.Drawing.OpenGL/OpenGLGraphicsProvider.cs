@@ -1,4 +1,7 @@
-﻿namespace SimulationFramework.Drawing.OpenGL;
+﻿using SimulationFramework.Drawing.Canvas;
+using SimulationFramework.Drawing.Pipelines;
+
+namespace SimulationFramework.Drawing.OpenGL;
 
 public class OpenGLGraphicsProvider : IGraphicsProvider
 {
@@ -27,12 +30,22 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
         throw new NotImplementedException();
     }
 
+    public ICanvas GetFrameCanvas()
+    {
+        throw new NotImplementedException();
+    }
+
     public ITexture GetFrameTexture()
     {
         throw new NotImplementedException();
     }
 
     public IRenderer GetRenderer()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Initialize(Application application)
     {
         throw new NotImplementedException();
     }
