@@ -1,11 +1,11 @@
-﻿<h1 align="center">
+<h1 align="center">
 <img src="https://raw.githubusercontent.com/Redninja106/simulationframework/master/assets/logo-128x128.png"/>
 <br>SimulationFramework</br>
 </h1>
 
-SimulationFramework is a framework for creative coding, game development, and graphical apps built on .NET 6. It is designed with simplicity and ease of use in mind in order to cut down on development time for rapid prototyping. Making heavy use of interfaces, all major features are abstracted to make SimulationFramework completely dependency free and by extension completely cross-platform.
+SimulationFramework is a cross-platform library for creative coding, game development, and graphical apps built on .NET 6. Designed with simplicity and ease of use in mind, it cuts down on development time for quick and easy rapid prototyping. 
 
-⚠️ Currently, SimulationFramework is in a very early state of development. ⚠️
+⚠️ Currently, SimulationFramework is still in the early stages of development. ⚠️
 
 ## Features
 
@@ -18,6 +18,8 @@ SimulationFramework is a framework for creative coding, game development, and gr
 - **Input**: A simple input API that doesn't get in the way.
 
 - **[Dear ImGui](https://github.com/ocornut/imgui) Support**: Dear ImGui is completely built-in with zero setup.
+
+- **Abstract**: all features are provided through interfaces to make SimulationFramework completely dependency free and by extension completely cross-platform.
 
 ## Getting Started
 
@@ -60,12 +62,15 @@ public static void Main()
 Next, to start drawing. The `ICanvas` provided in `OnRender()` contains a variety methods for drawing.
 
 ```cs
+// the OnRender method is called each frame
 public override void OnRender(ICanvas canvas)
 {
     // don't forget to clear the screen each frame!
     canvas.Clear(Color.CornflowerBlue); 
+    
     // draw a 50 pixel wide red square at the mouse position
-    canvas.DrawRect(Mouse.Position, (50, 50), Color.Red, Alignment.Center); 
+    canvas.Fill(Color.Red);
+    canvas.DrawRect(Mouse.Position, new Vector2(50, 50)); 
 }
 ```
 To see more, go to [the wiki](https://github.com/Redninja106/simulationframework/wiki).
