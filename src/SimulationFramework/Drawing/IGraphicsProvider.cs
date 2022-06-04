@@ -24,7 +24,7 @@ public interface IGraphicsProvider : IAppComponent
     /// <param name="data">The initial raw bitmap data. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
     /// <param name="flags"></param>
     /// <returns>The new <see cref="ITexture"/>.</returns>
-    ITexture CreateTexture(int width, int height, Span<Color> data, TextureFlags flags);
+    ITexture CreateTexture(int width, int height, Span<Color> data, TextureOptions flags);
 
     /// <summary>
     /// Loads a bitmap from it's raw encoded data.
@@ -32,7 +32,7 @@ public interface IGraphicsProvider : IAppComponent
     /// <param name="encodedData"></param>
     /// <param name="flags"></param>
     /// <returns></returns>
-    ITexture LoadTexture(Span<byte> encodedData, TextureFlags flags = TextureFlags.None);
+    ITexture LoadTexture(Span<byte> encodedData, TextureOptions flags = TextureOptions.None);
 
     /// <summary>
     /// Clears all cached fonts.

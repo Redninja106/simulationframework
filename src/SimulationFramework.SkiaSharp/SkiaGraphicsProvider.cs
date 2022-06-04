@@ -44,7 +44,7 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
     }
 
 
-    public ITexture CreateTexture(int width, int height, Span<Color> data, TextureFlags flags = TextureFlags.None)
+    public ITexture CreateTexture(int width, int height, Span<Color> data, TextureOptions flags = TextureOptions.None)
     {
         var bitmap = new SkiaTexture(this, new SKBitmap(width, height), true);
 
@@ -55,7 +55,7 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         return bitmap;
     }
 
-    public ITexture LoadTexture(Span<byte> encodedData, TextureFlags flags = TextureFlags.None)
+    public ITexture LoadTexture(Span<byte> encodedData, TextureOptions flags = TextureOptions.None)
     {
         return new SkiaTexture(this, SKBitmap.Decode(encodedData), true);
     }
