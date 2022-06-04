@@ -51,6 +51,7 @@ public sealed class DesktopPlatform : IAppPlatform
         application.AddComponent(CreateGraphics());
         application.AddComponent(new RealtimeProvider());
         application.AddComponent(new DesktopInputComponent(this.Window));
+        application.AddComponent(new ImGuiNETProvider(new DesktopImGuiBackend(Window)));
         application.Dispatcher.Subscribe<ResizeMessage>(m =>
         {
             frameProvider?.Resize(m.Width, m.Height);

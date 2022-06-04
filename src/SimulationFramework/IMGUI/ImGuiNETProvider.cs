@@ -224,7 +224,7 @@ public unsafe sealed class ImGuiNETProvider : IImGuiProvider
 
     public void Initialize(Application application)
     {
-        application.Dispatcher.Subscribe<RenderMessage>(m => BeforeRender(), MessagePriority.Low);
         application.Dispatcher.Subscribe<RenderMessage>(m => BeforeRender(), MessagePriority.High);
+        application.Dispatcher.Subscribe<RenderMessage>(m => AfterRender(), MessagePriority.Low);
     }
 }

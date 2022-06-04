@@ -7,11 +7,11 @@ using SimulationFramework.Drawing;
 
 namespace SimulationFramework.Desktop;
 
-internal class WindowImGuiBackend : IImGuiNETBackend
+internal class DesktopImGuiBackend : IImGuiNETBackend
 {
     private ImGuiController imguiController;
 
-    public WindowImGuiBackend(IWindow window)
+    public DesktopImGuiBackend(IWindow window)
     {
         imguiController = new ImGuiController(window.CreateOpenGL(), window, window.CreateInput());
     }

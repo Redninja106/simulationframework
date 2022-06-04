@@ -51,7 +51,9 @@ public abstract class Simulation
 
         Application.Dispatcher.Subscribe<RenderMessage>(m =>
         {
+            m.Canvas.ResetState();
             OnRender(m.Canvas);
+            m.Canvas.Flush();
         });
 
         Application.Dispatcher.Subscribe<UninitializeMessage>(m =>
