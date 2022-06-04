@@ -31,7 +31,7 @@ internal sealed class SkiaTexture : ITexture
             bitmap.Dispose();
     }
 
-    public ICanvas OpenCanvas()
+    public ICanvas CreateCanvas()
     {
         return new SkiaCanvas(this.provider, this, new SKCanvas(bitmap), false);
     }
