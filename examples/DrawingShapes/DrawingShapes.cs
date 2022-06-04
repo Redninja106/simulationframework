@@ -8,8 +8,11 @@ namespace DrawingShapes;
 
 class DrawingShapesSimulation : Simulation
 {
+    ITexture logo;
+    
     public override void OnInitialize(AppConfig config)
     {
+        logo = Graphics.LoadTexture("./logo-512x512.png");
     }
 
     public override void OnRender(ICanvas canvas)
@@ -45,7 +48,7 @@ class DrawingShapesSimulation : Simulation
         {
             canvas.PushState();
             canvas.Translate(Mouse.Position);
-            canvas.DrawTexture(Graphics.LoadTexture("./logo-512x512.png"));
+            canvas.DrawTexture(logo);
             canvas.PopState();
         }
         
