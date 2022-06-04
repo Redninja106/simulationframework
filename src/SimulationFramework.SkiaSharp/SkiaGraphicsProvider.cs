@@ -44,9 +44,9 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
     }
 
 
-    public ITexture CreateTexture(int width, int height, Span<Color> data, TextureOptions flags = TextureOptions.None)
+    public ITexture CreateTexture(int width, int height, Span<Color> data, TextureOptions options = TextureOptions.None)
     {
-        var bitmap = new SkiaTexture(this, new SKBitmap(width, height), true);
+        var bitmap = new SkiaTexture(this, new SKBitmap(width, height), true, options);
 
         if (!data.IsEmpty)
         {
@@ -55,9 +55,9 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         return bitmap;
     }
 
-    public ITexture LoadTexture(Span<byte> encodedData, TextureOptions flags = TextureOptions.None)
+    public ITexture LoadTexture(Span<byte> encodedData, TextureOptions options = TextureOptions.None)
     {
-        return new SkiaTexture(this, SKBitmap.Decode(encodedData), true);
+        return new SkiaTexture(this, SKBitmap.Decode(encodedData), true, options);
     }
 
     public void Dispose()
