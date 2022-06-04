@@ -45,6 +45,12 @@ public abstract class CanvasState
     /// </para>
     /// </summary>
     public DrawMode DrawMode { get; private set; }
+    
+    public float FontSize { get; private set; }
+    
+    public FontStyle FontStyle { get; private set; }
+
+    public string FontName { get; private set; }
 
     protected virtual void Initialize(CanvasState other)
     {
@@ -62,22 +68,38 @@ public abstract class CanvasState
             UpdateFillTexture(null, Matrix3x2.Identity, TileMode.Clamp, TileMode.Clamp);
 
             UpdateDrawMode(DrawMode.Fill);
+
+            UpdateFont("Verdana");
+            UpdateFontStyle(16, FontStyle.Normal);
         }
         else
         {
-            UpdateClipRegion(other.ClipRegion);
-
-            UpdateTransform(other.Transform);
-
-            UpdateFillColor(other.FillColor);
-            UpdateGradient(other.Gradient);
-            UpdateFillTexture(other.FillTexture, other.FillTextureTransform, other.FillTextureTileModeX, other.FillTextureTileModeY);
-
-            UpdateStrokeColor(other.StrokeColor);
-            UpdateStrokeWidth(other.StrokeWidth);
-
-            UpdateDrawMode(other.DrawMode);
+            UpdateValues(other);
         }
+    }
+
+    private void UpdateValues(CanvasState other)
+    {
+        UpdateClipRegion(other.ClipRegion);
+
+        UpdateTransform(other.Transform);
+
+        UpdateFillColor(other.FillColor);
+        UpdateGradient(other.Gradient);
+        UpdateFillTexture(other.FillTexture, other.FillTextureTransform, other.FillTextureTileModeX, other.FillTextureTileModeY);
+
+        UpdateStrokeColor(other.StrokeColor);
+        UpdateStrokeWidth(other.StrokeWidth);
+
+        UpdateDrawMode(other.DrawMode);
+
+        UpdateFont(other.FontName);
+        UpdateFontStyle(other.FontSize, other.FontStyle);
+    }
+
+    internal protected void Reapply()
+    {
+        UpdateValues(this);
     }
 
     internal protected virtual void UpdateFillTexture(ITexture texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
@@ -121,5 +143,16 @@ public abstract class CanvasState
     internal protected virtual void UpdateDrawMode(DrawMode drawMode)
     {
         DrawMode = drawMode;
+    }
+
+    internal protected virtual void UpdateFontStyle(float size, FontStyle style)
+    {
+        this.FontSize = size;
+        this.FontStyle = style;
+    }
+
+    internal protected virtual void UpdateFont(string name)
+    {
+        this.FontName = name;
     }
 }

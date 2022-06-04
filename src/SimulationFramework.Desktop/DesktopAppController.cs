@@ -112,10 +112,7 @@ internal class DesktopAppController : IAppController
 
             canvas.ResetState();
 
-            using (canvas.PushState())
-            {
-                dispatcher.Dispatch(new RenderMessage(canvas));
-            }
+            dispatcher.Dispatch(new RenderMessage(canvas));
 
             canvas.Flush();
 

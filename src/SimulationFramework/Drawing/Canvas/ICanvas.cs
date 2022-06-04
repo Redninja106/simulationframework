@@ -391,17 +391,15 @@ public interface ICanvas : IDisposable
     /// <param name="styles">The style of the text.</param>
     /// <param name="size">The size of the font, in pixels.</param>
     /// <returns><see langword="true"/> if the font was successfully loaded, otherwise <see langword="false"/>.</returns>
-    bool SetFont(string fontName, TextStyles styles, float size);
-
-    // TODO: support for custom fonts? perhaps font objects?
-
-    // state save/load stack operations
+    sealed void Font(string name) => State.UpdateFont(name);
+    
+    sealed void FontStyle(float size, FontStyle style) => State.UpdateFontStyle(size, style);
 
     /// <summary>
     /// Pushes the current transformation matrix, clipping rectangle, and drawing state onto the stack.
     /// </summary>
     /// <returns>A <see cref="CanvasSession"/> which, when disposed, calls <see cref="PopState"/> on this canvas.</returns>
-    CanvasSession PushState();
+    void PushState();
 
     /// <summary>
     /// Pops a transformation matrix, clipping rectangle, and drawing state off the top of the stack.

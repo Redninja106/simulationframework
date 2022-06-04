@@ -10,12 +10,12 @@ namespace SimulationFramework.Drawing.Canvas;
 /// Options for drawing text.
 /// </summary>
 [Flags]
-public enum TextStyles
+public enum FontStyle
 {
     /// <summary>
     /// Normal text.
     /// </summary>
-    Default = 0,
+    Normal = 0,
     ///
     Bold = 1 << 0,
     /// 

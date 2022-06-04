@@ -30,7 +30,6 @@ internal sealed class SkiaCanvas : ICanvas
         this.provider = provider;
         this.canvas = canvas;
         this.owner = owner;
-
         ResetState();
     }
 
@@ -89,7 +88,7 @@ internal sealed class SkiaCanvas : ICanvas
         bool shouldClose = true;
         shouldClose &= polygon[0] != polygon[polygon.Length - 1];
         shouldClose &= (this.State.DrawMode == DrawMode.Fill || this.State.DrawMode == DrawMode.Gradient);
-
+        path.FillType = SKPathFillType.EvenOdd;
         fixed (Vector2* polygonPtr = polygon)
             SkiaNativeApi.sk_path_add_poly(path.Handle, polygonPtr, polygon.Length, shouldClose);
 
@@ -102,6 +101,38 @@ internal sealed class SkiaCanvas : ICanvas
         currentState.Paint.MeasureText(text, ref skbounds);
         Rectangle bounds = new(position, new(skbounds.Width, skbounds.Height), alignment);
         canvas.DrawText(text, bounds.X - skbounds.Left, bounds.Y - skbounds.Top, currentState.Paint);
+
+        if (currentState.FontStyle.HasFlag(FontStyle.Underline))
+        {
+            var font = currentState.Paint.FontMetrics;
+
+            using var underline = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = font.UnderlineThickness ?? 0,
+                Color = currentState.FillColor.AsSKColor()
+            };
+
+            float y = bounds.Y + font.CapHeight + (font.UnderlinePosition ?? 0);
+
+            canvas.DrawLine(bounds.X, y, bounds.X + bounds.Width, y, underline);
+        }
+        
+        if (currentState.FontStyle.HasFlag(FontStyle.Strikethrough))
+        {
+            var font = currentState.Paint.FontMetrics;
+
+            using var strikethrough = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = font.StrikeoutThickness ?? 0,
+                Color = currentState.FillColor.AsSKColor()
+            };
+
+            float y = bounds.Y + font.CapHeight + (font.StrikeoutPosition ?? 0);
+
+            canvas.DrawLine(bounds.X, y, bounds.X + bounds.Width, y, strikethrough);
+        }
     }
 
     public Vector2 MeasureText(string text, float maxWidth, out int charsMeasured)
@@ -124,17 +155,10 @@ internal sealed class SkiaCanvas : ICanvas
         return new(bounds.Width, bounds.Height);
     }
 
-    public bool SetFont(string fontName, TextStyles styles, float size)
-    {
-        throw new NotImplementedException();
-    }
-
-    public CanvasSession PushState()
+    public void PushState()
     {
         stateStack.Push(currentState);
         currentState = new SkiaCanvasState(this.GetSKCanvas(), currentState);
-        
-        return new(this);
     }
 
     public void PopState()
@@ -145,6 +169,7 @@ internal sealed class SkiaCanvas : ICanvas
             throw new InvalidOperationException();
 
         currentState = stateStack.Pop();
+        currentState.Apply();
     }
 
     public void ResetState()

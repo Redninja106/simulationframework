@@ -17,7 +17,7 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
     internal readonly ISkiaFrameProvider frameProvider;
 
     internal SkiaCanvas frameCanvas;
-    internal Dictionary<(string fontName, TextStyles styles, int size), SKFont> fonts = new(); 
+    internal Dictionary<(string fontName, FontStyle styles, int size), SKFont> fonts = new(); 
 
     public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate getProcAddress)
     {
@@ -80,14 +80,14 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         }
     }
 
-    public SKFont GetFont(string fontName, TextStyles styles, int size)
+    public SKFont GetFont(string fontName, FontStyle styles, int size)
     {
         if (!fonts.ContainsKey((fontName, styles, size)))
         {
             var fontStyle = new SKFontStyle(
-                styles.HasFlag(TextStyles.Bold) ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
+                styles.HasFlag(FontStyle.Bold) ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
                 SKFontStyleWidth.Normal,
-                styles.HasFlag(TextStyles.Italic) ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright
+                styles.HasFlag(FontStyle.Italic) ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright
                 );
 
             var typeface = SKTypeface.FromFamilyName(fontName, fontStyle);
