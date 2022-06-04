@@ -3,6 +3,7 @@ using Silk.NET.Input;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.OpenGL;
 using SimulationFramework.IMGUI;
+using SimulationFramework.Drawing;
 
 namespace SimulationFramework.Desktop;
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Canvas;
 using SkiaSharp;
 
