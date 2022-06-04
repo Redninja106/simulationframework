@@ -62,12 +62,15 @@ public static void Main()
 Next, to start drawing. The `ICanvas` provided in `OnRender()` contains a variety methods for drawing.
 
 ```cs
+// the OnRender method is called each frame
 public override void OnRender(ICanvas canvas)
 {
     // don't forget to clear the screen each frame!
     canvas.Clear(Color.CornflowerBlue); 
+    
     // draw a 50 pixel wide red square at the mouse position
-    canvas.DrawRect(Mouse.Position, (50, 50), Color.Red, Alignment.Center); 
+    canvas.Fill(Color.Red);
+    canvas.DrawRect(Mouse.Position, new Vector2(50, 50)); 
 }
 ```
 To see more, go to [the wiki](https://github.com/Redninja106/simulationframework/wiki).
