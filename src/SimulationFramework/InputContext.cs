@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimulationFramework.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -123,7 +124,11 @@ public sealed class InputContext : IAppComponent
     {
     }
     
-    public void Initialize(Application simulation)
+    public void Initialize(Application application)
     {
+        application.Dispatcher.Subscribe<FrameBeginMessage>(m =>
+        {
+            NewFrame();
+        }, MessagePriority.High);
     }
 }

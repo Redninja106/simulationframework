@@ -19,8 +19,12 @@ public sealed class MessageDispatcher
     {
         //message.DispatchTime = Time.TotalTime;
 
-        var e = events.First(e=>e.Type == typeof(T));
-        foreach (var listener in e.Listeners)
+        var e = events.Where(e=>e.Type == typeof(T));
+
+        if (!e.Any())
+            return;
+
+        foreach (var listener in e.First().Listeners)
         {
             ((Action<T>)listener.action)(message);
         }    

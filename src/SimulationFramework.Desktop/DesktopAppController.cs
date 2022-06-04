@@ -106,6 +106,8 @@ internal class DesktopAppController : IAppController
     
         while (isRunning)
         {
+            dispatcher.Dispatch(new FrameBeginMessage());
+
             window.DoEvents();
 
             var canvas = Graphics.GetOutputCanvas();
@@ -116,7 +118,8 @@ internal class DesktopAppController : IAppController
 
             canvas.Flush();
 
-            window.GLContext.SwapBuffers();          
+            window.GLContext.SwapBuffers();
+            dispatcher.Dispatch(new FrameEndMessage());
         }
 
         dispatcher.Dispatch(new UninitializeMessage());
