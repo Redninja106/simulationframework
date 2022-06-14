@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SFSLPrototype.Nodes;
+namespace SimulationFramework.SFSL.Nodes;
 
 public record BufferNode(TokenNode BufferKeyword, TokenNode OpenCaret, TokenNode Type, TokenNode CloseCaret, TokenNode Name, TokenNode Semicolon) : Node()
 {

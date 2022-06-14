@@ -1,4 +1,4 @@
-namespace SFSLPrototype.Nodes;
+namespace SimulationFramework.SFSL.Nodes;
 
 
 public abstract record Node

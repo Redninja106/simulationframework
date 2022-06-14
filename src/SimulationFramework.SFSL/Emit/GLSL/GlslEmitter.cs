@@ -5,9 +5,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using SFSLPrototype.Nodes;
+using SimulationFramework.SFSL.Nodes;
 
-namespace SFSLPrototype.Emit.GLSL;
+namespace SimulationFramework.SFSL.Emit.GLSL;
 
 internal class GlslEmitter : Emitter
 {

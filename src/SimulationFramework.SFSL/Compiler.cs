@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SFSLPrototype.Nodes;
-using SFSLPrototype.Emit;
-using SFSLPrototype.Emit.HLSL;
+using SimulationFramework.SFSL.Nodes;
+using SimulationFramework.SFSL.Emit;
+using SimulationFramework.SFSL.Emit.HLSL;
 
-namespace SFSLPrototype;
+namespace SimulationFramework.SFSL;
 
 public class Compiler
 {
@@ -15,7 +15,7 @@ public class Compiler
     {
         var context = new CompilationContext();
 
-        var lexer = new Lexer(source);
+        var lexer = new Lexer(context, source);
 
         var documentBuilder = new DocumentBuilder(context);
 

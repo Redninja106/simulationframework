@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SFSLPrototype.Nodes;
+namespace SimulationFramework.SFSL.Nodes;
 
 public record StructNode(TokenNode structKeyword, TokenNode identifierNode, TokenNode openBracket, VariableNode[] Members, TokenNode closeBracket) : Node
 {

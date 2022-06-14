@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SFSLPrototype.Nodes;
+using SimulationFramework.SFSL.Nodes;
 
-namespace SFSLPrototype;
+namespace SimulationFramework.SFSL;
 
 public record TokenNode : Node
 {

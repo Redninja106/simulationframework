@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SFSLPrototype.Nodes;
+namespace SimulationFramework.SFSL.Nodes;
 
 public record VariableDeclarationStatement(TokenNode Type, TokenNode Name, TokenNode EqualsOrSemicolon, Expression Initializer, TokenNode Semicolon) : Statement
 {

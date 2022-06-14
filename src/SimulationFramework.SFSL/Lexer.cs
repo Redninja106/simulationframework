@@ -4,15 +4,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SFSLPrototype;
+namespace SimulationFramework.SFSL;
 
 internal class Lexer
 {
+    private readonly CompilationContext context;
+
     string source;
 
-    public Lexer(string source)
+    private readonly string[] operators;
+    private readonly char[] idenifierChars;
+    private readonly string[] validWhitespace;
+    
+    public Lexer(CompilationContext context, string source)
     {
+        this.context = context;
         this.source = source;
+        //System.Text.Json.JsonDocument.Parse()
     }
 
     public TokenNode[] GetTokens()

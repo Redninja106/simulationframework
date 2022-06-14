@@ -4,27 +4,26 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SFSLPrototype.Nodes;
+using SimulationFramework.SFSL.Nodes;
 
-namespace SFSLPrototype.Emit.HLSL;
+namespace SimulationFramework.SFSL.Emit.HLSL;
 
 internal class HlslEmitter : Emitter
 {
-    private const string EMITTED_PREFIX = "_e";
-    private const string cbufferName = EMITTED_PREFIX + "_cbuffer";
+    private const string EMITTED_PREFIX = "___";
     private int nextTextureId = 0;
 
     private List<(string type, string name)> cbufferMembers = new();
 
     public HlslEmitter(TextWriter writer) : base(writer)
     {
-        Out.WriteLine($"struct {cbufferName};");
+        Out.WriteLine($"struct {EMITTED_PREFIX}cbuffer;");
     }
 
     public override void Flush()
     {
         Out.WriteLine();
-        Out.WriteLine($"struct {cbufferName} : register(b0){Environment.NewLine}{{");
+        Out.WriteLine($"struct {EMITTED_PREFIX}cbuffer : register(b0){Environment.NewLine}{{");
         foreach (var member in cbufferMembers)
         {
             Out.WriteLine($"\t{member.type} {member.name};");
@@ -55,8 +54,8 @@ internal class HlslEmitter : Emitter
         // Texture2D Texture : register(t0);
         // sampler Sampler : register(s0);
         Out.WriteLine();
-        Out.WriteLine($"Texture2D {EMITTED_PREFIX}_{node.NameToken.Value}_texture : register(t{nextTextureId});");
-        Out.WriteLine($"sampler {EMITTED_PREFIX}_{node.NameToken.Value}_sampler : register(s{nextTextureId});");
+        Out.WriteLine($"Texture2D {node.NameToken.Value} : register(t{nextTextureId});");
+        Out.WriteLine($"sampler {EMITTED_PREFIX}_{node.NameToken.Value}Sampler : register(s{nextTextureId});");
 
         nextTextureId++;
 

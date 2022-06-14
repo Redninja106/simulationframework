@@ -5,7 +5,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SFSLPrototype.Nodes;
+namespace SimulationFramework.SFSL.Nodes;
 
 public record VariableNode(TokenNode InOrOutModifier, TokenNode Type, TokenNode Name, TokenNode Semicolon) : Node
 {
