@@ -46,13 +46,13 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
 
     public ITexture CreateTexture(int width, int height, Span<Color> data, TextureOptions options = TextureOptions.None)
     {
-        if (data.Length != width * height)
-            throw new ArgumentException("data.Length != width * height");
-
         var texture = new SkiaTexture(this, new SKBitmap(width, height), true, options);
 
         if (!data.IsEmpty)
         {
+            if (data.Length != width * height)
+                throw new ArgumentException("data.Length != width * height");
+
             data.CopyTo(texture.Pixels);
             texture.ApplyChanges();
         }
