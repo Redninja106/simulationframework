@@ -1,6 +1,6 @@
 ﻿using SimulationFramework.Drawing.Direct3D11.Buffers;
 using SimulationFramework.Drawing.Direct3D11.Shaders;
-using SimulationFramework.Drawing.Pipelines;
+using SimulationFramework.Drawing.Pipeline;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +37,7 @@ internal sealed class D3D11Renderer : IRenderer
 
         if (rs == null)
         {
-            rs = resources.Device.CreateRasterizerState(RasterizerDescription.CullNone);
+            rs = resources.Device.CreateRasterizerState(RasterizerDescription.CullFront);
         }
 
         DeviceContext.RSSetState(rs);
@@ -57,7 +57,7 @@ internal sealed class D3D11Renderer : IRenderer
         DeviceContext.Draw(kind.GetVertexCount(count), offset);
     }
 
-    public void UseShader(IShader shader)
+    public void Shader(IShader shader)
     {
         shader.Apply(this);
     }

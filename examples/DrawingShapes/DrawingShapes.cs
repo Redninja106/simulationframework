@@ -1,5 +1,5 @@
 ﻿using SimulationFramework;
-using SimulationFramework.Drawing.Canvas;
+using SimulationFramework.Drawing;
 using System;
 using System.Numerics;
 
@@ -7,12 +7,17 @@ namespace DrawingShapes;
 
 class DrawingShapesSimulation : Simulation
 {
+    ITexture image;
     public override void OnInitialize(AppConfig config)
     {
+        image = Graphics.LoadTexture("logo-512x512.png");
     }
 
     public override void OnRender(ICanvas canvas)
     {
+        canvas.DrawTexture(image);
+        return;
+
         canvas.Clear(Color.Gray);
 
         canvas.Fill(Color.Red);

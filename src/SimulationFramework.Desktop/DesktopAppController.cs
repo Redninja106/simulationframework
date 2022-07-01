@@ -109,7 +109,7 @@ internal class DesktopAppController : IAppController
             window.DoEvents();
 
             var renderer = Graphics.GetRenderer();
-            renderer.SetRenderTarget(Graphics.GetFrameTexture());
+            renderer?.SetRenderTarget(Graphics.GetFrameTexture());
 
             var canvas = Graphics.GetFrameCanvas();
 

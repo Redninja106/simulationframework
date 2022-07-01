@@ -1,5 +1,4 @@
-﻿using SimulationFramework.Drawing.Canvas;
-using SimulationFramework.Drawing.Pipelines;
+﻿using SimulationFramework.Drawing.Pipeline;
 using System;
 
 namespace SimulationFramework.Drawing;

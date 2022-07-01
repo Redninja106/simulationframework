@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SimulationFramework.Direct3D11\SimulationFramework.Drawing.Direct3D11.csproj" />
-    <ProjectReference Include="..\SimulationFramework.SkiaSharp\SimulationFramework.SkiaSharp.csproj" />
     <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
   </ItemGroup>
 

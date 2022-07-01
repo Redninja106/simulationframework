@@ -1,5 +1,4 @@
 ﻿using SimulationFramework.Drawing;
-using SimulationFramework.Drawing.Canvas;
 using SimulationFramework.Messaging;
 using System;
 using System.Collections.Generic;
@@ -57,6 +56,9 @@ public sealed class Application : IDisposable
 
     public void AddComponent<T>(T component) where T : IAppComponent
     {
+        if (component is null)
+            return;
+
         if (components.Any(c => c is T))
             throw new Exception("A component of type " + typeof(T).Name + " already exists");
 

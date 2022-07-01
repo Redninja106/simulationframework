@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Silk.NET.Windowing;
-using SimulationFramework.SkiaSharp;
 using ImGuiNET;
 using SimulationFramework.IMGUI;
 using SimulationFramework.Drawing;
@@ -19,8 +18,8 @@ public sealed class DesktopPlatform : IAppPlatform
 {
     public IWindow Window { get; }
 
-    private DesktopSkiaFrameProvider frameProvider;
     private Func<IntPtr, IGraphicsProvider> graphics;
+
 
     public IAppController CreateController()
     {
@@ -29,19 +28,7 @@ public sealed class DesktopPlatform : IAppPlatform
 
     private IGraphicsProvider CreateGraphics()
     {
-        if (graphics is null)
-        {
-            frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
-            return new SkiaGraphicsProvider(frameProvider, name =>
-            {
-                Window.GLContext.TryGetProcAddress(name, out nint addr);
-                return addr;
-            });
-        }
-        else
-        {
-            return graphics(Window.Native.Win32.Value.Hwnd);
-        }
+        return graphics != null ? graphics(Window.Native.Win32.Value.Hwnd) : null;
     }
 
     public DesktopPlatform(Func<IntPtr, IGraphicsProvider> graphics = null)
@@ -60,9 +47,5 @@ public sealed class DesktopPlatform : IAppPlatform
         application.AddComponent(CreateGraphics());
         application.AddComponent(new RealtimeProvider());
         application.AddComponent(new DesktopInputComponent(this.Window));
-        application.Dispatcher.Subscribe<ResizeMessage>(m =>
-        {
-            frameProvider?.Resize(m.Width, m.Height);
-        });
     }
 }

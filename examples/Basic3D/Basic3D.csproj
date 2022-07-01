@@ -10,7 +10,14 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\SimulationFramework.Desktop\SimulationFramework.Desktop.csproj" />
     <ProjectReference Include="..\..\src\SimulationFramework.Direct3D11\SimulationFramework.Drawing.Direct3D11.csproj" />
+    <ProjectReference Include="..\..\src\SimulationFramework.SFSL\SimulationFramework.SFSL.csproj" />
     <ProjectReference Include="..\..\src\SimulationFramework\SimulationFramework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="texture.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

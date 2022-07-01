@@ -1,7 +1,7 @@
-﻿using SimulationFramework.Drawing.Canvas;
+﻿using SimulationFramework.Drawing.Imaging.PNG;
 using SimulationFramework.Drawing.Direct3D11.Buffers;
 using SimulationFramework.Drawing.Direct3D11.Shaders;
-using SimulationFramework.Drawing.Pipelines;
+using SimulationFramework.Drawing.Pipeline;
 using SimulationFramework.Messaging;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -65,7 +65,15 @@ public class D3D11Graphics : IGraphicsProvider
 
     public ITexture LoadTexture(Span<byte> encodedData, ResourceOptions flags)
     {
-        throw new NotImplementedException();
+        using var stream = new MemoryStream(encodedData.Length);
+        stream.Write(encodedData);
+        stream.Position = 0;
+
+        var decoder = new PNGDecoder(stream);
+
+        //var result = Graphics.Create
+
+        return null;
     }
 
     public void SetResourceLifetime(int lifetimeInFrames)

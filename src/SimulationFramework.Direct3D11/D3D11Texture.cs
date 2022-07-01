@@ -1,6 +1,4 @@
-﻿using SimulationFramework.Drawing;
-using SimulationFramework.Drawing.Canvas;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -11,7 +9,7 @@ using Vortice.Direct3D11;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
-internal class D3D11Texture : D3D11Object, ITexture
+internal unsafe class D3D11Texture : D3D11Object, ITexture
 {
     private LazyResource<ID3D11RenderTargetView> renderTargetView;
     private LazyResource<ID3D11ShaderResourceView> shaderResourceView;
@@ -19,6 +17,8 @@ internal class D3D11Texture : D3D11Object, ITexture
     public ID3D11Texture2D Texture { get; private set; }
     public ID3D11RenderTargetView RenderTargetView => renderTargetView.GetValue();
     public ID3D11ShaderResourceView ShaderResourceView => shaderResourceView.GetValue();
+
+    private Color[] cpuData;
 
     public D3D11Texture(DeviceResources resources, ID3D11Texture2D tex) : base(resources)
     {
@@ -39,21 +39,53 @@ internal class D3D11Texture : D3D11Object, ITexture
         {
             Width = width,
             Height = height,
+            SampleDescription = new(1, 0),
+            ArraySize = 1,
+            BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
+            Usage = ResourceUsage.Default,
+            CpuAccessFlags = CpuAccessFlags.Read | CpuAccessFlags.Write,
+            Format = Vortice.DXGI.Format.B8G8R8A8_UNorm,
         };
-
+        
         fixed (void* dataPtr = data)
         {
-            Texture = resources.Device.CreateTexture2D(desc, new[] { new SubresourceData(dataPtr, width * Unsafe.SizeOf<Color>()) });
+            SubresourceData[] subresourceData = null;
+            
+            if (!data.IsEmpty)
+            {
+                cpuData = new Color[Width * height];
+                data.CopyTo(cpuData.AsSpan());
+
+                subresourceData = new[] { new SubresourceData(dataPtr, width * Unsafe.SizeOf<Color>()) };
+            }
+            
+            Texture = resources.Device.CreateTexture2D(desc, subresourceData);
         }
+
+        renderTargetView = new(resources, CreateRenderTargetView);
+        shaderResourceView = new(resources, CreateShaderResourceView);
     }
 
     public int Width { get; }
     public int Height { get; }
-    public Span<Color> Pixels { get => throw new NotImplementedException(); }
+    public Span<Color> Pixels => GetPixels();
 
     public void ApplyChanges()
     {
-        throw new NotImplementedException();
+        if (cpuData == null)
+            return;
+
+        Resources.ImmediateRenderer.DeviceContext.UpdateSubresource(cpuData.AsSpan(), this.Texture, rowPitch: Width * sizeof(Color));
+    }
+
+    private Span<Color> GetPixels()
+    {
+        if (cpuData is null)
+        {
+            cpuData = new Color[Width * Height];
+        }
+
+        return cpuData.AsSpan();
     }
 
     public void Dispose()

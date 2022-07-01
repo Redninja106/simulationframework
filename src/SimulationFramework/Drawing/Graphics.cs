@@ -1,9 +1,11 @@
-﻿using SimulationFramework.Drawing.Canvas;
-using SimulationFramework.Drawing.Pipelines;
+﻿using SimulationFramework.Drawing.Imaging.PNG;
+using SimulationFramework.Drawing.Pipeline;
+using SimulationFramework.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -70,9 +72,24 @@ public static class Graphics
     /// <param name="encodedBytes">A span of the bytes of a supported image file.</param>
     /// <param name="flags">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture LoadTexture(Span<byte> encodedBytes, ResourceOptions flags = ResourceOptions.None)
+    public static unsafe ITexture LoadTexture(Span<byte> encodedBytes, ResourceOptions flags = ResourceOptions.None)
     {
-        return Provider.LoadTexture(encodedBytes, flags);
+        fixed (byte* encodedBytesPtr = encodedBytes)
+        {
+            using var stream = new UnmanagedMemoryStream(encodedBytesPtr, encodedBytes.Length);
+            var decoder = new PNGDecoder(stream);
+
+            var metadata = decoder.Metadata;
+
+            stream.Position = 0;
+
+            var texture = CreateTexture((int)metadata.Width, (int)metadata.Height);
+
+            decoder.GetColors(texture.Pixels);
+            texture.ApplyChanges();
+
+            return texture;
+        }
     }
 
     /// <summary>

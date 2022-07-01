@@ -5,8 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using SimulationFramework.Drawing;
-using SimulationFramework.Drawing.Canvas;
-using SimulationFramework.Drawing.Pipelines;
+using SimulationFramework.Drawing.Pipeline;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
@@ -121,7 +120,7 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
 
     public IRenderer GetRenderer()
     {
-        throw new NotImplementedException();
+        return null;
     }
 
     public void Initialize(Application application)

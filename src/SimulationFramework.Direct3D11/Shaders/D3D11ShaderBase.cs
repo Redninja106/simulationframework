@@ -1,4 +1,4 @@
-﻿using SimulationFramework.Drawing.Pipelines;
+﻿using SimulationFramework.Drawing.Pipeline;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -137,7 +137,7 @@ internal abstract class D3D11ShaderBase<T> : D3D11Object, IShader where T : ID3D
 
     private ID3D11SamplerState UpdateSampler(ID3D11SamplerState samplerState, TileMode tileMode)
     {
-        if (samplerState.Description.AddressU == TileModeToAddressMode(tileMode))
+        if (samplerState is not null && samplerState.Description.AddressU == TileModeToAddressMode(tileMode))
         {
             // the existing state is good!
             return samplerState;
@@ -204,17 +204,17 @@ internal abstract class D3D11ShaderBase<T> : D3D11Object, IShader where T : ID3D
         }
     }
 
-    public void GetVariable<T>(string name, out T value) where T : unmanaged
-    {
-        throw new NotImplementedException();
-    }
-
     public T1 GetVariable<T1>(string name) where T1 : unmanaged
     {
         throw new NotImplementedException();
     }
 
     public ITexture GetTexture(string name)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IBuffer<T1> GetBuffer<T1>(string name) where T1 : unmanaged
     {
         throw new NotImplementedException();
     }

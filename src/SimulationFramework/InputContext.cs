@@ -123,7 +123,11 @@ public sealed class InputContext : IAppComponent
     {
     }
     
-    public void Initialize(Application simulation)
+    public void Initialize(Application application)
     {
+        application.Dispatcher.Subscribe<Messaging.RenderMessage>(m =>
+        {
+            NewFrame();
+        }, Messaging.MessagePriority.Low);
     }
 }

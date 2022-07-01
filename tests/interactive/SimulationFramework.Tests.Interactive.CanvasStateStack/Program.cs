@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using SimulationFramework;
 using SimulationFramework.Desktop;
-using SimulationFramework.Drawing.Canvas;
+using SimulationFramework.Drawing;
 
 class Program : Simulation
 {
