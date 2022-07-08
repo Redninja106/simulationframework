@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
-namespace SimulationFramework.Drawing.Canvas;
+namespace SimulationFramework.Drawing;
 
 /// <summary>
 /// Enables the rendering shapes to a texture.
@@ -50,7 +50,7 @@ public interface ICanvas : IDisposable
         State.UpdateFillColor(color);
         State.UpdateDrawMode(DrawMode.Fill);
     }
-    
+
     /// <summary>
     /// Configures the canvas to fill shapes using the provided gradient.
     /// </summary>
@@ -63,17 +63,17 @@ public interface ICanvas : IDisposable
     /// <summary>
     /// Configures the canvas to outline shapes with the provided color.
     /// </summary>
-    sealed void Stroke(Color color) 
+    sealed void Stroke(Color color)
     {
         State.UpdateStrokeColor(color);
         State.UpdateDrawMode(DrawMode.Stroke);
     }
-    
+
     /// <summary>
     /// Sets the stroke width of the canvas.
     /// </summary>
     sealed void StrokeWidth(float width) => State.UpdateStrokeWidth(width);
-    
+
     /// <summary>
     /// Sets the clipping rectangle of the canvas.
     /// </summary>
@@ -84,7 +84,7 @@ public interface ICanvas : IDisposable
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     sealed void Fill(ITexture texture) => Fill(texture, Matrix3x2.Identity);
-    
+
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
     /// </summary>
@@ -93,7 +93,7 @@ public interface ICanvas : IDisposable
         State.UpdateFillTexture(texture, transform, tileModeX, tileModeY);
         State.UpdateDrawMode(DrawMode.Textured);
     }
-    
+
     /// <summary>
     /// Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <see cref="SetStrokeWidth(float)"/>.
     /// </summary>
@@ -392,7 +392,7 @@ public interface ICanvas : IDisposable
     /// <param name="size">The size of the font, in pixels.</param>
     /// <returns><see langword="true"/> if the font was successfully loaded, otherwise <see langword="false"/>.</returns>
     sealed void Font(string name) => State.UpdateFont(name);
-    
+
     sealed void FontStyle(float size, FontStyle style) => State.UpdateFontStyle(size, style);
 
     /// <summary>

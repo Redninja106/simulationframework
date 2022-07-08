@@ -1,5 +1,4 @@
-﻿using SimulationFramework.Drawing.Canvas;
-using System;
+﻿using System;
 
 namespace SimulationFramework.Drawing;
 

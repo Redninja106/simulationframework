@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SimulationFramework.Drawing.Canvas;
+namespace SimulationFramework.Drawing;
 
 /// <summary>
 /// Options for configuring the behavior of an <see cref="ICanvas"/> when drawing shapes. See <see cref="ICanvas.DrawMode"/>.

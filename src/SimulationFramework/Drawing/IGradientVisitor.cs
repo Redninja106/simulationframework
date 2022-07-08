@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Drawing.Canvas;
+namespace SimulationFramework.Drawing;
 
 public interface IGradientVisitor
 {

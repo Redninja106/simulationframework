@@ -5,7 +5,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Drawing.Canvas;
+namespace SimulationFramework.Drawing;
 
 /// <summary>
 /// Provides access to state-specific data of an <see cref="ICanvas"/>.
@@ -40,14 +40,14 @@ public abstract class CanvasState
     /// <summary>
     /// Gets or sets the drawing mode of the canvas.
     /// <para>
-    /// Each kind of <see cref="Canvas.DrawMode"/> has it's own state in the canvas, 
+    /// Each kind of <see cref="Drawing.DrawMode"/> has it's own state in the canvas, 
     /// so setting this property will use whatever state was last set for that value.
     /// </para>
     /// </summary>
     public DrawMode DrawMode { get; private set; }
-    
+
     public float FontSize { get; private set; }
-    
+
     public FontStyle FontStyle { get; private set; }
 
     public string FontName { get; private set; }
@@ -147,12 +147,12 @@ public abstract class CanvasState
 
     internal protected virtual void UpdateFontStyle(float size, FontStyle style)
     {
-        this.FontSize = size;
-        this.FontStyle = style;
+        FontSize = size;
+        FontStyle = style;
     }
 
     internal protected virtual void UpdateFont(string name)
     {
-        this.FontName = name;
+        FontName = name;
     }
 }

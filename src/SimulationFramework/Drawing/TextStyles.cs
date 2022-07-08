@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Drawing.Canvas;
+namespace SimulationFramework.Drawing;
 
 /// <summary>
 /// Options for drawing text.

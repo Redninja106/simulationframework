@@ -1,4 +1,4 @@
-﻿using SimulationFramework.Drawing.Canvas;
+﻿using SimulationFramework.Drawing;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
