@@ -11,7 +11,7 @@ public static class SimulationExtensions
 {
     public static void RunDesktop(this Simulation simulation)
     {
-        using var platform = new DesktopPlatform();
+        using var platform = DesktopAppPlatform.CreateForCurrentPlatform();
         simulation.Run(platform);
     }
 }

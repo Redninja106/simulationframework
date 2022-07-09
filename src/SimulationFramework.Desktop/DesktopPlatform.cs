@@ -9,52 +9,31 @@ using ImGuiNET;
 using SimulationFramework.IMGUI;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
+using SimulationFramework.Desktop.Windows;
 
 namespace SimulationFramework.Desktop;
 
 /// <summary>
 /// Implements a simulation environment which runs the simulation in a window.
 /// </summary>
-public sealed class DesktopPlatform : IAppPlatform
+public abstract class DesktopAppPlatform : IAppPlatform
 {
-    public IWindow Window { get; }
 
-    private DesktopSkiaFrameProvider frameProvider;
+    public abstract IAppController CreateController();
+    public abstract void Initialize(Application application);
     
-    public IAppController CreateController()
+    public static DesktopAppPlatform CreateForCurrentPlatform()
     {
-        return new DesktopAppController(this.Window);
-    }
-
-    private IGraphicsProvider CreateGraphics()
-    {
-        frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
-        return new SkiaGraphicsProvider(frameProvider, name =>
+        if (OperatingSystem.IsWindows())
         {
-            Window.GLContext.TryGetProcAddress(name, out nint addr);
-            return addr;
-        });
+            return new WindowsAppPlatform();
+        }
+        
+        throw new NotSupportedException("The the SimulationFramework.Desktop project does not support this platform!");
     }
 
-    public DesktopPlatform()
+    public virtual void Dispose()
     {
-        Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default);
-    }
-
-    public void Dispose()
-    {
-    }
-
-    public void Initialize(Application application)
-    {
-        Window.Initialize();
-        application.AddComponent(CreateGraphics());
-        application.AddComponent(new RealtimeProvider());
-        application.AddComponent(new DesktopInputComponent(this.Window));
-        application.AddComponent(new ImGuiNETProvider(new DesktopImGuiBackend(Window)));
-        application.Dispatcher.Subscribe<ResizeMessage>(m =>
-        {
-            frameProvider?.Resize(m.Width, m.Height);
-        });
+        GC.SuppressFinalize(this);
     }
 }
