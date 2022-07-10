@@ -24,7 +24,7 @@ SimulationFramework is a cross-platform library for creative coding, game develo
 
 - **Built-in [Dear ImGui](https://github.com/ocornut/imgui) Support**: Dear ImGui is completely built-in with zero setup.
 
-- **Many more planned**: See [Planned Features].
+- **Many more planned**: See [Planned Features](https://github.com/Redninja106/simulationframework#planned-features).
 
 > Note: Right now SimulationFramework is still in the very early stages of development and therefore is still changing with every new version.
 
