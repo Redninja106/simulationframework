@@ -36,7 +36,7 @@ public sealed class Application : IDisposable
 
         Dispatcher.Subscribe<InitializeMessage>(m =>
         {
-            for (int i = 0; i < components.Count(); i++)
+            for (int i = 0; i < components.Count; i++)
             {
                 components[i].Initialize(this);
             }
@@ -48,11 +48,8 @@ public sealed class Application : IDisposable
     public T GetComponent<T>() where T : IAppComponent
     {
         var c = components.Where(c => c is T);
-        
-        if (!c.Any())
-            throw new Exception("Could not find component of type " + typeof(T).Name);
 
-        return (T)c.First();
+        return (T)c.SingleOrDefault();
     }
 
     public void AddComponent<T>(T component) where T : IAppComponent
@@ -88,11 +85,6 @@ public sealed class Application : IDisposable
 
     //public void Start()
     //{
-
-
-
-
-
     //    var appConfig = new AppConfig(this);
 
     //    appConfig.Width

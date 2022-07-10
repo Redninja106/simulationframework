@@ -60,11 +60,10 @@ internal class WindowsAppController : IAppController
         {
             dispatcher.Dispatch(new FrameBeginMessage());
 
-            window.DoEvents();
+            ProcessMessages();
 
             dispatcher.Dispatch(new RenderMessage(Graphics.GetOutputCanvas()));
 
-            window.GLContext.SwapBuffers();
             dispatcher.Dispatch(new FrameEndMessage());
         }
 
@@ -74,5 +73,16 @@ internal class WindowsAppController : IAppController
     private nint WndProc(nint hwnd, WindowMessage message, nint wParam, nint lParam)
     {
         return 0;
+    }
+
+    private void ProcessMessages()
+    {
+        Message message;
+
+        while (Win32.PeekMessage(out message, this.windowHandle, 0, 0, PeekMessageFlags.PM_REMOVE))
+        {
+            Win32.TranslateMessage(ref message);
+            Win32.DispatchMessage(ref message);
+        }
     }
 }

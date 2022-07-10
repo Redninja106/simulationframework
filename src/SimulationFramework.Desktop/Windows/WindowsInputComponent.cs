@@ -9,11 +9,9 @@ internal class WindowsInputComponent : IAppComponent
 {
     public void Dispose()
     {
-        throw new NotImplementedException();
     }
 
     public void Initialize(Application application)
     {
-        throw new NotImplementedException();
     }
 }

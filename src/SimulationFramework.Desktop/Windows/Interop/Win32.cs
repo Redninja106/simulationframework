@@ -19,7 +19,7 @@ delegate nint WindowProc(nint hwnd, WindowMessage msg, nint wParam, nint lParam)
 
 internal static class Win32
 {
-    public const int CW_USEDEFAULT = 0x80000000;
+    public const int CW_USEDEFAULT = unchecked((int)0x80000000);
 
     [DllImport("user32.dll", CharSet = CharSet.Unicode)]
     public static extern short RegisterClassEx(ref WindowClassEx windowClass);
@@ -29,4 +29,13 @@ internal static class Win32
 
     [DllImport("kernel32.dll")]
     public static extern nint GetModuleHandle(string module);
-}
+
+    [DllImport("user32.dll")] 
+    public static extern bool PeekMessage(out Message lpMsg, nint hWnd, WindowMessage wMsgFilterMin, WindowMessage wMsgFilterMax, PeekMessageFlags flags);
+    
+    [DllImport("user32.dll")] 
+    public static extern bool TranslateMessage(ref Message message);
+
+    [DllImport("user32.dll")] 
+    public static extern void DispatchMessage(ref Message message);
+}   
