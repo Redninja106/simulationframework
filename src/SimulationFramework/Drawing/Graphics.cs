@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SimulationFramework.Drawing.Canvas;
+using SimulationFramework.Drawing.Pipelines;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,18 +20,33 @@ public static class Graphics
     /// Gets canvas which draws to the current frame.
     /// </summary>
     /// <returns></returns>
-    public static ICanvas GetOutputCanvas()
+    public static ICanvas GetFrameCanvas()
     {
         return Provider.GetFrameCanvas();
+    }
+
+    public static ITexture GetFrameTexture()
+    {
+        return Provider.GetFrameTexture();
+    }
+
+    public static IRenderer GetRenderer()
+    {
+        return Provider.GetRenderer();
+    }
+
+    public static IShader CreateShader(ShaderKind kind, string source)
+    {
+        return Provider.CreateShader(kind, source);
     }
 
     /// <summary>
     /// Loads a texture from a file.
     /// </summary>
     /// <param name="file">The path to a .PNG image file.</param>
-    /// <param name="options">A <see cref="TextureOptions"/> value which influences the behavior of the texture.</param>
+    /// <param name="flags">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture LoadTexture(string file, TextureOptions options = TextureOptions.None)
+    public static ITexture LoadTexture(string file, ResourceOptions flags = ResourceOptions.None)
     {
         var fileData = File.ReadAllBytes(file);
 
@@ -40,9 +57,9 @@ public static class Graphics
     /// Loads a texture from raw, encoded file data.
     /// </summary>
     /// <param name="encodedBytes">An array of the bytes of a supported image file.</param>
-    /// <param name="options">A <see cref="TextureOptions"/> value which influences the behavior of the texture.</param>
+    /// <param name="flags">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture LoadTexture(byte[] encodedBytes, TextureOptions options = TextureOptions.None)
+    public static ITexture LoadTexture(byte[] encodedBytes, ResourceOptions flags = ResourceOptions.None)
     {
         return LoadTexture(encodedBytes.AsSpan(), options);
     }
@@ -51,9 +68,9 @@ public static class Graphics
     /// Loads a texture from raw, encoded file data.
     /// </summary>
     /// <param name="encodedBytes">A span of the bytes of a supported image file.</param>
-    /// <param name="options">A <see cref="TextureOptions"/> value which influences the behavior of the texture.</param>
+    /// <param name="flags">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture LoadTexture(Span<byte> encodedBytes, TextureOptions options = TextureOptions.None)
+    public static ITexture LoadTexture(Span<byte> encodedBytes, ResourceOptions flags = ResourceOptions.None)
     {
         return Provider.LoadTexture(encodedBytes, options);
     }
@@ -63,9 +80,9 @@ public static class Graphics
     /// </summary>
     /// <param name="width">The width of the texture, in pixels.</param>
     /// <param name="height">The height of the texture, in pixels.</param>
-    /// <param name="options">A <see cref="TextureOptions"/> value which influences the behavior of the texture.</param>
+    /// <param name="flags">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture CreateTexture(int width, int height, TextureOptions options = TextureOptions.None)
+    public static ITexture CreateTexture(int width, int height, ResourceOptions flags = ResourceOptions.None)
     {
         return Provider.CreateTexture(width, height, null, options);
     }
@@ -76,9 +93,9 @@ public static class Graphics
     /// <param name="width">The width of the texture, in pixels.</param>
     /// <param name="height">The height of the texture, in pixels.</param>
     /// <param name="colors">The data of to fill the texture with. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
-    /// <param name="flags">A <see cref="TextureOptions"/> value which influences the behavior of the texture.</param>
+    /// <param name="flags">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture CreateTexture(int width, int height, Span<Color> colors, TextureOptions flags = TextureOptions.None)
+    public static ITexture CreateTexture(int width, int height, Span<Color> colors, ResourceOptions flags = ResourceOptions.None)
     {
         return Provider.CreateTexture(width, height, colors, flags);
     }
@@ -89,15 +106,17 @@ public static class Graphics
     /// <param name="width">The width of the texture, in pixels.</param>
     /// <param name="height">The height of the texture, in pixels.</param>
     /// <param name="colors">The data of to fill the texture with. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
-    /// <param name="options">A <see cref="TextureOptions"/> value which influences the behavior of the texture.</param>
+    /// <param name="flags">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture CreateTexture(int width, int height, Color[] colors, TextureOptions options = TextureOptions.None)
+    public static ITexture CreateTexture(int width, int height, Color[] colors, ResourceOptions flags = ResourceOptions.None)
     {
         return Provider.CreateTexture(width, height, colors.AsSpan(), options);
     }
 
-    /// <summary>
-    /// Clears all cached fonts.
-    /// </summary>
-    public static void ClearFontCache() => Provider.ClearFontCache();
+    public static IBuffer<T> CreateBuffer<T>(int size) where T : unmanaged
+    {
+        return Provider.CreateBuffer<T>(size, 0);
+    }
+
+
 }

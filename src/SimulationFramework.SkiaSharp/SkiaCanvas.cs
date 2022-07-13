@@ -12,7 +12,9 @@ internal sealed class SkiaCanvas : ICanvas
     public ITexture Target { get; }
 
     public CanvasState State => currentState;
-    
+
+    ITexture ICanvas.Target { get; }
+
     //the canvas maintains a stack of state objects that can be controlled by the user
     private readonly Stack<SkiaCanvasState> stateStack = new();
     private SkiaCanvasState currentState;
