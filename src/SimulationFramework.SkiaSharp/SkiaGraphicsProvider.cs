@@ -102,31 +102,6 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         return fonts[(fontName, styles, size)];
     }
 
-    public ITexture GetFrameTexture()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged
-    {
-        throw new NotImplementedException();
-    }
-
-    public IShader CreateShader(ShaderKind kind, string source)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetResourceLifetime(int lifetimeInFrames)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IRenderer GetRenderer()
-    {
-        throw new NotImplementedException();
-    }
-
     public void Initialize(Application application)
     {
     }

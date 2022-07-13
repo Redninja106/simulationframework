@@ -110,19 +110,7 @@ internal class DesktopAppController : IAppController
 
             window.DoEvents();
 
-            var renderer = Graphics.GetRenderer();
-            renderer.SetRenderTarget(Graphics.GetFrameTexture());
-
-            var canvas = Graphics.GetFrameCanvas();
-
-            canvas.ResetState();
-
-            using (canvas.PushState())
-            {
-                dispatcher.Dispatch(new RenderMessage(canvas));
-            }
-
-            canvas.Flush();
+            dispatcher.Dispatch(new RenderMessage(Graphics.GetOutputCanvas()));
 
             window.GLContext.SwapBuffers();
             dispatcher.Dispatch(new FrameEndMessage());
