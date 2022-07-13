@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "SimulationFramework.Direct3D11": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}

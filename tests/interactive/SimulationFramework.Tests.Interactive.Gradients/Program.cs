@@ -1,5 +1,5 @@
 ﻿using SimulationFramework.Desktop;
-using SimulationFramework.Drawing.Canvas;
+using SimulationFramework.Drawing;
 using System.Numerics;
 
 namespace SimulationFramework.Tests.Interactive.Gradients;

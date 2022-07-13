@@ -1,5 +1,4 @@
 ﻿using SimulationFramework.Drawing;
-using SimulationFramework.Drawing.Canvas;
 using SimulationFramework.Messaging;
 using System;
 using System.Collections.Generic;
@@ -51,7 +50,9 @@ public abstract class Simulation
 
         Application.Dispatcher.Subscribe<RenderMessage>(m =>
         {
+            m.Canvas.ResetState();
             OnRender(m.Canvas);
+            m.Canvas.Flush();
         });
 
         Application.Dispatcher.Subscribe<UninitializeMessage>(m =>

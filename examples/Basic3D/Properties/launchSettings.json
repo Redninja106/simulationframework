@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Basic3D": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}

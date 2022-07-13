@@ -5,8 +5,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using SimulationFramework.Drawing;
-using SimulationFramework.Drawing.Canvas;
-using SimulationFramework.Drawing.Pipelines;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
@@ -18,7 +16,7 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
     internal readonly ISkiaFrameProvider frameProvider;
 
     internal SkiaCanvas frameCanvas;
-    internal Dictionary<(string fontName, TextStyles styles, int size), SKFont> fonts = new(); 
+    internal Dictionary<(string fontName, FontStyle styles, int size), SKFont> fonts = new(); 
 
     public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate getProcAddress)
     {
@@ -45,20 +43,25 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
     }
 
 
-    public ITexture CreateTexture(int width, int height, Span<Color> data, ResourceOptions flags = ResourceOptions.None)
+    public ITexture CreateTexture(int width, int height, Span<Color> data, TextureOptions options = TextureOptions.None)
     {
-        var bitmap = new SkiaTexture(this, new SKBitmap(width, height), true);
+        var texture = new SkiaTexture(this, new SKBitmap(width, height), true, options);
 
         if (!data.IsEmpty)
         {
+            if (data.Length != width * height)
+                throw new ArgumentException("data.Length != width * height");
+
+            data.CopyTo(texture.Pixels);
+            texture.ApplyChanges();
         }
 
-        return bitmap;
+        return texture;
     }
 
-    public ITexture LoadTexture(Span<byte> encodedData, ResourceOptions flags = ResourceOptions.None)
+    public ITexture LoadTexture(Span<byte> encodedData, TextureOptions options = TextureOptions.None)
     {
-        return new SkiaTexture(this, SKBitmap.Decode(encodedData), true);
+        return new SkiaTexture(this, SKBitmap.Decode(encodedData), true, options);
     }
 
     public void Dispose()
@@ -81,14 +84,14 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         }
     }
 
-    public SKFont GetFont(string fontName, TextStyles styles, int size)
+    public SKFont GetFont(string fontName, FontStyle styles, int size)
     {
         if (!fonts.ContainsKey((fontName, styles, size)))
         {
             var fontStyle = new SKFontStyle(
-                styles.HasFlag(TextStyles.Bold) ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
+                styles.HasFlag(FontStyle.Bold) ? SKFontStyleWeight.Bold : SKFontStyleWeight.Normal,
                 SKFontStyleWidth.Normal,
-                styles.HasFlag(TextStyles.Italic) ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright
+                styles.HasFlag(FontStyle.Italic) ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright
                 );
 
             var typeface = SKTypeface.FromFamilyName(fontName, fontStyle);
@@ -97,31 +100,6 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         }
 
         return fonts[(fontName, styles, size)];
-    }
-
-    public ITexture GetFrameTexture()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged
-    {
-        throw new NotImplementedException();
-    }
-
-    public IShader CreateShader(ShaderKind kind, string source)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetResourceLifetime(int lifetimeInFrames)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IRenderer GetRenderer()
-    {
-        throw new NotImplementedException();
     }
 
     public void Initialize(Application application)

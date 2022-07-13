@@ -1,5 +1,4 @@
-﻿using SimulationFramework.Drawing.Canvas;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -39,13 +38,22 @@ public interface ITexture : IDisposable
     /// </summary>
     /// <param name="x">The x-coordinate of the pixel.</param>
     /// <param name="y">The y-coordinate of the pixel.</param>
-    sealed ref Color GetPixel(int x, int y) => ref Pixels[y * Width + x];
+    sealed ref Color GetPixel(int x, int y)
+    {
+        if (x < 0 || x >= Width)
+            throw new ArgumentOutOfRangeException(nameof(x));
+        
+        if (y < 0 || y >= Height)
+            throw new ArgumentOutOfRangeException(nameof(y));
+        
+        return ref Pixels[y * Width + x];
+    }
 
     /// <summary>
     /// Opens a new canvas which draws to this texture.
     /// </summary>
     /// <returns>An <see cref="ICanvas"/> which draws onto this texture.</returns>
-    ICanvas OpenCanvas();
+    ICanvas CreateCanvas();
 
     /// <summary>
     /// Applies any changes made do the bitmap's data using <see cref="Pixels"/> or <see cref="GetPixel(int, int)"/>.
