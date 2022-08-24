@@ -36,13 +36,16 @@ public abstract class Simulation
     /// <param name="height">The new height of the simulation's video output.</param>
     public virtual void OnResize(int width, int height) { }
 
+    /// <summary>
+    /// Starts this simulation using the provided platform.
+    /// </summary>
+    /// <param name="platform"></param>
     public void Run(IAppPlatform platform)
     {
         Application = new Application(platform);
 
         Application.Dispatcher.Subscribe<InitializeMessage>(m => {
-            var config = AppConfig.Open();
-            config.ResetToDefault();
+            var config = AppConfig.CreateDefault();
             config.Title = "Simulation";
             OnInitialize(config);
             config.Apply();

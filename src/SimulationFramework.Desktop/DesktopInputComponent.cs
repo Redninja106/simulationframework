@@ -2,7 +2,6 @@
 using Silk.NET.Input;
 using SilkKey = Silk.NET.Input.Key;
 using SilkButton = Silk.NET.Input.MouseButton;
-using SimulationFramework.IMGUI;
 using System.Numerics;
 using SimulationFramework.Messaging;
 

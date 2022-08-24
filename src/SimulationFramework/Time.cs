@@ -11,13 +11,13 @@ namespace SimulationFramework;
 /// </summary>
 public static class Time
 {
-    internal static ITimeProvider Provider => Application.Current.GetComponent<ITimeProvider>();
-    
+    internal static ITimeProvider Provider => Application.Current.GetComponent<ITimeProvider>() ?? throw Exceptions.CoreComponentNotFound();
+
     /// <summary>
     /// The number of seconds since the last frame.
     /// </summary>
     public static float DeltaTime => Provider.GetDeltaTime();
-    
+
     /// <summary>
     /// The number of seconds since the start of the simulation.
     /// </summary>

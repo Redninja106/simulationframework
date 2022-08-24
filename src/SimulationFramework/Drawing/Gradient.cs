@@ -1,5 +1,4 @@
-﻿using SimulationFramework.Drawing.Canvas;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing;
 
 /// <summary>
-/// 
+///
 /// </summary>
 /// <param name="Stops"></param>
 /// <param name="Transform"></param>

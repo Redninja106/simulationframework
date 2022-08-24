@@ -11,5 +11,6 @@ public enum MessagePriority
 {
     Low,
     Normal,
-    High
+    High,
+    Internal
 }

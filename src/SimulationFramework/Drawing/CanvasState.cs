@@ -33,7 +33,7 @@ public abstract class CanvasState
     public Rectangle? ClipRegion { get; private set; }
 
     /// <summary>
-    /// Gets or sets the stroke width of the canvas. This value only has an effect on drawing when drawing lines or when <see cref="DrawMode"/> is <see cref="DrawMode.Border"/>.
+    /// Gets or sets the stroke width of the canvas. This value only has an effect on drawing when drawing lines or when <see cref="DrawMode"/> is <see cref="DrawMode.Stroke"/>.
     /// </summary>
     public float StrokeWidth { get; private set; }
 

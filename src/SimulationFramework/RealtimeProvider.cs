@@ -81,6 +81,7 @@ public sealed class RealtimeProvider : ITimeProvider
     {
     }
 
+    /// <inheritdoc/>
     public void Initialize(Application application)
     {
         application.Dispatcher.Subscribe<RenderMessage>(m =>

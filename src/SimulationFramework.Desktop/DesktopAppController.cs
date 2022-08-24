@@ -23,6 +23,7 @@ internal class DesktopAppController : IAppController
     {
         try
         {
+            window.IsVisible = true;
             window.Title = config.Title;
             if (config.Fullscreen)
             {
@@ -67,16 +68,14 @@ internal class DesktopAppController : IAppController
         return true;
     }
 
-    public AppConfig CreateConfig()
+    public void InitializeConfig(AppConfig config)
     {
-        var result = new AppConfig();
-        result.Width = window.Size.X;
-        result.Height = window.Size.Y;
-        result.Title = window.Title;
-        result.Fullscreen = window.WindowBorder == WindowBorder.Fixed && window.Size == window.Monitor.Bounds.Size && window.Position == Vector2D<int>.Zero;
-        result.TitlebarHidden = window.WindowBorder == WindowBorder.Hidden && !result.Fullscreen;
-        result.Resizable = window.WindowBorder == WindowBorder.Resizable && !result.Fullscreen;
-        return result;
+        config.Width = window.Size.X;
+        config.Height = window.Size.Y;
+        config.Title = window.Title;
+        config.Fullscreen = window.WindowBorder == WindowBorder.Fixed && window.Size == window.Monitor.Bounds.Size && window.Position == Vector2D<int>.Zero;
+        config.TitlebarHidden = window.WindowBorder == WindowBorder.Hidden && !config.Fullscreen;
+        config.Resizable = window.WindowBorder == WindowBorder.Resizable && !config.Fullscreen;
     }
 
     public void Dispose()

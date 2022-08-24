@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Silk.NET.Windowing;
 using SimulationFramework.SkiaSharp;
 using ImGuiNET;
-using SimulationFramework.IMGUI;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 
@@ -38,7 +37,7 @@ public sealed class DesktopPlatform : IAppPlatform
 
     public DesktopPlatform()
     {
-        Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default);
+        Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default with { IsVisible = false });
     }
 
     public void Dispose()
@@ -51,7 +50,6 @@ public sealed class DesktopPlatform : IAppPlatform
         application.AddComponent(CreateGraphics());
         application.AddComponent(new RealtimeProvider());
         application.AddComponent(new DesktopInputComponent(this.Window));
-        application.AddComponent(new ImGuiNETProvider(new DesktopImGuiBackend(Window)));
         application.Dispatcher.Subscribe<ResizeMessage>(m =>
         {
             frameProvider?.Resize(m.Width, m.Height);

@@ -95,7 +95,7 @@ public interface ICanvas : IDisposable
     }
 
     /// <summary>
-    /// Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <see cref="SetStrokeWidth(float)"/>.
+    /// Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <see cref="StrokeWidth(float)"/>.
     /// </summary>
     /// <param name="x1">The x-coordinate of the first point of the line.</param>
     /// <param name="y1">The y-coordinate of the first point of the line.</param>
@@ -105,7 +105,7 @@ public interface ICanvas : IDisposable
     sealed void DrawLine(float x1, float y1, float x2, float y2) => DrawLine(new(x1, y1), new(x2, y2));
 
     /// <summary>
-    /// Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <see cref="SetStrokeWidth(float)"/>.
+    /// Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <see cref="StrokeWidth(float)"/>.
     /// </summary>
     /// <param name="p1">The first point of the line.</param>
     /// <param name="p2">The second point of the line.</param>
@@ -229,8 +229,8 @@ public interface ICanvas : IDisposable
     /// <param name="radiusX">The radius of the ellipse on the x-axis.</param>
     /// <param name="radiusY">The radius of the ellipse on the y-axis.</param>
     /// <param name="begin">The angle at which the ellipse segment begins.</param>
-    /// <param name="includeCenter">Whether the arc's endpoints should connect to one other or to the center of the ellipse.</param>
     /// <param name="end">The angle at which the ellipse segment begins.</param>
+    /// <param name="includeCenter">Whether the arc's endpoints should connect to one other or to the center of the ellipse.</param>
     /// <param name="alignment">The point on the bounding-box of the ellipse to align to the provided position</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     sealed void DrawArc(float x, float y, float radiusX, float radiusY, float begin, float end, bool includeCenter, Alignment alignment = Alignment.Center) => DrawArc(new(x, y), new(radiusX, radiusY), begin, end, includeCenter, alignment);
@@ -324,7 +324,7 @@ public interface ICanvas : IDisposable
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
     /// <para>
-    /// If the current <see cref="DrawMode"/> is <see cref="DrawMode.Fill"/> or <see cref="DrawMode.Gradient"/>, 
+    /// If the current <see cref="DrawMode"/> is <see cref="DrawMode.Fill"/> or <see cref="DrawMode.Gradient"/>,
     /// the first and last vertices are connected to create a closed polygon.
     /// </para>
     /// </summary>
@@ -332,13 +332,13 @@ public interface ICanvas : IDisposable
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     sealed void DrawPolygon(IEnumerable<Vector2> polygon)
     {
-        CollectionsHelper.EnumerableAsSpan(polygon, 0, (span, state) => DrawPolygon(span));
+        CollectionsHelper.EnumerableAsSpan(polygon, 0, (span, _) => DrawPolygon(span));
     }
 
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
     /// <para>
-    /// If the current <see cref="DrawMode"/> is <see cref="DrawMode.Fill"/> or <see cref="DrawMode.Gradient"/>, 
+    /// If the current <see cref="DrawMode"/> is <see cref="DrawMode.Fill"/> or <see cref="DrawMode.Gradient"/>,
     /// the first and last vertices are connected to create a closed polygon.
     /// </para>
     /// </summary>
@@ -374,12 +374,12 @@ public interface ICanvas : IDisposable
     sealed Vector2 MeasureText(string text) => MeasureText(text, 0, out _);
 
     /// <summary>
-    /// Determines the size of the provided text based on the current font selection, 
+    /// Determines the size of the provided text based on the current font selection,
     /// stopping if the string's length exceeds a maximum.
     /// </summary>
     /// <param name="text">The text to measure.</param>
     /// <param name="maxLength">The maximum length of the string.</param>
-    /// <param name="charsMeasured">The number of characters measured before measuring stopped, 
+    /// <param name="charsMeasured">The number of characters measured before measuring stopped,
     /// or the length of <paramref name="text"/> if the entire string was measured.</param>
     /// <returns>The width and height of the provided text's bounds.</returns>
     Vector2 MeasureText(string text, float maxLength, out int charsMeasured);
@@ -387,9 +387,7 @@ public interface ICanvas : IDisposable
     /// <summary>
     /// Sets a font with the specified attributes as current (and loads it if it is not already loaded).
     /// </summary>
-    /// <param name="fontName">The name of the system font to try to load.</param>
-    /// <param name="styles">The style of the text.</param>
-    /// <param name="size">The size of the font, in pixels.</param>
+    /// <param name="name">The size of the font, in pixels.</param>
     /// <returns><see langword="true"/> if the font was successfully loaded, otherwise <see langword="false"/>.</returns>
     sealed void Font(string name) => State.UpdateFont(name);
 
@@ -398,7 +396,6 @@ public interface ICanvas : IDisposable
     /// <summary>
     /// Pushes the current transformation matrix, clipping rectangle, and drawing state onto the stack.
     /// </summary>
-    /// <returns>A <see cref="CanvasSession"/> which, when disposed, calls <see cref="PopState"/> on this canvas.</returns>
     void PushState();
 
     /// <summary>

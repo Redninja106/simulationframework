@@ -11,5 +11,5 @@ public interface IAppController : IAppComponent
 {
     void Start(MessageDispatcher dispatcher);
     bool ApplyConfig(AppConfig config);
-    AppConfig CreateConfig();
+    void InitializeConfig(AppConfig config);
 }
