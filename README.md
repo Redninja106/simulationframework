@@ -3,6 +3,8 @@
 <br>SimulationFramework</br>
 </h1>
 
+![physics](https://user-images.githubusercontent.com/45476006/187402573-d134ce5c-9b08-478d-85e0-773e62f111ae.gif)
+
 SimulationFramework is a cross-platform library for creative coding, game development, and graphical apps built on .NET 6. Designed with simplicity and ease of use in mind, it cuts down on development time for quick and easy rapid prototyping. 
 
 [Join the discord server!](https://discord.gg/V4X2vTvV2G)
@@ -39,18 +41,20 @@ dotnet add package SimulationFramework.Desktop
 
 Next, create a class which inherits from `Simulation`. The abstract methods `OnInitialize` and `OnRender` allow you to add functionality to your simulation
 ```cs
-using SimualtionFramework;
+// MySimulation.cs
+using SimulationFramework;
+using SimulationFramework.Drawing.Canvas;
 
 class MySimulation : Simulation
 {
     // the OnInitialize method is when the simulation is started
-    public override OnInitalize(AppConfig config)
+    public override void OnInitalize(AppConfig config)
     {
         
     }
 
     // the OnRender method is called each frame
-    public override OnRender(ICanvas canvas)
+    public override void OnRender(ICanvas canvas)
     {
         
     }
@@ -60,18 +64,26 @@ class MySimulation : Simulation
 To start the simulation, call `Simulation.RunWindowed()`:
 
 ```cs
+// Program.cs
 using SimulationFramework.Desktop;
 
-public static void Main()
+class Program 
 {
-    MySimulation sim = new MySimulation();
-    Simulation.RunDesktop();
+    public static void Main()
+    {
+        MySimulation sim = new MySimulation();
+        Simulation.RunDesktop();
+    }
 }
 ```
+Running the program will result in a blank window:
+
+![blank-simulation](https://user-images.githubusercontent.com/45476006/187397250-da5579f6-b3b2-4375-8e27-3aa5b5b1f5c8.png)
 
 Next, to start drawing. The `ICanvas` provided in `OnRender()` contains a variety methods for drawing.
 
 ```cs
+// MySimulation.cs
 using SimulationFramework.Canvas;
 using System.Numerics;
 
@@ -81,14 +93,18 @@ public override void OnRender(ICanvas canvas)
     // don't forget to clear the screen each frame!
     canvas.Clear(Color.CornflowerBlue); 
     
-    // draw a 50 pixel wide red square at the mouse position
+    // draw a 50 pixel wide red square centered at the mouse position
     canvas.Fill(Color.Red);
-    canvas.DrawRect(Mouse.Position, new Vector2(50, 50)); 
+    canvas.DrawRect(Mouse.Position, new Vector2(50, 50), Alignment.Center); 
 }
 ```
+
+The above example produces the following output:
+
+![readme-example](https://user-images.githubusercontent.com/45476006/187396823-f0c7bcbc-8884-4bf2-8b57-0695bf14ecd8.gif)
 
 To see more, [go to the wiki](https://github.com/Redninja106/simulationframework/wiki) or [join the discord server](https://discord.gg/V4X2vTvV2G).
 
 ## Planned features
-- **Dependency Free**: SimulationFramework won't depend on any other nuget packages or have any native dependencies.
-- **3D Drawing**: A performant and cross-platform 3D graphics API backed by a custom C#-inspired shader language. (see the branch '3d')
+- **Dependency Free**: SimulationFramework won't depend on any other nuget packages or have any native dependencies (except imgui, which will be optional).
+- **3D Drawing**: A performant and cross-platform 3D graphics API complete with a custom C#-inspired shader language. (see the '3d' branch)
