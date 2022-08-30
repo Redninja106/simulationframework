@@ -3,7 +3,8 @@
 <br>SimulationFramework</br>
 </h1>
 
-![physics](https://user-images.githubusercontent.com/45476006/187402573-d134ce5c-9b08-478d-85e0-773e62f111ae.gif)
+![asteroids](https://user-images.githubusercontent.com/45476006/187406787-a6936d83-1581-4f8c-9d92-a9f58d1ea797.gif) ![physics](https://user-images.githubusercontent.com/45476006/187406806-c7beaba1-859c-4e09-8cc1-55f5839d5b3e.gif)
+
 
 SimulationFramework is a cross-platform library for creative coding, game development, and graphical apps built on .NET 6. Designed with simplicity and ease of use in mind, it cuts down on development time for quick and easy rapid prototyping. 
 
