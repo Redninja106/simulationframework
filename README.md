@@ -9,7 +9,7 @@
 
 </div>
 
-SimulationFramework is a cross-platform library for creative coding, game development, and graphical apps built on .NET 6. Designed with simplicity and ease of use in mind, it cuts down on development time for quick and easy rapid prototyping. 
+SimulationFramework is a cross-platform library for creative coding, game development, and graphical apps built on .NET 6. Designed with simplicity and ease of use in mind, it cuts down on development time for easy rapid prototyping. 
 
 [Join the discord server!](https://discord.gg/V4X2vTvV2G)
 
@@ -32,18 +32,22 @@ SimulationFramework is a cross-platform library for creative coding, game develo
 
 - **Many more planned**: See [Planned Features](https://github.com/Redninja106/simulationframework#planned-features).
 
-> Note: Right now SimulationFramework is still in the very early stages of development and therefore is still changing with every new version.
+> Note: Right now SimulationFramework is still in the very early stages of development and is changing with every new version.
 
 
 ## Getting Started
 
-To start, create a new Console App using .NET 6. Add the [SimulationFramework Nuget Package](https://www.nuget.org/packages/SimulationFramework/) (and it's desktop environment) using Visual Studio or the .NET CLI via the following commands:
+> SimulationFramework requires .NET 6 and Visual Studio 2022.
+
+Create a new Console App using .NET 6. Add the [SimulationFramework Nuget Package](https://www.nuget.org/packages/SimulationFramework/) (and it's desktop environment) using Visual Studio or the .NET CLI via the following commands:
+
 ```
 dotnet add package SimulationFramework
 dotnet add package SimulationFramework.Desktop
 ```
 
 Next, create a class which inherits from `Simulation`. The abstract methods `OnInitialize` and `OnRender` allow you to add functionality to your simulation
+
 ```cs
 // MySimulation.cs
 using SimulationFramework;
@@ -80,9 +84,14 @@ class Program
     }
 }
 ```
+
 Running the program will result in a blank window:
 
+<div align="center">
+    
 ![blank-simulation](https://user-images.githubusercontent.com/45476006/187409330-160e4f8f-db41-4cb3-91f2-8957ef2b4c66.png)
+    
+</div>
 
 Next, to start drawing. The `ICanvas` provided in `OnRender()` contains a variety methods for drawing.
 
@@ -105,10 +114,15 @@ public override void OnRender(ICanvas canvas)
 
 The above example produces the following output:
 
+<div align="center">
+    
 ![readme-example](https://user-images.githubusercontent.com/45476006/187409007-ec8abaea-3c59-456e-9106-d1c1860b0b45.gif)
+  
+</div>
 
 To see more, [go to the wiki](https://github.com/Redninja106/simulationframework/wiki) or [join the discord server](https://discord.gg/V4X2vTvV2G).
 
-## Planned features
+## Planned Features
 - **Dependency Free**: SimulationFramework won't depend on any other nuget packages or have any native dependencies (except imgui, which will be optional).
 - **3D Drawing**: A performant and cross-platform 3D graphics API complete with a custom C#-inspired shader language. (see the '3d' branch)
+- **WebAssembly and Mobile Support**: Any simulations you write will run on a web browser or mobile phone, no code changes needed.
