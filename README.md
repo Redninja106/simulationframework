@@ -82,7 +82,7 @@ class Program
 ```
 Running the program will result in a blank window:
 
-![blank-simulation](https://user-images.githubusercontent.com/45476006/187407294-3034a4f5-23c0-44ab-893e-83bacdaa372d.png)
+![blank-simulation](https://user-images.githubusercontent.com/45476006/187409330-160e4f8f-db41-4cb3-91f2-8957ef2b4c66.png)
 
 Next, to start drawing. The `ICanvas` provided in `OnRender()` contains a variety methods for drawing.
 
@@ -105,7 +105,7 @@ public override void OnRender(ICanvas canvas)
 
 The above example produces the following output:
 
-![readme-example](https://user-images.githubusercontent.com/45476006/187396823-f0c7bcbc-8884-4bf2-8b57-0695bf14ecd8.gif)
+![readme-example](https://user-images.githubusercontent.com/45476006/187409007-ec8abaea-3c59-456e-9106-d1c1860b0b45.gif)
 
 To see more, [go to the wiki](https://github.com/Redninja106/simulationframework/wiki) or [join the discord server](https://discord.gg/V4X2vTvV2G).
 
