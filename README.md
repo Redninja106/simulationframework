@@ -79,7 +79,7 @@ class Program
 ```
 Running the program will result in a blank window:
 
-![blank-simulation](https://user-images.githubusercontent.com/45476006/187397250-da5579f6-b3b2-4375-8e27-3aa5b5b1f5c8.png)
+![blank-simulation](https://user-images.githubusercontent.com/45476006/187407294-3034a4f5-23c0-44ab-893e-83bacdaa372d.png)
 
 Next, to start drawing. The `ICanvas` provided in `OnRender()` contains a variety methods for drawing.
 
