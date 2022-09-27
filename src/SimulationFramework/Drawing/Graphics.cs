@@ -1,5 +1,5 @@
-﻿using SimulationFramework.Drawing.Imaging.PNG;
-using SimulationFramework.Drawing.Pipeline;
+﻿using SimulationFramework.Serialization.PNG;
+using SimulationFramework.Drawing.RenderPipeline;
 using SimulationFramework.Utilities;
 using System;
 using System.Collections.Generic;
@@ -37,10 +37,10 @@ public static class Graphics
         return Provider.GetRenderer();
     }
 
-    public static IShader CreateShader(ShaderKind kind, string source)
-    {
-        return Provider.CreateShader(kind, source);
-    }
+    // public static IShader CreateShader(ShaderKind kind, string source)
+    // {
+    //     return Provider.CreateShader(kind, source);
+    // }
 
     /// <summary>
     /// Loads a texture from a file.
@@ -135,5 +135,11 @@ public static class Graphics
         return Provider.CreateBuffer<T>(size, 0);
     }
 
+    public static IBuffer<T> CreateBuffer<T>(T[] data) where T : unmanaged
+    {
+        var buffer = Provider.CreateBuffer<T>(data.Length, 0);
+        buffer.SetData(data);
+        return buffer;
+    }
 
 }

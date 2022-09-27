@@ -140,9 +140,4 @@ internal unsafe class D3D11Texture : D3D11Object, ITexture
     {
         return this.Texture;    
     }
-
-    ICanvas ITexture.OpenCanvas()
-    {
-        throw new NotImplementedException();
-    }
 }

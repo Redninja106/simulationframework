@@ -4,31 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.SFSL;
-
+namespace SimulationFramework.ShaderLanguage;
 internal class CompilationContext
 {
-    private List<CompilationNotification> notifications = new();
+    private string source;
 
-    public bool HasErrors()
+    public CompilationContext(string source)
     {
-        return notifications.Count > 0;
-    }
-
-    
-    // public TargetLanguage TargetLanguage { get; private set; }
-
-    public CompilationResult CreateResult()
-    {
-        return new CompilationResult()
-        {
-            Notifications = this.notifications.ToArray(),
-            // Language = this.TargetLanguage,
-        };
-    }
-
-    public void Notify(CompilationNotification notification)
-    {
-        notifications.Add(notification);
+        this.source = source;
     }
 }

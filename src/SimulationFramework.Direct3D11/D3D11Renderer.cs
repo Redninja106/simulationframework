@@ -1,6 +1,6 @@
 ﻿using SimulationFramework.Drawing.Direct3D11.Buffers;
-using SimulationFramework.Drawing.Direct3D11.Shaders;
-using SimulationFramework.Drawing.Pipeline;
+using SimulationFramework.Drawing.RenderPipeline;
+using SimulationFramework.Shaders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +16,9 @@ internal sealed class D3D11Renderer : IRenderer
     public ID3D11DeviceContext DeviceContext { get; private set; }
     private D3D11Texture currentRenderTarget;
     private DeviceResources resources;
+
+    private List<D3D11Object> shaders = new();
+
 
     public D3D11Renderer(DeviceResources resources, ID3D11DeviceContext deviceContext)
     {
@@ -57,9 +60,32 @@ internal sealed class D3D11Renderer : IRenderer
         DeviceContext.Draw(kind.GetVertexCount(count), offset);
     }
 
-    public void Shader(IShader shader)
+    public void SetVertexShader<T>(T shader) where T : struct, IShader
     {
-        shader.Apply(this);
+        var shaderObject = shaders.OfType<D3D11VertexShader<T>>().SingleOrDefault();
+
+        if (shaderObject is null)
+        {
+            shaderObject = new D3D11VertexShader<T>(this.resources);
+            shaders.Add(shaderObject);
+        }
+
+        shaderObject.Update(shader);
+        shaderObject.Apply(this.DeviceContext);
+    }
+    
+    public void SetFragmentShader<T>(T shader) where T : struct, IShader
+    {
+        var shaderObject = shaders.OfType<D3D11FragmentShader<T>>().SingleOrDefault();
+
+        if (shaderObject is null)
+        {
+            shaderObject = new D3D11FragmentShader<T>(this.resources);
+            shaders.Add(shaderObject);
+        }
+
+        shaderObject.Update(shader);
+        shaderObject.Apply(this.DeviceContext);
     }
 
     public void SetRenderTarget(ITexture renderTarget)
@@ -81,7 +107,7 @@ internal sealed class D3D11Renderer : IRenderer
         SetViewport(new(0, 0, 0, 0));
     }
 
-    public void VertexBuffer<T>(IBuffer<T> vertexBuffer) where T : unmanaged
+    public void SetVertexBuffer<T>(IBuffer<T> vertexBuffer) where T : unmanaged
     {
         if (vertexBuffer is not D3D11Buffer<T> d3dBuffer)
             throw new ArgumentException(null, nameof(vertexBuffer));

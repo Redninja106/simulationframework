@@ -1,4 +1,5 @@
-﻿using SimulationFramework.Drawing.Pipeline;
+﻿using SimulationFramework.Drawing.RenderPipeline;
+using SimulationFramework.Shaders;
 using System;
 
 namespace SimulationFramework.Drawing;
@@ -38,10 +39,10 @@ public interface IGraphicsProvider : IAppComponent
 
     IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged;
 
-    IShader CreateShader(ShaderKind kind, string source);
-
     // gets the main renderer
     IRenderer GetRenderer();
 
     void SetResourceLifetime(int lifetimeInFrames);
+
+    void CompileShader<T>(ShaderKind kind) where T : struct, IShader;
 }

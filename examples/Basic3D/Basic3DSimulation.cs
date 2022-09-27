@@ -1,6 +1,7 @@
 ﻿using SimulationFramework;
 using SimulationFramework.Drawing;
-using SimulationFramework.Drawing.Pipeline;
+using SimulationFramework.Drawing.RenderPipeline;
+using SimulationFramework.Shaders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,15 +13,96 @@ namespace Basic3D;
 
 internal class Basic3DSimulation : Simulation
 {
-    IShader vertexShader, fragmentShader;
+    static readonly Vertex[] vertices = new Vertex[]
+    {
+        new(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f,  0.0f,  0.0f, -1.0f),
+        new( 1.0f,  1.0f, -1.0f, 1.0f, 0.0f,  0.0f,  0.0f, -1.0f),
+        new(-1.0f, -1.0f, -1.0f, 0.0f, 1.0f,  0.0f,  0.0f, -1.0f),
+        new(-1.0f, -1.0f, -1.0f, 0.0f, 1.0f,  0.0f,  0.0f, -1.0f),
+        new( 1.0f,  1.0f, -1.0f, 1.0f, 0.0f,  0.0f,  0.0f, -1.0f),
+        new( 1.0f, -1.0f, -1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f),
+        new( 1.0f,  1.0f, -1.0f, 0.0f, 0.0f,  1.0f,  0.0f,  0.0f),
+        new( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  1.0f,  0.0f,  0.0f),
+        new( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f,  1.0f,  0.0f,  0.0f),
+        new( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f,  1.0f,  0.0f,  0.0f),
+        new( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  1.0f,  0.0f,  0.0f),
+        new( 1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f),
+        new( 1.0f,  1.0f,  1.0f, 0.0f, 0.0f,  0.0f,  0.0f,  1.0f),
+        new(-1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  0.0f,  0.0f,  1.0f),
+        new( 1.0f, -1.0f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,  1.0f),
+        new( 1.0f, -1.0f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,  1.0f),
+        new(-1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  0.0f,  0.0f,  1.0f),
+        new(-1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  1.0f),
+        new(-1.0f,  1.0f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,  0.0f),
+        new(-1.0f,  1.0f, -1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f),
+        new(-1.0f, -1.0f,  1.0f, 0.0f, 1.0f, -1.0f,  0.0f,  0.0f),
+        new(-1.0f, -1.0f,  1.0f, 0.0f, 1.0f, -1.0f,  0.0f,  0.0f),
+        new(-1.0f,  1.0f, -1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f),
+        new(-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f,  0.0f,  0.0f),
+        new(-1.0f,  1.0f,  1.0f, 0.0f, 0.0f,  0.0f,  1.0f,  0.0f),
+        new( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0f),
+        new(-1.0f,  1.0f, -1.0f, 0.0f, 1.0f,  0.0f,  1.0f,  0.0f),
+        new(-1.0f,  1.0f, -1.0f, 0.0f, 1.0f,  0.0f,  1.0f,  0.0f),
+        new( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0f),
+        new( 1.0f,  1.0f, -1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f),
+        new(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f,  0.0f, -1.0f,  0.0f),
+        new( 1.0f, -1.0f, -1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  0.0f),
+        new(-1.0f, -1.0f,  1.0f, 0.0f, 1.0f,  0.0f, -1.0f,  0.0f),
+        new(-1.0f, -1.0f,  1.0f, 0.0f, 1.0f,  0.0f, -1.0f,  0.0f),
+        new( 1.0f, -1.0f, -1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  0.0f),
+        new( 1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f, -1.0f,  0.0f),
+    };
+
     IBuffer<Vertex> vertexBuffer;
-    ITexture texture;
+    float xRotation, yRotation;
+    bool spin;
+    public override void OnInitialize(AppConfig config)
+    {
+        vertexBuffer = Graphics.CreateBuffer(vertices);
+    }
+
+    public override void OnRender(ICanvas canvas)
+    {
+        if (Keyboard.IsKeyDown(Key.A)) yRotation += Time.DeltaTime;
+        if (Keyboard.IsKeyDown(Key.D)) yRotation -= Time.DeltaTime;
+        if (Keyboard.IsKeyDown(Key.W)) xRotation -= Time.DeltaTime;
+        if (Keyboard.IsKeyDown(Key.S)) xRotation += Time.DeltaTime;
+        
+        if (spin)
+        {
+            yRotation += Time.DeltaTime;
+        }
+
+        if (Keyboard.IsKeyPressed(Key.Space))
+        {
+            spin = !spin;
+        }
+
+        VertexShader vertexShader = new()
+        {
+            World = Matrix4x4.CreateRotationX(xRotation) * Matrix4x4.CreateRotationY(yRotation),
+            View = Matrix4x4.CreateLookAt(Vector3.One * 5, Vector3.Zero, Vector3.UnitY),
+            Proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, 16f / 9f, 0.1f, 10f)
+        };
+
+        FragmentShader fragShader = new();
+
+        var renderer = Graphics.GetRenderer();
+
+        renderer.Clear(Color.Black);
+
+        renderer.SetVertexBuffer(vertexBuffer);
+        renderer.SetVertexShader(vertexShader);
+        renderer.SetFragmentShader(fragShader);
+
+        renderer.DrawPrimitives(PrimitiveKind.Triangles, 12, 0);
+    }
 
     struct Vertex
     {
-        Vector3 position;
-        Vector2 uv;
-        Vector3 normal;
+        public Vector3 position;
+        public Vector2 uv;
+        public Vector3 normal;
 
         public Vertex(Vector3 position, Vector2 uv, Vector3 normal)
         {
@@ -34,119 +116,59 @@ internal class Basic3DSimulation : Simulation
         }
     }
 
-    public override void OnInitialize(AppConfig config)
+    struct VertexShader : IShader
     {
-        vertexShader = Graphics.CreateShader(ShaderKind.Vertex, @"
-cbuffer ___cbuffer : register(b0)
-{
-    float4x4 world;
-    float4x4 view;
-    float4x4 proj;
-};
+        public Matrix4x4 World;
+        public Matrix4x4 View;
+        public Matrix4x4 Proj;
 
-struct vs_in
-{
-    float3 position : POSITION;
-    float2 tex : TEXCOORD0;
-};
+        [ShaderIn]
+        private Vertex vertex;
 
-struct ps_in
-{
-    float4 position : SV_POSITION;
-    float2 tex : TEXCOORD0;
-};
+        [ShaderOut]
+        private Vector3 normal;
 
-ps_in main(vs_in input)
-{
-    ps_in result;
-    result.position = float4(input.position, 1);
-    result.position = mul(result.position, world);
-    result.position = mul(result.position, view);
-    result.position = mul(result.position, proj);
-    
-    result.tex = input.tex;
+        [ShaderOut]
+        private Vector2 uv;
 
-    return result;
-}
-");
-        fragmentShader = Graphics.CreateShader(ShaderKind.Fragment, @"
-Texture2D image : register(t0);
-SamplerState image_sampler : register(s0);
+        [ShaderOut(OutSemantic.Position)]
+        private Vector4 position;
 
-struct ps_in
-{
-    float4 position : SV_POSITION;
-    float2 tex : TEXCOORD0;
-};
-
-float4 main(ps_in input) : SV_Target
-{
-    return image.Sample(image_sampler, input.tex);
-}
-");
-
-        vertexBuffer = Graphics.CreateBuffer<Vertex>(36);
-        vertexBuffer.SetData(new Vertex[]
+        public void Main()
         {
-            new(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f,  0.0f,  0.0f, -1.0f),
-            new( 1.0f,  1.0f, -1.0f, 1.0f, 0.0f,  0.0f,  0.0f, -1.0f),
-            new(-1.0f, -1.0f, -1.0f, 0.0f, 1.0f,  0.0f,  0.0f, -1.0f),
-            new(-1.0f, -1.0f, -1.0f, 0.0f, 1.0f,  0.0f,  0.0f, -1.0f),
-            new( 1.0f,  1.0f, -1.0f, 1.0f, 0.0f,  0.0f,  0.0f, -1.0f),
-            new( 1.0f, -1.0f, -1.0f, 1.0f, 1.0f,  0.0f,  0.0f, -1.0f),
-            new( 1.0f,  1.0f, -1.0f, 0.0f, 0.0f,  1.0f,  0.0f,  0.0f),
-            new( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  1.0f,  0.0f,  0.0f),
-            new( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f,  1.0f,  0.0f,  0.0f),
-            new( 1.0f, -1.0f, -1.0f, 0.0f, 1.0f,  1.0f,  0.0f,  0.0f),
-            new( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  1.0f,  0.0f,  0.0f),
-            new( 1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  0.0f),
-            new( 1.0f,  1.0f,  1.0f, 0.0f, 0.0f,  0.0f,  0.0f,  1.0f),
-            new(-1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  0.0f,  0.0f,  1.0f),
-            new( 1.0f, -1.0f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,  1.0f),
-            new( 1.0f, -1.0f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,  1.0f),
-            new(-1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  0.0f,  0.0f,  1.0f),
-            new(-1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  1.0f),
-            new(-1.0f,  1.0f,  1.0f, 0.0f, 0.0f, -1.0f,  0.0f,  0.0f),
-            new(-1.0f,  1.0f, -1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f),
-            new(-1.0f, -1.0f,  1.0f, 0.0f, 1.0f, -1.0f,  0.0f,  0.0f),
-            new(-1.0f, -1.0f,  1.0f, 0.0f, 1.0f, -1.0f,  0.0f,  0.0f),
-            new(-1.0f,  1.0f, -1.0f, 1.0f, 0.0f, -1.0f,  0.0f,  0.0f),
-            new(-1.0f, -1.0f, -1.0f, 1.0f, 1.0f, -1.0f,  0.0f,  0.0f),
-            new(-1.0f,  1.0f,  1.0f, 0.0f, 0.0f,  0.0f,  1.0f,  0.0f),
-            new( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0f),
-            new(-1.0f,  1.0f, -1.0f, 0.0f, 1.0f,  0.0f,  1.0f,  0.0f),
-            new(-1.0f,  1.0f, -1.0f, 0.0f, 1.0f,  0.0f,  1.0f,  0.0f),
-            new( 1.0f,  1.0f,  1.0f, 1.0f, 0.0f,  0.0f,  1.0f,  0.0f),
-            new( 1.0f,  1.0f, -1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  0.0f),
-            new(-1.0f, -1.0f, -1.0f, 0.0f, 0.0f,  0.0f, -1.0f,  0.0f),
-            new( 1.0f, -1.0f, -1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  0.0f),
-            new(-1.0f, -1.0f,  1.0f, 0.0f, 1.0f,  0.0f, -1.0f,  0.0f),
-            new(-1.0f, -1.0f,  1.0f, 0.0f, 1.0f,  0.0f, -1.0f,  0.0f),
-            new( 1.0f, -1.0f, -1.0f, 1.0f, 0.0f,  0.0f, -1.0f,  0.0f),
-            new( 1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f, -1.0f,  0.0f),
-        });
+            position = new Vector4(vertex.position, 1);
 
-        texture = Graphics.LoadTexture("texture.png");
+            position = Vector4.Transform(position, World);
+            position = Vector4.Transform(position, View);
+            position = Vector4.Transform(position, Proj);
+
+            uv = vertex.uv;
+
+            normal = vertex.normal;
+
+            normal = Vector3.TransformNormal(vertex.normal, World);
+        }
     }
 
-    public override void OnRender(ICanvas canvas)
+    struct FragmentShader : IShader
     {
-        vertexShader.SetVariable("world", Matrix4x4.Transpose(Matrix4x4.CreateRotationY(Time.TotalTime)));
-        vertexShader.SetVariable("view", Matrix4x4.Transpose(Matrix4x4.CreateLookAt(Vector3.One * 5, Vector3.Zero, Vector3.UnitY)));
-        vertexShader.SetVariable("proj", Matrix4x4.Transpose(Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, 16f/9f, 0.1f, 10f)));
+        [ShaderIn]
+        private Vector2 uv;
 
-        fragmentShader.SetTexture("image", texture, TileMode.Mirror);
+        [ShaderIn]
+        private Vector3 normal;
 
-        var renderer = Graphics.GetRenderer();
+        [ShaderOut(OutSemantic.Color)]
+        private Vector4 color;
 
-        renderer.Clear(Color.Black);
-
-        renderer.VertexBuffer(vertexBuffer);
-        renderer.Shader(vertexShader);
-        renderer.Shader(fragmentShader);
-
-        //fragmentShader.SetTexture("texture", texture, TileMode.Clamp);
-
-        renderer.DrawPrimitives(PrimitiveKind.Triangles, 12, 0);
+        public void Main()
+        {
+            float x = (uv.X - .5f);
+            float y = (uv.Y - .5f);
+            float c = x * x + y * y;
+            var b = Vector3.Dot(normal, Vector3.Normalize(new Vector3(-1, 1, -1)));
+            c = b * MathF.Sqrt(c) * .5f + .25f;
+            color = new(uv.X, uv.Y, 0, 1);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using SimulationFramework.Drawing.Pipeline;
+﻿using SimulationFramework.Drawing.RenderPipeline;
 using System.Runtime.CompilerServices;
 using Vortice.Direct3D11;
 

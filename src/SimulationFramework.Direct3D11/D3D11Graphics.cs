@@ -1,7 +1,5 @@
-﻿using SimulationFramework.Drawing.Imaging.PNG;
+﻿using SimulationFramework.Serialization.PNG;
 using SimulationFramework.Drawing.Direct3D11.Buffers;
-using SimulationFramework.Drawing.Direct3D11.Shaders;
-using SimulationFramework.Drawing.Pipeline;
 using SimulationFramework.Messaging;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -9,6 +7,9 @@ using Vortice.D3DCompiler;
 using Vortice.Direct3D;
 using Vortice.Direct3D11;
 using Vortice.DXGI;
+using SimulationFramework.Drawing.RenderPipeline;
+using SimulationFramework.Shaders;
+using SimulationFramework.Shaders.Compiler;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
@@ -17,7 +18,7 @@ public class D3D11Graphics : IGraphicsProvider
     private DeviceResources resources;
     private D3D11Texture frameTexture;
     private NullCanvas frameCanvas;
-    
+
     public D3D11Graphics(IntPtr hwnd)
     {
         resources = new DeviceResources(hwnd);
@@ -33,20 +34,6 @@ public class D3D11Graphics : IGraphicsProvider
     public IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged
     {
         return new D3D11Buffer<T>(this.resources, size, flags);
-    }
-
-    public IShader CreateShader(ShaderKind kind, string source)
-    {
-        switch (kind)
-        {
-            case ShaderKind.Vertex:
-                return new D3D11VertexShader(resources, source);
-            case ShaderKind.Fragment:
-                return new D3D11FragmentShader(resources, source);
-            case ShaderKind.Compute:
-            default:
-                throw new NotImplementedException();
-        }
     }
 
     public ITexture CreateTexture(int width, int height, Span<Color> data, ResourceOptions flags)
@@ -100,6 +87,9 @@ public class D3D11Graphics : IGraphicsProvider
 
     private void Resize(ResizeMessage message)
     {
+        if (message.Width == 0 || message.Height == 0)
+            return;
+
         this.resources.ImmediateRenderer.DeviceContext.ClearState();
         frameTexture.Dispose();
         resources.Resize(message.Width, message.Height);
@@ -109,6 +99,10 @@ public class D3D11Graphics : IGraphicsProvider
     public ICanvas GetFrameCanvas()
     {
         return this.frameCanvas;
+    }
+
+    public void CompileShader<T>(ShaderKind kind) where T : struct, IShader
+    {
     }
 
     record NullCanvas(ITexture Target) : ICanvas

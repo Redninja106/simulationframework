@@ -4,15 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.SFSL;
-
-public class CompilationResult
+namespace SimulationFramework.ShaderLanguage;
+public sealed class CompilationResult
 {
-    public bool Succeeded => Notifications.Length == 0;
-
-    public CompilationNotification[] Notifications;
-
-    public string[] Results;
-
-    // public TargetLanguage Language;
+    public string Output;
 }

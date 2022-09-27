@@ -58,6 +58,9 @@ internal sealed class DeviceResources
 
     public void Resize(int width, int height)
     {
+        if (SwapChain.Description1.Width == width && SwapChain.Description1.Height == height)
+            return;
+
         SwapChain.ResizeBuffers(0, width, height);
     }
 }

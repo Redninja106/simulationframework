@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SimulationFramework.SFSL.Tests;
+namespace SimulationFramework.ShaderLanguage.Tests;
 [TestClass]
 public class LexerTests
 {

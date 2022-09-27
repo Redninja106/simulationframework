@@ -1,4 +1,5 @@
-﻿using SimulationFramework.Drawing.Pipeline;
+﻿using SimulationFramework.Drawing.RenderPipeline;
+using SimulationFramework.Shaders;
 
 namespace SimulationFramework.Drawing.OpenGL;
 
@@ -9,12 +10,12 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
         throw new NotImplementedException();
     }
 
-    public IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged
+    public void CompileShader<T>(ShaderKind kind) where T : struct, IShader
     {
         throw new NotImplementedException();
     }
 
-    public IShader CreateShader(ShaderKind kind, string source)
+    public IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged
     {
         throw new NotImplementedException();
     }

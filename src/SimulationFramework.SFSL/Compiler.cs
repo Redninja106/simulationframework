@@ -1,37 +1,29 @@
-﻿using System;
+﻿using SimulationFramework.ShaderLanguage.Emitters;
+using SimulationFramework.ShaderLanguage.Emitters.Hlsl;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SimulationFramework.SFSL.Nodes;
-using SimulationFramework.SFSL.Emit;
-using SimulationFramework.SFSL.Emit.HLSL;
 
-namespace SimulationFramework.SFSL;
-
-public class Compiler
+namespace SimulationFramework.ShaderLanguage;
+public static class Compiler
 {
-    public CompilationResult Compile(string source)
+    public static CompilationResult Compile(string source, CompilationTarget target)
     {
-        var context = new CompilationContext();
+        var result = new CompilationResult();
+        
+        var tokens = Scanner.Scan(source);
 
-        var lexer = new Lexer(context, source);
+        var ast = Parser.Parse(ref tokens);
 
-        var documentBuilder = new DocumentBuilder(context);
+        result.Output = GetEmitter(target).Emit(ast);
 
-        var reader = new TokenReader(lexer.GetTokens());
-        var document = documentBuilder.Build(reader);
+        return result;
+    }
 
-        var errorChecker = new DocumentErrorChecker(context);
-
-        document.Accept(errorChecker);
-
-        Emitter emitter = new HlslEmitter(Console.Out);
-
-        document.Accept(emitter);
-
-        emitter.Flush();
-
-        return context.CreateResult();
+    private static Emitter GetEmitter(CompilationTarget target)
+    {
+        return new HLSLEmitter();
     }
 }
