@@ -72,4 +72,59 @@ public abstract class Simulation
 
         Application.Dispose();
     }
+
+    /// <summary>
+    /// Creates a simulation from the provided delegates.
+    /// </summary>
+    /// <param name="initialize">The delegate to call when simulation initializes.</param>
+    /// <param name="render">The delegate to call when simulation renders.</param>
+    /// <returns>A simulation which uses the provided delegates.</returns>
+    public static Simulation Create(Action<AppConfig> initialize, Action<ICanvas> render)
+    {
+        return Create(initialize, render, null);
+    }
+
+    /// <summary>
+    /// Creates a simulation from the provided delegates.
+    /// </summary>
+    /// <param name="initialize">The delegate to call when simulation initializes.</param>
+    /// <param name="render">The delegate to call when simulation renders.</param>
+    /// <param name="uninitialize">The delegate to call when simulation uninitializes.</param>
+    /// <returns>A simulation which uses the provided delegates.</returns>
+    public static Simulation Create(Action<AppConfig> initialize, Action<ICanvas> render, Action? uninitialize)
+    {
+        return new ActionSimulation(initialize, render, uninitialize);
+    }
+
+    private class ActionSimulation : Simulation
+    {
+        private readonly Action<AppConfig> initialize;
+        private readonly Action<ICanvas> render;
+        private readonly Action? uninitialize;
+
+        public ActionSimulation(Action<AppConfig> initialize, Action<ICanvas> render, Action? uninitialize)
+        {
+            this.initialize= initialize;
+            this.render = render;
+            this.uninitialize = uninitialize;
+        }
+
+        public override void OnInitialize(AppConfig config)
+        {
+            this.initialize(config);
+        }
+
+        public override void OnRender(ICanvas canvas)
+        {
+            this.render(canvas);
+        }
+
+        public override void OnUninitialize()
+        {
+            if (this.uninitialize is not null)
+            {
+                this.uninitialize();
+            }
+        }
+    }
 }

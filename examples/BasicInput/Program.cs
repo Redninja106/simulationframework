@@ -1,9 +1,15 @@
-﻿namespace BasicInput;
+﻿using SimulationFramework;
+using SimulationFramework.Desktop;
+using SimulationFramework.Drawing;
 
-internal class Program
+var simulation = Simulation.Create(Init, Render);
+simulation.RunDesktop();
+
+void Init(AppConfig config)
 {
-    static void Main(string[] args)
-    {
-        Console.WriteLine("Hello, World!");
-    }
+}
+
+void Render(ICanvas canvas)
+{
+    canvas.Clear(Color.Red);
 }

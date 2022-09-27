@@ -15,11 +15,14 @@ public sealed class MessageDispatcher
 
     public void Dispatch<T>(T message) where T : Message
     {
-        message.DispatchTime = Time.TotalTime;
+        if (Application.Current.GetComponent<ITimeProvider>() is not null)
+        {
+            message.DispatchTime = Time.TotalTime;
+        }
 
         var toDispatch = events.Where(e => e.IsListeningFor(typeof(T)));
 
-        foreach (var e in events)
+        foreach (var e in events.ToArray())
         {
             e.Dispatch(message);
         }
