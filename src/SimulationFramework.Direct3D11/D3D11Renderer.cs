@@ -11,22 +11,17 @@ using Vortice.Direct3D11.Debug;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
-internal sealed class D3D11Renderer : IRenderer
+internal sealed class D3D11Renderer : D3D11Object, IRenderer
 {
     public ID3D11DeviceContext DeviceContext { get; private set; }
     private D3D11Texture currentRenderTarget;
-    private DeviceResources resources;
+    private ID3D11RasterizerState rs;
 
-    private List<D3D11Object> shaders = new();
-
-
-    public D3D11Renderer(DeviceResources resources, ID3D11DeviceContext deviceContext)
+    public D3D11Renderer(DeviceResources resources, ID3D11DeviceContext deviceContext) : base(resources)
     {
-        this.resources = resources;
         this.DeviceContext = deviceContext;
     }
 
-    private ID3D11RasterizerState rs;
     public void PreDraw(PrimitiveKind primitiveKind)
     {
         DeviceContext.IASetPrimitiveTopology(primitiveKind.AsPrimitiveTopology());
@@ -40,7 +35,7 @@ internal sealed class D3D11Renderer : IRenderer
 
         if (rs == null)
         {
-            rs = resources.Device.CreateRasterizerState(RasterizerDescription.CullFront);
+            rs = Resources.Device.CreateRasterizerState(RasterizerDescription.CullFront);
         }
 
         DeviceContext.RSSetState(rs);
@@ -62,12 +57,12 @@ internal sealed class D3D11Renderer : IRenderer
 
     public void SetVertexShader<T>(T shader) where T : struct, IShader
     {
-        var shaderObject = shaders.OfType<D3D11VertexShader<T>>().SingleOrDefault();
+        var shaderObject = Resources.Shaders.OfType<D3D11VertexShader<T>>().SingleOrDefault();
 
         if (shaderObject is null)
         {
-            shaderObject = new D3D11VertexShader<T>(this.resources);
-            shaders.Add(shaderObject);
+            shaderObject = new D3D11VertexShader<T>(this.Resources);
+            Resources.Shaders.Add(shaderObject);
         }
 
         shaderObject.Update(shader);
@@ -76,12 +71,12 @@ internal sealed class D3D11Renderer : IRenderer
     
     public void SetFragmentShader<T>(T shader) where T : struct, IShader
     {
-        var shaderObject = shaders.OfType<D3D11FragmentShader<T>>().SingleOrDefault();
+        var shaderObject = Resources.Shaders.OfType<D3D11FragmentShader<T>>().SingleOrDefault();
 
         if (shaderObject is null)
         {
-            shaderObject = new D3D11FragmentShader<T>(this.resources);
-            shaders.Add(shaderObject);
+            shaderObject = new D3D11FragmentShader<T>(this.Resources);
+            Resources.Shaders.Add(shaderObject);
         }
 
         shaderObject.Update(shader);
@@ -122,6 +117,14 @@ internal sealed class D3D11Renderer : IRenderer
 
     public void SetViewport(Rectangle viewport)
     {
-        DeviceContext.RSSetViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height);
+        DeviceContext.RSSetViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height, 0, 1);
+    }
+
+    public override void Dispose()
+    {
+        this.currentRenderTarget.Dispose();
+        this.rs.Dispose();
+        this.DeviceContext.Dispose();
+        base.Dispose();
     }
 }

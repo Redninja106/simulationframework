@@ -80,6 +80,7 @@ internal static class OpCodeExtensions
         {
             OpCode.Jmp,
             OpCode.Call,
+            OpCode.Callvirt,
             OpCode.Ldftn,
             OpCode.Ldstr,
             OpCode.Ldfld,

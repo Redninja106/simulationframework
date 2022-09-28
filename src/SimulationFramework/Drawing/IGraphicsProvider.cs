@@ -44,5 +44,5 @@ public interface IGraphicsProvider : IAppComponent
 
     void SetResourceLifetime(int lifetimeInFrames);
 
-    void CompileShader<T>(ShaderKind kind) where T : struct, IShader;
+    void InvalidateShader(Type shaderType);
 }

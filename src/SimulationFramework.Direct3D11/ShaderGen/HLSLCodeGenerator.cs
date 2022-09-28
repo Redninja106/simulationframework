@@ -78,7 +78,7 @@ public class HLSLCodeGenerator : CodeGenerator
 
     private static readonly Dictionary<InSemantic, string> inputSemanticAliases = new()
     {
-
+        [InSemantic.Position] = "SV_Position",
     };
 
     private static readonly Dictionary<OutSemantic, string> outputSemanticAliases = new()

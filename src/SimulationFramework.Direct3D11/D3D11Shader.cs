@@ -58,7 +58,7 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
 
     public override void Dispose()
     {
-        cbuffer.Dispose();
+        cbuffer?.Dispose();
         base.Dispose();
     }
 

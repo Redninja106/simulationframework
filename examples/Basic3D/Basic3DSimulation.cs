@@ -54,8 +54,11 @@ internal class Basic3DSimulation : Simulation
     };
 
     IBuffer<Vertex> vertexBuffer;
+
+    float camXRotation, camYRotation, camZoom;
     float xRotation, yRotation;
     bool spin;
+
     public override void OnInitialize(AppConfig config)
     {
         vertexBuffer = Graphics.CreateBuffer(vertices);
@@ -63,10 +66,25 @@ internal class Basic3DSimulation : Simulation
 
     public override void OnRender(ICanvas canvas)
     {
-        if (Keyboard.IsKeyDown(Key.A)) yRotation += Time.DeltaTime;
-        if (Keyboard.IsKeyDown(Key.D)) yRotation -= Time.DeltaTime;
-        if (Keyboard.IsKeyDown(Key.W)) xRotation -= Time.DeltaTime;
-        if (Keyboard.IsKeyDown(Key.S)) xRotation += Time.DeltaTime;
+        if (Mouse.IsButtonDown(MouseButton.Right))
+        {
+            camYRotation += Mouse.DeltaPosition.X * 0.01f;
+            camXRotation += Mouse.DeltaPosition.Y * 0.01f;
+        }
+
+        camZoom -= Mouse.ScrollWheelDelta;
+
+        if (Keyboard.IsKeyDown(Key.A)) 
+            yRotation += Time.DeltaTime;
+
+        if (Keyboard.IsKeyDown(Key.D)) 
+            yRotation -= Time.DeltaTime;
+
+        if (Keyboard.IsKeyDown(Key.W)) 
+            xRotation -= Time.DeltaTime;
+
+        if (Keyboard.IsKeyDown(Key.S)) 
+            xRotation += Time.DeltaTime;
         
         if (spin)
         {
@@ -81,17 +99,20 @@ internal class Basic3DSimulation : Simulation
         VertexShader vertexShader = new()
         {
             World = Matrix4x4.CreateRotationX(xRotation) * Matrix4x4.CreateRotationY(yRotation),
-            View = Matrix4x4.CreateLookAt(Vector3.One * 5, Vector3.Zero, Vector3.UnitY),
-            Proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, 16f / 9f, 0.1f, 10f)
+            View = Matrix4x4.CreateLookAt(Vector3.Transform(Vector3.UnitZ * MathF.Pow(1.1f, camZoom), Matrix4x4.CreateRotationX(camXRotation) * Matrix4x4.CreateRotationY(camYRotation)), Vector3.Zero, Vector3.UnitY),
+            Proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, 16f / 9f, 0.1f, 100f)
         };
 
         FragmentShader fragShader = new();
 
         var renderer = Graphics.GetRenderer();
 
-        renderer.Clear(Color.Black);
+        renderer.Clear(Color.Gray);
+        
+        renderer.SetViewport(new(canvas.Width, canvas.Height, 0, 0));
 
         renderer.SetVertexBuffer(vertexBuffer);
+
         renderer.SetVertexShader(vertexShader);
         renderer.SetFragmentShader(fragShader);
 
@@ -126,13 +147,13 @@ internal class Basic3DSimulation : Simulation
         private Vertex vertex;
 
         [ShaderOut]
-        private Vector3 normal;
-
-        [ShaderOut]
         private Vector2 uv;
 
         [ShaderOut(OutSemantic.Position)]
         private Vector4 position;
+
+        [ShaderOut]
+        private Vector3 normal;
 
         public void Main()
         {
@@ -144,8 +165,6 @@ internal class Basic3DSimulation : Simulation
 
             uv = vertex.uv;
 
-            normal = vertex.normal;
-
             normal = Vector3.TransformNormal(vertex.normal, World);
         }
     }
@@ -153,22 +172,29 @@ internal class Basic3DSimulation : Simulation
     struct FragmentShader : IShader
     {
         [ShaderIn]
-        private Vector2 uv;
-
-        [ShaderIn]
         private Vector3 normal;
 
         [ShaderOut(OutSemantic.Color)]
         private Vector4 color;
 
+        [ShaderIn(InSemantic.Position)]
+        private Vector4 position;
+
+        [ShaderIn]
+        private Vector2 uv;
+
+        //public ITexture Texture;
+
         public void Main()
         {
-            float x = (uv.X - .5f);
-            float y = (uv.Y - .5f);
-            float c = x * x + y * y;
+            //float x = (uv.X - .5f);
+            //float y = (uv.Y - .5f);
+            //float c =  x * x + y * y;
             var b = Vector3.Dot(normal, Vector3.Normalize(new Vector3(-1, 1, -1)));
-            c = b * MathF.Sqrt(c) * .5f + .25f;
-            color = new(uv.X, uv.Y, 0, 1);
+            var c = b * .9f + .1f;
+            color = new(c, 0, 0, 1);
+            // color = new(normal.X, 0, 0, 1);
+            //color = Texture.Sample(uv).ToVector4();
         }
     }
 }

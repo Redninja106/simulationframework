@@ -88,7 +88,7 @@ internal unsafe class D3D11Texture : D3D11Object, ITexture
         return cpuData.AsSpan();
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
         this.shaderResourceView?.Dispose();
         this.renderTargetView?.Dispose();

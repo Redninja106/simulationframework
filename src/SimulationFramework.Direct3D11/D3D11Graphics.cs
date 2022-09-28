@@ -43,6 +43,8 @@ public class D3D11Graphics : IGraphicsProvider
 
     public void Dispose()
     {
+        frameTexture.Dispose();
+        resources.Dispose();
     }
 
     public ITexture GetFrameTexture()
@@ -101,8 +103,22 @@ public class D3D11Graphics : IGraphicsProvider
         return this.frameCanvas;
     }
 
-    public void CompileShader<T>(ShaderKind kind) where T : struct, IShader
+    public void InvalidateShader(Type shaderType)
     {
+        var shaderObj = FindShader(shaderType);
+
+        if (shaderObj is not null)
+        {
+            resources.Shaders.Remove(shaderObj);
+            shaderObj.Dispose();
+        }
+    }
+
+    private D3D11Object FindShader(Type shaderType)
+    {
+        return resources.Shaders.SingleOrDefault(obj => 
+            obj.GetType().GenericTypeArguments.FirstOrDefault() == shaderType
+            );
     }
 
     record NullCanvas(ITexture Target) : ICanvas

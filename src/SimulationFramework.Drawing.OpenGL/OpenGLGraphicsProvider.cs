@@ -50,6 +50,11 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
         throw new NotImplementedException();
     }
 
+    public void InvalidateShader(Type shaderType)
+    {
+        throw new NotImplementedException();
+    }
+
     public ITexture LoadTexture(Span<byte> encodedData, ResourceOptions flags)
     {
         throw new NotImplementedException();

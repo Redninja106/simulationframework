@@ -12,15 +12,18 @@ using Vortice.DXGI;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
-internal sealed class DeviceResources
+internal sealed class DeviceResources : IDisposable
 {
     public ID3D11Device Device { get; private set; }
     public D3D11Renderer ImmediateRenderer { get; private set; }
     public IDXGISwapChain1 SwapChain { get; private set; }
     public ID3D11Debug Debug { get; private set; }
+    public List<D3D11Object> Shaders { get; private set; }
 
     public DeviceResources(IntPtr hwnd)
     {
+        Shaders = new();
+
         var hr = D3D11.D3D11CreateDevice(null, DriverType.Hardware, DeviceCreationFlags.Debug, new[] { FeatureLevel.Level_11_0 }, out var device);
         this.Device = device;
         this.Debug = device.QueryInterface<ID3D11Debug>();
@@ -62,5 +65,19 @@ internal sealed class DeviceResources
             return;
 
         SwapChain.ResizeBuffers(0, width, height);
+    }
+
+    public void Dispose()
+    {
+        foreach (var shader in Shaders)
+        {
+            shader.Dispose();
+        }
+
+        SwapChain.Dispose();
+        ImmediateRenderer.Dispose();
+        //Debug.ReportLiveDeviceObjects(ReportLiveDeviceObjectFlags.Detail);
+        Debug.Dispose();
+        Device.Dispose();
     }
 }

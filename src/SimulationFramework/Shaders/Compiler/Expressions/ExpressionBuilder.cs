@@ -225,11 +225,13 @@ internal class ExpressionBuilder
             value = instruction.OpCode switch
             {
                 OpCode.Ldloc => (uint)instruction.Argument!,
-                OpCode.Ldloc_S => (uint)(sbyte)instruction.Argument!,
+                OpCode.Ldloc_S => (byte)instruction.Argument!,
                 OpCode.Ldloc_0 => 0,
                 OpCode.Ldloc_1 => 1,
                 OpCode.Ldloc_2 => 2,
                 OpCode.Ldloc_3 => 3,
+                OpCode.Ldloca => (uint)instruction.Argument!,
+                OpCode.Ldloca_S => (byte)instruction.Argument!,
                 _ => null
             };
 
@@ -241,7 +243,7 @@ internal class ExpressionBuilder
             value = instruction.OpCode switch
             {
                 OpCode.Stloc => (uint)instruction.Argument!,
-                OpCode.Stloc_S => (uint)(sbyte)instruction.Argument!,
+                OpCode.Stloc_S => (byte)instruction.Argument!,
                 OpCode.Stloc_0 => 0,
                 OpCode.Stloc_1 => 1,
                 OpCode.Stloc_2 => 2,
@@ -370,7 +372,7 @@ internal class ExpressionBuilder
 
     bool BuildCallExpr(Instruction instruction)
     {
-        if (instruction.OpCode is not OpCode.Call)
+        if (instruction.OpCode is not (OpCode.Call or OpCode.Callvirt))
             return false;
 
         var metadataToken = (MetadataToken)instruction.Argument!;

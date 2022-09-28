@@ -25,6 +25,4 @@ public interface IRenderer
 
     void SetViewport(Rectangle viewport);
     //void SetViewport(Rectangle viewport, float minDepth, float maxDepth);
-
-    
 }

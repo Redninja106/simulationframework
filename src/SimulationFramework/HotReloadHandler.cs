@@ -1,5 +1,6 @@
 ﻿using SimulationFramework;
 using SimulationFramework.Drawing;
+using SimulationFramework.Shaders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,17 @@ internal static class HotReloadHandler
 {
     public static void UpdateApplication(Type[]? types)
     {
-        // Graphics.
+        if (types is null)
+            return;
+
+        var provider = Application.Current.GetComponent<IGraphicsProvider>();
+
+        foreach (var type in types)
+        {
+            if (type.IsValueType && type.GetInterfaces().Contains(typeof(IShader)))
+            {
+                provider.InvalidateShader(type);
+            }
+        }
     }
 }
