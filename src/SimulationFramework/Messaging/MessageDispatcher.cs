@@ -13,9 +13,14 @@ public sealed class MessageDispatcher
 {
     private readonly List<IMessageListener> events = new();
 
+    /// <summary>
+    /// Dispatches a message.
+    /// </summary>
+    /// <typeparam name="T">The type of message to dispatch.</typeparam>
+    /// <param name="message">The message data.</param>
     public void Dispatch<T>(T message) where T : Message
     {
-        if (Application.Current.GetComponent<ITimeProvider>() is not null)
+        if (Application.Current?.GetComponent<ITimeProvider>() is not null)
         {
             message.DispatchTime = Time.TotalTime;
         }
@@ -27,8 +32,14 @@ public sealed class MessageDispatcher
             e.Dispatch(message);
         }
     }
-
-    public void Subscribe<T>(Action<T> listener, MessagePriority priority = MessagePriority.Normal) where T : Message
+    
+    /// <summary>
+    /// Subscribes a delegate to listen for messages of a specific type.
+    /// </summary>
+    /// <typeparam name="T">The type of message to listen for.</typeparam>
+    /// <param name="listener">The listener delegate.</param>
+    /// <param name="priority">The priority of the listener</param>
+    public void Subscribe<T>(Action<T> listener, ListenerPriority priority = ListenerPriority.Normal) where T : Message
     {
         if (events.SingleOrDefault(e => e is Event<T>) is not Event<T> ev)
         {
@@ -39,6 +50,11 @@ public sealed class MessageDispatcher
         ev.AddListener(listener, priority);
     }
 
+    /// <summary>
+    /// Unsubscibes a delegate from listening for messages.
+    /// </summary>
+    /// <typeparam name="T">The type of messages the delegate was listening for.</typeparam>
+    /// <param name="listener">The listener to unsubscribe.</param>
     public void Unsubscribe<T>(Action<T> listener) where T : Message
     {
         if (events.SingleOrDefault(e => e is Event<T>) is Event<T> ev)
@@ -62,7 +78,7 @@ public sealed class MessageDispatcher
             return type == typeof(T) || type.IsSubclassOf(typeof(T));
         }
 
-        public void AddListener(Action<T> action, MessagePriority priority)
+        public void AddListener(Action<T> action, ListenerPriority priority)
         {
             if (eventListeners.Contains(new(action, priority)))
             {
@@ -70,7 +86,7 @@ public sealed class MessageDispatcher
             }
 
             eventListeners.Add(new(action, priority));
-            eventListeners.Sort((a, b) => Comparer<MessagePriority>.Default.Compare(a.Priority, b.Priority));
+            eventListeners.Sort((a, b) => Comparer<ListenerPriority>.Default.Compare(a.Priority, b.Priority));
         }
 
         public void RemoveListener(Action<T> action)
@@ -94,6 +110,6 @@ public sealed class MessageDispatcher
             }
         }
 
-        private record EventListener(Action<T> Action, MessagePriority Priority);
+        private record EventListener(Action<T> Action, ListenerPriority Priority);
     }
 }

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Messaging;
 
+/// <summary>
+/// Sent went a frame begins.
+/// </summary>
 public class FrameBeginMessage : Message
 {
 }

@@ -8,7 +8,7 @@ namespace SimulationFramework.Tests.Interactive.Input;
 
 class Program : Simulation
 {
-    private int mouseScroll;
+    //private int mouseScroll;
 
     static void Main()
     {

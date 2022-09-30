@@ -17,8 +17,7 @@ public sealed class Application : IDisposable
     /// <summary>
     /// The currently running application, or null if there is none.
     /// </summary>
-    [AllowNull]
-    public static Application Current { get; private set; }
+    public static Application? Current { get; private set; }
 
     /// <summary>
     /// The application's dispatcher.
@@ -47,7 +46,7 @@ public sealed class Application : IDisposable
             }
             
             this.initialized = true;
-        }, MessagePriority.Internal);
+        }, ListenerPriority.Internal);
     }
 
     /// <summary>

@@ -12,7 +12,7 @@ namespace SimulationFramework;
 /// </summary>
 public static class Mouse
 {
-    internal static InputContext Context => Application.Current.GetComponent<InputContext>() ?? throw Exceptions.CoreComponentNotFound();
+    internal static InputContext Context => Application.Current?.GetComponent<InputContext>() ?? throw Exceptions.CoreComponentNotFound();
 
     /// <summary>
     /// The position of the mouse.

@@ -125,12 +125,14 @@ public readonly partial struct Color : IEquatable<Color>
     public static explicit operator uint(Color color) => color.Value;
     public static explicit operator Color(uint value) => new(value);
 
+    /// <inheritdoc/>
     public bool Equals(Color other)
     {
         return other.Value == this.Value;
     }
 
-    public override bool Equals([NotNullWhen(true)] object obj)
+    /// <inheritdoc/>
+    public override bool Equals([NotNullWhen(true)] object? obj)
     {
         if (obj is Color color)
             return this.Equals(color);

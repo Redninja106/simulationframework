@@ -13,8 +13,8 @@ namespace SimulationFramework;
 /// </summary>
 public sealed class InputContext : IAppComponent
 {
-    internal event KeyEvent KeyDown;
-    internal event KeyEvent KeyUp;
+    internal event KeyEvent? KeyDown;
+    internal event KeyEvent? KeyUp;
 
     internal readonly List<char> typedKeys = new();
 
@@ -33,8 +33,6 @@ public sealed class InputContext : IAppComponent
 
     internal float rightTrigger, leftTrigger;
     internal Vector2 rightJoystick, leftJoystick;
-
-    public Action<int> SelectedGamepadUpdated;
 
     public void UpdateKey(Key key, bool isDown)
     {
@@ -129,6 +127,6 @@ public sealed class InputContext : IAppComponent
         application.Dispatcher.Subscribe<FrameBeginMessage>(m =>
         {
             NewFrame();
-        }, MessagePriority.High);
+        }, ListenerPriority.High);
     }
 }

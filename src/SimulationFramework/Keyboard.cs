@@ -16,7 +16,7 @@ public delegate void KeyEvent(Key key);
 /// </summary>
 public static class Keyboard
 {
-    internal static InputContext Context => Application.Current.GetComponent<InputContext>() ?? throw Exceptions.CoreComponentNotFound();
+    internal static InputContext Context => Application.Current?.GetComponent<InputContext>() ?? throw Exceptions.CoreComponentNotFound();
 
     /// <summary>
     /// Returns true if the provided key is pressed.
@@ -37,15 +37,21 @@ public static class Keyboard
     /// </summary>
     public static IEnumerable<char> GetChars() => Context.typedKeys;
 
-    public static event KeyEvent KeyPressed 
-    { 
-        add { Context.KeyDown += value; }
-        remove { Context.KeyUp -= value; }
+    /// <summary>
+    /// Invoked when a key is pressed on the keyboard.
+    /// </summary>
+    public static event KeyEvent KeyPressed
+    {
+        add => Context.KeyDown += value;
+        remove => Context.KeyUp -= value;
     }
 
+    /// <summary>
+    /// Invoked when a key is released on the keyboard.
+    /// </summary>
     public static event KeyEvent KeyReleased
     {
-        add { Context.KeyDown += value; }
-        remove { Context.KeyUp -= value; }
+        add => Context.KeyDown += value;
+        remove => Context.KeyUp -= value;
     }
 }

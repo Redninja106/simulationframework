@@ -8,9 +8,15 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
+/// <summary>
+/// The base class for all simulations. Inherit this class or use <see cref="Create(Action{SimulationFramework.AppConfig}, Action{ICanvas})"/> to create a simulation.
+/// </summary>
 public abstract class Simulation
 {
-    public Application Application { get; private set; }
+    /// <summary>
+    /// This simulations application.
+    /// </summary>
+    public Application? Application { get; private set; }
 
     /// <summary>
     /// Called when the simulation should initialize.

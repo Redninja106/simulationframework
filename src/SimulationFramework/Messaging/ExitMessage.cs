@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Messaging;
 
-// send as a request for the application to uninitialize
+/// <summary>
+/// Sent when the application is requested to exit.
+/// </summary>
 public sealed class ExitMessage : Message
 {
 }

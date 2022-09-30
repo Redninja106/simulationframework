@@ -12,7 +12,7 @@ namespace SimulationFramework;
 /// </summary>
 public static class Gamepad
 {
-    private static InputContext Context => Application.Current.GetComponent<InputContext>() ?? throw Exceptions.CoreComponentNotFound();
+    private static InputContext Context => Application.Current?.GetComponent<InputContext>() ?? throw Exceptions.CoreComponentNotFound();
     
     /// <summary>
     /// The left joystick value of the gamepad.

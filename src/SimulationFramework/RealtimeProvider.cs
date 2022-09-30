@@ -87,6 +87,6 @@ public sealed class RealtimeProvider : ITimeProvider
         application.Dispatcher.Subscribe<RenderMessage>(m =>
         {
             this.Tick();
-        }, MessagePriority.High);
+        }, ListenerPriority.High);
     }
 }

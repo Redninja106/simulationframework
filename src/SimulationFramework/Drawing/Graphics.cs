@@ -12,7 +12,7 @@ namespace SimulationFramework.Drawing;
 /// </summary>
 public static class Graphics
 {
-    private static IGraphicsProvider Provider => Application.Current.GetComponent<IGraphicsProvider>();
+    private static IGraphicsProvider Provider => Application.Current?.GetComponent<IGraphicsProvider>() ?? throw Exceptions.CoreComponentNotFound();
 
     /// <summary>
     /// Gets canvas which draws to the current frame.
