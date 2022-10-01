@@ -173,22 +173,6 @@ public struct Rectangle : IEquatable<Rectangle>
     }
 
     /// <summary>
-    /// Casts from a rectangle to a tuple of (position, size).
-    /// </summary>
-    public static implicit operator (Vector2, Vector2)(Rectangle rectangle)
-    {
-        return (rectangle.Position, rectangle.Size);
-    }
-
-    /// <summary>
-    /// Casts from a tuple of (position, size) to a rectangle.
-    /// </summary>
-    public static implicit operator Rectangle((Vector2 position, Vector2 size) rectangle)
-    {
-        return new(rectangle.position, rectangle.size);
-    }
-
-    /// <summary>
     /// Indicates if this rectangle is equal to another.
     /// </summary>
     /// <param name="other">The rectangle to compare against this one.</param>

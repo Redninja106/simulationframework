@@ -54,4 +54,119 @@ public static class MathHelper
     {
         return a + (b - a) * t;
     }
+
+    /// <summary>
+    /// Normalizes a float to range [0.0, 1.0]
+    /// </summary>
+    /// <param name="value">The value to normalize.</param>
+    /// <returns>The normalized value.</returns>
+    public static float Normalize(float value)
+    {
+        return Math.Clamp(value, 0.0f, 1.0f);
+    }
+
+    /// <summary>
+    /// Converts from radians to degress.
+    /// </summary>
+    /// <param name="radians">The angle to convert.</param>
+    /// <returns>The converted angle, in degrees.</returns>
+    public static float RadiansToDegrees(float radians)
+    {
+        return radians * (360f / MathF.Tau);
+    }
+
+    /// <summary>
+    /// Converts from degrees to radians.
+    /// </summary>
+    /// <param name="degrees">The angle to convert.</param>
+    /// <returns>The converted angle, in radians.</returns>
+    public static float DegreesToRadians(float degrees)
+    {
+        return degrees * (MathF.Tau / 360f);
+    }
+
+    /// <summary>
+    /// Converts from radians to turns.
+    /// </summary>
+    /// <param name="radians">The angle to convert.</param>
+    /// <returns>The converted angle, in turns.</returns>
+    public static float RadiansToTurns(float radians)
+    {
+        return radians * (1f / MathF.Tau);
+    }
+
+    /// <summary>
+    /// Converts from degrees to turns.
+    /// </summary>
+    /// <param name="degrees">The angle to convert.</param>
+    /// <returns>The converted angle, in turns.</returns>
+    public static float DegreesToTurns(float degrees)
+    {
+        return degrees * (1f / 360f);
+    }
+
+    /// <summary>
+    /// Converts from turns to degrees.
+    /// </summary>
+    /// <param name="turns">The angle to convert.</param>
+    /// <returns>The converted angle, in degrees.</returns>
+    public static float TurnsToDegrees(float turns)
+    {
+        return turns * 360f;
+    }
+
+    /// <summary>
+    /// Converts from turns to radians.
+    /// </summary>
+    /// <param name="turns">The angle to convert.</param>
+    /// <returns>The converted angle, in radians.</returns>
+    public static float TurnsToRadians(float turns)
+    {
+        return turns * MathF.Tau;
+    }
+
+    /// <summary>
+    /// Normalizes the given angle to its smallest positive equivalent.
+    /// </summary>
+    /// <param name="turns">The angle to normalize.</param>
+    /// <returns>The normalized angle, between 0 and 1.</returns>
+    public static float NormalizeTurns(float turns)
+    {
+        turns %= 1f;
+
+        if (turns < 0)
+            turns++;
+
+        return turns;
+    }
+
+    /// <summary>
+    /// Normalizes the given angle to its smallest positive equivalent.
+    /// </summary>
+    /// <param name="degrees">The angle to normalize.</param>
+    /// <returns>The normalized angle, between 0 and 360.</returns>
+    public static float NormalizeDegrees(float degrees)
+    {
+        degrees %= 360;
+
+        if (degrees < 0)
+            degrees++;
+
+        return degrees;
+    }
+
+    /// <summary>
+    /// Normalizes the given angle to its smallest positive equivalent.
+    /// </summary>
+    /// <param name="radians">The angle to normalize.</param>
+    /// <returns>The normalized angle, between 0 and 2pi.</returns>
+    public static float NormalizeRadians(float radians)
+    {
+        radians %= MathF.Tau;
+
+        if (radians < 0)
+            radians += MathF.Tau;
+
+        return radians;
+    }
 }

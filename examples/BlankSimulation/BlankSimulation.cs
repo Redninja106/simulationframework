@@ -9,8 +9,20 @@ internal class BlankSimulation : Simulation
     {
     }
 
+    float h, s, v;
+
     public override void OnRender(ICanvas canvas)
     {
-        canvas.Clear(Color.Gray);
+        if (Keyboard.IsKeyPressed(Key.Space))
+        {
+            Console.WriteLine("H:");
+            h = float.Parse(Console.ReadLine());
+            Console.WriteLine("S:");
+            s = float.Parse(Console.ReadLine());
+            Console.WriteLine("V:");
+            v = float.Parse(Console.ReadLine());
+        }
+
+        canvas.Clear(Color.FromHSV(h /  360f, s / 100, v / 100));
     }
 }

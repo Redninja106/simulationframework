@@ -8,4 +8,5 @@ namespace SimulationFramework;
 internal static class Exceptions
 {
     public static Exception CoreComponentNotFound() => new SimulationFrameworkException("A simulation is not initialized or a required component is missing.");
+    public static Exception ParseFailed(string? paramName = null) => new ArgumentOutOfRangeException(paramName, "Input string was not in the correct format");
 }
