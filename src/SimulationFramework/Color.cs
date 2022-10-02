@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Drawing;
+namespace SimulationFramework;
 
 /// <summary>
 /// Represents a 32-bit RGBA color.
@@ -190,38 +190,40 @@ public readonly partial struct Color : IEquatable<Color>
     }
 
     /// <summary>
-    /// Indicates if two rectangles are equal.
+    /// Indicates if two <see cref="Color"/> objects are equal.
     /// </summary>
     /// <param name="left">The first color.</param>
     /// <param name="right">The second color.</param>
-    /// <returns><see langword="true"/> if the colors are equal, otherwise <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> if the <see cref="Color"/> objects are equal, otherwise <see langword="false"/>.</returns>
     public static bool operator ==(Color left, Color right)
     {
         return left.Equals(right);
     }
 
     /// <summary>
-    /// Indicates if two rectangles are not equal.
+    /// Indicates if two <see cref="Color"/> objects are not equal.
     /// </summary>
     /// <param name="left">The first color.</param>
     /// <param name="right">The second color.</param>
-    /// <returns><see langword="true"/> if the colors are not equal, otherwise <see langword="false"/>.</returns>
+    /// <returns><see langword="true"/> if the <see cref="Color"/> objects are not equal, otherwise <see langword="false"/>.</returns>
     public static bool operator !=(Color left, Color right)
     {
         return !(left == right);
     }
 
     /// <summary>
-    /// Returns this color as a Vector3, with its R, G, and B values as X, Y, and Z, respectively.
+    /// Returns this <see cref="Color"/> as a <see cref="Vector3"/>, with its R, G, and B values as X, Y, and Z, respectively.
     /// </summary>
+    /// <returns>The converted <see cref="Vector3"/>.</returns>
     public Vector3 ToVector3()
     {
         return new Vector3(this.R / 255f, this.G / 255f, this.B / 255f);
     }
 
     /// <summary>
-    /// Returns this color as a Vector3, with its R, G, B, and A values as X, Y, Z, and W, respectively.
+    /// Converts this <see cref="Color"/> to <see cref="Vector4"/>, with its R, G, B, and A values as X, Y, Z, and W, respectively.
     /// </summary>
+    /// <returns>The converted <see cref="Vector4"/>.</returns>
     public Vector4 ToVector4()
     {
         return new Vector4(ToVector3(), this.A / 255f);
@@ -330,43 +332,27 @@ public readonly partial struct Color : IEquatable<Color>
     }
 
     /// <summary>
-    /// Linearly interpolates between two color values in RGBA space.
+    /// Linearly interpolates between two <see cref="Color"/> values in RGBA space.
     /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="t"></param>
-    /// <returns></returns>
-    public static Color Lerp(Color a, Color b, float t)
+    /// <param name="color1">The first color.</param>
+    /// <param name="color2">The second color.</param>
+    /// <param name="t">The interpolation amount, from 0.0 to 1.0.</param>
+    /// <returns>The interpolated color.</returns>
+    public static Color Lerp(Color color1, Color color2, float t)
     {
-        Vector4 vecA = a.ToVector4();
-        Vector4 vecB = b.ToVector4();
-
-        return new Color(
-            MathHelper.Lerp(vecA.X, vecB.X, t),
-            MathHelper.Lerp(vecA.Y, vecB.Y, t),
-            MathHelper.Lerp(vecA.Z, vecB.Z, t),
-            MathHelper.Lerp(vecA.W, vecB.W, t)
-            );
+        return ColorF.Lerp(color1.ToColorF(), color2.ToColorF(), t).ToColor();
     }
 
     /// <summary>
-    /// Linearly interpolates between two color values in HSV space.
+    /// Linearly interpolates between two <see cref="Color"/> values in HSV space.
     /// </summary>
-    /// <param name="a"></param>
-    /// <param name="b"></param>
-    /// <param name="t"></param>
-    /// <returns></returns>
-    public static Color LerpHSV(Color a, Color b, float t)
+    /// <param name="color1">The first color.</param>
+    /// <param name="color2">The second color.</param>
+    /// <param name="t">The interpolation amount, from 0.0 to 1.0.</param>
+    /// <returns>The interpolated color.</returns>
+    public static Color LerpHSV(Color color1, Color color2, float t)
     {
-        Vector4 vecA = a.ToHSVA();
-        Vector4 vecB = b.ToHSVA();
-
-        return FromHSV(
-            MathHelper.Lerp(vecA.X, vecB.X, t),
-            MathHelper.Lerp(vecA.Y, vecB.Y, t),
-            MathHelper.Lerp(vecA.Z, vecB.Z, t),
-            MathHelper.Lerp(vecA.W, vecB.W, t)
-            );
+        return ColorF.LerpHSV(color1.ToColorF(), color2.ToColorF(), t).ToColor();
     }
 
     /// <summary>
@@ -444,5 +430,14 @@ public readonly partial struct Color : IEquatable<Color>
         {
             throw Exceptions.ParseFailed(nameof(value));
         }
+    }
+
+    /// <summary>
+    /// Converts this <see cref="Color"/> as a <see cref="ColorF"/>.
+    /// </summary>
+    /// <returns>The converted <see cref="ColorF"/>.</returns>
+    public ColorF ToColorF()
+    {
+        return new(ToVector4());
     }
 }
