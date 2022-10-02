@@ -2,7 +2,6 @@
 using Silk.NET.Input;
 using SilkKey = Silk.NET.Input.Key;
 using SilkButton = Silk.NET.Input.MouseButton;
-using SimulationFramework.IMGUI;
 using System.Numerics;
 using SimulationFramework.Messaging;
 
@@ -73,10 +72,10 @@ internal class DesktopInputComponent : IAppComponent
             Context.UpdateGamepadButton(GamepadButton.Start, gamepad.Start().Pressed);
             Context.UpdateGamepadButton(GamepadButton.RightStick, gamepad.RightStick().Pressed);
             Context.UpdateGamepadButton(GamepadButton.LeftStick, gamepad.LeftStick().Pressed);
-            Context.UpdateGamepadButton(GamepadButton.DPadRight, gamepad.DPadRight().Pressed);
-            Context.UpdateGamepadButton(GamepadButton.DPadLeft, gamepad.DPadLeft().Pressed);
-            Context.UpdateGamepadButton(GamepadButton.DPadUp, gamepad.DPadUp().Pressed);
-            Context.UpdateGamepadButton(GamepadButton.DPadDown, gamepad.DPadDown().Pressed);
+            Context.UpdateGamepadButton(GamepadButton.Right, gamepad.DPadRight().Pressed);
+            Context.UpdateGamepadButton(GamepadButton.Left, gamepad.DPadLeft().Pressed);
+            Context.UpdateGamepadButton(GamepadButton.Up, gamepad.DPadUp().Pressed);
+            Context.UpdateGamepadButton(GamepadButton.Down, gamepad.DPadDown().Pressed);
             Context.UpdateGamepadButton(GamepadButton.RightBumper, gamepad.RightBumper().Pressed);
             Context.UpdateGamepadButton(GamepadButton.LeftBumper, gamepad.LeftBumper().Pressed);
         }

@@ -34,7 +34,7 @@ namespace SimulationFramework.SkiaSharp
             throw new NotSupportedException("This operation is not support on the main frame texture!");
         }
 
-        public ICanvas OpenCanvas()
+        public ICanvas CreateCanvas()
         {
             throw new NotSupportedException("This operation is not support on the main frame texture!");
         }

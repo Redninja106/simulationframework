@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimulationFramework.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -12,8 +13,8 @@ namespace SimulationFramework;
 /// </summary>
 public sealed class InputContext : IAppComponent
 {
-    internal event KeyEvent KeyDown;
-    internal event KeyEvent KeyUp;
+    internal event KeyEvent? KeyDown;
+    internal event KeyEvent? KeyUp;
 
     internal readonly List<char> typedKeys = new();
 
@@ -32,8 +33,6 @@ public sealed class InputContext : IAppComponent
 
     internal float rightTrigger, leftTrigger;
     internal Vector2 rightJoystick, leftJoystick;
-
-    public Action<int> SelectedGamepadUpdated;
 
     public void UpdateKey(Key key, bool isDown)
     {
@@ -125,9 +124,9 @@ public sealed class InputContext : IAppComponent
     
     public void Initialize(Application application)
     {
-        application.Dispatcher.Subscribe<Messaging.RenderMessage>(m =>
+        application.Dispatcher.Subscribe<FrameBeginMessage>(m =>
         {
             NewFrame();
-        }, Messaging.MessagePriority.Low);
+        }, ListenerPriority.High);
     }
 }

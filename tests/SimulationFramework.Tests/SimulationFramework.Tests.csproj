@@ -18,4 +18,8 @@
     <ProjectReference Include="..\..\src\SimulationFramework\SimulationFramework.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Drawing\" />
+  </ItemGroup>
+
 </Project>

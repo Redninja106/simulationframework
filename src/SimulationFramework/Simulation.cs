@@ -8,9 +8,15 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
+/// <summary>
+/// The base class for all simulations. Inherit this class or use <see cref="Create(Action{SimulationFramework.AppConfig}, Action{ICanvas})"/> to create a simulation.
+/// </summary>
 public abstract class Simulation
 {
-    public Application Application { get; private set; }
+    /// <summary>
+    /// This simulations application.
+    /// </summary>
+    public Application? Application { get; private set; }
 
     /// <summary>
     /// Called when the simulation should initialize.
@@ -36,13 +42,16 @@ public abstract class Simulation
     /// <param name="height">The new height of the simulation's video output.</param>
     public virtual void OnResize(int width, int height) { }
 
+    /// <summary>
+    /// Starts this simulation using the provided platform.
+    /// </summary>
+    /// <param name="platform"></param>
     public void Run(IAppPlatform platform)
     {
         Application = new Application(platform);
 
         Application.Dispatcher.Subscribe<InitializeMessage>(m => {
-            var config = AppConfig.Open();
-            config.ResetToDefault();
+            var config = AppConfig.CreateDefault();
             config.Title = "Simulation";
             OnInitialize(config);
             config.Apply();
@@ -50,7 +59,9 @@ public abstract class Simulation
 
         Application.Dispatcher.Subscribe<RenderMessage>(m =>
         {
+            m.Canvas.ResetState();
             OnRender(m.Canvas);
+            m.Canvas.Flush();
         });
 
         Application.Dispatcher.Subscribe<UninitializeMessage>(m =>
@@ -66,5 +77,60 @@ public abstract class Simulation
         Application.Start();
 
         Application.Dispose();
+    }
+
+    /// <summary>
+    /// Creates a simulation from the provided delegates.
+    /// </summary>
+    /// <param name="initialize">The delegate to call when simulation initializes.</param>
+    /// <param name="render">The delegate to call when simulation renders.</param>
+    /// <returns>A simulation which uses the provided delegates.</returns>
+    public static Simulation Create(Action<AppConfig> initialize, Action<ICanvas> render)
+    {
+        return Create(initialize, render, null);
+    }
+
+    /// <summary>
+    /// Creates a simulation from the provided delegates.
+    /// </summary>
+    /// <param name="initialize">The delegate to call when simulation initializes.</param>
+    /// <param name="render">The delegate to call when simulation renders.</param>
+    /// <param name="uninitialize">The delegate to call when simulation uninitializes.</param>
+    /// <returns>A simulation which uses the provided delegates.</returns>
+    public static Simulation Create(Action<AppConfig> initialize, Action<ICanvas> render, Action? uninitialize)
+    {
+        return new ActionSimulation(initialize, render, uninitialize);
+    }
+
+    private class ActionSimulation : Simulation
+    {
+        private readonly Action<AppConfig> initialize;
+        private readonly Action<ICanvas> render;
+        private readonly Action? uninitialize;
+
+        public ActionSimulation(Action<AppConfig> initialize, Action<ICanvas> render, Action? uninitialize)
+        {
+            this.initialize= initialize;
+            this.render = render;
+            this.uninitialize = uninitialize;
+        }
+
+        public override void OnInitialize(AppConfig config)
+        {
+            this.initialize(config);
+        }
+
+        public override void OnRender(ICanvas canvas)
+        {
+            this.render(canvas);
+        }
+
+        public override void OnUninitialize()
+        {
+            if (this.uninitialize is not null)
+            {
+                this.uninitialize();
+            }
+        }
     }
 }

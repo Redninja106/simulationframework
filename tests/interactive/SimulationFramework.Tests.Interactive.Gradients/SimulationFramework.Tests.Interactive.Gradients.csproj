@@ -1,22 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-<<<<<<<< HEAD:src/SimulationFramework.Drawing.OpenGL/SimulationFramework.Drawing.OpenGL.csproj
-========
     <OutputType>Exe</OutputType>
->>>>>>>> master:tests/interactive/SimulationFramework.Tests.Interactive.Gradients/SimulationFramework.Tests.Interactive.Gradients.csproj
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<<< HEAD:src/SimulationFramework.Drawing.OpenGL/SimulationFramework.Drawing.OpenGL.csproj
-    <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
-========
     <ProjectReference Include="..\..\..\src\SimulationFramework.Desktop\SimulationFramework.Desktop.csproj" />
     <ProjectReference Include="..\..\..\src\SimulationFramework\SimulationFramework.csproj" />
->>>>>>>> master:tests/interactive/SimulationFramework.Tests.Interactive.Gradients/SimulationFramework.Tests.Interactive.Gradients.csproj
   </ItemGroup>
 
 </Project>

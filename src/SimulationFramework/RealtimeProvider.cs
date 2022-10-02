@@ -15,7 +15,7 @@ public sealed class RealtimeProvider : ITimeProvider
 {
     /// <summary>
     /// </summary>
-    public float MaxDeltaTime { get; set; } = 1 / 30f;
+    public float MaxDeltaTime { get; set; } = float.PositiveInfinity;
 
     /// <summary>
     /// </summary>
@@ -81,11 +81,12 @@ public sealed class RealtimeProvider : ITimeProvider
     {
     }
 
+    /// <inheritdoc/>
     public void Initialize(Application application)
     {
         application.Dispatcher.Subscribe<RenderMessage>(m =>
         {
             this.Tick();
-        }, MessagePriority.High);
+        }, ListenerPriority.High);
     }
 }

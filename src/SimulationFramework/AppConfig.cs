@@ -11,33 +11,75 @@ namespace SimulationFramework;
 /// </summary>
 public class AppConfig
 {
+    /// <summary>
+    /// The title of the application.
+    /// </summary>
     public string Title { get; set; }
 
+    /// <summary>
+    /// The width of the application's window.
+    /// </summary>
     public int Width { get; set; }
+
+    /// <summary>
+    /// The height of the application's window.
+    /// </summary>
     public int Height { get; set; }
     
+    /// <summary>
+    /// Whether the window should be resizable or not.
+    /// </summary>
     public bool Resizable { get; set; }
+
+    /// <summary>
+    /// Whether the window should be fullscreen or not.
+    /// </summary>
     public bool Fullscreen { get; set; }
+
+    /// <summary>
+    /// Whether the window's titlebar should be hidden or not.
+    /// </summary>
     public bool TitlebarHidden { get; set; }
 
-    public AppConfig()
+    private AppConfig()
     {
-
+        Title = string.Empty;
     }
 
-    public static AppConfig Open() 
+    /// <summary>
+    /// Creates a new AppConfig with the simulation's current options.
+    /// </summary>
+    /// <returns></returns>
+    public static AppConfig Create() 
     {
-        var controller = Application.Current.GetComponent<IAppController>();
-        return controller.CreateConfig();
+        var controller = Application.Current.GetComponent<IAppController>() ?? throw Exceptions.CoreComponentNotFound();
+        var result = new AppConfig();
+        controller.InitializeConfig(result);
+        return result;
     }
 
+    /// <summary>
+    /// Creates a new AppConfig with default options.
+    /// </summary>
+    public static AppConfig CreateDefault()
+    {
+        var result = new AppConfig();
+        result.ResetToDefault();
+        return result;
+    }
+
+    /// <summary>
+    /// Tries to apply this AppConfig to the simulation.
+    /// </summary>
+    /// <returns><see langword="true"/> if all changes were applied, <see langword="false"/> if one or more changes failed to apply.</returns>
     public bool Apply()
     {
-        var controller = Application.Current.GetComponent<IAppController>();
+        var controller = Application.Current.GetComponent<IAppController>() ?? throw Exceptions.CoreComponentNotFound();
         return controller.ApplyConfig(this);
     }
-    
-    public void ResetToDefault()
+
+    // Resets this AppConfig to its default values.
+    private void ResetToDefault()
     {
         Title = "Application";
         Width = 1280;
@@ -46,5 +88,4 @@ public class AppConfig
         Fullscreen = false;
         TitlebarHidden = false;
     }
-    //public void EnableSimulationPane(int width, int height, bool scaling = true) { }
 }

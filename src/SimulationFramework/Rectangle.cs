@@ -17,14 +17,17 @@ public struct Rectangle : IEquatable<Rectangle>
     /// The x-coordinate of the top-left corner of the rectangle.
     /// </summary>
     public float X;
+
     /// <summary>
     /// The y-coordinate of the top-left corner of the rectangle.
     /// </summary>
     public float Y;
+
     /// <summary>
     /// The width of the rectangle.
     /// </summary>
     public float Width;
+
     /// <summary>
     /// The height of the rectangle.
     /// </summary>
@@ -33,12 +36,20 @@ public struct Rectangle : IEquatable<Rectangle>
     /// <summary>
     /// The size of the rectangle.
     /// </summary>
-    public Vector2 Size { get => new Vector2(Width, Height); set => (Width, Height) = (value.X, value.Y); }
+    public Vector2 Size
+    {
+        get => new(Width, Height);
+        set => (Width, Height) = (value.X, value.Y);
+    }
 
     /// <summary>
     /// The top-left corner of the rectangle.
     /// </summary>
-    public Vector2 Position { get => new Vector2(X, Y); set => (X, Y) = (value.X, value.Y); }
+    public Vector2 Position
+    {
+        get => new(X, Y);
+        set => (X, Y) = (value.X, value.Y);
+    }
 
     /// <summary>
     /// The center of the rectangle.
@@ -69,7 +80,7 @@ public struct Rectangle : IEquatable<Rectangle>
         this.Height = height;
         this.X = this.Y = 0;
 
-        SetAlignedPosition(new Vector2(x, y), alignment);
+        SetAlignedPosition(new(x, y), alignment);
     }
 
     /// <summary>
@@ -80,13 +91,13 @@ public struct Rectangle : IEquatable<Rectangle>
         return alignment switch
         {
             Alignment.TopLeft => new(X, Y),
-            Alignment.TopCenter => new(X + .5f * Width, Y),
+            Alignment.TopCenter => new(X + (.5f * Width), Y),
             Alignment.TopRight => new(X + Width, Y),
-            Alignment.CenterLeft => new(X, Y + .5f * Height),
-            Alignment.Center => new(X + .5f * Width, Y + .5f * Height),
-            Alignment.CenterRight => new(X + Width, Y + .5f * Height),
+            Alignment.CenterLeft => new(X, Y + (.5f * Height)),
+            Alignment.Center => new(X + (.5f * Width), Y + (.5f * Height)),
+            Alignment.CenterRight => new(X + Width, Y + (.5f * Height)),
             Alignment.BottomLeft => new(X, Y + Height),
-            Alignment.BottomCenter => new Vector2(X + .5f * Width, Y + Height),
+            Alignment.BottomCenter => new Vector2(X + (.5f * Width), Y + Height),
             Alignment.BottomRight => new Vector2(X + Width, Y + Height),
             _ => throw new ArgumentException("Unrecognized alignment!"),
         };
@@ -102,7 +113,7 @@ public struct Rectangle : IEquatable<Rectangle>
         this.X = alignment switch
         {
             Alignment.TopLeft or Alignment.CenterLeft or Alignment.BottomLeft => position.X,
-            Alignment.TopCenter or Alignment.Center or Alignment.BottomCenter => position.X - .5f * this.Width,
+            Alignment.TopCenter or Alignment.Center or Alignment.BottomCenter => position.X - (.5f * this.Width),
             Alignment.TopRight or Alignment.CenterRight or Alignment.BottomRight => position.X - this.Width,
             _ => throw new ArgumentException("Unrecognized alignment!")
         };
@@ -110,7 +121,7 @@ public struct Rectangle : IEquatable<Rectangle>
         this.Y = alignment switch
         {
             Alignment.TopLeft or Alignment.TopCenter or Alignment.TopRight => position.Y,
-            Alignment.CenterLeft or Alignment.Center or Alignment.CenterRight => position.Y - .5f * Height,
+            Alignment.CenterLeft or Alignment.Center or Alignment.CenterRight => position.Y - (.5f * Height),
             Alignment.BottomLeft or Alignment.BottomCenter or Alignment.BottomRight => position.Y - Height,
             _ => throw new ArgumentException("Unrecognized alignment!")
         };
@@ -128,7 +139,7 @@ public struct Rectangle : IEquatable<Rectangle>
     }
 
     /// <summary>
-    /// Determines if the rectangle has any intersection with another.
+    /// Determines if the rectangle has an intersection with another.
     /// </summary>
     /// <param name="other">The rectangle to check for an intersection with.</param>
     /// <returns>True if the rectangles are intersecting, otherwise false.</returns>
@@ -162,88 +173,59 @@ public struct Rectangle : IEquatable<Rectangle>
     }
 
     /// <summary>
-    /// Casts from a recangle to a tuple of floats.
+    /// Indicates if this rectangle is equal to another.
     /// </summary>
-    public static implicit operator (float, float, float, float)(Rectangle rectangle)
-    {
-        return (rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
-    }
-
-    /// <summary>
-    /// Casts from a tuple of floats to a rectangle.
-    /// </summary>
-    public static implicit operator Rectangle((float x, float y, float width, float height) rectangle)
-    {
-        return new(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-    }
-
-    /// <summary>
-    /// Casts from a rectangle to a tuple of (position, size).
-    /// </summary>
-    public static implicit operator (Vector2, Vector2)(Rectangle rectangle)
-    {
-        return (rectangle.Position, rectangle.Size);
-    }
-
-    /// <summary>
-    /// Casts from a tuple of (position, size) to a rectangle.
-    /// </summary>
-    public static implicit operator Rectangle((Vector2 position, Vector2 size) rectangle)
-    {
-        return new(rectangle.position, rectangle.size);
-    }
-
-    ///
+    /// <param name="other">The rectangle to compare against this one.</param>
+    /// <returns><see langword="true"/> if this rectangle equals <paramref name="other"/>, otherwise <see langword="false"/>.</returns>
     public bool Equals(Rectangle other)
     {
         return X == other.X || Y == other.Y || Width == other.Width || Height == other.Height;
     }
 
-    ///
-    public override bool Equals([NotNullWhen(true)] object obj)
+    /// <inheritdoc/>
+    public override bool Equals([NotNullWhen(true)] object? obj)
     {
-        if (obj is Rectangle rect)
-            return Equals(rect);
-
-        return false;
+        return obj is Rectangle rect && Equals(rect);
     }
 
+    /// <summary>
     /// Returns this rectangle in the format "{x, y, width, height}".
+    /// </summary>
     public override string ToString()
     {
         return $"{{{X}, {Y}, {Width}, {Height}}}";
     }
 
-    ///
+    /// <summary>
+    /// Indicates if two rectangles are equal.
+    /// </summary>
+    /// <param name="left">The first rectangle.</param>
+    /// <param name="right">The second rectangle.</param>
+    /// <returns><see langword="true"/> if the rectangles are equal, otherwise <see langword="false"/>.</returns>
     public static bool operator ==(Rectangle left, Rectangle right)
     {
         return left.Equals(right);
     }
-    
-    ///
+
+    /// <summary>
+    /// Indicates if two rectangles are not equal.
+    /// </summary>
+    /// <param name="left">The first rectangle.</param>
+    /// <param name="right">The second rectangle.</param>
+    /// <returns><see langword="true"/> if the rectangles are not equal, otherwise <see langword="false"/>.</returns>
     public static bool operator !=(Rectangle left, Rectangle right)
     {
         return !(left == right);
     }
 
-    ///
+    /// <inheritdoc/>
     public override int GetHashCode()
     {
         return HashCode.Combine(X, Y, Width, Height);
     }
 
     /// <summary>
-    /// Creates a rectangle from the position of each side.
-    /// </summary>
-    /// <param name="args"></param>
-    /// <returns></returns>
-    public static Rectangle CreateLTRB((float left, float top, float right, float bottom) args)
-    {
-        return CreateLTRB(args.left, args.top, args.right, args.bottom);
-    }
-
-    /// <summary>
-    /// Creates a rectangle from the position of each side.
+    /// Creates a rectangle given the absoulte position of each of its sides.
     /// </summary>
     /// <param name="left">The position of the left side of the rectangle on the x-axis.</param>
     /// <param name="top">The position of the top of the rectangle on the y-axis.</param>

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Messaging;
 
 /// <summary>
-/// Sent when the simulation is initialized.
+/// Sent went a frame begins.
 /// </summary>
-public sealed class InitializeMessage : Message
+public class FrameBeginMessage : Message
 {
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing;
 
 /// <summary>
-/// 
+/// Represents a gradient.
 /// </summary>
 /// <param name="Stops"></param>
 /// <param name="Transform"></param>
