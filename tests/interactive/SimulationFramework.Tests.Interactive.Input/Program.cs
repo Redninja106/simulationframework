@@ -2,7 +2,6 @@
 using System.Numerics;
 using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
-using SimulationFramework.Utilities;
 
 namespace SimulationFramework.Tests.Interactive.Input;
 

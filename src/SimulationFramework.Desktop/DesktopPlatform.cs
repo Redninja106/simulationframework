@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Silk.NET.Windowing;
 using ImGuiNET;
-using SimulationFramework.IMGUI;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 

@@ -8,12 +8,12 @@ namespace SimulationFramework.Desktop;
 internal class DesktopAppController : IAppController
 {
     private readonly IWindow window;
-    
+
     private bool isRunning;
 
     // where the window was located before we went into fullscreen
     private Vector2D<int>? lastWindowPosition;
-    
+
     public DesktopAppController(IWindow window)
     {
         this.window = window;
@@ -41,7 +41,7 @@ internal class DesktopAppController : IAppController
                     window.Position = lastWindowPosition.Value;
                     lastWindowPosition = null;
                 }
-                
+
                 if (config.TitlebarHidden)
                 {
                     window.WindowBorder = WindowBorder.Hidden;
@@ -63,20 +63,18 @@ internal class DesktopAppController : IAppController
         {
             return false;
         }
-        
+
         return true;
     }
 
-    public AppConfig CreateConfig()
+    public void InitializeConfig(AppConfig config)
     {
-        var result = new AppConfig();
-        result.Width = window.Size.X;
-        result.Height = window.Size.Y;
-        result.Title = window.Title;
-        result.Fullscreen = window.WindowBorder == WindowBorder.Fixed && window.Size == window.Monitor.Bounds.Size && window.Position == Vector2D<int>.Zero;
-        result.TitlebarHidden = window.WindowBorder == WindowBorder.Hidden && !result.Fullscreen;
-        result.Resizable = window.WindowBorder == WindowBorder.Resizable && !result.Fullscreen;
-        return result;
+        config.Width = window.Size.X;
+        config.Height = window.Size.Y;
+        config.Title = window.Title;
+        config.Fullscreen = window.WindowBorder == WindowBorder.Fixed && window.Size == window.Monitor.Bounds.Size && window.Position == Vector2D<int>.Zero;
+        config.TitlebarHidden = window.WindowBorder == WindowBorder.Hidden && !config.Fullscreen;
+        config.Resizable = window.WindowBorder == WindowBorder.Resizable && !config.Fullscreen;
     }
 
     public void Dispose()
@@ -92,39 +90,40 @@ internal class DesktopAppController : IAppController
             application.Dispatcher.Dispatch<ExitMessage>(new());
         };
 
-        application.Dispatcher.Subscribe<ExitMessage>(m => 
+        application.Dispatcher.Subscribe<ExitMessage>(m =>
         {
             isRunning = false;
         });
     }
-    
+
+
     public void Start(MessageDispatcher dispatcher)
     {
         isRunning = true;
 
         dispatcher.Dispatch(new InitializeMessage());
-    
+
         while (isRunning)
         {
             window.DoEvents();
 
-            var renderer = Graphics.GetRenderer();
-            renderer?.SetRenderTarget(Graphics.GetFrameTexture());
-
-            var canvas = Graphics.GetFrameCanvas();
-
-            canvas.ResetState();
-
-            using (canvas.PushState())
+            if (Application.Current.GetComponent<IGraphicsProvider>() is not null)
             {
+                var renderer = Graphics.GetRenderer();
+                renderer?.SetRenderTarget(Graphics.GetFrameTexture());
+
+                var canvas = Graphics.GetFrameCanvas();
+
+                canvas.ResetState();
+
                 dispatcher.Dispatch(new RenderMessage(canvas));
+
+                canvas.Flush();
             }
 
-            canvas.Flush();
-
-            window.GLContext.SwapBuffers();          
+            // window.GLContext.SwapBuffers();
         }
 
         dispatcher.Dispatch(new UninitializeMessage());
-    }    
+    }
 }

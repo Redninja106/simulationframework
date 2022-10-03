@@ -122,8 +122,8 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
     public override void Dispose()
     {
-        this.currentRenderTarget.Dispose();
-        this.rs.Dispose();
+        this.currentRenderTarget?.Dispose();
+        this.rs?.Dispose();
         this.DeviceContext.Dispose();
         base.Dispose();
     }

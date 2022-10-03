@@ -28,7 +28,7 @@ public class D3D11Graphics : IGraphicsProvider
 
     private void AfterRender(RenderMessage message)
     {
-        resources.SwapChain.Present(1);
+        resources.SwapChain.Present(0);
     }
 
     public IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged
@@ -77,9 +77,9 @@ public class D3D11Graphics : IGraphicsProvider
 
     public void Initialize(Application application)
     {
-        application.Dispatcher.Subscribe<RenderMessage>(AfterRender, MessagePriority.Low);
-        application.Dispatcher.Subscribe<RenderMessage>(BeforeRender, MessagePriority.High);
-        application.Dispatcher.Subscribe<ResizeMessage>(Resize, MessagePriority.High);
+        application.Dispatcher.Subscribe<RenderMessage>(AfterRender, ListenerPriority.Low);
+        application.Dispatcher.Subscribe<RenderMessage>(BeforeRender, ListenerPriority.High);
+        application.Dispatcher.Subscribe<ResizeMessage>(Resize, ListenerPriority.High);
     }
 
     private void BeforeRender(RenderMessage message)
@@ -171,18 +171,12 @@ public class D3D11Graphics : IGraphicsProvider
         {
         }
 
-        public CanvasSession PushState()
-        {
-            return new CanvasSession(this);
-        }
-
         public void ResetState()
         {
         }
 
-        public bool SetFont(string fontName, TextStyles styles, float size) 
+        void ICanvas.PushState()
         {
-            return true;
         }
 
         class NullCanvasState : CanvasState

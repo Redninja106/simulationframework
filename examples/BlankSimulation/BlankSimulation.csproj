@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\SimulationFramework.Desktop\SimulationFramework.Desktop.csproj" />
+    <ProjectReference Include="..\..\src\SimulationFramework.Direct3D11\SimulationFramework.Drawing.Direct3D11.csproj" />
     <ProjectReference Include="..\..\src\SimulationFramework\SimulationFramework.csproj" />
   </ItemGroup>
 

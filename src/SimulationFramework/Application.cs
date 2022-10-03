@@ -44,7 +44,7 @@ public sealed class Application : IDisposable
             {
                 components[i].Initialize(this);
             }
-            
+
             this.initialized = true;
         }, ListenerPriority.Internal);
     }
