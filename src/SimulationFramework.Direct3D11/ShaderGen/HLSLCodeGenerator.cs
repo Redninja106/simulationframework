@@ -126,7 +126,7 @@ public class HLSLCodeGenerator : CodeGenerator
             VisitIdentifier(input.Name);
 
             string semantic = null;
-            var inputAttribute = input.Attribute as ShaderInAttribute;
+            var inputAttribute = input.attr as ShaderInAttribute;
             if (inputSemanticAliases.ContainsKey(inputAttribute.Semantic))
             {
                 semantic = inputSemanticAliases[inputAttribute.Semantic];

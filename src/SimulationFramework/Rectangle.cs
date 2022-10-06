@@ -225,7 +225,7 @@ public struct Rectangle : IEquatable<Rectangle>
     }
 
     /// <summary>
-    /// Creates a rectangle given the absoulte position of each of its sides.
+    /// Creates a rectangle given the absolute position of each of its sides.
     /// </summary>
     /// <param name="left">The position of the left side of the rectangle on the x-axis.</param>
     /// <param name="top">The position of the top of the rectangle on the y-axis.</param>

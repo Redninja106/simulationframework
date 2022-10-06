@@ -1,6 +1,5 @@
 ﻿using SimulationFramework;
 using SimulationFramework.Drawing;
-using SimulationFramework.Drawing.RenderPipeline;
 using SimulationFramework.Shaders;
 using System;
 using System.Collections.Generic;

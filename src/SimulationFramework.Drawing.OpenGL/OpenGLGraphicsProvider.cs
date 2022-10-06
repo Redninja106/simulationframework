@@ -1,5 +1,4 @@
-﻿using SimulationFramework.Drawing.RenderPipeline;
-using SimulationFramework.Shaders;
+﻿using SimulationFramework.Shaders;
 
 namespace SimulationFramework.Drawing.OpenGL;
 

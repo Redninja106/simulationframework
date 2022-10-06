@@ -32,5 +32,4 @@ public class IntrinsicCallExpression : Expression
 
         return this;
     }
-
 }

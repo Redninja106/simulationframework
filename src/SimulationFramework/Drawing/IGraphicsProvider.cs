@@ -1,5 +1,4 @@
-﻿using SimulationFramework.Drawing.RenderPipeline;
-using SimulationFramework.Shaders;
+﻿using SimulationFramework.Shaders;
 using System;
 
 namespace SimulationFramework.Drawing;
@@ -38,11 +37,10 @@ public interface IGraphicsProvider : IAppComponent
     ITexture LoadTexture(Span<byte> encodedData, ResourceOptions flags);
 
     IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged;
+    IVolume<T> CreateVolume<T>(int length, int width, int height, ResourceOptions options) where T : unmanaged;
 
     // gets the main renderer
     IRenderer GetRenderer();
-
-    void SetResourceLifetime(int lifetimeInFrames);
 
     void InvalidateShader(Type shaderType);
 }

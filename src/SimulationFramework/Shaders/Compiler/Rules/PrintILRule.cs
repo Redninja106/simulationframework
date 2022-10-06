@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.Rules;
-internal class PrintILRule : CompilationRule
+internal class PrintILRule : CompilerRule
 {
     public override void CheckMethod(CompilationContext context, CompiledMethod compiledMethod)
     {

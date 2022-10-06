@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Shaders.Compiler.Rules;
 
 // converts this.* to CompiledVariableExpressions
-internal class VariableAccessReplacements : CompilationRule
+internal class VariableAccessReplacements : CompilerRule
 {
     CompilationContext context;
 

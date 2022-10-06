@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.Rules;
-internal class ReferenceTypeErrorRule : CompilationRule
+internal class ReferenceTypeErrorRule : CompilerRule
 {
     public override void CheckMethod(CompilationContext context, CompiledMethod compiledMethod)
     {

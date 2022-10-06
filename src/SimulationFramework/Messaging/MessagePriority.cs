@@ -12,6 +12,10 @@ namespace SimulationFramework.Messaging;
 public enum ListenerPriority
 {
     /// <summary>
+    /// The listener should be notified after all other listeners of another priority.
+    /// </summary>
+    After,
+    /// <summary>
     /// The listener is low priority.
     /// </summary>
     Low,
@@ -26,5 +30,9 @@ public enum ListenerPriority
     /// <summary>
     /// The listener is internal. This is for internal use only.
     /// </summary>
-    Internal
+    Internal,
+    /// <summary>
+    /// The listener should be notified before all other listeners of another priority.
+    /// </summary>
+    Before,
 }

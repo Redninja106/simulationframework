@@ -1,5 +1,4 @@
-﻿using SimulationFramework.Drawing.RenderPipeline;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,11 +10,11 @@ namespace SimulationFramework.Drawing.Direct3D11;
 internal static class D3DUtils
 {
     // finds the number of vertices in a group of primitives
-    public static int GetVertexCount(this PrimitiveKind primitiveKind, int count)
+    public static int GetVertexCount(this PrimitiveKind primitiveKind, int primitives)
     {
         return primitiveKind switch
         {
-            PrimitiveKind.Triangles => count * 3,
+            PrimitiveKind.Triangles => primitives * 3,
             _ => throw new NotImplementedException(),
         };
     }

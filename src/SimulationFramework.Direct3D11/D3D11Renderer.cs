@@ -1,5 +1,4 @@
 ﻿using SimulationFramework.Drawing.Direct3D11.Buffers;
-using SimulationFramework.Drawing.RenderPipeline;
 using SimulationFramework.Shaders;
 using System;
 using System.Collections.Generic;
@@ -13,6 +12,12 @@ namespace SimulationFramework.Drawing.Direct3D11;
 
 internal sealed class D3D11Renderer : D3D11Object, IRenderer
 {
+    public ITexture RenderTarget
+    {
+        get => currentRenderTarget;
+        set => SetRenderTarget(value);
+    }
+
     public ID3D11DeviceContext DeviceContext { get; private set; }
     private D3D11Texture currentRenderTarget;
     private ID3D11RasterizerState rs;
@@ -68,7 +73,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         shaderObject.Update(shader);
         shaderObject.Apply(this.DeviceContext);
     }
-    
+
     public void SetFragmentShader<T>(T shader) where T : struct, IShader
     {
         var shaderObject = Resources.Shaders.OfType<D3D11FragmentShader<T>>().SingleOrDefault();
@@ -83,13 +88,15 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         shaderObject.Apply(this.DeviceContext);
     }
 
-    public void SetRenderTarget(ITexture renderTarget)
+    private void SetRenderTarget(ITexture renderTarget)
     {
         if (renderTarget is not D3D11Texture d3dTexture)
             throw new ArgumentException(null, nameof(renderTarget));
 
         currentRenderTarget = d3dTexture;
         DeviceContext.OMSetRenderTargets(d3dTexture.RenderTargetView);
+
+        SetIndexBuffer(null);
     }
 
     public void Clear(Color color)
@@ -110,11 +117,6 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         DeviceContext.IASetVertexBuffer(0, d3dBuffer.GetInternalbuffer(BufferUsage.VertexBuffer), d3dBuffer.Stride);
     }
 
-    public void IndexBuffer(IBuffer<int> indexBuffer)
-    {
-        throw new NotImplementedException();
-    }
-
     public void SetViewport(Rectangle viewport)
     {
         DeviceContext.RSSetViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height, 0, 1);
@@ -126,5 +128,53 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         this.rs?.Dispose();
         this.DeviceContext.Dispose();
         base.Dispose();
+    }
+
+    public void SetIndexBuffer(IBuffer<uint> indexBuffer)
+    {
+    }
+
+    public void SetIndexBuffer(IBuffer<ushort> indexBuffer)
+    {
+    }
+
+    public void SetViewport(float x, float y, float w, float h)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetViewport(float x, float y, float w, float h, float minDepth, float maxDepth)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetViewport(Rectangle viewport, float minDepth, float maxDepth)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Clip(Rectangle? rectangle)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Clip(float x, float y, float w, float h)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void PushState()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void PopState()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ResetState()
+    {
+        throw new NotImplementedException();
     }
 }

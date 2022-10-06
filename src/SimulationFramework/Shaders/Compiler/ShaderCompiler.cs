@@ -16,7 +16,7 @@ namespace SimulationFramework.Shaders.Compiler;
 
 public class ShaderCompiler
 {
-    private List<CompilationRule> Rules = new();
+    private List<CompilerRule> Rules = new();
 
     public ShaderCompiler()
     {
@@ -31,8 +31,6 @@ public class ShaderCompiler
 
     public ShaderCompilation? Compile(Type shaderType, ShaderKind targetShaderKind, out IEnumerable<CompilerMessage> messages)
     {
-        
-
         /* 
          * be able to:
          * compile methods

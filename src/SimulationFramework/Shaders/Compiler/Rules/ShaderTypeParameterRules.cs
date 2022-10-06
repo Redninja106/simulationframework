@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.Rules;
-internal class ShaderTypeParameterRules : CompilationRule
+internal class ShaderTypeParameterRules : CompilerRule
 {
     CompilationContext context;
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.Rules;
 
-internal class ShaderTypeRestrictions : CompilationRule
+internal class ShaderTypeRestrictions : CompilerRule
 {
     public override void CheckStruct(CompilationContext context, CompiledStruct compiledStruct)
     {

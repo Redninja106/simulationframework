@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.Rules;
 
-internal class CallSubstitutions : CompilationRule
+internal class CallSubstitutions : CompilerRule
 {
     private CompilationContext context;
 

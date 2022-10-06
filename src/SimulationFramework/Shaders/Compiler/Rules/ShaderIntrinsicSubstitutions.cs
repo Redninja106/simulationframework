@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Shaders.Compiler.Rules;
 
 // replaces common methods with their shader intrinsic counterparts
-internal class ShaderIntrinsicSubstitutions : CompilationRule
+internal class ShaderIntrinsicSubstitutions : CompilerRule
 {
     private static readonly Dictionary<MethodBase, MethodInfo> substitutions = new();
 

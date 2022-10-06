@@ -86,7 +86,7 @@ public sealed class MessageDispatcher
             }
 
             eventListeners.Add(new(action, priority));
-            eventListeners.Sort((a, b) => Comparer<ListenerPriority>.Default.Compare(a.Priority, b.Priority));
+            eventListeners.Sort((a, b) => -Comparer<ListenerPriority>.Default.Compare(a.Priority, b.Priority));
         }
 
         public void RemoveListener(Action<T> action)

@@ -14,7 +14,7 @@ namespace SimulationFramework;
 public abstract class Simulation
 {
     /// <summary>
-    /// This simulations application.
+    /// This simulation's application. Only <see langword="null"/> when the simulation is not running.
     /// </summary>
     public Application? Application { get; private set; }
 

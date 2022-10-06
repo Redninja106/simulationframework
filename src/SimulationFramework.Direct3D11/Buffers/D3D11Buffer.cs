@@ -1,26 +1,33 @@
-﻿using SimulationFramework.Drawing.RenderPipeline;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Vortice.Direct3D11;
 
 namespace SimulationFramework.Drawing.Direct3D11.Buffers;
 
 internal sealed class D3D11Buffer<T> : IBuffer<T> where T : unmanaged
 {
-    public int Size { get; private set; }
+    public int Length { get; private set; }
     
-    private int SizeInBytes => Size * Stride;
+    private int SizeInBytes => Length * Stride;
     public int Stride => Unsafe.SizeOf<T>();
+    public ResourceOptions Options => this.options;
+    public Span<T> Data => data;
 
+    private T[] data;
     private DeviceResources resources;
     private ID3D11Buffer[] internalBuffers;
     private ResourceOptions options;
 
-    public D3D11Buffer(DeviceResources resources, int size, ResourceOptions options)
+    public D3D11Buffer(DeviceResources resources, int length, ResourceOptions options)
     {
         this.resources = resources;
-        this.Size = size;
+        this.Length = length;
         this.options = options;
         internalBuffers = new ID3D11Buffer[Enum.GetValues<BufferUsage>().Length];
+
+        if (!options.HasFlag(ResourceOptions.Readonly))
+        {
+            data = new T[length];
+        }
     }
 
     public void Dispose()
@@ -35,10 +42,10 @@ internal sealed class D3D11Buffer<T> : IBuffer<T> where T : unmanaged
 
     public void SetData(Span<T> data)
     {
-        if (this.Size != data.Length)
+        if (this.Length != data.Length)
         {
-            this.Size = data.Length;
-         
+            this.Length = data.Length;
+
             // recreate all already existing buffers with the proper size.
             foreach (var usage in Enum.GetValues<BufferUsage>())
             {
@@ -89,10 +96,6 @@ internal sealed class D3D11Buffer<T> : IBuffer<T> where T : unmanaged
         internalBuffers[(int)usage] = newBuffer;
     }
 
-    // a buffer is versatile and can be used in many different ways,
-    // which is something direct3d is not a fan of.
-    // we will need to create multiple copies of our internal buffer
-    // with different descriptions in order to match every use case.
     private BufferDescription GetBufferDescriptionForUsage(BufferUsage usage)
     {
         BufferDescription baseDesc = new()
@@ -112,6 +115,11 @@ internal sealed class D3D11Buffer<T> : IBuffer<T> where T : unmanaged
             BufferUsage.ConstantBuffer => baseDesc with { BindFlags = BindFlags.ConstantBuffer },
             _ => throw new NotImplementedException(),
         };
+    }
+
+    public void ApplyChanges()
+    {
+        SetData(this.Data);
     }
 
     ~D3D11Buffer()

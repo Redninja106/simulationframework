@@ -20,7 +20,7 @@ public enum DrawMode
     /// </summary>
     Gradient,
     /// <summary>
-    /// Shapes should be filled with a texture. 
+    /// Shapes should be filled with a texture.
     /// </summary>
     Textured
 }

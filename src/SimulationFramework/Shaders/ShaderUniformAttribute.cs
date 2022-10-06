@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders;
-internal class ShaderSourceEmitter
+
+[AttributeUsage(AttributeTargets.Field)]
+public sealed class ShaderUniformAttribute : Attribute
 {
 }

@@ -10,13 +10,13 @@ namespace SimulationFramework.Shaders.Compiler;
 public class ShaderCompilation
 {
     public ShaderKind ShaderKind; 
-    
+
     private List<CompiledMethod> methods;
     private List<CompiledStruct> structs;
     private List<CompiledVariable> variables;
 
     public CompiledMethod EntryPoint;
-    
+
 
     public IEnumerable<CompiledMethod> Methods => methods;
     public IEnumerable<CompiledStruct> Structs => structs;

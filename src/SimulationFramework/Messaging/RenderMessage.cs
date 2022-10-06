@@ -18,11 +18,18 @@ public sealed class RenderMessage : Message
     public ICanvas Canvas { get; private set; }
 
     /// <summary>
+    /// The renderer the simulation is rendering to.
+    /// </summary>
+    public IRenderer Renderer { get; private set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="RenderMessage"/> class.
     /// </summary>
     /// <param name="canvas">The canvas the simulation is rendering to.</param>
-    public RenderMessage(ICanvas canvas)
+    /// <param name="renderer">The renderer the simulation is rendering to.</param>
+    public RenderMessage(ICanvas canvas, IRenderer renderer)
     {
         Canvas = canvas;
+        Renderer = renderer;
     }
 }

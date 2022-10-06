@@ -12,11 +12,16 @@ public class CompiledVariable
     public FieldInfo BackingField;
     public Type VariableType;
     public string Name;
-    public bool IsInput => Attribute is ShaderInAttribute;
-    public bool IsOutput => Attribute is ShaderOutAttribute;
-    public bool IsUniform => Attribute is null;
 
-    public Attribute? Attribute;
+    public InSemantic? InputSemantic;
+    public OutSemantic? OutSemantic;
+
+    public string InputName;
+    public string OutputName;
+
+    public bool IsUniform;
+    public bool IsInput;
+    public bool IsOutput;
 
     public CompiledVariable(FieldInfo field)
     {
@@ -24,6 +29,21 @@ public class CompiledVariable
         this.VariableType = field.FieldType;
         this.Name = field.Name;
 
-        this.Attribute = field.GetCustomAttribute<ShaderInAttribute>() as Attribute ?? field.GetCustomAttribute<ShaderOutAttribute>();
+        var inputAttribute = field.GetCustomAttribute<ShaderInAttribute>();
+        this.IsInput = inputAttribute is not null;
+        this.InputName = inputAttribute?.LinkageName ?? Name;
+        this.InputSemantic = inputAttribute?.Semantic;
+
+        var outputAttribute = field.GetCustomAttribute<ShaderInAttribute>();
+        this.IsOutput = outputAttribute is not null;
+        this.InputName = outputAttribute?.LinkageName ?? Name;
+        this.InputSemantic = outputAttribute?.Semantic;
+
+        this.IsUniform = field.GetCustomAttribute<ShaderUniformAttribute>() is not null;
+
+        if (IsUniform && (IsOutput || IsInput))
+        {
+            throw new Exception("in/outs and uniforms are mutually exclusive!");
+        }
     }
 }

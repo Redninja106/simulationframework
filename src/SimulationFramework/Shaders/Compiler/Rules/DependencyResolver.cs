@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.Rules;
 
-internal class DependencyResolver : CompilationRule
+internal class DependencyResolver : CompilerRule
 {
     public List<MethodBase> methodDependencies = new();
 
