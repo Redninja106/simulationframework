@@ -11,17 +11,23 @@ namespace SimulationFramework.SkiaSharp;
 
 public sealed class SkiaGraphicsProvider : IGraphicsProvider
 {
-    internal readonly GRGlInterface glInterface;
-    internal readonly GRContext backendContext;
     internal readonly ISkiaFrameProvider frameProvider;
+    internal readonly GRGlGetProcedureAddressDelegate getProcAddress;
 
+    internal GRGlInterface glInterface;
+    internal GRContext backendContext;
     internal SkiaCanvas frameCanvas;
     internal Dictionary<(string fontName, FontStyle styles, int size), SKFont> fonts = new(); 
 
     public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate getProcAddress)
     {
         this.frameProvider = frameProvider;
+        this.getProcAddress = getProcAddress;
 
+    }
+
+    public void Initialize(Application application)
+    {
         glInterface = GRGlInterface.CreateOpenGl(getProcAddress);
         backendContext = GRContext.CreateGl(glInterface);
 
@@ -102,7 +108,4 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         return fonts[(fontName, styles, size)];
     }
 
-    public void Initialize(Application application)
-    {
-    }
 }

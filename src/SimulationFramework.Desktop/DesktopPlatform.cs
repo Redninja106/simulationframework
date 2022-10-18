@@ -8,24 +8,28 @@ using SimulationFramework.SkiaSharp;
 using ImGuiNET;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
+using SimulationFramework.Desktop;
+using SimulationFramework;
+
+[assembly: ApplicationPlatform(typeof(DesktopPlatform))]
 
 namespace SimulationFramework.Desktop;
 
 /// <summary>
 /// Implements a simulation environment which runs the simulation in a window.
 /// </summary>
-public sealed class DesktopPlatform : IAppPlatform
+public sealed class DesktopPlatform : IApplicationPlatform
 {
     public IWindow Window { get; }
 
     private DesktopSkiaFrameProvider frameProvider;
     
-    public IAppController CreateController()
+    public IApplicationController CreateController()
     {
         return new DesktopAppController(this.Window);
     }
 
-    private IGraphicsProvider CreateGraphics()
+    public IGraphicsProvider CreateGraphicsProvider()
     {
         frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
         return new SkiaGraphicsProvider(frameProvider, name =>
@@ -33,6 +37,11 @@ public sealed class DesktopPlatform : IAppPlatform
             Window.GLContext.TryGetProcAddress(name, out nint addr);
             return addr;
         });
+    }
+
+    public ITimeProvider CreateTimeProvider()
+    {
+        return new RealtimeProvider();
     }
 
     public DesktopPlatform()
@@ -44,15 +53,22 @@ public sealed class DesktopPlatform : IAppPlatform
     {
     }
 
+    public IEnumerable<IApplicationComponent> CreateAdditionalComponents()
+    {
+        yield return new DesktopInputComponent(this.Window);
+    }
+
     public void Initialize(Application application)
     {
         Window.Initialize();
-        application.AddComponent(CreateGraphics());
-        application.AddComponent(new RealtimeProvider());
-        application.AddComponent(new DesktopInputComponent(this.Window));
         application.Dispatcher.Subscribe<ResizeMessage>(m =>
         {
             frameProvider?.Resize(m.Width, m.Height);
         });
+    }
+
+    public static bool IsSupported()
+    {
+        return OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() || OperatingSystem.IsLinux();
     }
 }

@@ -10,7 +10,7 @@ namespace SimulationFramework;
 /// <summary>
 /// Handles the simulation's event loop.
 /// </summary>
-public interface IAppController : IAppComponent
+public interface IApplicationController : IApplicationComponent
 {
     /// <summary>
     /// Starts a simulation event loop.

@@ -7,14 +7,39 @@ using SimulationFramework.Messaging;
 
 namespace SimulationFramework.Desktop;
 
-internal class DesktopInputComponent : IAppComponent
+internal class DesktopInputComponent : IApplicationComponent
 {
-    private readonly IInputContext silkInputDevice;
+    private readonly IWindow window;
+    private IInputContext silkInputDevice;
     private InputContext Context => Application.Current.GetComponent<InputContext>();
 
     public DesktopInputComponent(IWindow window)
     {
+        this.window = window;
+    }
+
+    public void Initialize(Application application)
+    {
         silkInputDevice = window.CreateInput();
+
+        if (silkInputDevice.Mice.Count > 0)
+        {
+            silkInputDevice.Mice[0].MouseUp += MouseUp;
+            silkInputDevice.Mice[0].MouseDown += MouseDown;
+            silkInputDevice.Mice[0].MouseMove += MouseMove;
+            silkInputDevice.Mice[0].Scroll += Scroll;
+        }
+
+        if (silkInputDevice.Keyboards.Count > 0)
+        {
+            silkInputDevice.Keyboards[0].KeyDown += KeyDown;
+            silkInputDevice.Keyboards[0].KeyUp += KeyUp;
+            silkInputDevice.Keyboards[0].KeyChar += KeyChar;
+        }
+
+        if (silkInputDevice.Gamepads.Count > 0)
+        {
+        }
     }
 
     private void Scroll(IMouse arg1, ScrollWheel arg2)
@@ -174,27 +199,5 @@ internal class DesktopInputComponent : IAppComponent
             SilkButton.Button5 => MouseButton.X2,
             _ => throw new Exception(),
         };
-    }
-
-    public void Initialize(Application application)
-    {
-        if (silkInputDevice.Mice.Count > 0)
-        {
-            silkInputDevice.Mice[0].MouseUp += MouseUp;
-            silkInputDevice.Mice[0].MouseDown += MouseDown;
-            silkInputDevice.Mice[0].MouseMove += MouseMove;
-            silkInputDevice.Mice[0].Scroll += Scroll;
-        }
-
-        if (silkInputDevice.Keyboards.Count > 0)
-        {
-            silkInputDevice.Keyboards[0].KeyDown += KeyDown;
-            silkInputDevice.Keyboards[0].KeyUp += KeyUp;
-            silkInputDevice.Keyboards[0].KeyChar += KeyChar;
-        }
-
-        if (silkInputDevice.Gamepads.Count > 0)
-        {
-        }
     }
 }

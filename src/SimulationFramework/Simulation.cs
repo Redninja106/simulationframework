@@ -2,7 +2,10 @@
 using SimulationFramework.Messaging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,8 +16,16 @@ namespace SimulationFramework;
 /// </summary>
 public abstract class Simulation
 {
+    private static readonly string[] knownPlatforms = new[]
+    {
+        "SimulationFramework.Desktop.dll",
+    };
+
     /// <summary>
-    /// This simulations application.
+    /// This simulation's application.
+    /// <para>
+    /// If this simulation has been initialized (any overload of <see cref="Run()"/> has been called), this property will not be null.
+    /// </para>
     /// </summary>
     public Application? Application { get; private set; }
 
@@ -46,8 +57,10 @@ public abstract class Simulation
     /// Starts this simulation using the provided platform.
     /// </summary>
     /// <param name="platform"></param>
-    public void Run(IAppPlatform platform)
+    public void Run(IApplicationPlatform platform)
     {
+        ArgumentNullException.ThrowIfNull(platform);
+
         Application = new Application(platform);
 
         Application.Dispatcher.Subscribe<InitializeMessage>(m => {
@@ -77,6 +90,107 @@ public abstract class Simulation
         Application.Start();
 
         Application.Dispose();
+    }
+
+    /// <summary>
+    /// Starts this simulation.
+    /// </summary>
+    public void Run()
+    {
+        IEnumerable<IApplicationPlatform> platforms = GetAvailablePlatforms();
+
+        IApplicationPlatform? selectedPlatform = platforms.FirstOrDefault();
+
+        if (selectedPlatform is null)
+        {
+            throw Exceptions.NoPlatformAvailable();
+        }
+
+        Debug.Message($"Selected platform \"{selectedPlatform.GetType()}\".");
+
+        Run(selectedPlatform);
+    }
+
+    /// <summary>
+    /// Finds available, sorted platforms provided from loaded assemblies via the <see cref="ApplicationPlatformAttribute"/>.
+    /// </summary>
+    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="IApplicationPlatform"/> containing all currently available platforms.</returns>
+    public static IEnumerable<IApplicationPlatform> GetAvailablePlatforms()
+    {
+        const string IsPlatformSupportedMethodName = "IsSupported";
+        const string TypePlatformSearchContext = "It will not be used as an available platform.";
+        const string MethodPlatformSearchContext = "Its base type will not be used as an available platform.";
+                
+        List<IApplicationPlatform> platforms = new();
+        foreach (var knownPlatform in knownPlatforms)
+        {
+            try
+            {
+                Assembly.LoadFile(Path.GetFullPath("./" + knownPlatform));
+            }
+            catch { }
+        }
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        var attributes = assemblies.SelectMany(CustomAttributeExtensions.GetCustomAttributes<ApplicationPlatformAttribute>);
+
+        foreach (var attr in attributes)
+        {
+            Type type = attr.PlatformType;
+
+            Type? platformInterface = type.FindInterfaces((t, o) => t == typeof(IApplicationPlatform), null).SingleOrDefault();
+            if (platformInterface is null)
+            {
+                Debug.Warn(Warnings.TypeDoesNotImplementInterface(type, typeof(IApplicationPlatform), TypePlatformSearchContext));
+                continue;
+            }
+
+            var constructor = type.GetConstructor(Type.EmptyTypes);
+            if (constructor is null)
+            {
+                Debug.Warn(Warnings.TypeDoesNotHaveParameterlessConstructor(type, TypePlatformSearchContext));
+                continue;
+            }
+
+            MethodInfo? isPlatformSupportedMethod = type.GetMethod(IsPlatformSupportedMethodName, BindingFlags.Static | BindingFlags.Public, Type.EmptyTypes);
+            if (isPlatformSupportedMethod is null)
+            {
+                Debug.Warn(Warnings.TypeDoesNotHavePublicStaticMethod(type, IsPlatformSupportedMethodName, TypePlatformSearchContext));
+                continue;
+            }
+
+            if (isPlatformSupportedMethod.IsGenericMethod)
+            {
+                Debug.Warn(Warnings.MethodExpectedNonGeneric(isPlatformSupportedMethod, MethodPlatformSearchContext));
+                continue;
+            }
+
+            if (isPlatformSupportedMethod.ReturnType != typeof(bool))
+            {
+                Debug.Warn(Warnings.MethodExpectedReturnType(isPlatformSupportedMethod, typeof(bool), MethodPlatformSearchContext));
+                continue;
+            }
+
+            bool isSupported = false;
+            try
+            {
+                isSupported = (bool)isPlatformSupportedMethod.Invoke(null, null)!;
+            }
+            catch
+            {
+                Debug.Warn(Warnings.MethodInvocationFailed(isPlatformSupportedMethod, MethodPlatformSearchContext));
+                continue;
+            }
+
+            if (!isSupported)
+            {
+                continue;
+            }
+
+            var platformInstance = (IApplicationPlatform)constructor.Invoke(null)!;
+            platforms.Add(platformInstance);
+        }
+
+        return platforms;
     }
 
     /// <summary>

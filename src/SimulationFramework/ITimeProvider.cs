@@ -9,7 +9,7 @@ namespace SimulationFramework;
 /// <summary>
 /// Provider time measurements to an environment.
 /// </summary>
-public interface ITimeProvider : IAppComponent
+public interface ITimeProvider : IApplicationComponent
 {
     /// <summary>
     /// The largest value deltaTime before it's clamped.

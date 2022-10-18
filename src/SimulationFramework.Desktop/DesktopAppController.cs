@@ -5,7 +5,7 @@ using SimulationFramework.Messaging;
 
 namespace SimulationFramework.Desktop;
 
-internal class DesktopAppController : IAppController
+internal class DesktopAppController : IApplicationController
 {
     private readonly IWindow window;
     
@@ -84,11 +84,11 @@ internal class DesktopAppController : IAppController
 
     public void Initialize(Application application)
     {
-        window.Resize += size => application.Dispatcher.Dispatch(new ResizeMessage(size.X, size.Y));
+        window.Resize += size => application.Dispatcher.ImmediateDispatch(new ResizeMessage(size.X, size.Y));
 
         window.Closing += () =>
         {
-            application.Dispatcher.Dispatch<ExitMessage>(new());
+            application.Dispatcher.ImmediateDispatch<ExitMessage>(new());
         };
 
         application.Dispatcher.Subscribe<ExitMessage>(m => 
@@ -101,20 +101,22 @@ internal class DesktopAppController : IAppController
     {
         isRunning = true;
 
-        dispatcher.Dispatch(new InitializeMessage());
+        dispatcher.ImmediateDispatch(new InitializeMessage());
     
         while (isRunning)
         {
-            dispatcher.Dispatch(new FrameBeginMessage());
-
             window.DoEvents();
+            dispatcher.ImmediateDispatch(new FrameBeginMessage());
+            dispatcher.Flush();
 
-            dispatcher.Dispatch(new RenderMessage(Graphics.GetOutputCanvas()));
+            dispatcher.ImmediateDispatch(new RenderMessage(Graphics.GetOutputCanvas()));
 
             window.GLContext.SwapBuffers();
-            dispatcher.Dispatch(new FrameEndMessage());
+
+            dispatcher.ImmediateDispatch(new FrameEndMessage());
+            dispatcher.Flush();
         }
 
-        dispatcher.Dispatch(new UninitializeMessage());
+        dispatcher.ImmediateDispatch(new UninitializeMessage());
     }    
 }

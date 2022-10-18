@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework.Messaging;
 
@@ -12,27 +10,75 @@ namespace SimulationFramework.Messaging;
 public sealed class MessageDispatcher
 {
     private readonly List<IMessageListener> events = new();
+    private readonly Queue<Message> messageQueue = new();
 
     /// <summary>
-    /// Dispatches a message.
+    /// Dispatches all queued messages. This method is called by the application at the beginning and end of each frame.
+    /// </summary>
+    public void Flush()
+    {
+        Debug.Trace(Debug.TraceFlags.EventDispatcher, $"MessageDispatcher.Flush() called with {messageQueue.Count} messages in queue.");
+
+        // process entire queue
+        while (messageQueue.TryDequeue(out Message? nextMessage))
+        {
+            // skip null entries
+            if (nextMessage is null)
+                continue;
+
+            // dispatch message
+            DispatchCore(nextMessage);
+        }
+    }
+
+    /// <summary>
+    /// Adds an event to the event queue. The event is dispatched upon the next call to <see cref="Flush"/> (usually done by the application).
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="message"></param>
+    public void QueueDispatch<T>(T message) where T : Message
+    {
+        ArgumentNullException.ThrowIfNull(message);
+
+        Debug.Trace(Debug.TraceFlags.EventDispatcher, $"Message of type {typeof(T).Name} queued.");
+
+        messageQueue.Enqueue(message);
+    }
+
+    /// <summary>
+    /// Immediately dispatches a message, raising notifications and calling listeners.
     /// </summary>
     /// <typeparam name="T">The type of message to dispatch.</typeparam>
     /// <param name="message">The message data.</param>
-    public void Dispatch<T>(T message) where T : Message
+    public void ImmediateDispatch<T>(T message) where T : Message
     {
+        ArgumentNullException.ThrowIfNull(message);
+        
+        Debug.Trace(Debug.TraceFlags.EventDispatcher, $"DispatchImmediate(): Message of type {typeof(T).Name} dispatched.");
+
+        // call non-generic version
+        DispatchCore(message);
+    }
+    
+    private void DispatchCore(Message message)
+    {
+        // mark message with timestamp if provider is available
         if (Application.Current?.GetComponent<ITimeProvider>() is not null)
         {
             message.DispatchTime = Time.TotalTime;
         }
 
-        var toDispatch = events.Where(e => e.IsListeningFor(typeof(T)));
+        // get all listeners listening for message of T
+        var messageType = message.GetType();
+        var toDispatch = events.Where(e => e.IsListeningFor(messageType));
 
-        foreach (var e in events.ToArray())
+        // dispatch event to listeners (ToArray() in case of subscription modification during events)
+        foreach (var e in toDispatch.ToArray())
         {
             e.Dispatch(message);
         }
     }
-    
+
     /// <summary>
     /// Subscribes a delegate to listen for messages of a specific type.
     /// </summary>
@@ -41,12 +87,16 @@ public sealed class MessageDispatcher
     /// <param name="priority">The priority of the listener</param>
     public void Subscribe<T>(Action<T> listener, ListenerPriority priority = ListenerPriority.Normal) where T : Message
     {
-        if (events.SingleOrDefault(e => e is Event<T>) is not Event<T> ev)
-        {
-            ev = new Event<T>();
-            events.Add(ev);
-        }
+        ArgumentNullException.ThrowIfNull(listener);
 
+        // TODO BUG:
+        // In cases where a listener is subscribed to a message type when it is already subscribed to
+        // that message's parent type, that listener would be invoked twice upon dispatch of subclass type.
+
+        // find event if we already have one
+        Event<T>? ev = GetOrCreateEvent<T>();
+
+        // subscribe the listener to the event
         ev.AddListener(listener, priority);
     }
 
@@ -57,59 +107,180 @@ public sealed class MessageDispatcher
     /// <param name="listener">The listener to unsubscribe.</param>
     public void Unsubscribe<T>(Action<T> listener) where T : Message
     {
-        if (events.SingleOrDefault(e => e is Event<T>) is Event<T> ev)
+        ArgumentNullException.ThrowIfNull(listener);
+        
+        // find event to remove
+        Event<T>? ev = GetOrCreateEvent<T>();
+
+        // if we've got one remove it
+        if (ev is not null)
         {
             ev.RemoveListener(listener);
         }
     }
 
+    /// <summary>
+    /// Invokes the provided delegate once before the next dispatch of the specified message type.
+    /// </summary>
+    /// <typeparam name="T">The type of message to be notified of.</typeparam>
+    /// <param name="listener">The notification delegate.</param>
+    public void NotifyBefore<T>(Action<T> listener) where T : Message
+    {
+        ArgumentNullException.ThrowIfNull(listener);
+
+        // forward notification request to event type
+        Event<T> ev = GetOrCreateEvent<T>();
+        ev.NotifyBefore(listener);
+    }
+
+    /// <summary>
+    /// Invokes the provided delegate once after the next dispatch of the specified message type.
+    /// </summary>
+    /// <typeparam name="T">The type of message to be notified of.</typeparam>
+    /// <param name="listener">The notification delegate.</param>
+    public void NotifyAfter<T>(Action<T> listener) where T : Message
+    {
+        ArgumentNullException.ThrowIfNull(listener);
+
+        // forward notification request to event type
+        Event<T> ev = GetOrCreateEvent<T>();
+        ev.NotifyAfter(listener);
+    }
+
+    // gets this dispatchers Event<T> or null
+    private Event<T> GetOrCreateEvent<T>() where T : Message
+    {
+        // find event if we already have one
+        Event<T>? ev = events.OfType<Event<T>>().SingleOrDefault();
+
+        // if we don't, create one
+        if (ev is null)
+        {
+            ev = new Event<T>();
+            events.Add(ev);
+        }
+
+        return ev;
+    }
+
+    // exposes non generic methods of Event<T> such that they can be accessed from a collection of varying generic args
     private interface IMessageListener
     {
+        // does the listener want to be notified for mesasges of this type?
         public bool IsListeningFor(Type type);
+
+        // dispatches a message
         void Dispatch(Message message);
     }
 
+    // a group of listeners for a specific message type.
     private class Event<T> : IMessageListener where T : Message
     {
+        // one-time listeners for before dispatch
+        private readonly Queue<Action<T>> beforeNotifications = new();
+
+        // one-time listeners for after dispatch
+        private readonly Queue<Action<T>> afterNotifications = new();
+
+        // EventListener list, should always be kept sorted by priority
         private readonly List<EventListener> eventListeners = new();
 
+        // does the listener want to be notified for mesasges of this type?
         public bool IsListeningFor(Type type)
         {
             return type == typeof(T) || type.IsSubclassOf(typeof(T));
         }
 
-        public void AddListener(Action<T> action, ListenerPriority priority)
+        // adds an action to the before dispatch notification queue
+        public void NotifyBefore(Action<T> action)
         {
-            if (eventListeners.Contains(new(action, priority)))
+            AddNotify(action, beforeNotifications);
+        }
+
+        // adds an action to the after dispatch notification queue
+        public void NotifyAfter(Action<T> action)
+        {
+            AddNotify(action, afterNotifications);
+        }
+
+        // adds an action to a notification queue, checking for duplicates
+        private static void AddNotify(Action<T> action, Queue<Action<T>> queue)
+        {
+            // issue warning and return on duplicate
+            if (queue.Any(n => n == action))
             {
-                throw new Exception();
+                Debug.Warn(Warnings.DuplicateMessageSubscription(action, typeof(T)));
+                return;
             }
 
+            queue.Enqueue(action);
+        }
+
+        // adds a listener to this event with the provided priority
+        public void AddListener(Action<T> action, ListenerPriority priority)
+        {
+            // issue a warning if this delegate is already registered to this message type
+            if (eventListeners.Any(listener => listener.Action == action))
+            {
+                Debug.Warn(Warnings.DuplicateMessageSubscription(action, typeof(T)));
+                return;
+            }
+
+            // add event listener and sort by priority using default comparer
             eventListeners.Add(new(action, priority));
             eventListeners.Sort((a, b) => Comparer<ListenerPriority>.Default.Compare(a.Priority, b.Priority));
         }
 
+        // removes a listener by its MethodInfo
         public void RemoveListener(Action<T> action)
         {
+            // find our target method it in listeners
             var listener = eventListeners.FirstOrDefault(a => a.Action == action);
 
+            // if we have a match, remove it
             if (listener is not null)
             {
                 eventListeners.Remove(listener);
             }
         }
 
+        // dispatches the provided message 
         public void Dispatch(Message message)
         {
-            if (!IsListeningFor(message.GetType()))
-                return;
+            // make sure we're listening for this type of message
+            Debug.Assert(IsListeningFor(message.GetType()));
+            
+            T msg = (T)message;
 
-            foreach (var listener in eventListeners)
+            // notify before-dispatch listeners
+            SendNotifications(msg, beforeNotifications);
+
+            // dispatch to each listener (ToArray() in case of subscription modification during events)
+            foreach (var listener in eventListeners.ToArray())
             {
-                listener.Action((T)message);
+                listener.Action(msg);
+            }
+
+            // notify after-dispatch listeners
+            SendNotifications(msg, afterNotifications);
+        }
+
+        // clears a notification queue
+        private void SendNotifications(T message, Queue<Action<T>> queue)
+        {
+            // while the queue has elements
+            while (beforeNotifications.TryDequeue(out Action<T>? notification))
+            {
+                // skip null values
+                if (notification is null)
+                    continue;
+
+                // dispatch notification
+                notification(message);
             }
         }
 
+        // action-priority pair used to store normal event subscriptions
         private record EventListener(Action<T> Action, ListenerPriority Priority);
     }
 }

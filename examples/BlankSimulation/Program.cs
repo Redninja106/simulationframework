@@ -1,12 +1,14 @@
-﻿using SimulationFramework.Desktop;
+﻿using SimulationFramework;
+using SimulationFramework.Drawing;
 
-namespace BlankSimulation;
+Simulation simulation = Simulation.Create(Initialize, Render);
+simulation.Run();
 
-internal class Program
+void Initialize(AppConfig config)
 {
-    static void Main(string[] args)
-    {
-        var sim = new BlankSimulation();
-        sim.RunDesktop();
-    }
+}
+
+
+void Render(ICanvas canvas)
+{
 }
