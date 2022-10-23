@@ -4,7 +4,6 @@ using SimulationFramework.Drawing.Direct3D11.ShaderGen;
 using SimulationFramework.Shaders.Compiler;
 using SimulationFramework.Shaders;
 using System.Numerics;
-using SimulationFramework.Drawing.RenderPipeline;
 using SimulationFramework.Drawing;
 
 namespace Basic3D;

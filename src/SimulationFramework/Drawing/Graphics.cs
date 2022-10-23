@@ -139,16 +139,4 @@ public static class Graphics
         buffer.SetData(data);
         return buffer;
     }
-
-    public static IVolume<T> CreateVolume<T>(int width, int height, int length, ResourceOptions options = ResourceOptions.None) where T : unmanaged
-    {
-        return Provider.CreateVolume<T>(width, height, length, options);
-    }
-
-    public static IVolume<T> CreateVolume<T>(int width, int height, int length, Span<T> data, ResourceOptions options = ResourceOptions.None) where T : unmanaged
-    {
-        var volume = CreateVolume<T>(width, height, length, options);
-        // volume.SetData(data);
-        return volume;
-    }
 }

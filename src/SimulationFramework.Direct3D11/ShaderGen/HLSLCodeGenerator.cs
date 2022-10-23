@@ -126,7 +126,7 @@ public class HLSLCodeGenerator : CodeGenerator
             VisitIdentifier(input.Name);
 
             string semantic = null;
-            var inputAttribute = input.attr as ShaderInAttribute;
+            var inputAttribute = null as ShaderInAttribute;
             if (inputSemanticAliases.ContainsKey(inputAttribute.Semantic))
             {
                 semantic = inputSemanticAliases[inputAttribute.Semantic];
@@ -185,7 +185,7 @@ public class HLSLCodeGenerator : CodeGenerator
             VisitIdentifier(output.Name);
 
             string semantic = null;
-            var outputAttribute = output.Attribute as ShaderOutAttribute;
+            var outputAttribute = null as ShaderOutAttribute;
             if (outputSemanticAliases.ContainsKey(outputAttribute.Semantic))
             {
                 semantic = outputSemanticAliases[outputAttribute.Semantic];

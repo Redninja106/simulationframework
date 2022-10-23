@@ -93,7 +93,7 @@ public sealed class ImGuiComponent : IAppComponent
             throw new InvalidOperationException();
 
         renderer.SetVertexBuffer(vertexBuffer);
-        renderer.SetIndexBuffer(indexBuffer);
+        renderer.SetIndexBuffer(null);
 
         ImGuiVertexShader vertexShader = new()
         {

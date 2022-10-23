@@ -65,7 +65,6 @@ internal unsafe class D3D11Texture : D3D11Object, ITexture
         renderTargetView = new(resources, CreateRenderTargetView);
         shaderResourceView = new(resources, CreateShaderResourceView);
 
-        resources.ImmediateRenderer.DeviceContext.copy
     }
 
     public int Width { get; }

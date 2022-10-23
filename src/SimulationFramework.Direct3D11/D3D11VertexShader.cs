@@ -30,7 +30,7 @@ internal class D3D11VertexShader<T> : D3D11Shader<T> where T : struct, IShader
 
     private void CreateInputLayout(Span<byte> bytecode)
     {
-        var inputs = Compilation.Variables.Where(c => c.IsInput && (c.Attribute as ShaderInAttribute)?.Semantic is InSemantic.None);
+        var inputs = Compilation.Variables.Where(c => c.IsInput && (null as ShaderInAttribute)?.Semantic is InSemantic.None);
 
         var elements = new List<InputElementDescription>();
         Stack<(Type, string)> types = new();

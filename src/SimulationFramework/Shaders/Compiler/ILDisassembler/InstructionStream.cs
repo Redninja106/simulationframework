@@ -17,7 +17,7 @@ class InstructionStream
     public InstructionStream(MethodDisassembly disassembly)
     {
         this.disassembly = disassembly;
-        Position = 0;
+        this.Position = 0;
     }
 
     public Instruction Peek()

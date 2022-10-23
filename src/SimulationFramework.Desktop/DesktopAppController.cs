@@ -110,7 +110,7 @@ internal class DesktopAppController : IAppController
             if (Application.Current.GetComponent<IGraphicsProvider>() is not null)
             {
                 var renderer = Graphics.GetRenderer();
-                renderer?.SetRenderTarget(Graphics.GetFrameTexture());
+                renderer.RenderTarget = Graphics.GetFrameTexture();
 
                 var canvas = Graphics.GetFrameCanvas();
 

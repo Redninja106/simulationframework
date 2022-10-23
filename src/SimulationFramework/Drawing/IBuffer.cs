@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
 
-public interface IBuffer<T> : IResource
+public interface IBuffer<T> : IResource where T : unmanaged
 {
     /// <summary>
     /// The number of <typeparamref name="T"/> elements in this buffer.

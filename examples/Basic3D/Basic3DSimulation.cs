@@ -60,7 +60,7 @@ internal class Basic3DSimulation : Simulation
 
     public override void OnInitialize(AppConfig config)
     {
-        vertexBuffer = Graphics.CreateBuffer(vertices);
+        // vertexBuffer = Graphics.CreateBuffer<int>(vertices);
     }
 
     public override void OnRender(ICanvas canvas)
@@ -106,7 +106,7 @@ internal class Basic3DSimulation : Simulation
 
         var renderer = Graphics.GetRenderer();
 
-        renderer.Clear(Color.Gray);
+        renderer.Clear(Color.Gray, null, null);
         
         renderer.SetViewport(new(canvas.Width, canvas.Height, 0, 0));
 

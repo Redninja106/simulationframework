@@ -16,6 +16,6 @@ internal class BlankSimulation : Simulation
     {
         IRenderer renderer = Graphics.GetRenderer();
 
-        renderer.Clear(Color.Red);
+        // renderer.Clear(Color.Red);
     }
 }

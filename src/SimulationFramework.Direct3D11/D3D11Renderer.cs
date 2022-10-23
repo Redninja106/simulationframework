@@ -19,6 +19,9 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     }
 
     public ID3D11DeviceContext DeviceContext { get; private set; }
+    public ITexture<float> DepthTarget { get; set; }
+    public ITexture<byte> StencilTarget { get; set; }
+
     private D3D11Texture currentRenderTarget;
     private ID3D11RasterizerState rs;
 
@@ -96,7 +99,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         currentRenderTarget = d3dTexture;
         DeviceContext.OMSetRenderTargets(d3dTexture.RenderTargetView);
 
-        SetIndexBuffer(null);
+        // SetIndexBuffer(null);
     }
 
     public void Clear(Color color)
@@ -174,6 +177,11 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     }
 
     public void ResetState()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Clear(Color? color, float? depth, byte? stencil)
     {
         throw new NotImplementedException();
     }

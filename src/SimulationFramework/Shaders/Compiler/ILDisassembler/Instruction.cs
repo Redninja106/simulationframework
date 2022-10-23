@@ -40,6 +40,11 @@ internal class Instruction
         }
     }
 
+    public bool CanBranch()
+    {
+        return OpCode.GetBranchBehavior() is BranchBehavior.Branch or BranchBehavior.BranchOrContinue or BranchBehavior.Return;
+    }
+
     public bool IsBranchTarget()
     {
         foreach (var instruction in Method.instructions)
