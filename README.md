@@ -9,7 +9,7 @@
 
 </div>
 
-SimulationFramework is a cross-platform library for creative coding, game development, and graphical apps built on .NET 6. Designed with simplicity and ease of use in mind, it cuts down on development time for easy rapid prototyping. 
+SimulationFramework is a cross-platform library for creative coding, game development, and graphical apps built on .NET 6. Designed with simplicity and ease of use in mind, it cuts down on development time for quick and easy prototyping. 
 
 [Join the discord server!](https://discord.gg/V4X2vTvV2G)
 
@@ -17,23 +17,23 @@ SimulationFramework is a cross-platform library for creative coding, game develo
 
 - **Simple**: SimulationFramework is designed to be developer-friendly. It is well documented and provides flexible, intuitive, and easy-to-use APIs. 
 
-- **Portable**: All platform dependent components are abstracted into interfaces, meaning SimulationFramework can be made to run anywhere .NET can.
+- **Portable**: The core package is dependency free, meaning SimulationFramework can run anywhere .NET can.
 
 - **Documented**: [The wiki](https://github.com/Redninja106/simulationframework/wiki) contains everything you need to know about SimulationFramework, it's features, and how to use them.
 
 
 ### Features:
+- **Windowing**: automatically creates a configurable window
 
 - **2D Drawing**: A powerful 2D drawing API, backed by [SkiaSharp](https://github.com/mono/SkiaSharp).
 
-- **Input**: A simple input API that doesn't get in the way.
+- **Input**: Mouse, keyboard and controller support.
 
 - **Built-in [Dear ImGui](https://github.com/ocornut/imgui) Support**: Dear ImGui is completely built-in with zero setup.
 
-- **Many more planned**: See [Planned Features](https://github.com/Redninja106/simulationframework#planned-features).
+There are more on the way! See [Planned Features](https://github.com/Redninja106/simulationframework#planned-features).
 
 > Note: Right now SimulationFramework is still in the very early stages of development and is changing with every new version.
-
 
 ## Getting Started
 
