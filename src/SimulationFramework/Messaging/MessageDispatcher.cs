@@ -228,7 +228,7 @@ public sealed class MessageDispatcher
 
             // add event listener and sort by priority using default comparer
             eventListeners.Add(new(action, priority));
-            eventListeners.Sort((a, b) => Comparer<ListenerPriority>.Default.Compare(a.Priority, b.Priority));
+            eventListeners.Sort((a, b) => Comparer<ListenerPriority>.Default.Compare(b.Priority, a.Priority));
         }
 
         // removes a listener by its MethodInfo

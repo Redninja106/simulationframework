@@ -10,18 +10,17 @@ namespace SimulationFramework.Desktop;
 internal class DesktopInputComponent : IApplicationComponent
 {
     private readonly IWindow window;
-    private IInputContext silkInputDevice;
+    public IInputContext silkInputDevice;
     private InputContext Context => Application.Current.GetComponent<InputContext>();
 
     public DesktopInputComponent(IWindow window)
     {
         this.window = window;
+        silkInputDevice = window.CreateInput();
     }
 
     public void Initialize(Application application)
     {
-        silkInputDevice = window.CreateInput();
-
         if (silkInputDevice.Mice.Count > 0)
         {
             silkInputDevice.Mice[0].MouseUp += MouseUp;

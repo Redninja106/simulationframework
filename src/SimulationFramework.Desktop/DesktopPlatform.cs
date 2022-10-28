@@ -47,6 +47,7 @@ public sealed class DesktopPlatform : IApplicationPlatform
     public DesktopPlatform()
     {
         Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default with { IsVisible = false });
+        Window.Initialize();
     }
 
     public void Dispose()
@@ -56,11 +57,11 @@ public sealed class DesktopPlatform : IApplicationPlatform
     public IEnumerable<IApplicationComponent> CreateAdditionalComponents()
     {
         yield return new DesktopInputComponent(this.Window);
+        yield return new DesktopImGuiComponent(this.Window);
     }
 
     public void Initialize(Application application)
     {
-        Window.Initialize();
         application.Dispatcher.Subscribe<ResizeMessage>(m =>
         {
             frameProvider?.Resize(m.Width, m.Height);
