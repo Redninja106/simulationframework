@@ -46,42 +46,23 @@ dotnet add package SimulationFramework
 dotnet add package SimulationFramework.Desktop
 ```
 
-Next, create a class which inherits from `Simulation`. The abstract methods `OnInitialize` and `OnRender` allow you to add functionality to your simulation
-
-```cs
-// MySimulation.cs
-using SimulationFramework;
-using SimulationFramework.Drawing.Canvas;
-
-class MySimulation : Simulation
-{
-    // the OnInitialize method is when the simulation is started
-    public override void OnInitalize(AppConfig config)
-    {
-        
-    }
-
-    // the OnRender method is called each frame
-    public override void OnRender(ICanvas canvas)
-    {
-        
-    }
-}
-```
-
-To start the simulation, call `Simulation.RunWindowed()`:
-
+Next, create two methods `OnInitialize` and `OnRender` and pass them to `Simulation.Create`. To start the simulation, call `Simulation.Run()`:
 ```cs
 // Program.cs
-using SimulationFramework.Desktop;
+using SimulationFramework;
+using SimulationFramework.Drawing;
 
-class Program 
+Simulation mySimulation = Simulation.Create(OnInitialize, OnRender);
+mySimulation.Run();
+
+void OnInitialize(AppConfig config)
 {
-    public static void Main()
-    {
-        MySimulation sim = new MySimulation();
-        Simulation.RunDesktop();
-    }
+    // called when the simulation starts
+}
+
+void OnRender(ICanvas canvas)
+{
+    // called every frame
 }
 ```
 
@@ -96,12 +77,18 @@ Running the program will result in a blank window:
 Next, to start drawing. The `ICanvas` provided in `OnRender()` contains a variety methods for drawing.
 
 ```cs
-// MySimulation.cs
-using SimulationFramework.Canvas;
-using System.Numerics;
+// Program.cs
+using SimulationFramework;
+using SimulationFramework.Drawing;
 
-// the OnRender method is called each frame
-public override void OnRender(ICanvas canvas)
+Simulation mySimulation = Simulation.Create(OnInitialize, OnRender);
+mySimulation.Run();
+
+void OnInitialize(AppConfig config)
+{
+}
+
+void OnRender(ICanvas canvas)
 {
     // don't forget to clear the screen each frame!
     canvas.Clear(Color.CornflowerBlue); 
@@ -111,9 +98,7 @@ public override void OnRender(ICanvas canvas)
     canvas.DrawRect(Mouse.Position, new Vector2(50, 50), Alignment.Center); 
 }
 ```
-
-The above example produces the following output:
-
+Here is what that should look like: 
 <div align="center">
     
 ![readme-example](https://user-images.githubusercontent.com/45476006/187409007-ec8abaea-3c59-456e-9106-d1c1860b0b45.gif)
@@ -126,4 +111,4 @@ To see more, [go to the wiki](https://github.com/Redninja106/simulationframework
 - **C# shaders**: .NET CIL to HLSL/GLSL compilation to write any kind of shader in plain C# (or any other .NET language!).
 - **Dependency Free**: SimulationFramework won't depend on any other nuget packages or have any native dependencies (except imgui, which will be optional).
 - **3D Drawing**: A performant and cross-platform 3D graphics API. (see the '3d' branch)
-- **WebAssembly and Mobile Support**: Any simulations you write will run on a web browser or mobile phone, no code changes needed.
+- **WebAssembly and Mobile Support**: Any simulations you write will run on a web browser or mobile device, no code changes needed.
