@@ -123,6 +123,7 @@ The above example produces the following output:
 To see more, [go to the wiki](https://github.com/Redninja106/simulationframework/wiki) or [join the discord server](https://discord.gg/V4X2vTvV2G).
 
 ## Planned Features
+- **C# shaders**: .NET CIL to HLSL/GLSL compilation to write any kind of shader in plain C# (or any other .NET language!).
 - **Dependency Free**: SimulationFramework won't depend on any other nuget packages or have any native dependencies (except imgui, which will be optional).
-- **3D Drawing**: A performant and cross-platform 3D graphics API complete with a custom C#-inspired shader language. (see the '3d' branch)
+- **3D Drawing**: A performant and cross-platform 3D graphics API. (see the '3d' branch)
 - **WebAssembly and Mobile Support**: Any simulations you write will run on a web browser or mobile phone, no code changes needed.
