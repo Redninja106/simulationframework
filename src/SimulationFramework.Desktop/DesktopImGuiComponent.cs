@@ -32,13 +32,11 @@ internal class DesktopImGuiComponent : IApplicationComponent
     {
         gl.Viewport(0, 0, (uint)renderMessage.Canvas.Width, (uint)renderMessage.Canvas.Height);
         imGuiController.Update(Time.DeltaTime);
-        Console.WriteLine("PRERENDER");
     }
 
     void PostRender(RenderMessage renderMessage)
     {
         imGuiController.Render();
-        Console.WriteLine("POSTRENDER");
     }
 
     public void Dispose()

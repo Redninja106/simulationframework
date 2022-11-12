@@ -105,8 +105,8 @@ internal class DesktopAppController : IApplicationController
     
         while (isRunning)
         {
-            window.DoEvents();
             dispatcher.ImmediateDispatch(new FrameBeginMessage());
+            window.DoEvents();
             dispatcher.Flush();
 
             dispatcher.ImmediateDispatch(new RenderMessage(Graphics.GetOutputCanvas()));
