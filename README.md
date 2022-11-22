@@ -9,7 +9,7 @@
 
 </div>
 
-SimulationFramework is a cross-platform library for creative coding, game development, and graphical apps built on .NET 6. Designed with simplicity and ease of use in mind, it cuts down on development time for quick and easy prototyping. 
+SimulationFramework is a cross-platform library for creative coding, game development, and graphical apps built on .NET 7. Designed with simplicity and ease of use in mind, it cuts down on development time for quick and easy prototyping. 
 
 [Join the discord server!](https://discord.gg/V4X2vTvV2G)
 
