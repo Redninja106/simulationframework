@@ -24,10 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ImGui.NET" Version="1.88.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="logo-128x128.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

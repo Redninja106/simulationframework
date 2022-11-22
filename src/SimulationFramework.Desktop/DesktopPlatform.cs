@@ -8,6 +8,7 @@ using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 using SimulationFramework.Desktop;
 using SimulationFramework;
+using SimulationFramework.Drawing.Direct3D11;
 
 [assembly: ApplicationPlatform(typeof(DesktopPlatform))]
 
@@ -20,23 +21,20 @@ public sealed class DesktopPlatform : IApplicationPlatform
 {
     public IWindow Window { get; }
 
-    private Func<IntPtr, IGraphicsProvider> graphics;
-
-
-    public IAppController CreateController()
+    public IApplicationController CreateController()
     {
         return new DesktopAppController(this.Window);
     }
 
     public IGraphicsProvider CreateGraphicsProvider()
     {
-        return graphics != null ? graphics(Window.Native.Win32.Value.Hwnd) : null;
+        return new D3D11Graphics(Window.Native.Win32.Value.Hwnd);
     }
 
-    public DesktopPlatform(Func<IntPtr, IGraphicsProvider> graphics = null)
+    public DesktopPlatform()
     {
         Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default);
-        this.graphics = graphics;
+        Window.Initialize();
     }
 
     public void Dispose()
@@ -46,23 +44,19 @@ public sealed class DesktopPlatform : IApplicationPlatform
     public IEnumerable<IApplicationComponent> CreateAdditionalComponents()
     {
         yield return new DesktopInputComponent(this.Window);
-        yield return new DesktopImGuiComponent(this.Window);
     }
 
     public void Initialize(Application application)
     {
-        Window.Initialize();
-        application.AddComponent(CreateGraphics());
-        application.AddComponent(new RealtimeProvider());
-        application.AddComponent(new DesktopInputComponent(this.Window));
-        application.Dispatcher.Subscribe<ResizeMessage>(m =>
-        {
-            frameProvider?.Resize(m.Width, m.Height);
-        });
     }
 
     public static bool IsSupported()
     {
         return OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() || OperatingSystem.IsLinux();
+    }
+
+    public ITimeProvider CreateTimeProvider()
+    {
+        return new RealtimeProvider();
     }
 }

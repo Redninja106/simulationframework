@@ -35,6 +35,18 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         }
     }
 
+    public bool Wireframe
+    {
+        get
+        {
+            return false;
+        }
+        set
+        {
+
+        }
+    }
+
     public float DepthBias { get; set; }
 
     private D3D11Texture<Color> currentRenderTarget;
@@ -58,13 +70,13 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
         if (rs == null)
         {
-            rs = Resources.Device.CreateRasterizerState(RasterizerDescription.CullBack);
+            rs = Resources.Device.CreateRasterizerState(RasterizerDescription.CullFront);
         }
 
         DeviceContext.RSSetState(rs);
     }
 
-    public void DrawIndexedPrimitives(PrimitiveKind kind, int count, int vertexOffset, int indexOffset)
+    public void DrawPrimitivesIndexed(PrimitiveKind kind, int count, int vertexOffset, int indexOffset)
     {
         PreDraw(kind);
 
@@ -133,7 +145,6 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
     public void ResetState()
     {
-        throw new NotImplementedException();
     }
 
     public void Flush()
@@ -145,12 +156,12 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         throw new NotImplementedException();
     }
 
-    public void DrawInstancedPrimitives(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int instanceOffset = 0)
+    public void DrawPrimitivesInstanced(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int instanceOffset = 0)
     {
         throw new NotImplementedException();
     }
 
-    public void DrawIndexedInstancedPrimitives(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int indexOffset = 0, int instanceOffset = 0)
+    public void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int indexOffset = 0, int instanceOffset = 0)
     {
         throw new NotImplementedException();
     }

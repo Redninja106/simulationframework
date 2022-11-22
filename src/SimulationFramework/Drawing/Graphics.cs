@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -172,4 +173,28 @@ public static class Graphics
         PrimitiveKind.TriangleStrip => (vertexCount - 1) / 2,
         _ => throw new ArgumentException(null, nameof(kind)),
     };
+
+    public static ITexture<TTo> ReinterpretTexture<TFrom, TTo>(ITexture<TFrom> texture)
+        where TFrom : unmanaged
+        where TTo : unmanaged
+    {
+        throw new NotImplementedException();
+    }
+
+    public static IBuffer<TTo> ReinterpretBuffer<TFrom, TTo>(IBuffer<TFrom> buffer) 
+        where TFrom : unmanaged 
+        where TTo : unmanaged
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void CopyTexture<T>(ITexture<T> source, ITexture<T> destination) where T : unmanaged
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void CopyBuffer<T>(ITexture<T> source, ITexture<T> destination) where T : unmanaged
+    {
+        throw new NotImplementedException();
+    }
 }

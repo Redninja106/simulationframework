@@ -59,6 +59,14 @@ internal static class Debug
         throw exception;
     }
 
+    public static void Assert<TException>(bool condition) where TException : Exception, new()
+    {
+        if (condition)
+            return;
+
+        throw new TException();
+    }
+
     public static void Redirect(TextWriter? writer)
     {
         redirectWriter = writer;

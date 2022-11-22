@@ -15,6 +15,7 @@ public interface IRenderer
 
     CullMode CullMode { get; set; }
     float DepthBias { get; set; }
+    bool Wireframe { get; set; }
 
     void ClearRenderTarget(Color color);
     void ClearDepthTarget(float depth);
@@ -24,14 +25,14 @@ public interface IRenderer
     void SetInstanceBuffer<T>(IBuffer<T>? instanceBuffer) where T : unmanaged;
     void SetIndexBuffer(IBuffer<uint>? indexBuffer);
     
-    void SetVertexShader(IShader shader);
-    void SetGeometryShader(IShader shader);
-    void SetFragmentShader(IShader shader);
+    void SetVertexShader(IShader? shader);
+    void SetGeometryShader(IShader? shader);
+    void SetFragmentShader(IShader? shader);
 
     void DrawPrimitives(PrimitiveKind kind, int count, int vertexOffset = 0);
-    void DrawIndexedPrimitives(PrimitiveKind kind, int count, int vertexOffset = 0, int indexOffset = 0);
-    void DrawInstancedPrimitives(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int instanceOffset = 0);
-    void DrawIndexedInstancedPrimitives(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int indexOffset = 0, int instanceOffset = 0);
+    void DrawPrimitivesIndexed(PrimitiveKind kind, int count, int vertexOffset = 0, int indexOffset = 0);
+    void DrawPrimitivesInstanced(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int instanceOffset = 0);
+    void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int indexOffset = 0, int instanceOffset = 0);
 
     void SetViewport(Rectangle viewport);
     void Clip(Rectangle? rectangle);

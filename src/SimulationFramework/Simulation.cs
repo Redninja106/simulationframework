@@ -72,9 +72,15 @@ public abstract class Simulation
 
         Application.Dispatcher.Subscribe<RenderMessage>(m =>
         {
+            m.Renderer.ResetState();
             m.Canvas.ResetState();
+
+            m.Renderer.RenderTarget = Graphics.GetFrameTexture();
+
             OnRender(m.Canvas);
+            
             m.Canvas.Flush();
+            m.Renderer.Flush();
         });
 
         Application.Dispatcher.Subscribe<UninitializeMessage>(m =>

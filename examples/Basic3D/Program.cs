@@ -13,6 +13,6 @@ internal class Program
     static void Main(string[] args)
     {
         var sim = new Basic3DSimulation();
-        sim.RunDesktop(hwnd => new D3D11Graphics(hwnd));
+        sim.Run();
     }
 }

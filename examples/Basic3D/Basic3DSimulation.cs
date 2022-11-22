@@ -75,10 +75,10 @@ internal class Basic3DSimulation : Simulation
 
 
         if (Keyboard.IsKeyDown(Key.Plus))
-            camZoom++;
+            camZoom -= Time.DeltaTime * 5;
 
         if (Keyboard.IsKeyDown(Key.Minus))
-            camZoom--;
+            camZoom += Time.DeltaTime * 5;
 
         if (Keyboard.IsKeyDown(Key.A)) 
             yRotation += Time.DeltaTime;

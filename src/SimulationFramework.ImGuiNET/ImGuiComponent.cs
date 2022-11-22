@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace SimulationFramework.ImGuiNET;
 
-public sealed class ImGuiComponent : IAppComponent
+public sealed class ImGuiComponent : IApplicationComponent
 {
     // https://github.com/mellinoe/ImGui.NET/blob/master/src/ImGui.NET.SampleProgram.XNA/ImGuiRenderer.cs
 
@@ -212,7 +212,7 @@ public sealed class ImGuiComponent : IAppComponent
 
                 renderer.SetFragmentShader(fragmentShader);
 
-                renderer.DrawIndexedPrimitives(PrimitiveKind.Triangles, (int)command.ElemCount / 3, vertexOffset + (int)command.VtxOffset, indexOffset + (int)command.IdxOffset);
+                renderer.DrawPrimitivesIndexed(PrimitiveKind.Triangles, (int)command.ElemCount / 3, vertexOffset + (int)command.VtxOffset, indexOffset + (int)command.IdxOffset);
             }
 
             vertexOffset += commandList.VtxBuffer.Size;

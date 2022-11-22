@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,4 +14,5 @@ internal static class Exceptions
     public static Exception NoPlatformAvailable() => new SimulationFrameworkException("No supported application platforms were found.");
     public static Exception DuplicateComponent(Type type) => new SimulationFrameworkException($"A component of type {type.Name} already exists.");
     public static Exception Internal(Exception? innerException = null) => new SimulationFrameworkException("An internal error occurred.", innerException);
+    public static Exception InvalidEnumArgument(string? paramName = null) => new ArgumentException("Invalid Enum value!", paramName);
 }

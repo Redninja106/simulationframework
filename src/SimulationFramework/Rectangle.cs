@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -134,8 +135,23 @@ public struct Rectangle : IEquatable<Rectangle>
     /// <returns>True if the rectangle contains <paramref name="point"/>, otherwise false.</returns>
     public bool ContainsPoint(Vector2 point)
     {
-        return this.X <= point.X && this.X + this.Width >= point.X &&
+        return 
+            this.X <= point.X && this.X + this.Width >= point.X &&
             this.Y <= point.Y && this.Y + this.Height >= point.Y;
+    }
+    
+    /// <summary>
+    /// Determines if another rectangle is entirely contained within this one.
+    /// </summary>
+    /// <param name="other">The other rectangle.</param>
+    /// <returns>True if this rectangle entirely contains <paramref name="other"/>, otherwise false.</returns>
+    public bool Contains(Rectangle other)
+    {
+        return 
+            this.X <= other.X && 
+            this.X + this.Width >= other.X + other.Width &&
+            this.Y <= other.Y && 
+            this.Y + this.Height >= other.Y + other.Height;
     }
 
     /// <summary>

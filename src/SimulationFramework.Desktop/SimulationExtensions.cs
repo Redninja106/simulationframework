@@ -12,12 +12,7 @@ public static class SimulationExtensions
 {
     public static void RunDesktop(this Simulation simulation)
     {
-        RunDesktop(simulation, null);
-    }
-
-    public static void RunDesktop(this Simulation simulation, Func<IntPtr, IGraphicsProvider> graphics)
-    {
-        using var platform = new DesktopPlatform(graphics);
+        using var platform = new DesktopPlatform();
         simulation.Run(platform);
     }
 }
