@@ -1,15 +1,14 @@
-﻿using SimulationFramework.Desktop;
-using SimulationFramework.Drawing.Direct3D11;
-using SimulationFramework.Shaders.Compiler.ILDisassembler;
-using System.Net;
+﻿using SimulationFramework;
+using SimulationFramework.Drawing;
 
-namespace BlankSimulation;
+Simulation simulation = Simulation.Create(Initialize, Render);
+simulation.Run();
 
-internal class Program
+void Initialize(AppConfig config)
 {
-    static void Main(string[] args)
-    {
-        var sim = new BlankSimulation();
-        sim.RunDesktop(hwnd => new D3D11Graphics(hwnd));
-    }
+}
+
+
+void Render(ICanvas canvas)
+{
 }

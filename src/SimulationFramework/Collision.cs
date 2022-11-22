@@ -18,57 +18,124 @@ public class Collision
     // line/ray
     // point
 
+    /// <summary>
+    /// Not implemented.
+    /// </summary>
+    /// <param name="polygonA"></param>
+    /// <param name="polygonB"></param>
+    /// <returns></returns>
     public static bool CollidePolygonPolygon(Span<Vector2> polygonA, Span<Vector2> polygonB)
     {
         // separating axis theorem
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Not implemented.
+    /// </summary>
+    /// <param name="polygon"></param>
+    /// <param name="rectangle"></param>
+    /// <returns></returns>
     public static bool CollidePolygonRectangle(Span<Vector2> polygon, Rectangle rectangle)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Not implemented.
+    /// </summary>
+    /// <param name="polygon"></param>
+    /// <param name="rectangle"></param>
+    /// <returns></returns>
     public static bool CollidePolygonCircle(Span<Vector2> polygon, Circle circle)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Not implemented.
+    /// </summary>
+    /// <param name="polygon"></param>
+    /// <param name="rectangle"></param>
+    /// <returns></returns>
     public static bool CollidePolygonLine(Span<Vector2> polygon, Vector2 from, Vector2 to)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Not implemented.
+    /// </summary>
+    /// <param name="polygon"></param>
+    /// <param name="rectangle"></param>
+    /// <returns></returns>
     public static bool CollidePolygonPoint(Span<Vector2> polygon, Vector2 point)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Not implemented.
+    /// </summary>
+    /// <param name="polygon"></param>
+    /// <param name="rectangle"></param>
+    /// <returns></returns>
     public static bool CollideRectangleRectangle(Rectangle rectangleA, Rectangle rectangleB)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Not implemented.
+    /// </summary>
+    /// <param name="polygon"></param>
+    /// <param name="rectangle"></param>
+    /// <returns></returns>
     public static bool CollideRectangleCircle(Rectangle rectangle, Circle circle)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Not implemented.
+    /// </summary>
+    /// <param name="polygon"></param>
+    /// <param name="rectangle"></param>
+    /// <returns></returns>
     public static bool CollideRectangleLine(Rectangle rectangle, Vector2 from, Vector2 to)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Not implemented.
+    /// </summary>
+    /// <param name="polygon"></param>
+    /// <param name="rectangle"></param>
+    /// <returns></returns>
     public static bool CollideRectanglePoint(Rectangle rectangle, Vector2 point)
     {
         return rectangle.ContainsPoint(point);
     }
 
+    /// <summary>
+    /// Determines if 2 circles are colliding.
+    /// </summary>
+    /// <param name="circleA"></param>
+    /// <param name="circleB"></param>
+    /// <returns></returns>
     public static bool CollideCircleCircle(Circle circleA, Circle circleB)
     {
         return Vector2.DistanceSquared(circleA.Position, circleB.Position) <= (circleA.Radius + circleB.Radius) * (circleA.Radius + circleB.Radius);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="circle"></param>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <returns></returns>
     public static bool CollideCircleLine(Circle circle, Vector2 from, Vector2 to)
     {
         // http://jeffreythompson.org/collision-detection/line-circle.php
@@ -96,11 +163,26 @@ public class Collision
         return false;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="circle"></param>
+    /// <param name="point"></param>
+    /// <returns></returns>
     public static bool CollideCirclePoint(Circle circle, Vector2 point)
     {
         return (circle.Position - point).LengthSquared() <= circle.Radius * circle.Radius;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="fromA"></param>
+    /// <param name="toA"></param>
+    /// <param name="fromB"></param>
+    /// <param name="toB"></param>
+    /// <param name="point"></param>
+    /// <returns></returns>
     public static bool CollideLineLine(Vector2 fromA, Vector2 toA, Vector2 fromB, Vector2 toB, out Vector2 point)
     {
         var a1 = toA.Y - fromA.Y;
@@ -125,6 +207,13 @@ public class Collision
         return true;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="point"></param>
+    /// <returns></returns>
     public static bool CollideLinePoint(Vector2 from, Vector2 to, Vector2 point)
     {
         return Vector2.DistanceSquared(from, point) + Vector2.DistanceSquared(point, to) == Vector2.DistanceSquared(from, to);

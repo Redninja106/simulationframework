@@ -11,7 +11,7 @@ namespace SimulationFramework;
 /// <summary>
 /// Controls the input sent to a simulation.
 /// </summary>
-public sealed class InputContext : IAppComponent
+public sealed class InputContext : IApplicationComponent
 {
     internal event KeyEvent? KeyDown;
     internal event KeyEvent? KeyUp;

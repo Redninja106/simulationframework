@@ -5,7 +5,7 @@ using SimulationFramework.Messaging;
 
 namespace SimulationFramework.Desktop;
 
-internal class DesktopAppController : IAppController
+internal class DesktopAppController : IApplicationController
 {
     private readonly IWindow window;
 
@@ -83,11 +83,11 @@ internal class DesktopAppController : IAppController
 
     public void Initialize(Application application)
     {
-        window.Resize += size => application.Dispatcher.Dispatch(new ResizeMessage(size.X, size.Y));
+        window.Resize += size => application.Dispatcher.ImmediateDispatch(new ResizeMessage(size.X, size.Y));
 
         window.Closing += () =>
         {
-            application.Dispatcher.Dispatch<ExitMessage>(new());
+            application.Dispatcher.ImmediateDispatch<ExitMessage>(new());
         };
 
         application.Dispatcher.Subscribe<ExitMessage>(m =>
@@ -95,35 +95,27 @@ internal class DesktopAppController : IAppController
             isRunning = false;
         });
     }
-
-
+    
     public void Start(MessageDispatcher dispatcher)
     {
         isRunning = true;
 
-        dispatcher.Dispatch(new InitializeMessage());
-
+        dispatcher.ImmediateDispatch(new InitializeMessage());
+    
         while (isRunning)
         {
+            dispatcher.ImmediateDispatch(new FrameBeginMessage());
             window.DoEvents();
+            dispatcher.Flush();
 
-            if (Application.Current.GetComponent<IGraphicsProvider>() is not null)
-            {
-                var renderer = Graphics.GetRenderer();
-                renderer.RenderTarget = Graphics.GetFrameTexture();
+            dispatcher.ImmediateDispatch(new RenderMessage(Graphics.GetOutputCanvas()));
 
-                var canvas = Graphics.GetFrameCanvas();
+            window.GLContext.SwapBuffers();
 
-                canvas.ResetState();
-
-                dispatcher.Dispatch(new RenderMessage(canvas, renderer));
-
-                canvas.Flush();
-            }
-
-            // window.GLContext.SwapBuffers();
+            dispatcher.ImmediateDispatch(new FrameEndMessage());
+            dispatcher.Flush();
         }
 
-        dispatcher.Dispatch(new UninitializeMessage());
-    }
+        dispatcher.ImmediateDispatch(new UninitializeMessage());
+    }    
 }

@@ -6,7 +6,7 @@ namespace SimulationFramework.Drawing;
 /// <summary>
 /// Interface which provides graphics functionality as a component of a simulation.
 /// </summary>
-public interface IGraphicsProvider : IAppComponent
+public interface IGraphicsProvider : IApplicationComponent
 {
     ICanvas GetFrameCanvas();
 

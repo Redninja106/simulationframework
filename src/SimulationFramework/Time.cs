@@ -32,4 +32,9 @@ public static class Time
     /// The highest allowed value of <see cref="DeltaTime"/>.
     /// </summary>
     public static float MaxDeltaTime { get => Provider.MaxDeltaTime; set => Provider.MaxDeltaTime = value; }
+
+    /// <summary>
+    /// The default value of <see cref="MaxDeltaTime"/>.
+    /// </summary>
+    public const float DefaultMaxDeltaTime = float.PositiveInfinity;
 }
