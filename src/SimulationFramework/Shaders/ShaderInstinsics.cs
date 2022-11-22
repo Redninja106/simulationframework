@@ -16,6 +16,9 @@ public static class ShaderIntrinsics
     public static Vector4 Vec4(Vector3 xyz, float w) => new(xyz, w);
 
     [ShaderIntrinsic(ShaderIntrinsicAttribute.ConstructorMethodName, typeof(Vector4))]
+    public static Vector4 Vec4(Vector2 xy, float z, float w) => new(xy.X, xy.Y, z, w);
+
+    [ShaderIntrinsic(ShaderIntrinsicAttribute.ConstructorMethodName, typeof(Vector4))]
     public static Vector4 Vec4(float x, float y, float z, float w) => new(x, y, z, w);
 
     [ShaderIntrinsic(ShaderIntrinsicAttribute.ConstructorMethodName, typeof(Vector3))]

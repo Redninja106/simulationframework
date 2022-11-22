@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders;
 
-public enum InSemantic
+public enum InputSemantic
 {
     None,
     Position,

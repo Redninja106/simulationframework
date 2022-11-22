@@ -26,12 +26,14 @@ public class HLSLCodeGenerator : CodeGenerator
         [typeof(Vector4)] = "float4",
         [typeof(Matrix4x4)] = "float4x4",
         [typeof(Matrix3x2)] = "float3x2",
+        [typeof(ColorF)] = "float4",
     };
 
     private static readonly Dictionary<MethodInfo, string> intrinsicAliases = new()
     {
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Mul))] = "mul",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec4), new[] { typeof(Vector3), typeof(float) })] = "float4",
+        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec4), new[] { typeof(Vector2), typeof(float), typeof(float) })] = "float4",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec4), new[] { typeof(float), typeof(float), typeof(float), typeof(float) })] = "float4",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec3), new[] { typeof(float), typeof(float), typeof(float) })] = "float3",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec3), new[] { typeof(float) })] = "float3",
@@ -76,15 +78,15 @@ public class HLSLCodeGenerator : CodeGenerator
 
     private Dictionary<FieldInfo, string> fieldSemantics = new();
 
-    private static readonly Dictionary<InSemantic, string> inputSemanticAliases = new()
+    private static readonly Dictionary<InputSemantic, string> inputSemanticAliases = new()
     {
-        [InSemantic.Position] = "SV_Position",
+        [InputSemantic.Position] = "SV_Position",
     };
 
-    private static readonly Dictionary<OutSemantic, string> outputSemanticAliases = new()
+    private static readonly Dictionary<OutputSemantic, string> outputSemanticAliases = new()
     {
-        [OutSemantic.Position] = "SV_Position",
-        [OutSemantic.Color] = "SV_Target",
+        [OutputSemantic.Position] = "SV_Position",
+        [OutputSemantic.Color] = "SV_Target",
     };
 
     public HLSLCodeGenerator(ShaderCompilation compilation) : base(compilation)
@@ -126,10 +128,9 @@ public class HLSLCodeGenerator : CodeGenerator
             VisitIdentifier(input.Name);
 
             string semantic = null;
-            var inputAttribute = null as ShaderInAttribute;
-            if (inputSemanticAliases.ContainsKey(inputAttribute.Semantic))
+            if (input.InputSemantic is not null && inputSemanticAliases.ContainsKey(input.InputSemantic.Value))
             {
-                semantic = inputSemanticAliases[inputAttribute.Semantic];
+                semantic = inputSemanticAliases[input.InputSemantic.Value];
             }
             else
             {
@@ -139,21 +140,14 @@ public class HLSLCodeGenerator : CodeGenerator
                 }
                 else
                 {
-                    if (inputAttribute.LinkageName is not null)
+                    if (input.VariableType == typeof(int) ||
+                        input.VariableType == typeof(uint) ||
+                        input.VariableType == typeof(float) ||
+                        input.VariableType == typeof(Vector2) ||
+                        input.VariableType == typeof(Vector3) ||
+                        input.VariableType == typeof(Vector4))
                     {
-                        semantic = inputAttribute.LinkageName;
-                    }
-                    else
-                    {
-                        if (input.VariableType == typeof(int) ||
-                            input.VariableType == typeof(uint) ||
-                            input.VariableType == typeof(float) ||
-                            input.VariableType == typeof(Vector2) ||
-                            input.VariableType == typeof(Vector3) ||
-                            input.VariableType == typeof(Vector4))
-                        {
-                            semantic = input.Name;
-                        }
+                        semantic = input.Name;
                     }
                 }
             }
@@ -185,10 +179,9 @@ public class HLSLCodeGenerator : CodeGenerator
             VisitIdentifier(output.Name);
 
             string semantic = null;
-            var outputAttribute = null as ShaderOutAttribute;
-            if (outputSemanticAliases.ContainsKey(outputAttribute.Semantic))
+            if (output.OutSemantic is not null && outputSemanticAliases.ContainsKey(output.OutSemantic.Value))
             {
-                semantic = outputSemanticAliases[outputAttribute.Semantic];
+                semantic = outputSemanticAliases[output.OutSemantic.Value];
             }
             else
             {
@@ -198,14 +191,7 @@ public class HLSLCodeGenerator : CodeGenerator
                 }
                 else
                 { 
-                    if (outputAttribute.LinkageName is not null)
-                    {
-                        semantic = outputAttribute.LinkageName;
-                    }
-                    else
-                    {
-                        semantic = output.Name;
-                    }
+                    semantic = output.Name;
                 } 
             }
 
@@ -247,8 +233,8 @@ public class HLSLCodeGenerator : CodeGenerator
         VisitIdentifier(field.Name);
 
         string semantic;
-        var inputAttribute = field.GetCustomAttribute<ShaderInAttribute>();
-        var outputAttribute = field.GetCustomAttribute<ShaderOutAttribute>();
+        var inputAttribute = field.GetCustomAttribute<ShaderInputAttribute>();
+        var outputAttribute = field.GetCustomAttribute<ShaderOutputAttribute>();
         if (inputAttribute is not null && inputSemanticAliases.ContainsKey(inputAttribute.Semantic))
         {
             semantic = inputSemanticAliases[inputAttribute.Semantic];

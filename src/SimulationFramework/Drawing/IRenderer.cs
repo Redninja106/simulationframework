@@ -9,31 +9,36 @@ namespace SimulationFramework.Drawing;
 
 public interface IRenderer
 {
-    ITexture RenderTarget { get; set; }
-    ITexture<float> DepthTarget { get; set; }
-    ITexture<byte> StencilTarget { get; set; }
+    ITexture<Color>? RenderTarget { get; set; }
+    ITexture<float>? DepthTarget { get; set; }
+    ITexture<byte>? StencilTarget { get; set; }
 
-    void Clear(Color? color, float? depth, byte? stencil);
+    CullMode CullMode { get; set; }
+    float DepthBias { get; set; }
+
+    void ClearRenderTarget(Color color);
+    void ClearDepthTarget(float depth);
+    void ClearStencilTarget(byte stencil);
 
     void SetVertexBuffer<T>(IBuffer<T>? vertexBuffer) where T : unmanaged;
+    void SetInstanceBuffer<T>(IBuffer<T>? instanceBuffer) where T : unmanaged;
     void SetIndexBuffer(IBuffer<uint>? indexBuffer);
+    
+    void SetVertexShader(IShader shader);
+    void SetGeometryShader(IShader shader);
+    void SetFragmentShader(IShader shader);
 
-    void SetVertexShader<T>(T vertexShader) where T : struct, IShader;
-    void SetFragmentShader<T>(T fragmentShader) where T : struct, IShader;
+    void DrawPrimitives(PrimitiveKind kind, int count, int vertexOffset = 0);
+    void DrawIndexedPrimitives(PrimitiveKind kind, int count, int vertexOffset = 0, int indexOffset = 0);
+    void DrawInstancedPrimitives(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int instanceOffset = 0);
+    void DrawIndexedInstancedPrimitives(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int indexOffset = 0, int instanceOffset = 0);
 
-    void DrawPrimitives(PrimitiveKind kind, int count, int offset);
-    void DrawIndexedPrimitives(PrimitiveKind kind, int count, int vertexOffset, int indexOffset);
-
-    sealed void SetViewport(float x, float y, float w, float h) => SetViewport(new(x, y, w, h));
-    sealed void SetViewport(Rectangle viewport) => SetViewport(viewport, 0.0f, 1.0f);
-    sealed void SetViewport(float x, float y, float w, float h, float minDepth, float maxDepth) => SetViewport(new(x, y, w, h), minDepth, maxDepth);
-    void SetViewport(Rectangle viewport, float minDepth, float maxDepth);
-
-    sealed void Clip(float x, float y, float w, float h) => Clip(new(x, y, w, h));
+    void SetViewport(Rectangle viewport);
     void Clip(Rectangle? rectangle);
 
     void PushState();
     void PopState();
     void ResetState();
 
+    void Flush();
 }

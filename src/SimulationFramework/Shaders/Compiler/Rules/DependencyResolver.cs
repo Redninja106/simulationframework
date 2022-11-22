@@ -25,6 +25,7 @@ internal class DependencyResolver : CompilerRule
         typeof(Vector2),
         typeof(Vector3),
         typeof(Vector4),
+        typeof(ColorF),
         typeof(Matrix4x4),
         typeof(Matrix3x2),
     };

@@ -15,13 +15,13 @@ namespace SimulationFramework.Drawing.Direct3D11;
 public class D3D11Graphics : IGraphicsProvider
 {
     private DeviceResources resources;
-    private D3D11Texture frameTexture;
+    private D3D11Texture<Color> frameTexture;
     private NullCanvas frameCanvas;
 
     public D3D11Graphics(IntPtr hwnd)
     {
         resources = new DeviceResources(hwnd);
-        frameTexture = new D3D11Texture(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
+        frameTexture = new D3D11Texture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
         frameCanvas = new NullCanvas(frameTexture);
     }
 
@@ -35,9 +35,9 @@ public class D3D11Graphics : IGraphicsProvider
         return new D3D11Buffer<T>(this.resources, size, flags);
     }
 
-    public ITexture CreateTexture(int width, int height, Span<Color> data, ResourceOptions flags)
+    public ITexture<T> CreateTexture<T>(int width, int height, Span<T> data, ResourceOptions flags) where T : unmanaged
     {
-        return new D3D11Texture(this.resources, width, height, data, flags);
+        return new D3D11Texture<T>(this.resources, width, height, data, flags);
     }
 
     public void Dispose()
@@ -46,12 +46,12 @@ public class D3D11Graphics : IGraphicsProvider
         resources.Dispose();
     }
 
-    public ITexture GetFrameTexture()
+    public ITexture<Color> GetFrameTexture()
     {
         return frameTexture;
     }
 
-    public ITexture LoadTexture(Span<byte> encodedData, ResourceOptions flags)
+    public ITexture<Color> LoadTexture(Span<byte> encodedData, ResourceOptions flags)
     {
         using var stream = new MemoryStream(encodedData.Length);
         stream.Write(encodedData);
@@ -76,7 +76,7 @@ public class D3D11Graphics : IGraphicsProvider
 
     public void Initialize(Application application)
     {
-        application.Dispatcher.Subscribe<RenderMessage>(AfterRender, ListenerPriority.Low);
+        application.Dispatcher.Subscribe<RenderMessage>(AfterRender, ListenerPriority.After);
         application.Dispatcher.Subscribe<RenderMessage>(BeforeRender, ListenerPriority.High);
         application.Dispatcher.Subscribe<ResizeMessage>(Resize, ListenerPriority.High);
     }
@@ -94,7 +94,7 @@ public class D3D11Graphics : IGraphicsProvider
         this.resources.ImmediateRenderer.DeviceContext.ClearState();
         frameTexture.Dispose();
         resources.Resize(message.Width, message.Height);
-        frameTexture = new D3D11Texture(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
+        frameTexture = new D3D11Texture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
     }
 
     public ICanvas GetFrameCanvas()
@@ -120,7 +120,7 @@ public class D3D11Graphics : IGraphicsProvider
             );
     }
 
-    record NullCanvas(ITexture Target) : ICanvas
+    record NullCanvas(ITexture<Color> Target) : ICanvas
     {
         public CanvasState State { get; } = new NullCanvasState();
 
@@ -152,7 +152,7 @@ public class D3D11Graphics : IGraphicsProvider
         {
         }
 
-        public void DrawTexture(ITexture texture, Rectangle source, Rectangle destination)
+        public void DrawTexture(ITexture<Color> texture, Rectangle source, Rectangle destination)
         {
         }
 

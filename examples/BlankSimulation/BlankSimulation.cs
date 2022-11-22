@@ -1,4 +1,5 @@
-﻿using SimulationFramework;
+﻿using ImGuiNET;
+using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.ImGuiNET;
 using System.Numerics;
@@ -15,7 +16,7 @@ internal class BlankSimulation : Simulation
     public override void OnRender(ICanvas canvas)
     {
         IRenderer renderer = Graphics.GetRenderer();
-
-        // renderer.Clear(Color.Red);
+        renderer.ClearRenderTarget(Color.FromHSV(0,0,.1f));
+        ImGui.ShowDemoWindow();
     }
 }

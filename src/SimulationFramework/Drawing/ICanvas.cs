@@ -23,7 +23,7 @@ public interface ICanvas : IDisposable
     /// <summary>
     /// The texture to which this canvas is drawing to.
     /// </summary>
-    ITexture Target { get; }
+    ITexture<Color> Target { get; }
 
     /// <summary>
     /// The canvas's current state.
@@ -81,12 +81,12 @@ public interface ICanvas : IDisposable
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
     /// </summary>
-    sealed void Fill(ITexture texture) => Fill(texture, Matrix3x2.Identity);
+    sealed void Fill(ITexture<Color> texture) => Fill(texture, Matrix3x2.Identity);
 
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
     /// </summary>
-    sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX = TileMode.Clamp, TileMode tileModeY = TileMode.Clamp)
+    sealed void Fill(ITexture<Color> texture, Matrix3x2 transform, TileMode tileModeX = TileMode.Clamp, TileMode tileModeY = TileMode.Clamp)
     {
         State.UpdateFillTexture(texture, transform, tileModeX, tileModeY);
         State.UpdateDrawMode(DrawMode.Textured);
@@ -245,7 +245,7 @@ public interface ICanvas : IDisposable
     /// </summary>
     /// <param name="texture">The texture to draw.</param>
     /// <param name="alignment">The point on the texture to align to (0, 0).</param>
-    sealed void DrawTexture(ITexture texture, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, 0, 0, alignment);
+    sealed void DrawTexture(ITexture<Color> texture, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, 0, 0, alignment);
 
     /// <summary>
     /// Draws a texture to the canvas using the current transform and clipping settings.
@@ -254,7 +254,7 @@ public interface ICanvas : IDisposable
     /// <param name="x">The x-position of the texture.</param>
     /// <param name="y">The y-position of the texture.</param>
     /// <param name="alignment">The point on the texture to align to the provided position.</param>
-    sealed void DrawTexture(ITexture texture, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, new Vector2(x, y), alignment);
+    sealed void DrawTexture(ITexture<Color> texture, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, new Vector2(x, y), alignment);
 
     /// <summary>
     /// Draws a texture to the canvas using the current transform and clipping settings.
@@ -262,7 +262,7 @@ public interface ICanvas : IDisposable
     /// <param name="texture">The texture to draw.</param>
     /// <param name="position">The position of the texture's destination rectangle.</param>
     /// <param name="alignment">The point on the texture to align to the provided position.</param>
-    sealed void DrawTexture(ITexture texture, Vector2 position, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, position, new(texture.Width, texture.Height), alignment);
+    sealed void DrawTexture(ITexture<Color> texture, Vector2 position, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, position, new(texture.Width, texture.Height), alignment);
 
     /// <summary>
     /// Draws a texture to the canvas using the current transform and clipping settings.
@@ -273,7 +273,7 @@ public interface ICanvas : IDisposable
     /// <param name="width">The width of the texture destination.</param>
     /// <param name="height">The height of the texture destination.</param>
     /// <param name="alignment">The point on the texture to align to the provided position.</param>
-    sealed void DrawTexture(ITexture texture, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, new Vector2(x, y), new Vector2(width, height), alignment);
+    sealed void DrawTexture(ITexture<Color> texture, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, new Vector2(x, y), new Vector2(width, height), alignment);
 
     /// <summary>
     /// Draws a texture to the canvas using the current transform and clipping settings.
@@ -282,14 +282,14 @@ public interface ICanvas : IDisposable
     /// <param name="position">The position of the texture's destination rectangle.</param>
     /// <param name="size">The size of the texture's destination rectangle.</param>
     /// <param name="alignment">The point on the texture to align to the provided position.</param>
-    sealed void DrawTexture(ITexture texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, new Rectangle(position, size, alignment));
+    sealed void DrawTexture(ITexture<Color> texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, new Rectangle(position, size, alignment));
 
     /// <summary>
     /// Draws a texture to the canvas using the current transform and clipping settings.
     /// </summary>
     /// <param name="texture">The texture to draw.</param>
     /// <param name="destination">The location to draw the texture.</param>
-    sealed void DrawTexture(ITexture texture, Rectangle destination) => DrawTexture(texture, new(0, 0, texture.Width, texture.Height), destination);
+    sealed void DrawTexture(ITexture<Color> texture, Rectangle destination) => DrawTexture(texture, new(0, 0, texture.Width, texture.Height), destination);
 
     /// <summary>
     /// Draws a texture to the canvas, using the current transform and clipping settings.
@@ -297,7 +297,7 @@ public interface ICanvas : IDisposable
     /// <param name="texture">The texture to draw.</param>
     /// <param name="source">The source bounds of the texture.</param>
     /// <param name="destination">The destination bounds of the texture.</param>
-    void DrawTexture(ITexture texture, Rectangle source, Rectangle destination);
+    void DrawTexture(ITexture<Color> texture, Rectangle source, Rectangle destination);
 
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.

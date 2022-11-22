@@ -16,20 +16,28 @@ internal struct ImGuiVertexShader : IShader
     [ShaderUniform]
     public Matrix4x4 ProjectionMatrix;
 
-    [ShaderIn]
+    [ShaderInput]
     Vector2 position;
 
-    [ShaderIn, ShaderOut]
-    ColorF color;
-
-    [ShaderIn, ShaderOut]
+    [ShaderInput]
     Vector2 uv;
 
-    [ShaderOut(OutSemantic.Position)]
+    [ShaderInput]
+    Color color;
+
+    [ShaderOutput]
+    ColorF outColor;
+
+    [ShaderOutput]
+    Vector2 outUV;
+
+    [ShaderOutput(OutputSemantic.Position)]
     Vector4 outPosition;
 
     public void Main()
     {
         outPosition = Vector4.Transform(new Vector4(position, 0, 1), ProjectionMatrix);
+        outColor = color.ToColorF();
+        outUV = uv;
     }
 }

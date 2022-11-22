@@ -5,12 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
-
-public enum PrimitiveKind
+public enum CullMode
 {
-    Points, 
-    Triangles,
-    TriangleStrip,
-    Lines,
-    LineStrip,
+    None,
+    Back,
+    Front,
 }

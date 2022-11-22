@@ -10,17 +10,23 @@ using System.Threading.Tasks;
 namespace SimulationFramework.ImGuiNET;
 internal struct ImGuiFragmentShader : IShader
 {
-    public ITexture texture;
+    public ITexture<Color> texture;
 
-    [ShaderIn]
-    [ShaderOut(OutSemantic.Color)]
-    ColorF color;
+    [ShaderInput(InputSemantic.Position)]
+    Vector4 position;
 
-    [ShaderIn]
+    [ShaderInput]
     Vector2 uv;
+
+    [ShaderInput]
+    Vector4 color;
+
+    [ShaderOutput(OutputSemantic.Color)]
+    Vector4 outColor;
 
     public void Main()
     {
+        outColor = color;
         // color = color.ToVector4() * texture.Sample(uv).ToVector4());
     }
 }

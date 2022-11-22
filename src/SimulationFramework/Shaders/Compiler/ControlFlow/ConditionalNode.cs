@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Shaders;
+namespace SimulationFramework.Shaders.Compiler.ControlFlow;
 
-public enum OutSemantic
+internal class ConditionalNode
 {
-    None,
-    Position,
-    TextureCoordinate,
-    Color,
+
 }

@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "Basic3D": {
+    "BlankSimulation": {
       "commandName": "Project",
-      "nativeDebugging": true 
+      "nativeDebugging": true
     }
   }
 }

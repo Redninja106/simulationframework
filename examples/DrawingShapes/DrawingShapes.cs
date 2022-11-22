@@ -7,7 +7,7 @@ namespace DrawingShapes;
 
 class DrawingShapesSimulation : Simulation
 {
-    ITexture logo;
+    ITexture<Color> logo;
     
     public override void OnInitialize(AppConfig config)
     {

@@ -25,7 +25,7 @@ public abstract class CanvasState
     /// <summary>
     /// The texture used to fill when <see cref="DrawMode"/> is <see cref="DrawMode.Textured"/>, or <see langword="null"/> if none is set.
     /// </summary>
-    public ITexture? FillTexture { get; private set; }
+    public ITexture<Color>? FillTexture { get; private set; }
 
     /// <summary>
     /// The transform applied to the fill texture. This property's default value is <see cref="Matrix3x2.Identity"/>.
@@ -141,7 +141,7 @@ public abstract class CanvasState
         UpdateValues(this);
     }
 
-    internal protected virtual void UpdateFillTexture(ITexture? texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
+    internal protected virtual void UpdateFillTexture(ITexture<Color>? texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
     {
         FillTexture = texture;
         FillTextureTransform = transform;

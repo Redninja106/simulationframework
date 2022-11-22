@@ -8,15 +8,6 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
 
-public interface ITexture : ITexture<Color>
-{
-     /// <summary>
-    /// Opens a new canvas which draws to this texture.
-    /// </summary>
-    /// <returns>An <see cref="ICanvas"/> which draws onto this texture.</returns>
-    ICanvas OpenCanvas();
-}
-
 public interface ITexture<T> : IResource where T : unmanaged
 {
     /// <summary>

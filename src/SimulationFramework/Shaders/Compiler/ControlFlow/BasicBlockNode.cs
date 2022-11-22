@@ -2,17 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Shaders.Compiler.Branching;
-internal class UnitBranch : Branch
+namespace SimulationFramework.Shaders.Compiler.ControlFlow;
+internal class BasicBlockNode : GraphNode
 {
     public readonly List<Instruction> Instructions = new();
 
-    public UnitBranch(BranchGraph graph, InstructionStream? instructions) : base(graph)
+    public BasicBlockNode(Graph graph, InstructionStream? instructions) : base(graph)
     {
         if (instructions is null)
             return;
@@ -23,7 +22,7 @@ internal class UnitBranch : Branch
 
             if (Instructions.Count > 1 && instruction.IsBranchTarget())
             {
-                AddSuccessor(Graph.GetUnitBranch(instruction));
+                AddSuccessor(Graph.GetBasicBlock(instruction));
                 break;
             }
 
@@ -34,11 +33,11 @@ internal class UnitBranch : Branch
             {
                 var target = instruction.GetBranchTarget();
                 Debug.Assert(target is not null);
-                AddSuccessor(Graph.GetUnitBranch(target));
+                AddSuccessor(Graph.GetBasicBlock(target));
 
                 if (branchBehavior is BranchBehavior.BranchOrContinue)
                 {
-                    AddSuccessor(Graph.GetUnitBranch(instructions.Peek()));
+                    AddSuccessor(Graph.GetBasicBlock(instructions.Peek()));
                 }
 
                 break;
@@ -51,4 +50,6 @@ internal class UnitBranch : Branch
             }
         }
     }
+
+
 }

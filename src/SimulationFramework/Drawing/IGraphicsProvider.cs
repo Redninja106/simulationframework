@@ -16,7 +16,7 @@ public interface IGraphicsProvider : IAppComponent
     /// <returns>
     /// The canvas which draws to the current frame. This object should never be saved, as it may be different every frame.
     /// </returns>
-    ITexture GetFrameTexture();
+    ITexture<Color> GetFrameTexture();
 
     /// <summary>
     /// Creates a new bitmap with the provided data.
@@ -26,7 +26,7 @@ public interface IGraphicsProvider : IAppComponent
     /// <param name="data">The initial raw bitmap data. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
     /// <param name="flags"></param>
     /// <returns>The new <see cref="ITexture"/>.</returns>
-    ITexture CreateTexture(int width, int height, Span<Color> data, ResourceOptions flags);
+    ITexture<T> CreateTexture<T>(int width, int height, Span<T> data, ResourceOptions flags) where T : unmanaged;
 
     /// <summary>
     /// Loads a bitmap from it's raw encoded data.
@@ -34,7 +34,7 @@ public interface IGraphicsProvider : IAppComponent
     /// <param name="encodedData"></param>
     /// <param name="flags"></param>
     /// <returns></returns>
-    ITexture LoadTexture(Span<byte> encodedData, ResourceOptions flags);
+    ITexture<Color> LoadTexture(Span<byte> encodedData, ResourceOptions flags);
 
     IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged;
 

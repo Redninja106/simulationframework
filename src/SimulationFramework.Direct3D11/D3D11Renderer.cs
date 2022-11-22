@@ -3,6 +3,7 @@ using SimulationFramework.Shaders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Vortice.Direct3D11;
@@ -12,7 +13,7 @@ namespace SimulationFramework.Drawing.Direct3D11;
 
 internal sealed class D3D11Renderer : D3D11Object, IRenderer
 {
-    public ITexture RenderTarget
+    public ITexture<Color> RenderTarget
     {
         get => currentRenderTarget;
         set => SetRenderTarget(value);
@@ -22,7 +23,21 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     public ITexture<float> DepthTarget { get; set; }
     public ITexture<byte> StencilTarget { get; set; }
 
-    private D3D11Texture currentRenderTarget;
+    public CullMode CullMode
+    {
+        get
+        {
+            return CullMode.None;
+        }
+        set
+        {
+
+        }
+    }
+
+    public float DepthBias { get; set; }
+
+    private D3D11Texture<Color> currentRenderTarget;
     private ID3D11RasterizerState rs;
 
     public D3D11Renderer(DeviceResources resources, ID3D11DeviceContext deviceContext) : base(resources)
@@ -43,7 +58,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
         if (rs == null)
         {
-            rs = Resources.Device.CreateRasterizerState(RasterizerDescription.CullFront);
+            rs = Resources.Device.CreateRasterizerState(RasterizerDescription.CullBack);
         }
 
         DeviceContext.RSSetState(rs);
@@ -63,48 +78,13 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         DeviceContext.Draw(kind.GetVertexCount(count), offset);
     }
 
-    public void SetVertexShader<T>(T shader) where T : struct, IShader
+    private void SetRenderTarget(ITexture<Color> renderTarget)
     {
-        var shaderObject = Resources.Shaders.OfType<D3D11VertexShader<T>>().SingleOrDefault();
-
-        if (shaderObject is null)
-        {
-            shaderObject = new D3D11VertexShader<T>(this.Resources);
-            Resources.Shaders.Add(shaderObject);
-        }
-
-        shaderObject.Update(shader);
-        shaderObject.Apply(this.DeviceContext);
-    }
-
-    public void SetFragmentShader<T>(T shader) where T : struct, IShader
-    {
-        var shaderObject = Resources.Shaders.OfType<D3D11FragmentShader<T>>().SingleOrDefault();
-
-        if (shaderObject is null)
-        {
-            shaderObject = new D3D11FragmentShader<T>(this.Resources);
-            Resources.Shaders.Add(shaderObject);
-        }
-
-        shaderObject.Update(shader);
-        shaderObject.Apply(this.DeviceContext);
-    }
-
-    private void SetRenderTarget(ITexture renderTarget)
-    {
-        if (renderTarget is not D3D11Texture d3dTexture)
+        if (renderTarget is not D3D11Texture<Color> d3dTexture)
             throw new ArgumentException(null, nameof(renderTarget));
 
         currentRenderTarget = d3dTexture;
         DeviceContext.OMSetRenderTargets(d3dTexture.RenderTargetView);
-
-        // SetIndexBuffer(null);
-    }
-
-    public void Clear(Color color)
-    {
-        DeviceContext.ClearRenderTargetView(currentRenderTarget.RenderTargetView, new(color.ToVector4()));
     }
 
     public void BeginFrame()
@@ -137,43 +117,18 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     {
     }
 
-    public void SetIndexBuffer(IBuffer<ushort> indexBuffer)
-    {
-    }
-
-    public void SetViewport(float x, float y, float w, float h)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetViewport(float x, float y, float w, float h, float minDepth, float maxDepth)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetViewport(Rectangle viewport, float minDepth, float maxDepth)
-    {
-        throw new NotImplementedException();
-    }
-
     public void Clip(Rectangle? rectangle)
     {
-        throw new NotImplementedException();
-    }
-
-    public void Clip(float x, float y, float w, float h)
-    {
-        throw new NotImplementedException();
     }
 
     public void PushState()
     {
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
     }
 
     public void PopState()
     {
-        throw new NotImplementedException();
+        // throw new NotImplementedException();
     }
 
     public void ResetState()
@@ -181,8 +136,82 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         throw new NotImplementedException();
     }
 
-    public void Clear(Color? color, float? depth, byte? stencil)
+    public void Flush()
     {
+    }
+
+    public void SetInstanceBuffer<T>(IBuffer<T> instanceBuffer) where T : unmanaged
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawInstancedPrimitives(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int instanceOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawIndexedInstancedPrimitives(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int indexOffset = 0, int instanceOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetVertexShader(IShader shader)
+    {
+        this.GetType().GetMethod(nameof(SetVertexShader), BindingFlags.Instance | BindingFlags.NonPublic, new[] { shader.GetType() }).MakeGenericMethod(new[] { shader.GetType() }).Invoke(this, new[] { shader });
+    }
+
+    private void SetVertexShader<T>(IShader shader) where T : struct, IShader
+    {
+        var shaderObject = Resources.Shaders.OfType<D3D11VertexShader<T>>().SingleOrDefault(s => s.ShaderType == shader.GetType());
+
+        if (shaderObject is null)
+        {
+            shaderObject = new D3D11VertexShader<T>(this.Resources);
+            Resources.Shaders.Add(shaderObject);
+        }
+
+        shaderObject.Update(shader);
+        shaderObject.Apply(this.DeviceContext);
+    }
+
+    public void SetGeometryShader(IShader shader)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetFragmentShader(IShader shader)
+    {
+        this.GetType().GetMethod(nameof(SetFragmentShader), BindingFlags.Instance | BindingFlags.NonPublic, new[] { shader.GetType() }).MakeGenericMethod(new[] { shader.GetType() }).Invoke(this, new[] { shader });
+    }
+
+    private void SetFragmentShader<T>(IShader shader) where T : struct, IShader
+    {
+        var shaderObject = Resources.Shaders.OfType<D3D11FragmentShader<T>>().SingleOrDefault(s => s.ShaderType == shader.GetType());
+
+        if (shaderObject is null)
+        {
+            shaderObject = new D3D11FragmentShader<T>(this.Resources);
+            Resources.Shaders.Add(shaderObject);
+        }
+
+        shaderObject.Update(shader);
+        shaderObject.Apply(this.DeviceContext);
+    }
+
+    public void ClearRenderTarget(Color color)
+    {
+        DeviceContext.ClearRenderTargetView(this.currentRenderTarget.RenderTargetView, new(color.ToVector4()));
+    }
+
+    public void ClearDepthTarget(float depth)
+    {
+        // DeviceContext.ClearDepthStencilView(this.depthStencilView, DepthStencilClearFlags.Depth, depth, 0);
+        throw new NotImplementedException();
+    }
+
+    public void ClearStencilTarget(byte stencil)
+    {
+        // DeviceContext.ClearDepthStencilView(this.depthStencilView, DepthStencilClearFlags.Depth, 0f, stencil);
         throw new NotImplementedException();
     }
 }

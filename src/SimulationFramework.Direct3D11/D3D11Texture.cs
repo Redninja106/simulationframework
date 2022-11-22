@@ -9,7 +9,7 @@ using Vortice.Direct3D11;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
-internal unsafe class D3D11Texture : D3D11Object, ITexture
+internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T> where T : unmanaged
 {
     private LazyResource<ID3D11RenderTargetView> renderTargetView;
     private LazyResource<ID3D11ShaderResourceView> shaderResourceView;
@@ -18,10 +18,15 @@ internal unsafe class D3D11Texture : D3D11Object, ITexture
     public ID3D11RenderTargetView RenderTargetView => renderTargetView.GetValue();
     public ID3D11ShaderResourceView ShaderResourceView => shaderResourceView.GetValue();
 
-    private Color[] cpuData;
+    private T[] cpuData;
 
     public D3D11Texture(DeviceResources resources, ID3D11Texture2D tex) : base(resources)
     {
+        if (typeof(T) != typeof(Color))
+        {
+            throw new NotSupportedException("Texture<Color> only.");
+        }
+
         this.Texture = tex;
         Width = tex.Description.Width;
         Height = tex.Description.Height;
@@ -30,7 +35,7 @@ internal unsafe class D3D11Texture : D3D11Object, ITexture
         shaderResourceView = new(resources, CreateShaderResourceView);
     }
 
-    public unsafe D3D11Texture(DeviceResources resources, int width, int height, Span<Color> data, ResourceOptions flags) : base(resources)
+    public unsafe D3D11Texture(DeviceResources resources, int width, int height, Span<T> data, ResourceOptions flags) : base(resources)
     {
         Width = width;
         Height = height;
@@ -46,30 +51,22 @@ internal unsafe class D3D11Texture : D3D11Object, ITexture
             CpuAccessFlags = CpuAccessFlags.Read | CpuAccessFlags.Write,
             Format = Vortice.DXGI.Format.B8G8R8A8_UNorm,
         };
-        
-        fixed (void* dataPtr = data)
-        {
-            SubresourceData[] subresourceData = null;
-            
-            if (!data.IsEmpty)
-            {
-                cpuData = new Color[Width * height];
-                data.CopyTo(cpuData.AsSpan());
 
-                subresourceData = new[] { new SubresourceData(dataPtr, width * Unsafe.SizeOf<Color>()) };
-            }
-            
-            Texture = resources.Device.CreateTexture2D(desc, subresourceData);
-        }
+        Texture = resources.Device.CreateTexture2D(desc);
 
         renderTargetView = new(resources, CreateRenderTargetView);
         shaderResourceView = new(resources, CreateShaderResourceView);
 
+        if (!data.IsEmpty)
+        {
+            data.CopyTo(Pixels);
+            ApplyChanges();
+        }
     }
 
     public int Width { get; }
     public int Height { get; }
-    public Span<Color> Pixels => GetPixels();
+    public Span<T> Pixels => GetPixels();
 
     public void ApplyChanges()
     {
@@ -79,11 +76,11 @@ internal unsafe class D3D11Texture : D3D11Object, ITexture
         Resources.ImmediateRenderer.DeviceContext.UpdateSubresource(cpuData.AsSpan(), this.Texture, rowPitch: Width * sizeof(Color));
     }
 
-    private Span<Color> GetPixels()
+    private Span<T> GetPixels()
     {
         if (cpuData is null)
         {
-            cpuData = new Color[Width * Height];
+            cpuData = new T[Width * Height];
         }
 
         return cpuData.AsSpan();
@@ -140,5 +137,11 @@ internal unsafe class D3D11Texture : D3D11Object, ITexture
     public ID3D11Texture2D GetInternalTexture()
     {
         return this.Texture;    
+    }
+
+    public void Clear(T value)
+    {
+        cpuData.AsSpan().Fill(value);
+        this.ApplyChanges();
     }
 }

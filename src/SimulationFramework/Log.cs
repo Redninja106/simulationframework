@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace SimulationFramework;
 internal static class Log
 {
-    [Conditional("DEBUG")]
     public static void Error(string message, bool shouldThrow = true)
     {
         var prevColor = Console.ForegroundColor;
@@ -24,7 +23,6 @@ internal static class Log
             throw new Exception(message);
     }
 
-    [Conditional("DEBUG")]
     public static void Assert(bool condition, [CallerArgumentExpression("condition")] string? message = null)
     {
         if (condition)
@@ -34,7 +32,6 @@ internal static class Log
         Error(result);
     }
 
-    [Conditional("DEBUG")]
     public static void Warning(string message)
     {
         var prevColor = Console.ForegroundColor;
@@ -45,7 +42,6 @@ internal static class Log
         Console.ForegroundColor = prevColor;
     }
 
-    [Conditional("DEBUG")]
     public static void AssertWarning(bool condition, [CallerArgumentExpression("condition")] string? message = null)
     {
         if (condition)
@@ -55,7 +51,6 @@ internal static class Log
         Warning(result);
     }
 
-    [Conditional("DEBUG")]
     public static void Message(string message)
     {
         var prevColor = Console.ForegroundColor;
@@ -66,7 +61,6 @@ internal static class Log
         Console.ForegroundColor = prevColor;
     }
 
-    [Conditional("DEBUG")]
     public static void AssertMessage(bool condition, [CallerArgumentExpression("condition")] string? message = null)
     {
         if (condition)

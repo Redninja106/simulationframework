@@ -113,6 +113,7 @@ internal sealed class D3D11Buffer<T> : IBuffer<T> where T : unmanaged
             BufferUsage.Default => baseDesc,
             BufferUsage.VertexBuffer => baseDesc with { BindFlags = BindFlags.VertexBuffer },
             BufferUsage.ConstantBuffer => baseDesc with { BindFlags = BindFlags.ConstantBuffer },
+            BufferUsage.IndexBuffer => baseDesc with { BindFlags = BindFlags.IndexBuffer },
             _ => throw new NotImplementedException(),
         };
     }

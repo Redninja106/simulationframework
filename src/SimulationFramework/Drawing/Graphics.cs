@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Serialization.PNG;
+using SimulationFramework.Shaders;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +26,7 @@ public static class Graphics
         return Provider.GetFrameCanvas();
     }
 
-    public static ITexture GetFrameTexture()
+    public static ITexture<Color> GetFrameTexture()
     {
         return Provider.GetFrameTexture();
     }
@@ -46,7 +47,7 @@ public static class Graphics
     /// <param name="file">The path to a .PNG image file.</param>
     /// <param name="flags">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture LoadTexture(string file, ResourceOptions options = ResourceOptions.None)
+    public static ITexture<Color> LoadTexture(string file, ResourceOptions options = ResourceOptions.None)
     {
         var fileData = File.ReadAllBytes(file);
 
@@ -59,7 +60,7 @@ public static class Graphics
     /// <param name="encodedBytes">An array of the bytes of a supported image file.</param>
     /// <param name="options">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture LoadTexture(byte[] encodedBytes, ResourceOptions options = ResourceOptions.None)
+    public static ITexture<Color> LoadTexture(byte[] encodedBytes, ResourceOptions options = ResourceOptions.None)
     {
         return LoadTexture(encodedBytes.AsSpan(), options);
     }
@@ -70,7 +71,7 @@ public static class Graphics
     /// <param name="encodedBytes">A span of the bytes of a supported image file.</param>
     /// <param name="options">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static unsafe ITexture LoadTexture(Span<byte> encodedBytes, ResourceOptions options = ResourceOptions.None)
+    public static unsafe ITexture<Color> LoadTexture(Span<byte> encodedBytes, ResourceOptions options = ResourceOptions.None)
     {
         fixed (byte* encodedBytesPtr = encodedBytes)
         {
@@ -81,7 +82,7 @@ public static class Graphics
 
             stream.Position = 0;
 
-            var texture = CreateTexture((int)metadata.Width, (int)metadata.Height);
+            var texture = CreateTexture<Color>((int)metadata.Width, (int)metadata.Height);
 
             decoder.GetColors(texture.Pixels);
             texture.ApplyChanges();
@@ -97,9 +98,9 @@ public static class Graphics
     /// <param name="height">The height of the texture, in pixels.</param>
     /// <param name="options">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture CreateTexture(int width, int height, ResourceOptions options = ResourceOptions.None)
+    public static ITexture<T> CreateTexture<T>(int width, int height, ResourceOptions options = ResourceOptions.None) where T : unmanaged
     {
-        return Provider.CreateTexture(width, height, null, options);
+        return Provider.CreateTexture<T>(width, height, null, options);
     }
 
     /// <summary>
@@ -110,9 +111,9 @@ public static class Graphics
     /// <param name="colors">The data of to fill the texture with. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
     /// <param name="options">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture CreateTexture(int width, int height, Span<Color> colors, ResourceOptions options = ResourceOptions.None)
+    public static ITexture<T> CreateTexture<T>(int width, int height, Span<T> colors, ResourceOptions options = ResourceOptions.None) where T : unmanaged
     {
-        return Provider.CreateTexture(width, height, colors, options);
+        return Provider.CreateTexture<T>(width, height, colors, options);
     }
 
     /// <summary>
@@ -123,7 +124,7 @@ public static class Graphics
     /// <param name="colors">The data of to fill the texture with. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
     /// <param name="options">A <see cref="ResourceOptions"/> value which influences the behavior of the texture.</param>
     /// <returns>The new texture.</returns>
-    public static ITexture CreateTexture(int width, int height, Color[] colors, ResourceOptions options = ResourceOptions.None)
+    public static ITexture<Color> CreateTexture(int width, int height, Color[] colors, ResourceOptions options = ResourceOptions.None)
     {
         return Provider.CreateTexture(width, height, colors.AsSpan(), options);
     }
@@ -139,4 +140,36 @@ public static class Graphics
         buffer.SetData(data);
         return buffer;
     }
+
+    public static void DispatchCompute<T>(T shader, int threads, IRenderer? renderer = null) where T : struct, IShader
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void DispatchCompute<T>(T shader, int threadsX, int threadsY, int threadsZ, IRenderer? renderer = null) where T : struct, IShader
+    {
+        throw new NotImplementedException();
+    }
+
+    public static int GetVertexCount(PrimitiveKind kind, int primitiveCount) => kind switch
+    {
+        _ when primitiveCount is 0 => 0,
+        PrimitiveKind.Points => primitiveCount,
+        PrimitiveKind.Lines => primitiveCount * 2,
+        PrimitiveKind.Triangles => primitiveCount * 3,
+        PrimitiveKind.LineStrip => primitiveCount + 1,
+        PrimitiveKind.TriangleStrip => primitiveCount * 2 + 1,
+        _ => throw new ArgumentException(null, nameof(kind)),
+    };
+
+    public static int GetPrimitiveCount(PrimitiveKind kind, int vertexCount) => kind switch
+    {
+        _ when vertexCount is 0 => 0,
+        PrimitiveKind.Points => vertexCount,
+        PrimitiveKind.Lines => vertexCount / 2,
+        PrimitiveKind.Triangles => vertexCount / 3,
+        PrimitiveKind.LineStrip => vertexCount - 1,
+        PrimitiveKind.TriangleStrip => (vertexCount - 1) / 2,
+        _ => throw new ArgumentException(null, nameof(kind)),
+    };
 }

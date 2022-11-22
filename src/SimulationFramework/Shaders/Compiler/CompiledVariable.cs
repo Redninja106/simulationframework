@@ -13,8 +13,8 @@ public class CompiledVariable
     public Type VariableType;
     public string Name;
 
-    public InSemantic? InputSemantic;
-    public OutSemantic? OutSemantic;
+    public InputSemantic? InputSemantic;
+    public OutputSemantic? OutSemantic;
 
     public string InputName;
     public string OutputName;
@@ -29,15 +29,15 @@ public class CompiledVariable
         this.VariableType = field.FieldType;
         this.Name = field.Name;
 
-        var inputAttribute = field.GetCustomAttribute<ShaderInAttribute>();
+        var inputAttribute = field.GetCustomAttribute<ShaderInputAttribute>();
         this.IsInput = inputAttribute is not null;
         this.InputName = inputAttribute?.LinkageName ?? Name;
         this.InputSemantic = inputAttribute?.Semantic;
 
-        var outputAttribute = field.GetCustomAttribute<ShaderInAttribute>();
+        var outputAttribute = field.GetCustomAttribute<ShaderOutputAttribute>();
         this.IsOutput = outputAttribute is not null;
-        this.InputName = outputAttribute?.LinkageName ?? Name;
-        this.InputSemantic = outputAttribute?.Semantic;
+        this.OutputName = outputAttribute?.LinkageName ?? Name;
+        this.OutSemantic = outputAttribute?.Semantic;
 
         this.IsUniform = field.GetCustomAttribute<ShaderUniformAttribute>() is not null;
 

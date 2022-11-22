@@ -60,7 +60,7 @@ internal class Basic3DSimulation : Simulation
 
     public override void OnInitialize(AppConfig config)
     {
-        // vertexBuffer = Graphics.CreateBuffer<int>(vertices);
+        vertexBuffer = Graphics.CreateBuffer<Vertex>(vertices);
     }
 
     public override void OnRender(ICanvas canvas)
@@ -72,6 +72,13 @@ internal class Basic3DSimulation : Simulation
         }
 
         camZoom -= Mouse.ScrollWheelDelta;
+
+
+        if (Keyboard.IsKeyDown(Key.Plus))
+            camZoom++;
+
+        if (Keyboard.IsKeyDown(Key.Minus))
+            camZoom--;
 
         if (Keyboard.IsKeyDown(Key.A)) 
             yRotation += Time.DeltaTime;
@@ -106,7 +113,7 @@ internal class Basic3DSimulation : Simulation
 
         var renderer = Graphics.GetRenderer();
 
-        renderer.Clear(Color.Gray, null, null);
+        renderer.ClearRenderTarget(Color.FromHSV(0,0,.1f));
         
         renderer.SetViewport(new(canvas.Width, canvas.Height, 0, 0));
 
@@ -138,20 +145,25 @@ internal class Basic3DSimulation : Simulation
 
     struct VertexShader : IShader
     {
+        [ShaderUniform]
         public Matrix4x4 World;
+        
+        [ShaderUniform]
         public Matrix4x4 View;
+        
+        [ShaderUniform]
         public Matrix4x4 Proj;
 
-        [ShaderIn]
+        [ShaderInput]
         private Vertex vertex;
 
-        [ShaderOut]
+        [ShaderOutput]
         private Vector2 uv;
 
-        [ShaderOut(OutSemantic.Position)]
+        [ShaderOutput(OutputSemantic.Position)]
         private Vector4 position;
 
-        [ShaderOut]
+        [ShaderOutput]
         private Vector3 normal;
 
         public void Main()
@@ -170,16 +182,16 @@ internal class Basic3DSimulation : Simulation
 
     struct FragmentShader : IShader
     {
-        [ShaderIn]
+        [ShaderInput]
         private Vector3 normal;
 
-        [ShaderOut(OutSemantic.Color)]
+        [ShaderOutput(OutputSemantic.Color)]
         private Vector4 color;
 
-        [ShaderIn(InSemantic.Position)]
+        [ShaderInput(InputSemantic.Position)]
         private Vector4 position;
 
-        [ShaderIn]
+        [ShaderInput]
         private Vector2 uv;
 
         //public ITexture Texture;
