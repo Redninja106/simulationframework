@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="OpenTK.Graphics" Version="5.0.0-pre.8" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
   </ItemGroup>
 

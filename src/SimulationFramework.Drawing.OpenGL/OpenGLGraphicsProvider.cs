@@ -1,22 +1,15 @@
 ﻿using SimulationFramework.Shaders;
+using OpenTK.Graphics.OpenGL;
 
 namespace SimulationFramework.Drawing.OpenGL;
 
 public class OpenGLGraphicsProvider : IGraphicsProvider
 {
-    public void Apply(Simulation simulation)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void CompileShader<T>(ShaderKind kind) where T : struct, IShader
-    {
-        throw new NotImplementedException();
-    }
+    private OpenGLRenderer ImmediateRenderer;
 
     public IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged
     {
-        throw new NotImplementedException();
+        return new OpenGLBuffer<T>(size, flags);
     }
 
     public ITexture<T> CreateTexture<T>(int width, int height, Span<T> data, ResourceOptions flags) where T : unmanaged
@@ -26,7 +19,7 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
 
     public void Dispose()
     {
-        throw new NotImplementedException();
+        ImmediateRenderer.Dispose();
     }
 
     public ICanvas GetFrameCanvas()
@@ -46,7 +39,6 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
 
     public void Initialize(Application application)
     {
-        throw new NotImplementedException();
     }
 
     public void InvalidateShader(Type shaderType)
@@ -55,11 +47,6 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
     }
 
     public ITexture<Color> LoadTexture(Span<byte> encodedData, ResourceOptions flags)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void SetResourceLifetime(int lifetimeInFrames)
     {
         throw new NotImplementedException();
     }
