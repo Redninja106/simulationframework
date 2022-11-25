@@ -29,7 +29,7 @@ public class ShaderCompiler
         Rules.Add(new CallSubstitutions());
     }
 
-    public ShaderCompilation? Compile(Type shaderType, ShaderKind targetShaderKind, out IEnumerable<CompilerMessage> messages)
+    public ShaderCompilation? Compile(Type shaderType, ShaderSignature? signature, ShaderKind targetShaderKind)
     {
         /* 
          * be able to:
@@ -82,11 +82,10 @@ public class ShaderCompiler
         context.ShaderType = shaderType;
         context.kind = targetShaderKind;
 
-        CompileShaderType(context, shaderType);
+        CompileShaderType(context, shaderType, signature);
         CompileMethod(context, entryPoint);
 
         context.EntryPoint = context.methods.Single(m => m.Method == entryPoint);
-        messages = context.messages;
 
         return context.GetResult();
     }
@@ -127,18 +126,54 @@ public class ShaderCompiler
         context.structs.Add(s);
     }
 
-    private void CompileShaderType(CompilationContext context, Type shaderType)
+    private void CompileShaderType(CompilationContext context, Type shaderType, ShaderSignature? signature)
     {
         foreach (var field in shaderType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
         {
             var variable = new CompiledVariable(field);
-            context.variables.Add(variable);
+            if (variable.IsInput)
+            {
+                context.inputs.Add(variable);
+            }
+            else if (variable.IsOutput)
+            {
+                context.outputs.Add(variable);
+            }
+            else if (variable.IsUniform)
+            {
+                context.uniforms.Add(variable);
+            }
+            else
+            {
+                context.statics.Add(variable);
+            }
 
             foreach (var rule in Rules)
             {
                 rule.CheckVariable(context, variable);
             }
         }
+
+        if (signature is not null)
+        {
+            ArrangeInputs(context, signature);
+        }
+    }
+
+    void ArrangeInputs(CompilationContext context, ShaderSignature signature)
+    {
+        List<CompiledVariable> inputsSorted = new();
+
+        foreach (var (type, name) in signature.Fields)
+        {
+            var variable = context.inputs.Single(variable => name == variable.InputName);
+            Debug.Assert(variable.VariableType == type);
+            inputsSorted.Add(variable);
+            context.inputs.Remove(variable);
+        }
+
+        Debug.Assert(context.inputs.Where(v => v.InputSemantic is InputSemantic.None).Count() == 0);
+        context.inputs = inputsSorted;
     }
 
     class Translator : ExpressionVisitor

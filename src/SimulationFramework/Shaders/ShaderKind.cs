@@ -9,6 +9,7 @@ namespace SimulationFramework.Shaders;
 public enum ShaderKind
 {
     Vertex,
+    Geometry,
     Fragment,
     Compute
 }

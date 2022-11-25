@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.Rules;
@@ -25,8 +26,7 @@ internal class ReferenceTypeErrorRule : CompilerRule
 
     private static void CheckType(CompilationContext context, Type type)
     {
-        if (!type.IsValueType)
-            context.AddError("Reference Types not allowed!");
+        Debug.Assert(type.IsValueType, "Reference Types not allowed!");
     }
 
     private sealed class ReferenceTypeErrorVisitor : ExpressionVisitor

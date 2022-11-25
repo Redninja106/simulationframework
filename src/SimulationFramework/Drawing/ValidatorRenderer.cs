@@ -99,6 +99,8 @@ internal class ValidatorRenderer : IRenderer
         }
     }
 
+    public DepthStencilComparison DepthComparison { get; set; }
+    public bool WriteDepth { get; set; }
 
     public void Clip(Rectangle? rectangle)
     {

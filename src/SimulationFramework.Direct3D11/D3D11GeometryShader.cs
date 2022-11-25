@@ -8,31 +8,31 @@ using System.Threading.Tasks;
 using Vortice.Direct3D11;
 
 namespace SimulationFramework.Drawing.Direct3D11;
-internal class D3D11FragmentShader<T> : D3D11Shader<T> where T : struct, IShader
+internal class D3D11GeometryShader<T> : D3D11Shader<T> where T : struct, IShader
 {
-    private ID3D11PixelShader shader;
+    protected override ShaderKind Kind => ShaderKind.Geometry;
+    protected override string Profile => "gs_5_0";
 
-    protected override ShaderKind Kind => ShaderKind.Fragment;
-    protected override string Profile => "ps_5_0";
+    private ID3D11GeometryShader shader;
 
-    public D3D11FragmentShader(DeviceResources deviceResources, ShaderSignature signature) : base(deviceResources, signature)
+    public D3D11GeometryShader(DeviceResources deviceResources, ShaderSignature inputSignature) : base(deviceResources, inputSignature)
     {
     }
 
     protected override void CreateShader(Span<byte> bytecode)
     {
-        shader = Resources.Device.CreatePixelShader(bytecode);
+        shader = Resources.Device.CreateGeometryShader(bytecode);
     }
 
     public override void Apply(ID3D11DeviceContext context)
     {
-        context.PSSetShader(shader);
+        context.GSSetShader(shader);
         base.Apply(context);
     }
 
     public override void ApplyConstantBuffer(ID3D11DeviceContext context, ID3D11Buffer constantBuffer)
     {
-        context.PSSetConstantBuffer(0, constantBuffer);
+        context.GSSetConstantBuffer(0, constantBuffer);
         base.ApplyConstantBuffer(context, constantBuffer);
     }
 

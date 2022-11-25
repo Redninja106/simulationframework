@@ -114,8 +114,9 @@ internal class Basic3DSimulation : Simulation
         var renderer = Graphics.GetRenderer();
 
         renderer.ClearRenderTarget(Color.FromHSV(0,0,.1f));
-        
         renderer.SetViewport(new(canvas.Width, canvas.Height, 0, 0));
+        
+        renderer.CullMode = CullMode.Front;
 
         renderer.SetVertexBuffer(vertexBuffer);
 
@@ -198,14 +199,10 @@ internal class Basic3DSimulation : Simulation
 
         public void Main()
         {
-            //float x = (uv.X - .5f);
-            //float y = (uv.Y - .5f);
-            //float c =  x * x + y * y;
             var b = Vector3.Dot(normal, Vector3.Normalize(new Vector3(-1, 1, -1)));
-            var c = b * .9f + .1f;
+            b = MathF.Max(b, 0);
+            var c = b * .75f + .25f;
             color = new(c, 0, 0, 1);
-            // color = new(normal.X, 0, 0, 1);
-            //color = Texture.Sample(uv).ToVector4();
         }
     }
 }

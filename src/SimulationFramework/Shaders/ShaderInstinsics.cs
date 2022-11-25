@@ -35,4 +35,10 @@ public static class ShaderIntrinsics
 
     [ShaderIntrinsic(nameof(Vector3.Normalize), typeof(Vector3))]
     public static Vector3 Normalize(Vector3 vector) => Vector3.Normalize(vector);
+
+    [ShaderIntrinsic(ShaderIntrinsicAttribute.ConstructorMethodName, typeof(ColorF))]
+    public static ColorF ColorF(float r, float g, float b, float a) => new(r, g, b, a);
+
+    [ShaderIntrinsic(nameof(MathF.Max), typeof(MathF))]
+    public static float Max(float a, float b) => MathF.Max(a, b);
 }

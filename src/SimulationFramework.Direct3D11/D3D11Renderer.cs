@@ -1,7 +1,9 @@
 ﻿using SimulationFramework.Drawing.Direct3D11.Buffers;
 using SimulationFramework.Shaders;
+using SimulationFramework.Shaders.Compiler;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -27,11 +29,12 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     {
         get
         {
-            return CullMode.None;
+            return this.cullMode;
         }
         set
         {
-
+            Debug.Assert(Enum.IsDefined(value));
+            this.cullMode = value;
         }
     }
 
@@ -50,7 +53,16 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     public float DepthBias { get; set; }
 
     private D3D11Texture<Color> currentRenderTarget;
-    private ID3D11RasterizerState rs;
+    private Dictionary<CullMode, ID3D11RasterizerState> rasterizerStates = new();
+
+    private ShaderSignature vsOutputSignature;
+    private ShaderSignature gsOutputSignature;
+
+    private IShader vertexShader;
+    private IShader geometryShader;
+    private IShader fragmentShader;
+
+    private CullMode cullMode;
 
     public D3D11Renderer(DeviceResources resources, ID3D11DeviceContext deviceContext) : base(resources)
     {
@@ -68,12 +80,14 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
             DeviceContext.RSSetViewport(0, 0, this.currentRenderTarget.Width, this.currentRenderTarget.Height, 0, 1);
         }
 
-        if (rs == null)
+        if (rasterizerStates.Count is 0)
         {
-            rs = Resources.Device.CreateRasterizerState(RasterizerDescription.CullFront);
+            rasterizerStates[CullMode.None] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullNone);
+            rasterizerStates[CullMode.Front] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullFront);
+            rasterizerStates[CullMode.Back] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullBack);
         }
 
-        DeviceContext.RSSetState(rs);
+        DeviceContext.RSSetState(rasterizerStates[this.CullMode]);
     }
 
     public void DrawPrimitivesIndexed(PrimitiveKind kind, int count, int vertexOffset, int indexOffset)
@@ -120,7 +134,10 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     public override void Dispose()
     {
         this.currentRenderTarget?.Dispose();
-        this.rs?.Dispose();
+        foreach (var (key, value) in rasterizerStates)
+        {
+            value.Dispose();
+        }
         this.DeviceContext.Dispose();
         base.Dispose();
     }
@@ -168,6 +185,12 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
     public void SetVertexShader(IShader shader)
     {
+        if (shader is null)
+        {
+            this.vertexShader = null;
+            return;
+        }
+
         this.GetType().GetMethod(nameof(SetVertexShader), BindingFlags.Instance | BindingFlags.NonPublic, new[] { shader.GetType() }).MakeGenericMethod(new[] { shader.GetType() }).Invoke(this, new[] { shader });
     }
 
@@ -183,25 +206,81 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
         shaderObject.Update(shader);
         shaderObject.Apply(this.DeviceContext);
+        this.vertexShader = shader;
+
+        vsOutputSignature = shaderObject.Compilation.OutputSignature;
+
+        // recompile dependent shader stages
+        SetGeometryShader(this.geometryShader);
+        SetFragmentShader(this.fragmentShader);
     }
 
     public void SetGeometryShader(IShader shader)
     {
-        throw new NotImplementedException();
+        if (shader is null)
+        {
+            this.geometryShader = null;
+            return;
+        }    
+
+        this.GetType().GetMethod(nameof(SetGeometryShader), BindingFlags.Instance | BindingFlags.NonPublic, new[] { shader.GetType() }).MakeGenericMethod(new[] { shader.GetType() }).Invoke(this, new[] { shader });
+    }
+
+    private void SetGeometryShader<T>(IShader shader) where T : struct, IShader
+    {
+        ShaderSignature shaderSignature = vsOutputSignature;
+
+        this.geometryShader = shader;
+
+        // if theres no signature to compile against, wait until we have one
+        // SetVertexShader() will call this method with the input signatures
+        if (shaderSignature is null)
+            return;
+
+        var shaderObject = Resources.Shaders.OfType<D3D11GeometryShader<T>>().SingleOrDefault(s => s.ShaderType == shader.GetType() && s.InputSignature == shaderSignature);
+
+        if (shaderObject is null)
+        {
+            shaderObject = new D3D11GeometryShader<T>(this.Resources, shaderSignature);
+            Resources.Shaders.Add(shaderObject);
+        }
+
+        shaderObject.Update(shader);
+        shaderObject.Apply(this.DeviceContext);
+
+        gsOutputSignature = shaderObject.Compilation.OutputSignature;
+
+        // recompile dependent shader stages
+        SetFragmentShader(this.fragmentShader);
     }
 
     public void SetFragmentShader(IShader shader)
     {
+        if (shader is null)
+        {
+            this.fragmentShader = null;
+            return;
+        }
+
         this.GetType().GetMethod(nameof(SetFragmentShader), BindingFlags.Instance | BindingFlags.NonPublic, new[] { shader.GetType() }).MakeGenericMethod(new[] { shader.GetType() }).Invoke(this, new[] { shader });
     }
 
     private void SetFragmentShader<T>(IShader shader) where T : struct, IShader
     {
-        var shaderObject = Resources.Shaders.OfType<D3D11FragmentShader<T>>().SingleOrDefault(s => s.ShaderType == shader.GetType());
+        ShaderSignature shaderSignature = gsOutputSignature ?? vsOutputSignature;
+
+        fragmentShader = shader;
+
+        // if theres no signature to compile against, wait until we have one
+        // SetGeometryShader() and SetVertexShader() will call this method with the input signatures
+        if (shaderSignature is null)
+            return;
+
+        var shaderObject = Resources.Shaders.OfType<D3D11FragmentShader<T>>().SingleOrDefault(s => s.ShaderType == shader.GetType() && s.InputSignature == shaderSignature);
 
         if (shaderObject is null)
         {
-            shaderObject = new D3D11FragmentShader<T>(this.Resources);
+            shaderObject = new D3D11FragmentShader<T>(this.Resources, vsOutputSignature);
             Resources.Shaders.Add(shaderObject);
         }
 

@@ -38,8 +38,10 @@ public class HLSLCodeGenerator : CodeGenerator
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec3), new[] { typeof(float), typeof(float), typeof(float) })] = "float3",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec3), new[] { typeof(float) })] = "float3",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Sqrt), new[] { typeof(float) })] = "sqrt",
+        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Max), new[] { typeof(float), typeof(float) })] = "max",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Normalize), new[] { typeof(Vector3) })] = "normalize",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Dot), new[] { typeof(Vector3), typeof(Vector3) })] = "dot",
+        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.ColorF), new[] { typeof(float), typeof(float), typeof(float), typeof(float) })] = "float4",
     };
 
     private static readonly Dictionary<MemberInfo, string> memberAliases = new()
@@ -172,16 +174,16 @@ public class HLSLCodeGenerator : CodeGenerator
         Writer.Indent++;
 
         idx = 0;
-        foreach (var output in outputs.Reverse())
+        foreach (var output in outputs)
         {
             VisitType(output.VariableType);
             Writer.Write(' ');
             VisitIdentifier(output.Name);
 
             string semantic = null;
-            if (output.OutSemantic is not null && outputSemanticAliases.ContainsKey(output.OutSemantic.Value))
+            if (output.OutputSemantic is not null && outputSemanticAliases.ContainsKey(output.OutputSemantic.Value))
             {
-                semantic = outputSemanticAliases[output.OutSemantic.Value];
+                semantic = outputSemanticAliases[output.OutputSemantic.Value];
             }
             else
             {
@@ -264,7 +266,7 @@ public class HLSLCodeGenerator : CodeGenerator
 
     protected override void VisitType(Type type)
     {
-        string name;
+        string name = null;
 
         if (typeAliases.ContainsKey(type))
         {

@@ -12,27 +12,27 @@ namespace SimulationFramework;
 /// <summary>
 /// A RGBA floating point color.
 /// </summary>
-public readonly partial struct ColorF : IEquatable<ColorF>
+public partial struct ColorF : IEquatable<ColorF>
 {
     /// <summary>
     /// The R component of the color.
     /// </summary>
-    public float R { get; init; }
+    public float R { get; set; }
 
     /// <summary>
     /// The G component of the color.
     /// </summary>
-    public float G { get; init; }
+    public float G { get; set; }
 
     /// <summary>
     /// The B component of the color.
     /// </summary>
-    public float B { get; init; }
+    public float B { get; set; }
 
     /// <summary>
     /// The A component of the color.
     /// </summary>
-    public float A { get; init; }
+    public float A { get; set; }
 
     /// <summary>
     /// Creates a new <see cref="ColorF"/> with default values.

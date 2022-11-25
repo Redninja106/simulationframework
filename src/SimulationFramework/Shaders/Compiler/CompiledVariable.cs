@@ -14,7 +14,7 @@ public class CompiledVariable
     public string Name;
 
     public InputSemantic? InputSemantic;
-    public OutputSemantic? OutSemantic;
+    public OutputSemantic? OutputSemantic;
 
     public string InputName;
     public string OutputName;
@@ -37,7 +37,7 @@ public class CompiledVariable
         var outputAttribute = field.GetCustomAttribute<ShaderOutputAttribute>();
         this.IsOutput = outputAttribute is not null;
         this.OutputName = outputAttribute?.LinkageName ?? Name;
-        this.OutSemantic = outputAttribute?.Semantic;
+        this.OutputSemantic = outputAttribute?.Semantic;
 
         this.IsUniform = field.GetCustomAttribute<ShaderUniformAttribute>() is not null;
 

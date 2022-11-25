@@ -28,7 +28,6 @@ internal class ShaderTypeRestrictions : CompilerRule
 
     private void CheckType(CompilationContext context, Type type)
     {
-        if (type == context.ShaderType)
-            context.AddError("Shader type not allowed!");
+        Debug.Assert(type != context.ShaderType, "Shader type not allowed!");
     }
 }

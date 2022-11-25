@@ -2,6 +2,7 @@
 using SimulationFramework.Shaders.Compiler;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
@@ -16,8 +17,11 @@ internal class ShaderIntrinsicSubstitutions : CompilerRule
 {
     private static readonly Dictionary<MethodBase, MethodInfo> substitutions = new();
 
-    static ShaderIntrinsicSubstitutions()
+    public ShaderIntrinsicSubstitutions()
     {
+        if (substitutions.Count is not 0)
+            return;
+
         foreach (var method in typeof(ShaderIntrinsics).GetMethods())
         {
             var attribute = method.GetCustomAttribute<ShaderIntrinsicAttribute>();
@@ -39,8 +43,10 @@ internal class ShaderIntrinsicSubstitutions : CompilerRule
             }
 
             if (targetMethod is null)
-                throw new Exception();
-
+            {
+                Debug.Warn("Error with intrinsic method: " + method.ToString());
+                continue;
+            }
             substitutions.Add(targetMethod, method);
         }
     }

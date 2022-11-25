@@ -17,7 +17,7 @@ internal class D3D11VertexShader<T> : D3D11Shader<T> where T : struct, IShader
     private ID3D11VertexShader vertexShader;
     private ID3D11InputLayout inputLayout;
 
-    public D3D11VertexShader(DeviceResources deviceResources) : base(deviceResources)
+    public D3D11VertexShader(DeviceResources deviceResources) : base(deviceResources, null)
     {
     }
 

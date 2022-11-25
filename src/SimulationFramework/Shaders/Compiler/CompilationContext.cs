@@ -11,14 +11,16 @@ public class CompilationContext
     public ShaderKind kind;
     public ShaderCompiler Compiler;
 
-    public List<CompilerMessage> messages = new();
-
     public Queue<MethodBase> methodCompileQueue = new();
     public Queue<Type> structCompileQueue = new();
 
     public List<CompiledStruct> structs = new();
     public List<CompiledMethod> methods = new();
-    public List<CompiledVariable> variables = new();
+    public List<CompiledVariable> uniforms = new();
+    public List<CompiledVariable> statics = new();
+    public List<CompiledVariable> inputs = new();
+    public List<CompiledVariable> outputs = new();
+    public IEnumerable<CompiledVariable> AllVariables => uniforms.Concat(statics).Concat(inputs).Concat(outputs);
 
     public Type ShaderType;
     public CompiledMethod EntryPoint;
@@ -28,21 +30,13 @@ public class CompilationContext
         this.Compiler = shaderCompiler;
     }
 
-    public bool HasErrors()
+    public ShaderCompilation GetResult()
     {
-        return messages.Any(m => m.Severity is CompilationMessageSeverity.Error);
-    }
-
-    public ShaderCompilation? GetResult()
-    {
-        if (HasErrors())
-            return null;
-
-        return new ShaderCompilation(this.kind, methods, structs, variables) { EntryPoint = this.EntryPoint };
-    }
-
-    public void AddError(string message)
-    {
-        messages.Add(new() { Message = message, Severity = CompilationMessageSeverity.Error });
+        return new ShaderCompilation(this.kind, methods, structs, inputs, outputs, uniforms, statics) 
+        { 
+            EntryPoint = this.EntryPoint, 
+            InputSignature = new ShaderSignature(inputs.Select(v => (v.VariableType, v.Name))),
+            OutputSignature = new ShaderSignature(outputs.Select(v => (v.VariableType, v.Name))) 
+        };
     }
 }

@@ -19,6 +19,7 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
     private static ShaderCompiler compiler = new();
 
     public ShaderCompilation Compilation { get; }
+    public ShaderSignature InputSignature { get; }
     public Type ShaderType { get; }
 
     protected abstract void CreateShader(Span<byte> bytecode);
@@ -28,21 +29,12 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
     private byte[] cbufferData;
     private ID3D11Buffer cbuffer;
 
-    protected D3D11Shader(DeviceResources deviceResources) : base(deviceResources)
+    protected D3D11Shader(DeviceResources deviceResources, ShaderSignature inputSignature) : base(deviceResources)
     {
         this.ShaderType = typeof(T);
+        this.InputSignature = inputSignature;
 
-        Compilation = compiler.Compile(ShaderType, Kind, out var messages);
-
-        foreach (var m in messages)
-        {
-            Console.WriteLine(m);
-        }
-
-        if (messages.Any())
-        {
-            throw new Exception();
-        }
+        Compilation = compiler.Compile(ShaderType, inputSignature, Kind);
 
         var generator = new HLSLCodeGenerator(Compilation);
 
@@ -69,12 +61,10 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
             throw new Exception();
         }
 
-        var uniforms = Compilation.Variables.Where(v => v.IsUniform).ToArray();
-        
         if (cbufferData is null)
         {
             int size = 0;
-            foreach (var uniform in uniforms)
+            foreach (var uniform in Compilation.Uniforms)
             {
                 size += Marshal.SizeOf(uniform.BackingField.FieldType);
             }
@@ -84,7 +74,7 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
 
         int offset = 0;
 
-        foreach (var uniform in uniforms)
+        foreach (var uniform in Compilation.Uniforms)
         {
             var fieldOffset = Marshal.OffsetOf<T>(uniform.BackingField.Name);
             var fieldSize = Marshal.SizeOf(uniform.VariableType);

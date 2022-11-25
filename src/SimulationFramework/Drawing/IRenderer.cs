@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,8 +15,11 @@ public interface IRenderer
     ITexture<byte>? StencilTarget { get; set; }
 
     CullMode CullMode { get; set; }
-    float DepthBias { get; set; }
     bool Wireframe { get; set; }
+
+    float DepthBias { get; set; }
+    // DepthStencilComparison DepthComparison { get; set; }
+    // bool WriteDepth { get; set; }
 
     void ClearRenderTarget(Color color);
     void ClearDepthTarget(float depth);
@@ -42,4 +46,102 @@ public interface IRenderer
     void ResetState();
 
     void Flush();
+}
+
+struct LineStream<T> : IPrimitiveStream<T>
+    where T : unmanaged
+{
+    public void EmitVertex(T vertex)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void EndPrimitive()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public struct TriangleStream<T> : IPrimitiveStream<T>
+    where T : unmanaged
+{
+    public void EmitVertex(T vertex)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void EndPrimitive()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+struct PointStream<T> : IPrimitiveStream<T>
+    where T : unmanaged
+{
+    public void EmitVertex(T vertex)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void EndPrimitive()
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public interface IPrimitiveStream<T> 
+    where T : unmanaged
+{
+    void EmitVertex(T vertex);
+    void EndPrimitive();
+}
+
+struct MyGeoShader : IShader
+{
+    [ShaderInput]
+    TrianglePrimitive<Vector3> input;
+
+    [ShaderOutput, MaxVertices(3)]
+    TriangleStream<Vector3> triangles;
+
+    public void Main()
+    {
+        triangles.EmitVertex(input.VertexA);
+        triangles.EmitVertex(input.VertexB);
+        triangles.EmitVertex(input.VertexC);
+        triangles.EmitVertex(input.VertexC + input.VertexB - input.VertexA);
+        triangles.EndPrimitive();
+    }
+}
+
+public struct TrianglePrimitive<T> where T : unmanaged { public T VertexA, VertexB, VertexC; }
+
+public struct LinePrimitive<T> where T : unmanaged { public T VertexA, VertexB; }
+
+class ThreadGroupSize : Attribute { public ThreadGroupSize(int width, int height, int depth) { } }
+public class MaxVerticesAttribute : Attribute { public MaxVerticesAttribute(int maxVertices) { } }
+
+public enum DepthStencilComparison
+{
+    Always,
+    Never,
+    Equal,
+    NotEqual,
+    LessThan,
+    LessThanEqual,
+    GreaterThan,
+    GreaterThanEqual,
+}
+
+public enum StencilOperation
+{
+    None,
+    Zero,
+    Replace,
+    Invert,
+    Increment,
+    Decrement,
+    IncrementWrap,
+    DecrementWrap,
 }

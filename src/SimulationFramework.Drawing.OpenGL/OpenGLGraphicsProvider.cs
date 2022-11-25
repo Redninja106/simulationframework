@@ -19,7 +19,6 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
 
     public void Dispose()
     {
-        ImmediateRenderer.Dispose();
     }
 
     public ICanvas GetFrameCanvas()

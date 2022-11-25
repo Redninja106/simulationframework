@@ -28,7 +28,7 @@ internal class VariableAccessReplacements : CompilerRule
             return base.VisitMember(node);
         }
 
-        return new CompiledVariableExpression(context.variables.Single(v => v.BackingField == node.Member));
+        return new CompiledVariableExpression(context.AllVariables.Single(v => v.BackingField == node.Member));
     }
 
     protected override Expression VisitBinary(BinaryExpression node)
@@ -40,7 +40,7 @@ internal class VariableAccessReplacements : CompilerRule
             return base.VisitBinary(node);
         }
 
-        var compiledVarExpr = new CompiledVariableExpression(context.variables.Single(v => v.BackingField == memberExpression.Member));
+        var compiledVarExpr = new CompiledVariableExpression(context.AllVariables.Single(v => v.BackingField == memberExpression.Member));
         return new CompiledVariableAssignmentExpression(compiledVarExpr, Visit(node.Right));
     }
 }
