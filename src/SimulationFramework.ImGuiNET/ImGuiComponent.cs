@@ -179,7 +179,6 @@ public sealed class ImGuiComponent : IApplicationComponent
 
         renderer.RenderTarget = Graphics.GetFrameTexture();
         renderer.SetVertexBuffer(vertexBuffer);
-        renderer.SetIndexBuffer(indexBuffer);
         renderer.CullMode = CullMode.None;
 
         ImGuiVertexShader vertexShader = new()
@@ -212,7 +211,10 @@ public sealed class ImGuiComponent : IApplicationComponent
 
                 renderer.SetFragmentShader(fragmentShader);
 
-                renderer.DrawPrimitivesIndexed(PrimitiveKind.Triangles, (int)command.ElemCount / 3, vertexOffset + (int)command.VtxOffset, indexOffset + (int)command.IdxOffset);
+                renderer.SetIndexBuffer(indexBuffer, indexOffset + (int)command.IdxOffset);
+                renderer.SetVertexShader(vertexShader, vertexOffset + (int)command.VtxOffset);
+
+                renderer.DrawPrimitivesIndexed(PrimitiveKind.Triangles, (int)command.ElemCount / 3);
             }
 
             vertexOffset += commandList.VtxBuffer.Size;

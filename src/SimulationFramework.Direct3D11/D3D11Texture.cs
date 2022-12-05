@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Vortice.Direct3D;
 using Vortice.Direct3D11;
+using Vortice.DXGI;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
@@ -13,21 +14,22 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T> where T : unman
 {
     private LazyResource<ID3D11RenderTargetView> renderTargetView;
     private LazyResource<ID3D11ShaderResourceView> shaderResourceView;
-    
-    public ID3D11Texture2D Texture { get; private set; }
+
     public ID3D11RenderTargetView RenderTargetView => renderTargetView.GetValue();
     public ID3D11ShaderResourceView ShaderResourceView => shaderResourceView.GetValue();
 
     private T[] cpuData;
+    private ID3D11Texture2D[] internalTextures;
 
     public D3D11Texture(DeviceResources resources, ID3D11Texture2D tex) : base(resources)
     {
-        if (typeof(T) != typeof(Color))
+        if (typeof(T) != typeof(Color) && typeof(T) != typeof(float))
         {
-            throw new NotSupportedException("Texture<Color> only.");
+            throw new NotSupportedException("Texture<Color> or Texture<float> only.");
         }
 
-        this.Texture = tex;
+        this.internalTextures = new ID3D11Texture2D[2];
+        this.internalTextures[0] = tex;
         Width = tex.Description.Width;
         Height = tex.Description.Height;
 
@@ -40,6 +42,21 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T> where T : unman
         Width = width;
         Height = height;
 
+        Format format; 
+
+        if (typeof(T) == typeof(float))
+        {
+            format = Format.R32_Float;
+        }
+        else if (typeof(T) == typeof(Color))
+        {
+            format = Format.B8G8R8A8_UNorm;
+        }
+        else
+        {
+            throw new Exception();
+        }
+
         var desc = new Texture2DDescription()
         {
             Width = width,
@@ -49,10 +66,11 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T> where T : unman
             BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
             Usage = ResourceUsage.Default,
             CpuAccessFlags = CpuAccessFlags.Read | CpuAccessFlags.Write,
-            Format = Vortice.DXGI.Format.B8G8R8A8_UNorm,
+            Format = format,
         };
 
-        Texture = resources.Device.CreateTexture2D(desc);
+        this.internalTextures = new ID3D11Texture2D[2];
+        internalTextures[0] = resources.Device.CreateTexture2D(desc);
 
         renderTargetView = new(resources, CreateRenderTargetView);
         shaderResourceView = new(resources, CreateShaderResourceView);
@@ -73,7 +91,11 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T> where T : unman
         if (cpuData == null)
             return;
 
-        Resources.ImmediateRenderer.DeviceContext.UpdateSubresource(cpuData.AsSpan(), this.Texture, rowPitch: Width * sizeof(Color));
+        Resources.ImmediateRenderer.DeviceContext.UpdateSubresource(cpuData.AsSpan(), this.internalTextures[0], rowPitch: Width * sizeof(Color));
+        if (this.internalTextures[1] is not null)
+        {
+            Resources.ImmediateRenderer.DeviceContext.UpdateSubresource(cpuData.AsSpan(), this.internalTextures[1], rowPitch: Width * sizeof(Color));
+        }
     }
 
     private Span<T> GetPixels()
@@ -90,7 +112,8 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T> where T : unman
     {
         this.shaderResourceView?.Dispose();
         this.renderTargetView?.Dispose();
-        this.Texture.Dispose();
+        this.internalTextures[0].Dispose();
+        this.internalTextures[1].Dispose();
     }
 
     public ref Color GetPixel(int x, int y)
@@ -105,9 +128,11 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T> where T : unman
     
     private ID3D11RenderTargetView CreateRenderTargetView()
     {
+        var texture = GetInternalTexture(TextureUsage.RenderTarget);
+
         var desc = new RenderTargetViewDescription()
         {
-            Format = Texture.Description.Format,
+            Format = texture.Description.Format,
             ViewDimension = RenderTargetViewDimension.Texture2D,
             Texture2D = new Texture2DRenderTargetView()
             {
@@ -115,14 +140,16 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T> where T : unman
             }
         };
 
-        return this.Resources.Device.CreateRenderTargetView(Texture, desc);
+        return this.Resources.Device.CreateRenderTargetView(texture, desc);
     }
 
     private ID3D11ShaderResourceView CreateShaderResourceView()
     {
+        var texture = GetInternalTexture(TextureUsage.RenderTarget);
+
         var desc = new ShaderResourceViewDescription()
         {
-            Format = Texture.Description.Format,
+            Format = texture.Description.Format,
             ViewDimension = ShaderResourceViewDimension.Texture2D,
             Texture2D = new Texture2DShaderResourceView()
             {
@@ -131,12 +158,48 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T> where T : unman
             }
         };
 
-        return this.Resources.Device.CreateShaderResourceView(Texture, desc);
+        return this.Resources.Device.CreateShaderResourceView(texture, desc);
     }
 
-    public ID3D11Texture2D GetInternalTexture()
+    public ID3D11Texture2D GetInternalTexture(TextureUsage usage)
     {
-        return this.Texture;    
+        switch (usage)
+        {
+            case TextureUsage.RenderTarget:
+                return internalTextures[0];
+            case TextureUsage.DepthStencil:
+                if (typeof(T) != typeof(float))
+                    throw new Exception();
+
+                if (internalTextures[1] is null)
+                {
+                    Texture2DDescription desc = new()
+                    {
+                        ArraySize = 1,
+                        BindFlags = BindFlags.DepthStencil,
+                        Height = Height,
+                        Width = Width,
+                        SampleDescription = new(1, 0),
+                        CpuAccessFlags = CpuAccessFlags.None,
+                        Format = Format.D32_Float,
+                        OptionFlags = ResourceOptionFlags.None,
+                        MipLevels = 1,
+                        Usage = ResourceUsage.Default
+                    };
+
+                    unsafe
+                    {
+                        fixed (void* data = cpuData) 
+                        {
+                            internalTextures[1] = Resources.Device.CreateTexture2D(desc);
+                        } 
+                    }
+                }
+
+                return internalTextures[1];
+            default:
+                throw new Exception();
+        }
     }
 
     public void Clear(T value)

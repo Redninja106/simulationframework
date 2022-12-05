@@ -42,6 +42,7 @@ public class HLSLCodeGenerator : CodeGenerator
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Normalize), new[] { typeof(Vector3) })] = "normalize",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Dot), new[] { typeof(Vector3), typeof(Vector3) })] = "dot",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.ColorF), new[] { typeof(float), typeof(float), typeof(float), typeof(float) })] = "float4",
+        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Reflect), new[] { typeof(Vector3), typeof(Vector3) })] = "reflect",
     };
 
     private static readonly Dictionary<MemberInfo, string> memberAliases = new()

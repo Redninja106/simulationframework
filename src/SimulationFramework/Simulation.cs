@@ -75,7 +75,8 @@ public abstract class Simulation
             m.Renderer.ResetState();
             m.Canvas.ResetState();
 
-            m.Renderer.RenderTarget = Graphics.GetFrameTexture();
+            m.Renderer.RenderTarget = Graphics.GetDefaultRenderTarget();
+            m.Renderer.DepthTarget = Graphics.GetDefaultDepthTarget();
 
             OnRender(m.Canvas);
             

@@ -41,4 +41,7 @@ public static class ShaderIntrinsics
 
     [ShaderIntrinsic(nameof(MathF.Max), typeof(MathF))]
     public static float Max(float a, float b) => MathF.Max(a, b);
+    
+    [ShaderIntrinsic(nameof(Vector3.Reflect), typeof(Vector3))]
+    public static Vector3 Reflect(Vector3 vector, Vector3 normal) => Vector3.Reflect(vector, normal);
 }

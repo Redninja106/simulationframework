@@ -15,14 +15,18 @@ namespace SimulationFramework.Drawing.Direct3D11;
 public class D3D11Graphics : IGraphicsProvider
 {
     private DeviceResources resources;
-    private D3D11Texture<Color> frameTexture;
+    private D3D11Texture<Color> defaultRenderTarget;
+    private D3D11Texture<float> defaultDepthTarget;
     private NullCanvas frameCanvas;
 
     public D3D11Graphics(IntPtr hwnd)
     {
         resources = new DeviceResources(hwnd);
-        frameTexture = new D3D11Texture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
-        frameCanvas = new NullCanvas(frameTexture);
+        defaultRenderTarget = new D3D11Texture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
+
+        var swapchainDesc = resources.SwapChain.Description1;
+        defaultDepthTarget = new D3D11Texture<float>(resources, swapchainDesc.Width, swapchainDesc.Height, Span<float>.Empty, ResourceOptions.None);
+        frameCanvas = new NullCanvas(defaultRenderTarget);
     }
 
     private void AfterRender(RenderMessage message)
@@ -42,13 +46,17 @@ public class D3D11Graphics : IGraphicsProvider
 
     public void Dispose()
     {
-        frameTexture.Dispose();
+        defaultRenderTarget.Dispose();
         resources.Dispose();
     }
 
-    public ITexture<Color> GetFrameTexture()
+    public ITexture<Color> GetDefaultRenderTarget()
     {
-        return frameTexture;
+        return defaultRenderTarget;
+    }
+    public ITexture<float> GetDefaultDepthTarget()
+    {
+        return defaultDepthTarget;
     }
 
     public ITexture<Color> LoadTexture(Span<byte> encodedData, ResourceOptions flags)
@@ -92,9 +100,9 @@ public class D3D11Graphics : IGraphicsProvider
             return;
 
         this.resources.ImmediateRenderer.DeviceContext.ClearState();
-        frameTexture.Dispose();
+        defaultRenderTarget.Dispose();
         resources.Resize(message.Width, message.Height);
-        frameTexture = new D3D11Texture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
+        defaultRenderTarget = new D3D11Texture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
     }
 
     public ICanvas GetFrameCanvas()

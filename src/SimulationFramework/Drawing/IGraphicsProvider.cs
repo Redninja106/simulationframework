@@ -16,7 +16,8 @@ public interface IGraphicsProvider : IApplicationComponent
     /// <returns>
     /// The canvas which draws to the current frame. This object should never be saved, as it may be different every frame.
     /// </returns>
-    ITexture<Color> GetFrameTexture();
+    ITexture<Color> GetDefaultRenderTarget();
+    ITexture<float> GetDefaultDepthTarget();
 
     /// <summary>
     /// Creates a new bitmap with the provided data.

@@ -27,11 +27,6 @@ public static class Graphics
         return Provider.GetFrameCanvas();
     }
 
-    public static ITexture<Color> GetFrameTexture()
-    {
-        return Provider.GetFrameTexture();
-    }
-
     public static IRenderer GetRenderer()
     {
         return Provider.GetRenderer();
@@ -194,6 +189,21 @@ public static class Graphics
     }
 
     public static void CopyBuffer<T>(ITexture<T> source, ITexture<T> destination) where T : unmanaged
+    {
+        throw new NotImplementedException();
+    }
+
+    public static ITexture<Color> GetDefaultRenderTarget()
+    {
+        return Provider.GetDefaultRenderTarget();
+    }
+
+    public static ITexture<float> GetDefaultDepthTarget()
+    {
+        return Provider.GetDefaultDepthTarget();
+    }
+
+    public static ITexture<byte> GetDefaultStencilTarget()
     {
         throw new NotImplementedException();
     }

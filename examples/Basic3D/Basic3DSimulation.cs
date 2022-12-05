@@ -53,6 +53,11 @@ internal class Basic3DSimulation : Simulation
     };
 
     IBuffer<Vertex> vertexBuffer;
+    IBuffer<uint> indexBuffer;
+
+    ITexture<float> depthTarget;
+
+    Vector3 lightPosition = Vector3.UnitY * 2;
 
     float camXRotation, camYRotation, camZoom;
     float xRotation, yRotation;
@@ -60,7 +65,12 @@ internal class Basic3DSimulation : Simulation
 
     public override void OnInitialize(AppConfig config)
     {
-        vertexBuffer = Graphics.CreateBuffer<Vertex>(vertices);
+        ObjLoader.Load("blender_monkey.obj", out Vertex[] verts, out uint[] inds);
+
+        vertexBuffer = Graphics.CreateBuffer<Vertex>(verts);
+        // indexBuffer = Graphics.CreateBuffer<uint>(inds);
+
+        depthTarget = Graphics.CreateTexture<float>(1920, 1080);
     }
 
     public override void OnRender(ICanvas canvas)
@@ -72,7 +82,6 @@ internal class Basic3DSimulation : Simulation
         }
 
         camZoom -= Mouse.ScrollWheelDelta;
-
 
         if (Keyboard.IsKeyDown(Key.Plus))
             camZoom -= Time.DeltaTime * 5;
@@ -92,6 +101,24 @@ internal class Basic3DSimulation : Simulation
         if (Keyboard.IsKeyDown(Key.S)) 
             xRotation += Time.DeltaTime;
         
+        if (Keyboard.IsKeyDown(Key.RShift))
+            lightPosition.Z += Time.DeltaTime * 2;
+
+        if (Keyboard.IsKeyDown(Key.RCtrl))
+            lightPosition.Z -= Time.DeltaTime * 2; 
+
+        if (Keyboard.IsKeyDown(Key.LeftArrow))
+            lightPosition.X -= Time.DeltaTime * 2;
+
+        if (Keyboard.IsKeyDown(Key.RightArrow))
+            lightPosition.X += Time.DeltaTime * 2;
+
+        if (Keyboard.IsKeyDown(Key.UpArrow))
+            lightPosition.Y += Time.DeltaTime * 2;
+
+        if (Keyboard.IsKeyDown(Key.DownArrow))
+            lightPosition.Y -= Time.DeltaTime * 2;
+
         if (spin)
         {
             yRotation += Time.DeltaTime;
@@ -109,21 +136,24 @@ internal class Basic3DSimulation : Simulation
             Proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, 16f / 9f, 0.1f, 100f)
         };
 
-        FragmentShader fragShader = new();
+        FragmentShader fragShader = new() { lightPosition = this.lightPosition };
 
         var renderer = Graphics.GetRenderer();
 
         renderer.ClearRenderTarget(Color.FromHSV(0,0,.1f));
+        renderer.ClearDepthTarget(1.0f);
         renderer.SetViewport(new(canvas.Width, canvas.Height, 0, 0));
         
         renderer.CullMode = CullMode.Front;
 
         renderer.SetVertexBuffer(vertexBuffer);
+        // renderer.SetIndexBuffer(indexBuffer);
 
         renderer.SetVertexShader(vertexShader);
         renderer.SetFragmentShader(fragShader);
 
-        renderer.DrawPrimitives(PrimitiveKind.Triangles, 12, 0);
+        var primitiveCount = Graphics.GetPrimitiveCount(PrimitiveKind.Triangles, this.vertexBuffer.Length);
+        renderer.DrawPrimitives(PrimitiveKind.Triangles, primitiveCount);
     }
 
     struct Vertex
@@ -141,6 +171,11 @@ internal class Basic3DSimulation : Simulation
 
         public Vertex(float x, float y, float z, float u, float v, float nx, float ny, float nz) : this(new(x, y, z), new(u, v), new(nx, ny, nz))
         {
+        }
+
+        public override string ToString()
+        {
+            return $"(pos {position}, uv: {uv}, normal: {normal})";
         }
     }
 
@@ -167,6 +202,9 @@ internal class Basic3DSimulation : Simulation
         [ShaderOutput]
         private Vector3 normal;
 
+        [ShaderOutput]
+        private Vector3 fragPos;
+
         public void Main()
         {
             position = new Vector4(vertex.position, 1);
@@ -178,6 +216,8 @@ internal class Basic3DSimulation : Simulation
             uv = vertex.uv;
 
             normal = Vector3.TransformNormal(vertex.normal, World);
+
+            fragPos = Vector3.Transform(vertex.position, World);
         }
     }
 
@@ -195,14 +235,102 @@ internal class Basic3DSimulation : Simulation
         [ShaderInput]
         private Vector2 uv;
 
+        [ShaderInput]
+        private Vector3 fragPos;
+
+        [ShaderUniform]
+        public Vector3 lightPosition;
+
+        [ShaderUniform]
+        public Vector3 cameraPosition;
+
+        [ShaderUniform()]
+        public Vector2 pad;
         //public ITexture Texture;
 
         public void Main()
         {
-            var b = Vector3.Dot(normal, Vector3.Normalize(new Vector3(-1, 1, -1)));
+            Vector3 lightDirection = Vector3.Normalize(fragPos - lightPosition);
+
+            Vector3 viewDir = (cameraPosition - fragPos);
+
+            Vector3 reflectDir = Vector3.Reflect(new Vector3(0,0,0)-lightDirection, normal);
+
+            var spec = MathF.Max(Vector3.Dot(viewDir, reflectDir), 0.0f);
+
+            spec *= spec;
+            spec *= spec;
+            spec *= spec;
+            spec *= spec;
+            spec *= spec;
+            spec *= spec;
+            spec *= spec;
+            spec *= spec;
+            spec *= spec;
+
+            var b = Vector3.Dot(normal, lightDirection);
             b = MathF.Max(b, 0);
+            b += spec;  
             var c = b * .75f + .25f;
             color = new(c, 0, 0, 1);
+        }
+    }
+
+    class ObjLoader
+    {
+        public static void Load(string fileName, out Vertex[] vertices, out uint[] indices)
+        {
+            List<Vector3> positions = new();
+            List<Vector2> uvs = new();
+            List<Vector3> normals = new();
+
+            List<Vertex> verticesList = new();
+            List<uint> indicesList = new();
+
+            void AddVertex(int pos, int uv, int normal)
+            {
+                Vertex vertex = new(positions[pos-1], uvs[uv-1], normals[normal-1]);
+                
+                //if (!verticesList.Contains(vertex))
+                //{
+                    verticesList.Add(vertex);
+                //}
+
+                //indicesList.Add((uint)verticesList.IndexOf(vertex));
+            }
+
+            var lines = File.ReadAllLines(fileName);
+            foreach (var line in lines)
+            {
+                var parts = line.Split(' ');
+
+                switch (parts[0])
+                {
+                    case "v":
+                        positions.Add(new(float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3])));
+                        break;
+                    case "vt":
+                        uvs.Add(new(float.Parse(parts[1]), float.Parse(parts[2])));
+                        break;
+                    case "vn":
+                        normals.Add(new(float.Parse(parts[1]), float.Parse(parts[2]), float.Parse(parts[3])));
+                        break;
+                    case "f":
+                        var v1 = parts[1].Split('/').Select(int.Parse).ToArray();
+                        var v2 = parts[2].Split('/').Select(int.Parse).ToArray();
+                        var v3 = parts[3].Split('/').Select(int.Parse).ToArray();
+
+                        AddVertex(v1[0], v1[1], v1[2]);
+                        AddVertex(v2[0], v2[1], v2[2]);
+                        AddVertex(v3[0], v3[1], v3[2]);
+                        break;  
+                    default:
+                        break;
+                }
+            }
+
+            vertices = verticesList.ToArray();
+            indices = indicesList.ToArray();
         }
     }
 }

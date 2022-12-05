@@ -113,33 +113,27 @@ internal class ValidatorRenderer : IRenderer
         baseRenderer.Clip(rectangle);
     }
 
-    public void DrawPrimitives(PrimitiveKind kind, int count, int vertexOffset)
+    public void DrawPrimitives(PrimitiveKind kind, int count)
     {
         ValidateEnumValue(kind);
         
         Validate(count >= 0, nameof(count), PRIMITIVE_COUNT_NEGATIVE);
-        Validate(vertexOffset >= 0, nameof(vertexOffset), "Vertex offset cannot be negative!");
-
-        Validate(vertexOffset + Graphics.GetVertexCount(kind, count) < vertexBufferLength, nameof(vertexOffset), "Vertex offset + Vertex count cannot be >= the length of the vertex buffer!");
 
         Validate(vertexBufferLength is not null, nameof(vertexBufferLength));
 
-        baseRenderer.DrawPrimitives(kind, count, vertexOffset);
+        baseRenderer.DrawPrimitives(kind, count);
     }
 
-    public void DrawPrimitivesIndexed(PrimitiveKind kind, int count, int vertexOffset, int indexOffset)
+    public void DrawPrimitivesIndexed(PrimitiveKind kind, int count)
     {
         ValidateEnumValue(kind);
 
         Validate(count >= 0, nameof(count), PRIMITIVE_COUNT_NEGATIVE);
-        Validate(vertexOffset >= 0, nameof(count), PRIMITIVE_COUNT_NEGATIVE);
-
-        Validate(vertexOffset >= 0 && vertexOffset + Graphics.GetVertexCount(kind, count) < vertexBufferLength, nameof(vertexOffset));
 
         Validate(vertexBufferLength is not null, nameof(vertexBufferLength));
         Validate(indexBufferLength is not null, nameof(indexBufferLength));
 
-        baseRenderer.DrawPrimitivesIndexed(kind, count, vertexOffset, indexOffset);
+        baseRenderer.DrawPrimitivesIndexed(kind, count);
     }
 
     private void ValidateEnumValue<T>(T value, [CallerArgumentExpression(nameof(value))] string? paramName = null) where T : struct, Enum
@@ -177,42 +171,38 @@ internal class ValidatorRenderer : IRenderer
         baseRenderer.ResetState();
     }
 
-    public void SetIndexBuffer(IBuffer<uint>? indexBuffer)
+    public void SetIndexBuffer(IBuffer<uint>? indexBuffer, int offset = 0)
     {
         indexBufferLength = indexBuffer?.Length;
-        baseRenderer.SetIndexBuffer(indexBuffer);
+        baseRenderer.SetIndexBuffer(indexBuffer, offset);
     }
 
-    public void SetVertexBuffer<T>(IBuffer<T>? vertexBuffer) where T : unmanaged
+    public void SetVertexBuffer<T>(IBuffer<T>? vertexBuffer, int offset = 0) where T : unmanaged
     {
         this.vertexBufferLength = vertexBuffer?.Length;
-        baseRenderer.SetVertexBuffer(vertexBuffer);
+        baseRenderer.SetVertexBuffer(vertexBuffer, offset);
     }
 
-    public void SetInstanceBuffer<T>(IBuffer<T>? instanceBuffer) where T : unmanaged
+    public void SetInstanceBuffer<T>(IBuffer<T>? instanceBuffer, int offset = 0) where T : unmanaged
     {
         this.instanceBufferLength = instanceBuffer?.Length;
-        baseRenderer.SetInstanceBuffer(instanceBuffer);
+        baseRenderer.SetInstanceBuffer(instanceBuffer, offset);
     }
 
-    public void DrawPrimitivesInstanced(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int instanceOffset = 0)
+    public void DrawPrimitivesInstanced(PrimitiveKind kind, int primtiveCount, int instanceCount)
     {
         ValidateEnumValue(kind);
 
-        Validate(count >= 0, nameof(count));
-        Validate(vertexOffset >= 0, nameof(count));
+        Validate(primtiveCount >= 0, nameof(primtiveCount));
         Validate(instanceCount >= 0, nameof(instanceCount));
-
-        Validate(vertexOffset >= 0 && vertexOffset + Graphics.GetVertexCount(kind, count) < vertexBufferLength, nameof(vertexOffset));
-        Validate(instanceOffset >= 0 && instanceOffset + instanceCount < vertexBufferLength, nameof(vertexOffset));
 
         Validate(vertexBufferLength is not null, nameof(vertexBufferLength));
         Validate(indexBufferLength is not null, nameof(indexBufferLength));
 
-        baseRenderer.DrawPrimitivesInstanced(kind, count, instanceCount, vertexOffset, instanceOffset);
+        baseRenderer.DrawPrimitivesInstanced(kind, primtiveCount, instanceCount);
     }
 
-    public void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int indexOffset = 0, int instanceOffset = 0)
+    public void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int primitiveCount, int instanceCount)
     {
         throw new NotImplementedException();
     }
@@ -253,6 +243,16 @@ internal class ValidatorRenderer : IRenderer
     }
 
     public void ClearStencilTarget(byte stencil)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawGeometry(IGeometry geometry)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawGeometryInstanced(IGeometry geometry, int instanceCount)
     {
         throw new NotImplementedException();
     }

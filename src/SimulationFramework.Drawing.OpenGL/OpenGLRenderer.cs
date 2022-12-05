@@ -16,6 +16,8 @@ internal class OpenGLRenderer : IRenderer
     public float DepthBias { get; set; }
     public bool Wireframe { get; set; }
 
+    private int arrayBufferOffset, elementArrayBufferOffset; 
+
     public void ClearDepthTarget(float depth)
     {
         throw new NotImplementedException();
@@ -46,9 +48,9 @@ internal class OpenGLRenderer : IRenderer
         }
     }
 
-    public void DrawPrimitives(PrimitiveKind kind, int count, int vertexOffset = 0)
+    public void DrawPrimitives(PrimitiveKind kind, int count)
     {
-        GL.DrawArrays(GLPrimitiveType(kind), vertexOffset, Graphics.GetVertexCount(kind, count));
+        GL.DrawArrays(GLPrimitiveType(kind), arrayBufferOffset, Graphics.GetVertexCount(kind, count));
     }
 
     private PrimitiveType GLPrimitiveType(PrimitiveKind kind)
@@ -63,17 +65,17 @@ internal class OpenGLRenderer : IRenderer
         };
     }
 
-    public void DrawPrimitivesIndexed(PrimitiveKind kind, int count, int vertexOffset = 0, int indexOffset = 0)
+    public void DrawPrimitivesIndexed(PrimitiveKind kind, int count)
     {
         GL.DrawElements(GLPrimitiveType(kind), Graphics.GetVertexCount(kind, count), DrawElementsType.UnsignedInt, indexOffset);
     }
 
-    public void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int indexOffset = 0, int instanceOffset = 0)
+    public void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int count, int instanceCount)
     {
         throw new NotImplementedException();
     }
 
-    public void DrawPrimitivesInstanced(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int instanceOffset = 0)
+    public void DrawPrimitivesInstanced(PrimitiveKind kind, int count, int instanceCount)
     {
         throw new NotImplementedException();
     }
@@ -107,17 +109,17 @@ internal class OpenGLRenderer : IRenderer
         throw new NotImplementedException();
     }
 
-    public void SetIndexBuffer(IBuffer<uint>? indexBuffer)
+    public void SetIndexBuffer(IBuffer<uint>? indexBuffer, int offset = 0)
     {
         throw new NotImplementedException();
     }
 
-    public void SetInstanceBuffer<T>(IBuffer<T>? instanceBuffer) where T : unmanaged
+    public void SetInstanceBuffer<T>(IBuffer<T>? instanceBuffer, int offset = 0) where T : unmanaged
     {
         throw new NotImplementedException();
     }
 
-    public void SetVertexBuffer<T>(IBuffer<T>? vertexBuffer) where T : unmanaged
+    public void SetVertexBuffer<T>(IBuffer<T>? vertexBuffer, int offset = 0) where T : unmanaged
     {
         throw new NotImplementedException();
     }

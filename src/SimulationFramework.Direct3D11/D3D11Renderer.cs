@@ -20,10 +20,17 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         get => currentRenderTarget;
         set => SetRenderTarget(value);
     }
+    public ITexture<float> DepthTarget
+    {
+        get => currentDepthTarget;
+        set => depthStencilManager.SetDepthTexture(value as D3D11Texture<float>);
+    }
 
     public ID3D11DeviceContext DeviceContext { get; private set; }
-    public ITexture<float> DepthTarget { get; set; }
+
     public ITexture<byte> StencilTarget { get; set; }
+    public DepthStencilComparison DepthComparison { get; set; }
+    public bool WriteDepth { get; set; }
 
     public CullMode CullMode
     {
@@ -42,18 +49,20 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     {
         get
         {
-            return false;
+            return this.wireframe;
         }
         set
         {
 
+            this.wireframe = value;
         }
     }
 
     public float DepthBias { get; set; }
 
     private D3D11Texture<Color> currentRenderTarget;
-    private Dictionary<CullMode, ID3D11RasterizerState> rasterizerStates = new();
+    private D3D11Texture<float> currentDepthTarget;
+    private Dictionary<(CullMode cullMode, bool wireframe), ID3D11RasterizerState> rasterizerStates = new();
 
     private ShaderSignature vsOutputSignature;
     private ShaderSignature gsOutputSignature;
@@ -62,11 +71,17 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     private IShader geometryShader;
     private IShader fragmentShader;
 
+    private int vertexBufferOffset, indexBufferOffset, instanceBufferOffset;
+
     private CullMode cullMode;
+    private bool wireframe;
+
+    private readonly DepthStencilManager depthStencilManager;
 
     public D3D11Renderer(DeviceResources resources, ID3D11DeviceContext deviceContext) : base(resources)
     {
         this.DeviceContext = deviceContext;
+        depthStencilManager = new(resources);
     }
 
     public void PreDraw(PrimitiveKind primitiveKind)
@@ -82,26 +97,31 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
         if (rasterizerStates.Count is 0)
         {
-            rasterizerStates[CullMode.None] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullNone);
-            rasterizerStates[CullMode.Front] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullFront);
-            rasterizerStates[CullMode.Back] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullBack);
+            rasterizerStates[(CullMode.None, true)] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullNone with { FillMode = FillMode.Wireframe });
+            rasterizerStates[(CullMode.None, false)] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullNone with { FillMode = FillMode.Solid });
+            rasterizerStates[(CullMode.Front, true)] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullFront with { FillMode = FillMode.Wireframe });
+            rasterizerStates[(CullMode.Front, false)] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullFront with { FillMode = FillMode.Solid });
+            rasterizerStates[(CullMode.Back, true)] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullBack with { FillMode = FillMode.Wireframe });
+            rasterizerStates[(CullMode.Back, false)] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullBack with {  FillMode = FillMode.Solid });
         }
 
-        DeviceContext.RSSetState(rasterizerStates[this.CullMode]);
+        DeviceContext.RSSetState(rasterizerStates[(this.CullMode, this.wireframe)]);
+
+        depthStencilManager.PreDraw(this.DeviceContext);
     }
 
-    public void DrawPrimitivesIndexed(PrimitiveKind kind, int count, int vertexOffset, int indexOffset)
+    public void DrawPrimitivesIndexed(PrimitiveKind kind, int count)
     {
         PreDraw(kind);
 
-        DeviceContext.DrawIndexed(kind.GetVertexCount(count), indexOffset, vertexOffset);
+        DeviceContext.DrawIndexed(kind.GetVertexCount(count), this.indexBufferOffset, this.vertexBufferOffset);
     }
 
-    public void DrawPrimitives(PrimitiveKind kind, int count, int offset)
+    public void DrawPrimitives(PrimitiveKind kind, int count)
     {
         PreDraw(kind);
 
-        DeviceContext.Draw(kind.GetVertexCount(count), offset);
+        DeviceContext.Draw(kind.GetVertexCount(count), this.vertexBufferOffset);
     }
 
     private void SetRenderTarget(ITexture<Color> renderTarget)
@@ -110,7 +130,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
             throw new ArgumentException(null, nameof(renderTarget));
 
         currentRenderTarget = d3dTexture;
-        DeviceContext.OMSetRenderTargets(d3dTexture.RenderTargetView);
+        DeviceContext.OMSetRenderTargets(d3dTexture.RenderTargetView, depthStencilManager.DepthStencilView);
     }
 
     public void BeginFrame()
@@ -118,7 +138,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         SetViewport(new(0, 0, 0, 0));
     }
 
-    public void SetVertexBuffer<T>(IBuffer<T> vertexBuffer) where T : unmanaged
+    public void SetVertexBuffer<T>(IBuffer<T> vertexBuffer, int offset = 0) where T : unmanaged
     {
         if (vertexBuffer is not D3D11Buffer<T> d3dBuffer)
             throw new ArgumentException(null, nameof(vertexBuffer));
@@ -133,17 +153,23 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
     public override void Dispose()
     {
-        this.currentRenderTarget?.Dispose();
         foreach (var (key, value) in rasterizerStates)
         {
             value.Dispose();
         }
         this.DeviceContext.Dispose();
+        this.depthStencilManager.Dispose();
         base.Dispose();
     }
 
-    public void SetIndexBuffer(IBuffer<uint> indexBuffer)
+    public void SetIndexBuffer(IBuffer<uint> indexBuffer, int offset)
     {
+        if (indexBuffer is not D3D11Buffer<uint> d3dBuffer)
+            throw new();
+
+        this.indexBufferOffset = offset;
+
+        DeviceContext.IASetIndexBuffer(d3dBuffer.GetInternalbuffer(BufferUsage.IndexBuffer), Vortice.DXGI.Format.R32_UInt, 0);
     }
 
     public void Clip(Rectangle? rectangle)
@@ -168,17 +194,17 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     {
     }
 
-    public void SetInstanceBuffer<T>(IBuffer<T> instanceBuffer) where T : unmanaged
+    public void SetInstanceBuffer<T>(IBuffer<T> instanceBuffer, int offset = 0) where T : unmanaged
     {
         throw new NotImplementedException();
     }
 
-    public void DrawPrimitivesInstanced(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int instanceOffset = 0)
+    public void DrawPrimitivesInstanced(PrimitiveKind kind, int primitiveCount, int instanceCount)
     {
         throw new NotImplementedException();
     }
 
-    public void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int count, int instanceCount, int vertexOffset = 0, int indexOffset = 0, int instanceOffset = 0)
+    public void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int primitiveCount, int instanceCount)
     {
         throw new NotImplementedException();
     }
@@ -295,13 +321,22 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
     public void ClearDepthTarget(float depth)
     {
-        // DeviceContext.ClearDepthStencilView(this.depthStencilView, DepthStencilClearFlags.Depth, depth, 0);
-        throw new NotImplementedException();
+        DeviceContext.ClearDepthStencilView(this.depthStencilManager.DepthStencilView, DepthStencilClearFlags.Depth, depth, 0);
     }
 
     public void ClearStencilTarget(byte stencil)
     {
         // DeviceContext.ClearDepthStencilView(this.depthStencilView, DepthStencilClearFlags.Depth, 0f, stencil);
+        throw new NotImplementedException();
+    }
+
+    public void DrawGeometry(IGeometry geometry)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawGeometryInstanced(IGeometry geometry, int instanceCount)
+    {
         throw new NotImplementedException();
     }
 }

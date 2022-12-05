@@ -26,7 +26,7 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
         throw new NotImplementedException();
     }
 
-    public ITexture<Color> GetFrameTexture()
+    public ITexture<Color> GetDefaultRenderTarget()
     {
         throw new NotImplementedException();
     }
