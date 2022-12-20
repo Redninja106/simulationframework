@@ -4,39 +4,43 @@ using SilkKey = Silk.NET.Input.Key;
 using SilkButton = Silk.NET.Input.MouseButton;
 using System.Numerics;
 using SimulationFramework.Messaging;
+using ImGuiNET;
 
 namespace SimulationFramework.Desktop;
 
 internal class DesktopInputComponent : IApplicationComponent
 {
     private readonly IWindow window;
-    public IInputContext silkInputDevice;
-    private InputContext Context => Application.Current.GetComponent<InputContext>();
+    public readonly IInputContext silkInputContext;
+
+    public InputContext Context => Application.Current.GetComponent<InputContext>();
 
     public DesktopInputComponent(IWindow window)
     {
         this.window = window;
-        silkInputDevice = window.CreateInput();
+        silkInputContext = window.CreateInput();
     }
 
     public void Initialize(Application application)
     {
-        if (silkInputDevice.Mice.Count > 0)
+        application.Dispatcher.Subscribe<RenderMessage>(BeforeRender, ListenerPriority.High);
+
+        if (silkInputContext.Mice.Count > 0)
         {
-            silkInputDevice.Mice[0].MouseUp += MouseUp;
-            silkInputDevice.Mice[0].MouseDown += MouseDown;
-            silkInputDevice.Mice[0].MouseMove += MouseMove;
-            silkInputDevice.Mice[0].Scroll += Scroll;
+            silkInputContext.Mice[0].MouseUp += MouseUp;
+            silkInputContext.Mice[0].MouseDown += MouseDown;
+            silkInputContext.Mice[0].MouseMove += MouseMove;
+            silkInputContext.Mice[0].Scroll += Scroll;
         }
 
-        if (silkInputDevice.Keyboards.Count > 0)
+        if (silkInputContext.Keyboards.Count > 0)
         {
-            silkInputDevice.Keyboards[0].KeyDown += KeyDown;
-            silkInputDevice.Keyboards[0].KeyUp += KeyUp;
-            silkInputDevice.Keyboards[0].KeyChar += KeyChar;
+            silkInputContext.Keyboards[0].KeyDown += KeyDown;
+            silkInputContext.Keyboards[0].KeyUp += KeyUp;
+            silkInputContext.Keyboards[0].KeyChar += KeyChar;
         }
 
-        if (silkInputDevice.Gamepads.Count > 0)
+        if (silkInputContext.Gamepads.Count > 0)
         {
         }
     }
@@ -48,7 +52,8 @@ internal class DesktopInputComponent : IApplicationComponent
 
     private void MouseMove(IMouse arg1, System.Numerics.Vector2 arg2)
     {
-        Context.UpdateMousePosition(arg2);
+        if (!ImGui.GetIO().WantCaptureMouse)
+            Context.UpdateMousePosition(arg2);
     }
 
     private void KeyChar(IKeyboard arg1, char arg2)
@@ -63,12 +68,14 @@ internal class DesktopInputComponent : IApplicationComponent
 
     private void KeyDown(IKeyboard arg1, SilkKey arg2, int arg3)
     {
-        Context.UpdateKey(ConvertKey(arg2), true);
+        if (!ImGui.GetIO().WantCaptureKeyboard)
+            Context.UpdateKey(ConvertKey(arg2), true);
     }
 
     private void MouseDown(IMouse arg1, SilkButton arg2)
     {
-        Context.UpdateMouseButton(ConvertButton(arg2), true);
+        if (!ImGui.GetIO().WantCaptureMouse)
+            Context.UpdateMouseButton(ConvertButton(arg2), true);
     }
 
     private void MouseUp(IMouse arg1, SilkButton arg2)
@@ -76,11 +83,11 @@ internal class DesktopInputComponent : IApplicationComponent
         Context.UpdateMouseButton(ConvertButton(arg2), false);
     }
 
-    private void BeforeRender()
+    private void BeforeRender(RenderMessage message)
     {
-        if (silkInputDevice.Gamepads.Count > 0)
+        if (silkInputContext.Gamepads.Count > 0)
         {
-            var gamepad = silkInputDevice.Gamepads[0];
+            var gamepad = silkInputContext.Gamepads[0];
             Context.UpdateGamepadJoysticks(
                 new Vector2(gamepad.Thumbsticks[1].X, gamepad.Thumbsticks[1].Y),
                 new Vector2(gamepad.Thumbsticks[0].X, gamepad.Thumbsticks[0].Y)
@@ -107,7 +114,7 @@ internal class DesktopInputComponent : IApplicationComponent
 
     public void Dispose()
     {
-        silkInputDevice.Dispose();
+        silkInputContext.Dispose();
     }
 
     private static Key ConvertKey(SilkKey key)
@@ -150,17 +157,17 @@ internal class DesktopInputComponent : IApplicationComponent
             SilkKey.F11 => Key.F11,
             SilkKey.F12 => Key.F12,
             SilkKey.Space => Key.Space,
-            SilkKey.AltLeft => Key.LAlt,
-            SilkKey.ControlLeft => Key.LCtrl,
-            SilkKey.ShiftLeft => Key.LShift,
+            SilkKey.AltLeft => Key.LeftAlt,
+            SilkKey.ControlLeft => Key.LeftControl,
+            SilkKey.ShiftLeft => Key.LeftShift,
             SilkKey.CapsLock => Key.CapsLock,
             SilkKey.Tab => Key.Tab,
             SilkKey.GraveAccent => Key.Tilde,
             SilkKey.Escape => Key.Esc,
-            SilkKey.AltRight => Key.RAlt,
+            SilkKey.AltRight => Key.RightAlt,
             SilkKey.Menu => Key.Menu,
-            SilkKey.ControlRight => Key.RCtrl,
-            SilkKey.ShiftRight => Key.RShift,
+            SilkKey.ControlRight => Key.RightControl,
+            SilkKey.ShiftRight => Key.RightShift,
             SilkKey.Enter => Key.Enter,
             SilkKey.Backspace => Key.Backspace,
             SilkKey.Comma => Key.Comma,
@@ -168,8 +175,8 @@ internal class DesktopInputComponent : IApplicationComponent
             SilkKey.Slash => Key.Slash,
             SilkKey.Semicolon => Key.Semicolon,
             SilkKey.Apostrophe => Key.Apostrophe,
-            SilkKey.LeftBracket => Key.LBracket,
-            SilkKey.RightBracket => Key.RBracket,
+            SilkKey.LeftBracket => Key.OpenBracket,
+            SilkKey.RightBracket => Key.CloseBracket,
             SilkKey.BackSlash => Key.BackSlash,
             SilkKey.Minus => Key.Minus,
             SilkKey.Equal => Key.Plus,

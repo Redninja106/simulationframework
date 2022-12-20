@@ -14,12 +14,11 @@ internal class DesktopImGuiComponent : IApplicationComponent
     GL gl;
     ImGuiController imGuiController;
 
-
     public DesktopImGuiComponent(IWindow window)
     {
         var inputComponent = Application.Current.GetComponent<DesktopInputComponent>();
-        gl = window.CreateOpenGL();// GL.GetApi(window.GLContext);
-        imGuiController = new(gl, window, inputComponent.silkInputDevice);
+        gl = window.CreateOpenGL();
+        imGuiController = new(gl, window, inputComponent.silkInputContext);
     }
 
     public void Initialize(Application application)
