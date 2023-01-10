@@ -99,7 +99,7 @@ public abstract class CanvasState
             UpdateTransform(Matrix3x2.Identity);
 
             UpdateStrokeColor(Color.Black);
-            UpdateStrokeWidth(1f);
+            UpdateStrokeWidth(0f);
 
             UpdateFillColor(Color.White);
             UpdateGradient(null);
