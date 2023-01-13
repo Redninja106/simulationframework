@@ -70,7 +70,6 @@ public static class CollectionsHelper
         {
             ptr[i++] = enumerator.Current;
         }
-        enumerator.Reset();
 
         action(new Span<T>(ptr, count), state);
     }

@@ -34,6 +34,7 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
         {
             this.paint = new SKPaint();
             this.paint.IsAntialias = true;
+            this.paint.FilterQuality = SKFilterQuality.High;
         }
         else if (other != this)
         {
