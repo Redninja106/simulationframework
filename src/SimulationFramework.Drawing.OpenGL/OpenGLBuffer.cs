@@ -21,6 +21,7 @@ internal class OpenGLBuffer<T> : IBuffer<T> where T : unmanaged
     {
         this.Length = length;
         this.Options = options;
+        this.data = new T[length];
     }
 
     public void ApplyChanges()

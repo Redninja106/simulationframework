@@ -177,7 +177,7 @@ public sealed class ImGuiComponent : IApplicationComponent
         if (vertexBuffer is null || indexBuffer is null)
             throw new InvalidOperationException();
 
-        renderer.RenderTarget = Graphics.GetFrameTexture();
+        renderer.RenderTarget = Graphics.GetDefaultRenderTarget();
         renderer.SetVertexBuffer(vertexBuffer);
         renderer.CullMode = CullMode.None;
 
@@ -212,7 +212,7 @@ public sealed class ImGuiComponent : IApplicationComponent
                 renderer.SetFragmentShader(fragmentShader);
 
                 renderer.SetIndexBuffer(indexBuffer, indexOffset + (int)command.IdxOffset);
-                renderer.SetVertexShader(vertexShader, vertexOffset + (int)command.VtxOffset);
+                renderer.SetVertexBuffer(vertexBuffer, vertexOffset + (int)command.VtxOffset);
 
                 renderer.DrawPrimitivesIndexed(PrimitiveKind.Triangles, (int)command.ElemCount / 3);
             }

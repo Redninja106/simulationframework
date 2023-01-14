@@ -49,4 +49,9 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
     {
         throw new NotImplementedException();
     }
+
+    public ITexture<float> GetDefaultDepthTarget()
+    {
+        throw new NotImplementedException();
+    }
 }

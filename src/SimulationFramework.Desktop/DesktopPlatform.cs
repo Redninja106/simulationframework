@@ -20,6 +20,7 @@ namespace SimulationFramework.Desktop;
 public sealed class DesktopPlatform : IApplicationPlatform
 {
     public IWindow Window { get; }
+    private IGraphicsProvider? graphics;
 
     public IApplicationController CreateController()
     {
@@ -28,13 +29,19 @@ public sealed class DesktopPlatform : IApplicationPlatform
 
     public IGraphicsProvider CreateGraphicsProvider()
     {
-        return new D3D11Graphics(Window.Native.Win32.Value.Hwnd);
+        return graphics ?? new D3D11Graphics(Window.Native.Win32.Value.Hwnd);
     }
 
     public DesktopPlatform()
     {
         Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default);
         Window.Initialize();
+    }
+
+    public IApplicationPlatform WithGraphics(IGraphicsProvider graphics)
+    {
+        this.graphics = graphics;
+        return this;
     }
 
     public void Dispose()

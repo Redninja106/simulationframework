@@ -15,6 +15,8 @@ internal class OpenGLRenderer : IRenderer
     public CullMode CullMode { get; set; }
     public float DepthBias { get; set; }
     public bool Wireframe { get; set; }
+    public bool WriteDepth { get; set; }
+    public DepthStencilComparison DepthComparison { get; set; }
 
     private int arrayBufferOffset, elementArrayBufferOffset; 
 
@@ -67,7 +69,7 @@ internal class OpenGLRenderer : IRenderer
 
     public void DrawPrimitivesIndexed(PrimitiveKind kind, int count)
     {
-        GL.DrawElements(GLPrimitiveType(kind), Graphics.GetVertexCount(kind, count), DrawElementsType.UnsignedInt, indexOffset);
+        GL.DrawElements(GLPrimitiveType(kind), Graphics.GetVertexCount(kind, count), DrawElementsType.UnsignedInt, (nint)(count * 3));
     }
 
     public void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int count, int instanceCount)
@@ -130,6 +132,16 @@ internal class OpenGLRenderer : IRenderer
     }
 
     public void SetViewport(Rectangle viewport)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawGeometry(IGeometry geometry)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawGeometryInstanced(IGeometry geometry, int instanceCount)
     {
         throw new NotImplementedException();
     }
