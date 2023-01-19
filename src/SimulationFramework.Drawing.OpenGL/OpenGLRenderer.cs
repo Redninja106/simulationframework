@@ -18,6 +18,15 @@ internal class OpenGLRenderer : IRenderer
     public bool WriteDepth { get; set; }
     public DepthStencilComparison DepthComparison { get; set; }
 
+    public IGraphicsQueue Queue { get; set; }
+    public byte StencilReferenceValue { get; set; }
+    public byte StencilReadMask { get; set; }
+    public byte StencilWriteMask { get; set; }
+    public DepthStencilComparison StencilComparison { get; set; }
+    public StencilOperation StencilFailOperation { get; set; }
+    public StencilOperation StencilPassDepthFailOperation { get; set; }
+    public StencilOperation StencilPassOperation { get; set; }
+
     private int arrayBufferOffset, elementArrayBufferOffset; 
 
     public void ClearDepthTarget(float depth)
@@ -142,6 +151,11 @@ internal class OpenGLRenderer : IRenderer
     }
 
     public void DrawGeometryInstanced(IGeometry geometry, int instanceCount)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Submit(IGraphicsQueue deferredQueue)
     {
         throw new NotImplementedException();
     }

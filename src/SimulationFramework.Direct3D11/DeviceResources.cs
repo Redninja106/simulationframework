@@ -15,7 +15,6 @@ namespace SimulationFramework.Drawing.Direct3D11;
 internal sealed class DeviceResources : IDisposable
 {
     public ID3D11Device Device { get; private set; }
-    public D3D11Renderer ImmediateRenderer { get; private set; }
     public IDXGISwapChain1 SwapChain { get; private set; }
     public ID3D11Debug Debug { get; private set; }
     public List<D3D11Object> Shaders { get; private set; }
@@ -30,8 +29,6 @@ internal sealed class DeviceResources : IDisposable
         
         if (hr.Failure)
             throw new Exception();
-
-        ImmediateRenderer = new D3D11Renderer(this, device.ImmediateContext);
 
         Win32.GetWindowRect(hwnd, out var windowBounds);
         
@@ -75,7 +72,6 @@ internal sealed class DeviceResources : IDisposable
         }
 
         SwapChain.Dispose();
-        ImmediateRenderer.Dispose();
         //Debug.ReportLiveDeviceObjects(ReportLiveDeviceObjectFlags.Detail);
         Debug.Dispose();
         Device.Dispose();

@@ -5,7 +5,13 @@ namespace SimulationFramework.Drawing.OpenGL;
 
 public class OpenGLGraphicsProvider : IGraphicsProvider
 {
-    private OpenGLRenderer ImmediateRenderer;
+    public IRenderer ImmediateRenderer { get; }
+    public IGraphicsQueue ImmediateQueue { get; }
+
+    public OpenGLGraphicsProvider()
+    {
+
+    }
 
     public IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged
     {
@@ -21,17 +27,7 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
     {
     }
 
-    public ICanvas GetFrameCanvas()
-    {
-        throw new NotImplementedException();
-    }
-
     public ITexture<Color> GetDefaultRenderTarget()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IRenderer GetRenderer()
     {
         throw new NotImplementedException();
     }
@@ -51,6 +47,21 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
     }
 
     public ITexture<float> GetDefaultDepthTarget()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IRenderer CreateRenderer()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IGraphicsQueue CreateDeferredQueue()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IRenderer CreateRenderer(IGraphicsQueue? queue)
     {
         throw new NotImplementedException();
     }

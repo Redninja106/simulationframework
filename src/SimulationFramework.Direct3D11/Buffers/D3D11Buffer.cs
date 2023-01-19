@@ -6,7 +6,6 @@ namespace SimulationFramework.Drawing.Direct3D11.Buffers;
 internal sealed class D3D11Buffer<T> : IBuffer<T> where T : unmanaged
 {
     public int Length { get; private set; }
-    
     private int SizeInBytes => Length * Stride;
     public int Stride => Unsafe.SizeOf<T>();
     public ResourceOptions Options => this.options;
@@ -65,7 +64,7 @@ internal sealed class D3D11Buffer<T> : IBuffer<T> where T : unmanaged
         foreach (var buffer in this.internalBuffers)
         {
             if (buffer is not null)
-                resources.ImmediateRenderer.DeviceContext.UpdateSubresource(data, buffer);
+                resources.Device.ImmediateContext.UpdateSubresource(data, buffer);
         }
     }
 
@@ -90,7 +89,7 @@ internal sealed class D3D11Buffer<T> : IBuffer<T> where T : unmanaged
 
         if (firstNotNullBuffer != null)
         {
-            resources.ImmediateRenderer.DeviceContext.CopyResource(newBuffer, firstNotNullBuffer);
+            resources.Device.ImmediateContext.CopyResource(newBuffer, firstNotNullBuffer);
         }
 
         internalBuffers[(int)usage] = newBuffer;

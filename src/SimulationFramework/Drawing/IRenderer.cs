@@ -8,8 +8,11 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 public interface IRenderer
 {
+    IGraphicsQueue Queue { get; set; }
+    
     ITexture<Color>? RenderTarget { get; set; }
     ITexture<float>? DepthTarget { get; set; }
     ITexture<byte>? StencilTarget { get; set; }
@@ -20,6 +23,16 @@ public interface IRenderer
     float DepthBias { get; set; }
     bool WriteDepth { get; set; }
     DepthStencilComparison DepthComparison { get; set; }
+
+    byte StencilReferenceValue { get; set; }
+    byte StencilReadMask { get; set; }
+    byte StencilWriteMask { get; set; }
+    DepthStencilComparison StencilComparison { get; set; }
+    StencilOperation StencilFailOperation { get; set; }
+    StencilOperation StencilPassDepthFailOperation { get; set; }
+    StencilOperation StencilPassOperation { get; set; }
+
+    void Submit(IGraphicsQueue deferredQueue);
 
     void ClearRenderTarget(Color color);
     void ClearDepthTarget(float depth);
@@ -36,7 +49,7 @@ public interface IRenderer
     void DrawPrimitives(PrimitiveKind kind, int count);
     void DrawPrimitivesIndexed(PrimitiveKind kind, int count);
     void DrawPrimitivesInstanced(PrimitiveKind kind, int primitives, int instances);
-    void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int primitives, int instanceCount);
+    void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int primitives, int instances);
 
     void DrawGeometry(IGeometry geometry);
     void DrawGeometryInstanced(IGeometry geometry, int instanceCount);

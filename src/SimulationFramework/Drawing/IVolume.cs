@@ -5,10 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
-
-public interface IGeometry
+public interface IVolume<T> where T : unmanaged
 {
-    PrimitiveKind PrimitiveKind { get; }
-
-    void Update(VertexData data);
+    public int Width { get; }
+    public int Height { get; }
+    public int Depth { get; }
 }

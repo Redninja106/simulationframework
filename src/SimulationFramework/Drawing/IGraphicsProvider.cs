@@ -8,7 +8,7 @@ namespace SimulationFramework.Drawing;
 /// </summary>
 public interface IGraphicsProvider : IApplicationComponent
 {
-    ICanvas GetFrameCanvas();
+    IGraphicsQueue ImmediateQueue { get; }
 
     /// <summary>
     /// Gets the canvas for the current frame.
@@ -39,8 +39,6 @@ public interface IGraphicsProvider : IApplicationComponent
 
     IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged;
 
-    // gets the main renderer
-    IRenderer GetRenderer();
-
     void InvalidateShader(Type shaderType);
+    IRenderer CreateRenderer(IGraphicsQueue? queue);
 }

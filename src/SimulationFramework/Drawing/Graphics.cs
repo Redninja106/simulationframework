@@ -2,8 +2,10 @@
 using SimulationFramework.Shaders;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -19,25 +21,6 @@ public static class Graphics
     private static IGraphicsProvider Provider => Application.Current?.GetComponent<IGraphicsProvider>() ?? throw Exceptions.CoreComponentNotFound();
 
     /// <summary>
-    /// Gets canvas which draws to the current frame.
-    /// </summary>
-    /// <returns></returns>
-    public static ICanvas GetFrameCanvas()
-    {
-        return Provider.GetFrameCanvas();
-    }
-
-    public static IRenderer GetRenderer()
-    {
-        return Provider.GetRenderer();
-    }
-
-    // public static IShader CreateShader(ShaderKind kind, string source)
-    // {
-    //     return Provider.CreateShader(kind, source);
-    // }
-
-    /// <summary>
     /// Loads a texture from a file.
     /// </summary>
     /// <param name="file">The path to a .PNG image file.</param>
@@ -48,6 +31,46 @@ public static class Graphics
         var fileData = File.ReadAllBytes(file);
 
         return LoadTexture(fileData, options);
+    }
+
+    public static IRenderer CreateRenderer()
+    {
+        return Provider.CreateRenderer(null);
+    }
+
+    public static IRenderer CreateRenderer(IGraphicsQueue? queue)
+    {
+        return Provider.CreateRenderer(queue);
+    }
+
+    public static IGraphicsQueue CreateDeferredQueue()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static ICanvas CreateCanvas(IGraphicsQueue? queue = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static IGeometry LoadGeometry(string path)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static IGeometry LoadGeometry(byte[] encodedBytes)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static IGeometry CreateGeometry(VertexData data)
+    {
+        throw new NotImplementedException();
+    }
+
+    public static IGeometry CreateGeometry(PrimitiveKind kind, Span<Vector2> vertices)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -137,12 +160,17 @@ public static class Graphics
         return buffer;
     }
 
-    public static void DispatchCompute<T>(T shader, int threads, IRenderer? renderer = null) where T : struct, IShader
+    public static void DispatchComputeShader(IShader? shader, int threads, IGraphicsQueue? queue = null)
     {
-        throw new NotImplementedException();
+        DispatchComputeShader(shader, threads, 1, 1, queue);
     }
 
-    public static void DispatchCompute<T>(T shader, int threadsX, int threadsY, int threadsZ, IRenderer? renderer = null) where T : struct, IShader
+    public static void DispatchComputeShader(IShader? shader, int threadsX, int threadsY, IGraphicsQueue? queue = null)
+    {
+        DispatchComputeShader(shader, threadsX, threadsY, 1, queue);
+    }
+
+    public static void DispatchComputeShader(IShader? shader, int threadsX, int threadsY, int threadsZ, IGraphicsQueue? queue = null)
     {
         throw new NotImplementedException();
     }
@@ -169,29 +197,62 @@ public static class Graphics
         _ => throw new ArgumentException(null, nameof(kind)),
     };
 
-    public static ITexture<TTo> ReinterpretTexture<TFrom, TTo>(ITexture<TFrom> texture)
-        where TFrom : unmanaged
-        where TTo : unmanaged
+    public static void CopyTexture<T>(ITexture<T> source, ITexture<T> destination, IGraphicsQueue? queue = null) where T : unmanaged
     {
         throw new NotImplementedException();
     }
 
-    public static IBuffer<TTo> ReinterpretBuffer<TFrom, TTo>(IBuffer<TFrom> buffer) 
-        where TFrom : unmanaged 
-        where TTo : unmanaged
+    public static void CopyTexture<T>(ITexture<T> source, Rectangle sourceRect, ITexture<T> destination, Rectangle destinationRect, IGraphicsQueue? queue = null) where T : unmanaged
+    {
+        int sourceWidth = (int)sourceRect.Width;
+        int sourceHeight = (int)sourceRect.Height;
+
+        int destinationWidth = (int)destinationRect.Width;
+        int destinationHeight = (int)destinationRect.Height;
+
+        if (sourceWidth != destinationWidth || sourceHeight != destinationHeight)
+            throw new ArgumentException();
+
+        throw new NotImplementedException();
+    }
+
+    public static void CopyBuffer<T>(IBuffer<T> source, IBuffer<T> destination, IGraphicsQueue? queue = null) where T : unmanaged
     {
         throw new NotImplementedException();
     }
 
-    public static void CopyTexture<T>(ITexture<T> source, ITexture<T> destination) where T : unmanaged
+    public static void CopyBuffer<T>(IBuffer<T> source, Range sourceRange, IBuffer<T> destination, Range destinationRange, IGraphicsQueue? queue = null) where T : unmanaged
+    {
+        var (_, sourceLength) = sourceRange.GetOffsetAndLength(source.Length);
+        var (_, destinationLength) = sourceRange.GetOffsetAndLength(source.Length);
+
+        if (sourceLength != destinationLength)
+            throw new ArgumentException();
+
+        throw new NotImplementedException();
+    }
+
+    public static void CopyVolume<T>(IVolume<T> source, IVolume<T> destination, IGraphicsQueue? queue = null) where T : unmanaged
     {
         throw new NotImplementedException();
     }
 
-    public static void CopyBuffer<T>(ITexture<T> source, ITexture<T> destination) where T : unmanaged
+    public static void CopyVolume<T>(IVolume<T> source, Box sourceBox, IVolume<T> destination, Box destinationBox, IGraphicsQueue? queue = null) where T : unmanaged
     {
+        int sourceWidth = (int)sourceBox.Width;
+        int sourceHeight = (int)sourceBox.Height;
+        int sourceDepth = (int)sourceBox.Depth;
+
+        int destinationWidth = (int)destinationBox.Width;
+        int destinationHeight = (int)destinationBox.Height;
+        int destinationDepth = (int)destinationBox.Depth;
+
+        if (sourceWidth != destinationWidth || sourceHeight != destinationHeight || sourceDepth != destinationHeight)
+            throw new ArgumentException();
+
         throw new NotImplementedException();
     }
+
 
     public static ITexture<Color> GetDefaultRenderTarget()
     {

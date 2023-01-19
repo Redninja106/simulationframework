@@ -91,10 +91,10 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T> where T : unman
         if (cpuData == null)
             return;
 
-        Resources.ImmediateRenderer.DeviceContext.UpdateSubresource(cpuData.AsSpan(), this.internalTextures[0], rowPitch: Width * sizeof(Color));
+        Resources.Device.ImmediateContext.UpdateSubresource(cpuData.AsSpan(), this.internalTextures[0], rowPitch: Width * sizeof(Color));
         if (this.internalTextures[1] is not null)
         {
-            Resources.ImmediateRenderer.DeviceContext.UpdateSubresource(cpuData.AsSpan(), this.internalTextures[1], rowPitch: Width * sizeof(Color));
+            Resources.Device.ImmediateContext.UpdateSubresource(cpuData.AsSpan(), this.internalTextures[1], rowPitch: Width * sizeof(Color));
         }
     }
 

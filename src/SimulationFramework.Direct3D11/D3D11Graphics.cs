@@ -18,6 +18,9 @@ public class D3D11Graphics : IGraphicsProvider
     private D3D11Texture<Color> defaultRenderTarget;
     private D3D11Texture<float> defaultDepthTarget;
     private NullCanvas frameCanvas;
+    private D3D11ImmediateQueue immediateQueue;
+
+    public IGraphicsQueue ImmediateQueue => immediateQueue;
 
     public D3D11Graphics(IntPtr hwnd)
     {
@@ -27,6 +30,8 @@ public class D3D11Graphics : IGraphicsProvider
         var swapchainDesc = resources.SwapChain.Description1;
         defaultDepthTarget = new D3D11Texture<float>(resources, swapchainDesc.Width, swapchainDesc.Height, Span<float>.Empty, ResourceOptions.None);
         frameCanvas = new NullCanvas(defaultRenderTarget);
+
+        immediateQueue = new D3D11ImmediateQueue(resources);
     }
 
     private void AfterRender(RenderMessage message)
@@ -77,11 +82,6 @@ public class D3D11Graphics : IGraphicsProvider
         throw new NotImplementedException();
     }
 
-    public IRenderer GetRenderer()
-    {
-        return resources.ImmediateRenderer;
-    }
-
     public void Initialize(Application application)
     {
         application.Dispatcher.Subscribe<RenderMessage>(AfterRender, ListenerPriority.After);
@@ -91,7 +91,6 @@ public class D3D11Graphics : IGraphicsProvider
 
     private void BeforeRender(RenderMessage message)
     {
-        resources.ImmediateRenderer.BeginFrame();
     }
 
     private void Resize(ResizeMessage message)
@@ -99,7 +98,7 @@ public class D3D11Graphics : IGraphicsProvider
         if (message.Width == 0 || message.Height == 0)
             return;
 
-        this.resources.ImmediateRenderer.DeviceContext.ClearState();
+        this.resources.Device.ImmediateContext.ClearState();
         defaultRenderTarget.Dispose();
         resources.Resize(message.Width, message.Height);
         defaultRenderTarget = new D3D11Texture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
@@ -126,6 +125,18 @@ public class D3D11Graphics : IGraphicsProvider
         return resources.Shaders.SingleOrDefault(obj => 
             obj.GetType().GenericTypeArguments.FirstOrDefault() == shaderType
             );
+    }
+
+    public IRenderer CreateRenderer(IGraphicsQueue queue)
+    {
+        queue ??= this.immediateQueue;
+
+        if (queue is not D3D11QueueBase d3dQueue)
+        {
+            throw new Exception();
+        }
+
+        return new D3D11Renderer(resources, d3dQueue);
     }
 
     record NullCanvas(ITexture<Color> Target) : ICanvas

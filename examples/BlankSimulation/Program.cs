@@ -3,7 +3,8 @@ using SimulationFramework.Drawing;
 using SimulationFramework.Shaders;
 using System.Numerics;
 
-IBuffer<Vector3> verts = null;
+IRenderer renderer = null!;
+IBuffer<Vector3> verts = null!;
 IShader vs = new VertexShader();
 IShader gs = new GeometryShader();
 IShader fs = new FragmentShader();
@@ -13,15 +14,12 @@ simulation.Run();
 
 void Initialize(AppConfig config)
 {
-    var renderer = Graphics.GetRenderer();
+    renderer = Graphics.CreateRenderer();
     verts = Graphics.CreateBuffer<Vector3>(new Vector3[]{ new(-0.5f, -0.5f, 1), new(0.0f, 0.5f, 1), new(0.5f, -0.5f, 1), });
 }
 
-
 void Render(ICanvas canvas)
 {
-    var renderer = Graphics.GetRenderer();
-
     renderer.CullMode = CullMode.None;
 
     renderer.ClearRenderTarget(Color.Black);

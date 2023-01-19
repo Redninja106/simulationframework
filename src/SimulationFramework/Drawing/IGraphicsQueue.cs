@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
 
-public interface IGeometry
+public interface IGraphicsQueue : IDisposable
 {
-    PrimitiveKind PrimitiveKind { get; }
-
-    void Update(VertexData data);
+    // event Action Completed;
+    // void WaitForCompleted(IGraphicsQueue other);
+    // void Wait();
 }

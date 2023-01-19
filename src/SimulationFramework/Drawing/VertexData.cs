@@ -1,14 +1,15 @@
-﻿using System;
+﻿using SimulationFramework.Shaders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
-
-public interface IGeometry
+public class VertexData
 {
-    PrimitiveKind PrimitiveKind { get; }
+    private VertexData()
+    {
 
-    void Update(VertexData data);
+    }
 }

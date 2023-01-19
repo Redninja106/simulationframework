@@ -54,6 +54,7 @@ internal class Basic3DSimulation : Simulation
 
     IBuffer<Vertex> vertexBuffer;
     IBuffer<uint> indexBuffer;
+    IRenderer renderer;
 
     ITexture<float> depthTarget;
 
@@ -68,6 +69,7 @@ internal class Basic3DSimulation : Simulation
         ObjLoader.Load("blender_monkey.obj", out Vertex[] verts, out uint[] inds);
 
         vertexBuffer = Graphics.CreateBuffer<Vertex>(verts);
+        renderer = Graphics.CreateRenderer();
         // indexBuffer = Graphics.CreateBuffer<uint>(inds);
 
         depthTarget = Graphics.CreateTexture<float>(1920, 1080);
@@ -129,20 +131,19 @@ internal class Basic3DSimulation : Simulation
             spin = !spin;
         }
 
-        VertexShader vertexShader = new()
-        {
-            World = Matrix4x4.CreateRotationX(xRotation) * Matrix4x4.CreateRotationY(yRotation),
-            View = Matrix4x4.CreateLookAt(Vector3.Transform(Vector3.UnitZ * MathF.Pow(1.1f, camZoom), Matrix4x4.CreateRotationX(camXRotation) * Matrix4x4.CreateRotationY(camYRotation)), Vector3.Zero, Vector3.UnitY),
-            Proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, 16f / 9f, 0.1f, 100f)
-        };
+        VertexShader vertexShader = new();
+        vertexShader.uniforms.World = Matrix4x4.CreateRotationX(xRotation) * Matrix4x4.CreateRotationY(yRotation);
+        vertexShader.uniforms.View = Matrix4x4.CreateLookAt(Vector3.Transform(Vector3.UnitZ * MathF.Pow(1.1f, camZoom), Matrix4x4.CreateRotationX(camXRotation) * Matrix4x4.CreateRotationY(camYRotation)), Vector3.Zero, Vector3.UnitY);
+        vertexShader.uniforms.Proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, 16f / 9f, 0.1f, 100f);
 
-        FragmentShader fragShader = new() { lightPosition = this.lightPosition };
+        FragmentShader fragShader = new();
+        fragShader.lightPosition = this.lightPosition;
 
-        var renderer = Graphics.GetRenderer();
-
+        renderer.RenderTarget = Graphics.GetDefaultRenderTarget();
+        renderer.DepthTarget = Graphics.GetDefaultDepthTarget();
         renderer.ClearRenderTarget(Color.FromHSV(0,0,.1f));
         renderer.ClearDepthTarget(1.0f);
-        renderer.SetViewport(new(canvas.Width, canvas.Height, 0, 0));
+        renderer.SetViewport(new(renderer.RenderTarget.Width, renderer.RenderTarget.Height, 0, 0));
         
         renderer.CullMode = CullMode.Front;
 
@@ -179,100 +180,85 @@ internal class Basic3DSimulation : Simulation
         }
     }
 
+    struct VertexShaderUniforms
+    {
+        public Matrix4x4 World;
+        public Matrix4x4 View;
+        public Matrix4x4 Proj;
+    }
+
+    struct VertexShaderOutput
+    {
+        [ShaderOutput(OutputSemantic.Position)] 
+        public Vector4 position;
+        [ShaderOutput] 
+        public Vector2 uv;
+        [ShaderOutput] 
+        public Vector3 normal;
+        [ShaderOutput] 
+        public Vector3 fragPos;
+    }
+
     struct VertexShader : IShader
     {
         [ShaderUniform]
-        public Matrix4x4 World;
-        
-        [ShaderUniform]
-        public Matrix4x4 View;
-        
-        [ShaderUniform]
-        public Matrix4x4 Proj;
+        public VertexShaderUniforms uniforms;
 
-        [ShaderInput]
-        private Vertex vertex;
+        [ShaderInput] 
+        Vertex vertex;
 
-        [ShaderOutput]
-        private Vector2 uv;
-
-        [ShaderOutput(OutputSemantic.Position)]
-        private Vector4 position;
-
-        [ShaderOutput]
-        private Vector3 normal;
-
-        [ShaderOutput]
-        private Vector3 fragPos;
+        VertexShaderOutput output;
 
         public void Main()
         {
-            position = new Vector4(vertex.position, 1);
+            output.position = new Vector4(vertex.position, 1);
 
-            position = Vector4.Transform(position, World);
-            position = Vector4.Transform(position, View);
-            position = Vector4.Transform(position, Proj);
+            output.position = Vector4.Transform(vertex.position, uniforms.World);
+            output.position = Vector4.Transform(vertex.position, uniforms.View);
+            output.position = Vector4.Transform(vertex.position, uniforms.Proj);
 
-            uv = vertex.uv;
+            output.uv = vertex.uv;
 
-            normal = Vector3.TransformNormal(vertex.normal, World);
+            output.normal = Vector3.TransformNormal(vertex.normal, uniforms.World);
 
-            fragPos = Vector3.Transform(vertex.position, World);
+            output.fragPos = Vector3.Transform(vertex.position, uniforms.World);
         }
+    }
+
+    struct FragmentShaderInput
+    {
+
+        [ShaderInput(InputSemantic.Position)]
+        public Vector4 position;
+        [ShaderInput]
+        public Vector2 uv;
+        [ShaderInput]
+        public Vector3 normal;
+        [ShaderInput]
+        public Vector3 fragPos;
     }
 
     struct FragmentShader : IShader
     {
-        [ShaderInput]
-        private Vector3 normal;
-
         [ShaderOutput(OutputSemantic.Color)]
         private Vector4 color;
 
-        [ShaderInput(InputSemantic.Position)]
-        private Vector4 position;
+        private FragmentShaderInput input;
 
-        [ShaderInput]
-        private Vector2 uv;
-
-        [ShaderInput]
-        private Vector3 fragPos;
-
-        [ShaderUniform]
+        [ShaderUniform] 
         public Vector3 lightPosition;
-
-        [ShaderUniform]
+        [ShaderUniform] 
         public Vector3 cameraPosition;
-
-        [ShaderUniform()]
-        public Vector2 pad;
-        //public ITexture Texture;
 
         public void Main()
         {
-            Vector3 lightDirection = Vector3.Normalize(fragPos - lightPosition);
+            Vector3 lightDirection = Vector3.Normalize(input.fragPos - lightPosition);
+            
+            var brightness = Vector3.Dot(input.normal, lightDirection);
 
-            Vector3 viewDir = (cameraPosition - fragPos);
+            brightness = brightness * .75f + .25f;
 
-            Vector3 reflectDir = Vector3.Reflect(new Vector3(0,0,0)-lightDirection, normal);
-
-            var spec = MathF.Max(Vector3.Dot(viewDir, reflectDir), 0.0f);
-
-            spec *= spec;
-            spec *= spec;
-            spec *= spec;
-            spec *= spec;
-            spec *= spec;
-            spec *= spec;
-            spec *= spec;
-            spec *= spec;
-            spec *= spec;
-
-            var b = Vector3.Dot(normal, lightDirection);
-            b = MathF.Max(b, 0);
-            b += spec;  
-            var c = b * .75f + .25f;
-            color = new(c, 0, 0, 1);
+            color = new(brightness, brightness, brightness, 1);
         }
     }
 

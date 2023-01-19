@@ -94,7 +94,7 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
             }
             else
             {
-                Resources.ImmediateRenderer.DeviceContext.UpdateSubresource(cbufferData, cbuffer);
+                Resources.Device.ImmediateContext.UpdateSubresource(cbufferData, cbuffer);
             }
         }
     }
