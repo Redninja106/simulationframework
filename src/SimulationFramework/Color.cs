@@ -139,13 +139,13 @@ public readonly partial struct Color : IEquatable<Color>
     /// Converts a <see cref="Color"/> to a <see cref="System.Drawing.Color"/>.
     /// </summary>
     /// <param name="value">The color to convert.</param>
-    public static implicit operator System.Drawing.Color(Color value) => System.Drawing.Color.FromArgb(value.A, value.R, value.G, value.B);
+    public static explicit operator System.Drawing.Color(Color value) => System.Drawing.Color.FromArgb(value.A, value.R, value.G, value.B);
 
     /// <summary>
     /// Converts a <see cref="System.Drawing.Color"/> to a <see cref="Color"/>.
     /// </summary>
     /// <param name="value">The color to convert.</param>
-    public static implicit operator Color(System.Drawing.Color value) => new(value.R, value.G, value.B, value.A);
+    public static explicit operator Color(System.Drawing.Color value) => new(value.R, value.G, value.B, value.A);
 
     /// <summary>
     /// Converts a <see cref="Color"/> to a <see langword="uint"/>.
@@ -215,7 +215,7 @@ public readonly partial struct Color : IEquatable<Color>
     /// Returns this <see cref="Color"/> as a <see cref="Vector3"/>, with its R, G, and B values as X, Y, and Z, respectively.
     /// </summary>
     /// <returns>The converted <see cref="Vector3"/>.</returns>
-    public Vector3 ToVector3()
+    public Vector3 AsVector3()
     {
         return new Vector3(this.R / 255f, this.G / 255f, this.B / 255f);
     }
@@ -224,9 +224,9 @@ public readonly partial struct Color : IEquatable<Color>
     /// Converts this <see cref="Color"/> to <see cref="Vector4"/>, with its R, G, B, and A values as X, Y, Z, and W, respectively.
     /// </summary>
     /// <returns>The converted <see cref="Vector4"/>.</returns>
-    public Vector4 ToVector4()
+    public Vector4 AsVector4()
     {
-        return new Vector4(ToVector3(), this.A / 255f);
+        return new Vector4(AsVector3(), this.A / 255f);
     }
 
     /// <summary>
@@ -240,7 +240,7 @@ public readonly partial struct Color : IEquatable<Color>
         float min, max, delta;
         float hue, sat, value;
 
-        var (r, g, b) = this.ToVector3();
+        var (r, g, b) = this.AsVector3();
 
 
         min = MathF.Min(r, MathF.Min(g, b));
@@ -304,9 +304,29 @@ public readonly partial struct Color : IEquatable<Color>
     }
 
     /// <summary>
+    /// Creates a color given a hue, saturation, and value.
+    /// </summary>
+    /// <param name="channels">The channels of the color, where X is hue, Y is saturation, and Z is value.</param>
+    /// <returns>The created color.</returns>
+    public static Color FromHSV(Vector3 channels)
+    {
+        return FromHSV(channels.X, channels.Y, channels.Z, 1.0f);
+    }
+
+    /// <summary>
     /// Creates a color given a hue, saturation, value, and alpha.
     /// </summary>
-    /// <param name="hue">The hue of the color, in degress. This must be between 0 and 360.</param>
+    /// <param name="channels">The channels of the color, where X is hue, Y is saturation, Z is value, and W is alpha.</param>
+    /// <returns>The created color.</returns>
+    public static Color FromHSV(Vector4 channels)
+    {
+        return FromHSV(channels.X, channels.Y, channels.Z, channels.W);
+    }
+
+    /// <summary>
+    /// Creates a color given a hue, saturation, value, and alpha.
+    /// </summary>
+    /// <param name="hue">The hue of the color. This must be between 0 and 1.</param>
     /// <param name="saturation">The saturation of the color. This must be between 0 and 1.</param>
     /// <param name="value">The value (brightness) of the color. This must be between 0 and 1.</param>
     /// <param name="alpha">The alpha  of the color. This must be between 0 and 1.</param>
@@ -438,6 +458,6 @@ public readonly partial struct Color : IEquatable<Color>
     /// <returns>The converted <see cref="ColorF"/>.</returns>
     public ColorF ToColorF()
     {
-        return new(ToVector4());
+        return new(AsVector4());
     }
 }

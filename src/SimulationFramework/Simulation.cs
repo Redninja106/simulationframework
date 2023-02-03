@@ -194,7 +194,7 @@ public abstract class Simulation
     }
 
     /// <summary>
-    /// Creates a simulation from the provided delegates.
+    /// Creates a simulation from the provided callbacks.
     /// </summary>
     /// <param name="initialize">The delegate to call when simulation initializes.</param>
     /// <param name="render">The delegate to call when simulation renders.</param>
@@ -214,6 +214,30 @@ public abstract class Simulation
     public static Simulation Create(Action<AppConfig> initialize, Action<ICanvas> render, Action? uninitialize)
     {
         return new ActionSimulation(initialize, render, uninitialize);
+    }
+
+    /// <summary>
+    /// Creates and runs a simulation using the provided callbacks.
+    /// </summary>
+    /// <param name="initialize">The delegate to call when simulation initializes.</param>
+    /// <param name="render">The delegate to call when simulation renders.</param>
+    /// <returns>A simulation which uses the provided delegates.</returns>
+    public static void CreateAndRun(Action<AppConfig> initialize, Action<ICanvas> render)
+    {
+        CreateAndRun(initialize, render, null);
+    }
+
+    /// <summary>
+    /// Creates and runs a simulation using the provided callbacks.
+    /// </summary>
+    /// <param name="initialize">The delegate to call when simulation initializes.</param>
+    /// <param name="render">The delegate to call when simulation renders.</param>
+    /// <param name="uninitialize">The delegate to call when simulation uninitializes.</param>
+    /// <returns>A simulation which uses the provided delegates.</returns>
+    public static void CreateAndRun(Action<AppConfig> initialize, Action<ICanvas> render, Action? uninitialize)
+    {
+        var simulation = Create(initialize, render, uninitialize);
+        simulation.Run();
     }
 
     private class ActionSimulation : Simulation

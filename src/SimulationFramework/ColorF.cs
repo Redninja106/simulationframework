@@ -65,7 +65,7 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// Creates a new <see cref="ColorF"/>.
     /// </summary>
     /// <param name="color">The values of the color.</param>
-    public ColorF(Color color) : this(color.ToVector4())
+    public ColorF(Color color) : this(color.AsVector4())
     {
     }
 
@@ -125,8 +125,8 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// <returns>The interpolated color.</returns>
     public static ColorF Lerp(ColorF color1, ColorF color2, float t)
     {
-        var vec1 = color1.ToVector4();
-        var vec2 = color2.ToVector4();
+        var vec1 = color1.AsVector4();
+        var vec2 = color2.AsVector4();
 
         var result = Vector4.Lerp(vec1, vec2, t);
         return new(result);
@@ -152,7 +152,7 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// Returns this <see cref="Color"/> as a <see cref="Vector3"/>, with its R, G, and B values as X, Y, and Z, respectively.
     /// </summary>
     /// <returns>The converted <see cref="Vector3"/>.</returns>
-    public Vector3 ToVector3()
+    public Vector3 AsVector3()
     {
         return new(this.R, this.G, this.B);
     }
@@ -161,9 +161,9 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// Converts this <see cref="Color"/> to <see cref="Vector4"/>, with its R, G, B, and A values as X, Y, Z, and W, respectively.
     /// </summary>
     /// <returns>The converted <see cref="Vector4"/>.</returns>
-    public Vector4 ToVector4()
+    public Vector4 AsVector4()
     {
-        return new(ToVector3(), this.A);
+        return new(AsVector3(), this.A);
     }
 
     /// <summary>
@@ -172,7 +172,7 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// <returns>The converted <see cref="Color"/>.</returns>
     public Color ToColor()
     {
-        return new(ToVector4());
+        return new(AsVector4());
     }
 
     /// <summary>
@@ -190,7 +190,7 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// <summary>
     /// Creates a color given a hue, saturation, value, and alpha.
     /// </summary>
-    /// <param name="hue">The hue of the color, in degress. This must be between 0 and 360.</param>
+    /// <param name="hue">The hue of the color. This must be between 0 and 1.</param>
     /// <param name="saturation">The saturation of the color. This must be between 0 and 1.</param>
     /// <param name="value">The value (brightness) of the color. This must be between 0 and 1.</param>
     /// <param name="alpha">The alpha  of the color. This must be between 0 and 1.</param>
@@ -226,7 +226,7 @@ public readonly partial struct ColorF : IEquatable<ColorF>
         float min, max, delta;
         float hue, sat, value;
 
-        var (r, g, b) = this.ToVector3();
+        var (r, g, b) = this.AsVector3();
 
 
         min = MathF.Min(r, MathF.Min(g, b));
