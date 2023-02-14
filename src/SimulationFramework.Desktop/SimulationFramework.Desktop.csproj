@@ -9,7 +9,7 @@
     <Description>The desktop environment for SimulationFramework.</Description>
     <PackageIcon>logo-128x128.png</PackageIcon>
     <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
-    <Version>0.1.6</Version>
+    <Version>0.1.7</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Ryan Andersen</Authors>
     <Company />
