@@ -30,6 +30,7 @@ public interface ICanvas : IDisposable
     /// </summary>
     CanvasState State { get; }
 
+
     /// <summary>
     /// Clears the canvas.
     /// </summary>
@@ -40,6 +41,14 @@ public interface ICanvas : IDisposable
     /// Waits for all drawing commands to finish executing.
     /// </summary>
     void Flush();
+
+    /// <summary>
+    /// Sets whether the canvas should use antialiasing when rendering or not.
+    /// </summary>
+    sealed void Antialias(bool antialias)
+    {
+        State.UpdateAntialias(antialias);
+    }
 
     /// <summary>
     /// Configures the canvas to fill shapes with the provided color.

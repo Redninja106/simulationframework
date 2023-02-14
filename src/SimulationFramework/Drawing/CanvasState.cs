@@ -87,6 +87,11 @@ public abstract class CanvasState
     public string? FontName { get; private set; }
 
     /// <summary>
+    /// If the canvas should render using antialiasing.
+    /// </summary>
+    public bool Antialias { get; private set; }
+
+    /// <summary>
     /// Initializes this <see cref="CanvasState"/> instance, optionally based off another instance.
     /// </summary>
     /// <param name="other">The <see cref="CanvasState"/> instance which this state should be initialized to match, or null if this state should be initialized to its default values.</param>
@@ -109,6 +114,8 @@ public abstract class CanvasState
 
             UpdateFont("Verdana");
             UpdateFontStyle(16, FontStyle.Normal);
+
+            UpdateAntialias(true);
         }
         else
         {
@@ -134,6 +141,8 @@ public abstract class CanvasState
 
         UpdateFont(other.FontName);
         UpdateFontStyle(other.FontSize, other.FontStyle);
+
+        UpdateAntialias(other.Antialias);
     }
 
     internal protected void Reapply()
@@ -193,5 +202,10 @@ public abstract class CanvasState
     internal protected virtual void UpdateFont(string? name)
     {
         FontName = name;
+    }
+
+    internal protected virtual void UpdateAntialias(bool antialias)
+    {
+        Antialias = antialias;
     }
 }

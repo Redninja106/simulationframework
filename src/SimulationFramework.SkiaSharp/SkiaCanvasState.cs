@@ -33,7 +33,6 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
         if (other is null)
         {
             this.paint = new SKPaint();
-            this.paint.IsAntialias = true;
             this.paint.FilterQuality = SKFilterQuality.High;
         }
         else if (other != this)
@@ -155,5 +154,11 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
         {
             paint.Typeface = this.typeface = FontTypefaceCache.GetTypeface(name, style);
         }
+    }
+
+    protected override void UpdateAntialias(bool antialias)
+    {
+        paint.IsAntialias = antialias;
+        base.UpdateAntialias(antialias);
     }
 }

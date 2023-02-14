@@ -21,7 +21,7 @@ public interface ITexture : IDisposable
     /// The height of the texture, in pixels.
     /// </summary>
     int Height { get; }
-
+     
     /// <summary>
     /// A span of colors making up texture's data
     /// <para>
