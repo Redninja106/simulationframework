@@ -38,7 +38,6 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
         else if (other != this)
         {
             this.paint = ((SkiaCanvasState)other).paint.Clone();
-            this.fillTextureShader = GradientShaderCache.GetShader(other.Gradient);
             this.gradientShader = GradientShaderCache.GetShader(other.Gradient);
             this.typeface = FontTypefaceCache.GetTypeface(other.FontName, other.FontStyle);
         }
@@ -53,6 +52,7 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
 
     public void Dispose()
     {
+        fillTextureShader?.Dispose();
         paint.Dispose();
     }
 
