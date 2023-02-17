@@ -13,6 +13,7 @@ namespace SimulationFramework.Shaders.Compiler.Expressions;
 
 internal class ExpressionBuilder
 {
+    private MethodDisassembly Disassembly { get; set; }
     private InstructionStream InstructionStream { get; set; }
     private Stack<Expression> Expressions { get; set; }
     private ParameterExpression[] Arguments { get; set; }
@@ -21,14 +22,14 @@ internal class ExpressionBuilder
     private Type ReturnType { get; set; }
     private bool IsConstructor { get; set; }
 
-    private ExpressionBuilder()
+    private ExpressionBuilder(MethodDisassembly disassembly)
     {
-
+        this.Disassembly = disassembly;
     }
 
     public static BlockExpression BuildExpression(MethodDisassembly disassembly, out ParameterExpression[] Parameters)
     {
-        ExpressionBuilder builder = new();
+        ExpressionBuilder builder = new(disassembly);
 
         builder.IsConstructor = disassembly.Method is ConstructorInfo;
 
@@ -107,9 +108,14 @@ internal class ExpressionBuilder
 
         var right = Expressions.Pop();
         var left = Expressions.Pop();
-
-        Expressions.Push(Expression.MakeBinary(exprType.Value, left, right));
-
+        try
+        {
+            Expressions.Push(Expression.MakeBinary(exprType.Value, left, right));
+        }
+        catch (InvalidOperationException ex)
+        {
+            Expressions.Push(Expression.MakeBinary(exprType.Value, left, Expression.Convert(right, typeof(uint))));
+        }
         return true;
 
         static bool IsBinaryExpression(Instruction instruction, [NotNullWhen(true)] out ExpressionType? type)
@@ -120,6 +126,11 @@ internal class ExpressionBuilder
                 OpCode.Sub => ExpressionType.Subtract,
                 OpCode.Mul => ExpressionType.Multiply,
                 OpCode.Div => ExpressionType.Divide,
+                OpCode.And => ExpressionType.And,
+                OpCode.Or => ExpressionType.Or,
+                OpCode.Shr => ExpressionType.RightShift,
+                OpCode.Shr_Un => ExpressionType.RightShift,
+                OpCode.Shl => ExpressionType.LeftShift,
                 _ => null
             };
 
@@ -168,6 +179,7 @@ internal class ExpressionBuilder
             exprType = instruction.OpCode switch
             {
                 OpCode.Neg => ExpressionType.Negate,
+                OpCode.Not => ExpressionType.Not,
                 _ => null
             };
 
@@ -191,6 +203,7 @@ internal class ExpressionBuilder
                 OpCode.Conv_U8 => typeof(ulong),
                 OpCode.Conv_R4 => typeof(float),
                 OpCode.Conv_R8 => typeof(double),
+                OpCode.Conv_R_Un => typeof(float),
                 _ => null
             };
 
@@ -301,6 +314,7 @@ internal class ExpressionBuilder
                 OpCode.Ldc_I4_6 => 6,
                 OpCode.Ldc_I4_7 => 7,
                 OpCode.Ldc_I4_8 => 8,
+                OpCode.Ldstr => ((MetadataToken?)instruction?.Argument)?.Resolve() as string,
                 _ => null
             };
 

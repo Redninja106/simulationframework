@@ -17,9 +17,12 @@ public sealed class ImGuiComponent : IApplicationComponent
     private IBuffer<uint>? indexBuffer;
     private ITexture<Color>? fontTexture;
     private List<int> keys = new List<int>();
+    private IRenderer renderer;
 
     public void Initialize(Application application)
     {
+        renderer = Graphics.CreateRenderer();
+
         application.Dispatcher.Subscribe<RenderMessage>(BeforeRender, ListenerPriority.Before);
         application.Dispatcher.Subscribe<RenderMessage>(AfterRender, ListenerPriority.Low);
 
@@ -30,15 +33,16 @@ public sealed class ImGuiComponent : IApplicationComponent
 
         io.Fonts.AddFontDefault();
         io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
+
+        RecreateFontDeviceTexture();
     }
 
     public void BeforeRender(RenderMessage message)
     {
         var io = ImGui.GetIO();
-        io.DisplaySize = new(message.Canvas.Width, message.Canvas.Height);
+        io.DisplaySize = new(Graphics.GetDefaultRenderTarget().Width, Graphics.GetDefaultRenderTarget().Width);
         io.DeltaTime = Time.DeltaTime;
         UpdateInput();
-        RecreateFontDeviceTexture();
         ImGui.NewFrame();
     }
     private unsafe void RecreateFontDeviceTexture() 
@@ -114,13 +118,14 @@ public sealed class ImGuiComponent : IApplicationComponent
     {
         ImGui.Render();
 
-        RenderDrawData(message.Renderer, ImGui.GetDrawData());
+        RenderDrawData(ImGui.GetDrawData());
     }
 
-    public void RenderDrawData(IRenderer renderer, ImDrawDataPtr drawData)
+    public void RenderDrawData(ImDrawDataPtr drawData)
     {
         renderer.PushState();
 
+        renderer.RenderTarget = Graphics.GetDefaultRenderTarget();
         renderer.SetViewport(new(0, 0, renderer.RenderTarget.Width, renderer.RenderTarget.Height));
 
         if (drawData.TotalVtxCount > 0)
@@ -190,6 +195,9 @@ public sealed class ImGuiComponent : IApplicationComponent
 
         int vertexOffset = 0, indexOffset = 0;
 
+        renderer.SetIndexBuffer(indexBuffer);
+        renderer.SetVertexBuffer(vertexBuffer);
+
         for (int i = 0; i < drawData.CmdListsCount; i++)
         {
             var commandList = drawData.CmdListsRange[i];
@@ -206,15 +214,17 @@ public sealed class ImGuiComponent : IApplicationComponent
 
                 ImGuiFragmentShader fragmentShader = new()
                 {
-                    texture = loadedTextures[command.TextureId.ToInt32()]
+                    //texture = loadedTextures[command.TextureId.ToInt32()]
                 };
 
                 renderer.SetFragmentShader(fragmentShader);
 
-                renderer.SetIndexBuffer(indexBuffer, indexOffset + (int)command.IdxOffset);
-                renderer.SetVertexBuffer(vertexBuffer, vertexOffset + (int)command.VtxOffset);
 
-                renderer.DrawPrimitivesIndexed(PrimitiveKind.Triangles, (int)command.ElemCount / 3);
+                renderer.DrawIndexedPrimitives(
+                    PrimitiveKind.Triangles, 
+                    (int)command.ElemCount, 
+                    indexOffset + (int)command.IdxOffset,
+                    vertexOffset + (int)command.VtxOffset);
             }
 
             vertexOffset += commandList.VtxBuffer.Size;

@@ -37,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basic3D", "examples\Basic3D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Tests", "tests\SimulationFramework.Tests\SimulationFramework.Tests.csproj", "{6EEFBE34-3DC2-4513-8A0D-4FAF2DB9B509}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.ImGuiNET", "src\SimulationFramework.ImGuiNET\SimulationFramework.ImGuiNET.csproj", "{2D16A2B5-214B-4DD4-913D-993F25BB4CE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.ImGuiNET", "src\SimulationFramework.ImGuiNET\SimulationFramework.ImGuiNET.csproj", "{2D16A2B5-214B-4DD4-913D-993F25BB4CE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,6 +102,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{813D5E58-CE77-4969-B74A-A724228D8F73} = {70E789B1-29FB-421E-A968-1ED75F680090}
 		{D5CABA70-154E-4369-A79A-57D7E341B8A7} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 		{48F547C6-E87D-48F8-B9D2-9E48CC44C364} = {93BAFE7A-2079-49AC-96EC-0214CE007265}
 		{0E53B18E-B1F8-4571-A8A9-CEC7300F5BE3} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}

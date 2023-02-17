@@ -21,7 +21,9 @@ internal class DependencyResolver : CompilerRule
         typeof(float),
         typeof(int),
         typeof(uint),
+        typeof(byte),
         typeof(void),
+        typeof(string), // for inline shader source & printfs
         typeof(Vector2),
         typeof(Vector3),
         typeof(Vector4),
@@ -66,6 +68,11 @@ internal class DependencyResolver : CompilerRule
     {
         foreach (var field in compiledStruct.Fields)
         {
+            if (field.FieldType == compiledStruct.StructType)
+            {
+                throw new Exception();
+            }
+
             RequireType(context, field.FieldType);
         }
 

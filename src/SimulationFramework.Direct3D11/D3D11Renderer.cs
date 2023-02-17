@@ -81,8 +81,6 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     private IShader geometryShader;
     private IShader fragmentShader;
 
-    private int vertexBufferOffset, indexBufferOffset, instanceBufferOffset;
-
     private CullMode cullMode;
     private bool wireframe;
 
@@ -120,20 +118,6 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         depthStencilManager.PreDraw(this.CurrentQueue.DeviceContext);
     }
 
-    public void DrawPrimitivesIndexed(PrimitiveKind kind, int count)
-    {
-        PreDraw(kind);
-
-        CurrentQueue.DeviceContext.DrawIndexed(kind.GetVertexCount(count), this.indexBufferOffset, this.vertexBufferOffset);
-    }
-
-    public void DrawPrimitives(PrimitiveKind kind, int count)
-    {
-        PreDraw(kind);
-
-        CurrentQueue.DeviceContext.Draw(kind.GetVertexCount(count), this.vertexBufferOffset);
-    }
-
     private void SetRenderTarget(ITexture<Color> renderTarget)
     {
         if (renderTarget is not D3D11Texture<Color> d3dTexture)
@@ -150,10 +134,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
     public void SetVertexBuffer<T>(IBuffer<T> vertexBuffer, int offset = 0) where T : unmanaged
     {
-        if (vertexBuffer is not D3D11Buffer<T> d3dBuffer)
-            throw new ArgumentException(null, nameof(vertexBuffer));
-
-        CurrentQueue.DeviceContext.IASetVertexBuffer(0, d3dBuffer.GetInternalbuffer(BufferUsage.VertexBuffer), d3dBuffer.Stride);
+       
     }
 
     public void SetViewport(Rectangle viewport)
@@ -174,12 +155,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
     public void SetIndexBuffer(IBuffer<uint> indexBuffer, int offset)
     {
-        if (indexBuffer is not D3D11Buffer<uint> d3dBuffer)
-            throw new();
-
-        this.indexBufferOffset = offset;
-
-        CurrentQueue.DeviceContext.IASetIndexBuffer(d3dBuffer.GetInternalbuffer(BufferUsage.IndexBuffer), Vortice.DXGI.Format.R32_UInt, 0);
+        
     }
 
     public void Clip(Rectangle? rectangle)
@@ -351,6 +327,61 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     }
 
     public void Submit(IGraphicsQueue deferredQueue)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetVertexBuffer<T>(IBuffer<T> vertexBuffer) where T : unmanaged
+    {
+        if (vertexBuffer is not D3D11Buffer<T> d3dBuffer)
+            throw new ArgumentException(null, nameof(vertexBuffer));
+
+        CurrentQueue.DeviceContext.IASetVertexBuffer(0, d3dBuffer.GetInternalbuffer(BufferUsage.VertexBuffer), d3dBuffer.Stride);
+    }
+
+    public void SetInstanceBuffer<T>(IBuffer<T> instanceBuffer) where T : unmanaged
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetIndexBuffer(IBuffer<uint> indexBuffer)
+    {
+        if (indexBuffer is not D3D11Buffer<uint> d3dBuffer)
+            throw new();
+
+        CurrentQueue.DeviceContext.IASetIndexBuffer(d3dBuffer.GetInternalbuffer(BufferUsage.IndexBuffer), Vortice.DXGI.Format.R32_UInt, 0);
+    }
+
+    public void DrawPrimitives(PrimitiveKind kind, int vertexCount, int vertexOffset = 0)
+    {
+        PreDraw(kind);
+
+        CurrentQueue.DeviceContext.Draw(vertexCount, vertexOffset);
+    }
+
+    public void DrawPrimitives(PrimitiveKind kind, int vertexCount, int instanceCount, int vertexOffset = 0, int instanceOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawPrimitives(PrimitiveKind kind, IBuffer<DrawCommand> commands, int commandOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawIndexedPrimitives(PrimitiveKind kind, int indexCount, int indexOffset = 0, int vertexOffset = 0)
+    {
+        PreDraw(kind);
+
+        CurrentQueue.DeviceContext.DrawIndexed(indexCount, indexOffset, vertexOffset);
+    }
+
+    public void DrawIndexedPrimitives(PrimitiveKind kind, int indexCount, int instanceCount, int indexOffset = 0, int instanceOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawIndexedPrimitives(PrimitiveKind kind, IBuffer<IndexedDrawCommand> commands, int commandOffset = 0)
     {
         throw new NotImplementedException();
     }

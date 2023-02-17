@@ -90,13 +90,19 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
         {
             if (cbuffer is null)
             {
-                cbuffer = Resources.Device.CreateBuffer(BindFlags.ConstantBuffer, cbufferData.AsSpan());
+                cbuffer = Resources.Device.CreateBuffer(BindFlags.ConstantBuffer, cbufferData.AsSpan(), sizeInBytes: CeilTo16(cbufferData.Length));
             }
             else
             {
                 Resources.Device.ImmediateContext.UpdateSubresource(cbufferData, cbuffer);
             }
         }
+    }
+
+    static int CeilTo16(int value)
+    {
+        int remainder = value % 16;
+        return remainder is 0 ? value : value + (16 - remainder);
     }
 
     public virtual void Apply(ID3D11DeviceContext context)

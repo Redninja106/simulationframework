@@ -77,6 +77,8 @@ internal class Basic3DSimulation : Simulation
 
     public override void OnRender(ICanvas canvas)
     {
+        ImGuiNET.ImGui.ShowDemoWindow();
+
         if (Mouse.IsButtonDown(MouseButton.Right))
         {
             camYRotation += Mouse.DeltaPosition.X * 0.01f;
@@ -153,8 +155,7 @@ internal class Basic3DSimulation : Simulation
         renderer.SetVertexShader(vertexShader);
         renderer.SetFragmentShader(fragShader);
 
-        var primitiveCount = Graphics.GetPrimitiveCount(PrimitiveKind.Triangles, this.vertexBuffer.Length);
-        renderer.DrawPrimitives(PrimitiveKind.Triangles, primitiveCount);
+        renderer.DrawPrimitives(PrimitiveKind.Triangles, vertexBuffer.Length);
     }
 
     struct Vertex
@@ -189,14 +190,6 @@ internal class Basic3DSimulation : Simulation
 
     struct VertexShaderOutput
     {
-        [ShaderOutput(OutputSemantic.Position)] 
-        public Vector4 position;
-        [ShaderOutput] 
-        public Vector2 uv;
-        [ShaderOutput] 
-        public Vector3 normal;
-        [ShaderOutput] 
-        public Vector3 fragPos;
     }
 
     struct VertexShader : IShader
@@ -207,27 +200,42 @@ internal class Basic3DSimulation : Simulation
         [ShaderInput] 
         Vertex vertex;
 
-        VertexShaderOutput output;
+        [ShaderOutput(OutputSemantic.Position)]
+        public Vector4 position;
+        [ShaderOutput]
+        public Vector2 uv;
+        [ShaderOutput]
+        public Vector3 normal;
+        [ShaderOutput]
+        public Vector3 fragPos;
 
         public void Main()
         {
-            output.position = new Vector4(vertex.position, 1);
+            position = new Vector4(vertex.position, 1);
 
-            output.position = Vector4.Transform(vertex.position, uniforms.World);
-            output.position = Vector4.Transform(vertex.position, uniforms.View);
-            output.position = Vector4.Transform(vertex.position, uniforms.Proj);
+            position = Vector4.Transform(position, uniforms.World);
+            position = Vector4.Transform(position, uniforms.View);
+            position = Vector4.Transform(position, uniforms.Proj);
 
-            output.uv = vertex.uv;
+            /*ShaderIntrinsics.Hlsl(@"
+    // __output.position = float4(__input.vertex.position, 1);
+    __output.position = __input.vertex.position * uniforms.World;
+    __output.position = __input.vertex.position * uniforms.View;
+    __output.position = __input.vertex.position * uniforms.Proj;
 
-            output.normal = Vector3.TransformNormal(vertex.normal, uniforms.World);
+");
+            */
+            uv = vertex.uv;
 
-            output.fragPos = Vector3.Transform(vertex.position, uniforms.World);
+            normal = Vector3.TransformNormal(vertex.normal, uniforms.World);
+
+            Vector4 fragPos = Vector4.Transform(vertex.position, uniforms.World);
+            this.fragPos = new(fragPos.X, fragPos.Y, fragPos.Z);
         }
     }
 
     struct FragmentShaderInput
     {
-
         [ShaderInput(InputSemantic.Position)]
         public Vector4 position;
         [ShaderInput]
@@ -243,7 +251,16 @@ internal class Basic3DSimulation : Simulation
         [ShaderOutput(OutputSemantic.Color)]
         private Vector4 color;
 
-        private FragmentShaderInput input;
+
+        [ShaderInput(InputSemantic.Position)]
+        public Vector4 position;
+        [ShaderInput]
+        public Vector2 uv;
+        [ShaderInput]
+        public Vector3 normal;
+        [ShaderInput]
+        public Vector3 fragPos;
+
 
         [ShaderUniform] 
         public Vector3 lightPosition;
@@ -252,11 +269,15 @@ internal class Basic3DSimulation : Simulation
 
         public void Main()
         {
-            Vector3 lightDirection = Vector3.Normalize(input.fragPos - lightPosition);
-            
-            var brightness = Vector3.Dot(input.normal, lightDirection);
+            ShaderIntrinsics.Hlsl(@"
+// hello world
+");
 
-            brightness = brightness * .75f + .25f;
+            Vector3 lightDirection = Vector3.Normalize(fragPos - lightPosition);
+
+            var brightness = MathF.Max(0, Vector3.Dot(normal, lightDirection));
+
+            brightness += .25f;
 
             color = new(brightness, brightness, brightness, 1);
         }

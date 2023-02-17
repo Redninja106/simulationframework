@@ -23,7 +23,7 @@ internal struct ImGuiVertexShader : IShader
     Vector2 uv;
 
     [ShaderInput]
-    Color color;
+    uint color;
 
     [ShaderOutput]
     ColorF outColor;
@@ -37,7 +37,16 @@ internal struct ImGuiVertexShader : IShader
     public void Main()
     {
         outPosition = Vector4.Transform(new Vector4(position, 0, 1), ProjectionMatrix);
-        outColor = color.ToColorF();
+        ShaderIntrinsics.Hlsl(@"
+        __output.outColor.b = ((__input.color & 0xFF000000) >> 24) / 255;
+        __output.outColor.g = ((__input.color & 0x00FF0000) >> 16) / 255;
+        __output.outColor.r = ((__input.color & 0x0000FF00) >> 8) / 255;
+        __output.outColor.a = ((__input.color & 0x000000FF) >> 0) / 255;
+"); 
+        //outColor.R = ((color & 0xFF000000) >> 24) / 255f;
+        //outColor.G = ((color & 0x00FF0000) >> 16) / 255f;
+        //outColor.B = ((color & 0x0000FF00) >> 8) / 255f;
+        //outColor.A = ((color & 0x000000FF) >> 0) / 255f;
         outUV = uv;
     }
 }

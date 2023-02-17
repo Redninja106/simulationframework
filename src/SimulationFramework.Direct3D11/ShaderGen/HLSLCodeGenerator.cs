@@ -20,6 +20,7 @@ public class HLSLCodeGenerator : CodeGenerator
         [typeof(void)] = "void",
         [typeof(float)] = "float",
         [typeof(uint)] = "uint",
+        [typeof(byte)] = "uint",
         [typeof(int)] = "int",
         [typeof(Vector2)] = "float2",
         [typeof(Vector3)] = "float3",
@@ -49,13 +50,20 @@ public class HLSLCodeGenerator : CodeGenerator
     {
         [typeof(Vector2).GetField(nameof(Vector2.X))] = "x",
         [typeof(Vector2).GetField(nameof(Vector2.Y))] = "y",
+
         [typeof(Vector3).GetField(nameof(Vector3.X))] = "x",
         [typeof(Vector3).GetField(nameof(Vector3.Y))] = "y",
         [typeof(Vector3).GetField(nameof(Vector3.Z))] = "z",
+
         [typeof(Vector4).GetField(nameof(Vector4.X))] = "x",
         [typeof(Vector4).GetField(nameof(Vector4.Y))] = "y",
         [typeof(Vector4).GetField(nameof(Vector4.Z))] = "z",
         [typeof(Vector4).GetField(nameof(Vector4.W))] = "w",
+
+        [GetBackingField(typeof(ColorF).GetProperty(nameof(ColorF.R)))] = "r",
+        [GetBackingField(typeof(ColorF).GetProperty(nameof(ColorF.G)))] = "g",
+        [GetBackingField(typeof(ColorF).GetProperty(nameof(ColorF.B)))] = "b",
+        [GetBackingField(typeof(ColorF).GetProperty(nameof(ColorF.A)))] = "a",
 
         //[typeof(Matrix4x4).GetField(nameof(Matrix4x4.M11))] = "_11",
         //[typeof(Matrix4x4).GetField(nameof(Matrix4x4.M12))] = "_12",
@@ -78,6 +86,11 @@ public class HLSLCodeGenerator : CodeGenerator
         //[typeof(Matrix4x4).GetField(nameof(Matrix4x4.M44))] = "_44",
 
     };
+
+    private static FieldInfo GetBackingField(PropertyInfo property)
+    {
+        return property.DeclaringType.GetField($"<{property.Name}>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance);
+    }
 
     private Dictionary<FieldInfo, string> fieldSemantics = new();
 
@@ -342,6 +355,11 @@ public class HLSLCodeGenerator : CodeGenerator
 
     protected override Expression VisitIntrinsicCall(IntrinsicCallExpression node)
     {
+        if (node.Method == typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Hlsl), 0, new[] { typeof(string) }))
+        {
+            return node;
+        }
+        
         string name;
         if (node.Method is MethodInfo i && intrinsicAliases.ContainsKey(i))
         {
@@ -398,7 +416,6 @@ public class HLSLCodeGenerator : CodeGenerator
 
     protected override Expression VisitMethodCall(MethodCallExpression node)
     {
-        Writer.Write("dasdasd");
         return base.VisitMethodCall(node);
     }
 }

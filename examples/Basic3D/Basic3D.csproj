@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\SimulationFramework.Desktop\SimulationFramework.Desktop.csproj" />
     <ProjectReference Include="..\..\src\SimulationFramework.Drawing.OpenGL\SimulationFramework.Drawing.OpenGL.csproj" />
+    <ProjectReference Include="..\..\src\SimulationFramework.ImGuiNET\SimulationFramework.ImGuiNET.csproj" />
     <ProjectReference Include="..\..\src\SimulationFramework\SimulationFramework.csproj" />
   </ItemGroup>
 

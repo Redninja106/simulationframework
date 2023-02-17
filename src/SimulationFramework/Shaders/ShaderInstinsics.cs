@@ -44,4 +44,12 @@ public static class ShaderIntrinsics
     
     [ShaderIntrinsic(nameof(Vector3.Reflect), typeof(Vector3))]
     public static Vector3 Reflect(Vector3 vector, Vector3 normal) => Vector3.Reflect(vector, normal);
+
+    // inline hlsl, only supported on directx, will be removed
+    [ShaderIntrinsic(nameof(ShaderIntrinsics.Hlsl), typeof(ShaderIntrinsics))]
+    public static void Hlsl(string hlsl) { }
+
+    // inline hlsl, only supported on directx, will be removed
+    // [ShaderIntrinsic(nameof(ShaderIntrinsics.Hlsl<>), typeof(ShaderIntrinsics))]
+    // public static T? Hlsl<T>(string hlsl) => default;
 }

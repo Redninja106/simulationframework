@@ -21,6 +21,7 @@ public sealed class DesktopPlatform : IApplicationPlatform
 {
     public IWindow Window { get; }
     private IGraphicsProvider? graphics;
+    private List<IApplicationComponent> extensions = new();
 
     public IApplicationController CreateController()
     {
@@ -51,10 +52,21 @@ public sealed class DesktopPlatform : IApplicationPlatform
     public IEnumerable<IApplicationComponent> CreateAdditionalComponents()
     {
         yield return new DesktopInputComponent(this.Window);
+
+        foreach (var extension in extensions)
+        {
+            yield return extension;
+        }
     }
 
     public void Initialize(Application application)
     {
+    }
+
+    public DesktopPlatform WithExtension(IApplicationComponent extension)
+    {
+        extensions.Add(extension);
+        return this;
     }
 
     public static bool IsSupported()

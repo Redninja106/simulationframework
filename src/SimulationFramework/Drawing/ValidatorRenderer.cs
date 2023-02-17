@@ -141,7 +141,7 @@ internal class ValidatorRenderer : IRenderer
         Validate(vertexBufferLength is not null, nameof(vertexBufferLength));
         Validate(indexBufferLength is not null, nameof(indexBufferLength));
 
-        baseRenderer.DrawPrimitivesIndexed(kind, count);
+        baseRenderer.DrawIndexedPrimitives(kind, count);
     }
 
     private void ValidateEnumValue<T>(T value, [CallerArgumentExpression(nameof(value))] string? paramName = null) where T : struct, Enum
@@ -177,37 +177,6 @@ internal class ValidatorRenderer : IRenderer
     public void ResetState()
     {
         baseRenderer.ResetState();
-    }
-
-    public void SetIndexBuffer(IBuffer<uint>? indexBuffer, int offset = 0)
-    {
-        indexBufferLength = indexBuffer?.Length;
-        baseRenderer.SetIndexBuffer(indexBuffer, offset);
-    }
-
-    public void SetVertexBuffer<T>(IBuffer<T>? vertexBuffer, int offset = 0) where T : unmanaged
-    {
-        this.vertexBufferLength = vertexBuffer?.Length;
-        baseRenderer.SetVertexBuffer(vertexBuffer, offset);
-    }
-
-    public void SetInstanceBuffer<T>(IBuffer<T>? instanceBuffer, int offset = 0) where T : unmanaged
-    {
-        this.instanceBufferLength = instanceBuffer?.Length;
-        baseRenderer.SetInstanceBuffer(instanceBuffer, offset);
-    }
-
-    public void DrawPrimitivesInstanced(PrimitiveKind kind, int primtiveCount, int instanceCount)
-    {
-        ValidateEnumValue(kind);
-
-        Validate(primtiveCount >= 0, nameof(primtiveCount));
-        Validate(instanceCount >= 0, nameof(instanceCount));
-
-        Validate(vertexBufferLength is not null, nameof(vertexBufferLength));
-        Validate(indexBufferLength is not null, nameof(indexBufferLength));
-
-        baseRenderer.DrawPrimitivesInstanced(kind, primtiveCount, instanceCount);
     }
 
     public void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int primitiveCount, int instanceCount)
@@ -266,6 +235,51 @@ internal class ValidatorRenderer : IRenderer
     }
 
     public void Submit(IGraphicsQueue deferredQueue)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetVertexBuffer<T>(IBuffer<T>? vertexBuffer) where T : unmanaged
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetInstanceBuffer<T>(IBuffer<T>? instanceBuffer) where T : unmanaged
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetIndexBuffer(IBuffer<uint> indexBuffer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawPrimitives(PrimitiveKind kind, int vertexCount, int vertexOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawPrimitives(PrimitiveKind kind, int vertexCount, int instanceCount, int vertexOffset = 0, int instanceOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawPrimitives(PrimitiveKind kind, IBuffer<DrawCommand> commands, int commandOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawIndexedPrimitives(PrimitiveKind kind, int indexCount, int indexOffset = 0, int vertexOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawIndexedPrimitives(PrimitiveKind kind, int indexCount, int instanceCount, int indexOffset = 0, int instanceOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawIndexedPrimitives(PrimitiveKind kind, IBuffer<IndexedDrawCommand> commands, int commandOffset = 0)
     {
         throw new NotImplementedException();
     }

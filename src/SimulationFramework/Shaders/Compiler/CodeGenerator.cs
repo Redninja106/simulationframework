@@ -123,6 +123,12 @@ public class CodeGenerator : ExpressionVisitor
         Writer.Write('}');
     }
 
+    protected virtual Expression VisitInlineSourceExpression(InlineSourceExpression expression)
+    {
+        Writer.Write(expression.Source);
+        return expression;
+    }
+
     protected virtual void VisitField(FieldInfo field)
     {
         VisitType(field.FieldType);
@@ -203,8 +209,19 @@ public class CodeGenerator : ExpressionVisitor
 
     protected override Expression VisitUnary(UnaryExpression node)
     {
-        Writer.Write(GetExpressionOperator(node.NodeType));
+        if (node.NodeType is ExpressionType.Convert)
+        {
+            Writer.Write('(');
+            VisitType(node.Type);
+            Writer.Write(')');
+            Writer.Write('(');
+            Visit(node.Operand);
+            Writer.Write(')');
+            return node;
+        }
 
+        Writer.Write(GetExpressionOperator(node.NodeType));
+        
         if (NeedsParentheses(ExpressionType.Negate, node.NodeType))
         {
             Writer.Write('(');
@@ -286,6 +303,11 @@ public class CodeGenerator : ExpressionVisitor
             return VisitCompiledVariableAssignmentExpression(compiledVariableAssignmentExpression);
         }
 
+        if (node is InlineSourceExpression inlineSourceExpression)
+        {
+            return VisitInlineSourceExpression(inlineSourceExpression);
+        }
+
         return base.VisitExtension(node);
     }
 
@@ -350,6 +372,12 @@ public class CodeGenerator : ExpressionVisitor
             ExpressionType.Multiply => "*",
             ExpressionType.Divide => "/",
             ExpressionType.Assign => "=",
+            ExpressionType.And => "&",
+            ExpressionType.Or => "|",
+            ExpressionType.LeftShift => "<<",
+            ExpressionType.RightShift => ">>",
+            ExpressionType.Not => "-",
+            ExpressionType.Negate => "-",
             _ => "???"
         };
     }
@@ -361,15 +389,30 @@ public class CodeGenerator : ExpressionVisitor
 
     private int GetPrecedence(ExpressionType expression)
     {
+        // this ain't c but still relevant
+        // https://en.cppreference.com/w/c/language/operator_precedence
         return expression switch
         {
             ExpressionType.Assign => 14,
+            
+            
+            ExpressionType.Or => 10,
+            
+            ExpressionType.And => 8,
+
+            ExpressionType.LeftShift
+            or ExpressionType.RightShift => 5,
+
             ExpressionType.Add
             or ExpressionType.Subtract => 4,
+
             ExpressionType.Multiply
             or ExpressionType.Divide
             or ExpressionType.Modulo => 3,
+
             ExpressionType.Negate => 2,
+
+
             ExpressionType.Call
             or ExpressionType.Extension
             or ExpressionType.Parameter

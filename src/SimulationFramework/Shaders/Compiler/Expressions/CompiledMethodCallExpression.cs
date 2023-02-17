@@ -14,7 +14,6 @@ public class CompiledMethodCallExpression : Expression
     public List<Expression> Arguments { get; private set; }
 
     public override Type Type => Method.ReturnType;
-
     public override ExpressionType NodeType => ExpressionType.Extension;
 
     public CompiledMethodCallExpression(CompiledMethod method, IEnumerable<Expression> arguments)

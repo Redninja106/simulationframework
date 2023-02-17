@@ -42,7 +42,7 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T> where T : unman
         Width = width;
         Height = height;
 
-        Format format; 
+        Format format;
 
         if (typeof(T) == typeof(float))
         {
@@ -112,8 +112,8 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T> where T : unman
     {
         this.shaderResourceView?.Dispose();
         this.renderTargetView?.Dispose();
-        this.internalTextures[0].Dispose();
-        this.internalTextures[1].Dispose();
+        this.internalTextures[0]?.Dispose();
+        this.internalTextures[1]?.Dispose();
     }
 
     public ref Color GetPixel(int x, int y)

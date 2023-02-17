@@ -17,40 +17,58 @@ namespace SimulationFramework;
 [StructLayout(LayoutKind.Sequential)]
 public readonly partial struct Color : IEquatable<Color>
 {
+    private const uint RED_MASK   = 0xFF000000;
+    private const uint BLUE_MASK  = 0x00FF000;
+    private const uint GREEN_MASK = 0x0000FF00;
+    private const uint ALPHA_MASK = 0x000000FF;
+
+    private const int RED_SHIFT = 24;
+    private const int BLUE_SHIFT = 16;
+    private const int GREEN_SHIFT = 8;
+    private const int ALPHA_SHIFT = 0;
+
+
     /// <summary>
     /// The 8-bit value of the alpha component of this color.
     /// </summary>
-    public byte A { readonly get; init; }
+    public byte A 
+    { 
+        readonly get => (byte)((Value & ALPHA_MASK) >> ALPHA_SHIFT); 
+        init => Value = (Value & ~ALPHA_MASK) | ((uint)value << ALPHA_SHIFT); 
+    }
 
     /// <summary>
     /// The 8-bit value of the blue component of this color.
     /// </summary>
-    public byte B { readonly get; init; }
+    public byte B
+    {
+        readonly get => (byte)((Value & BLUE_MASK) >> BLUE_SHIFT);
+        init => Value = (Value & ~BLUE_MASK) | ((uint)value << BLUE_SHIFT);
+    }
 
     /// <summary>
     /// The 8-bit value of the green component of this color.
     /// </summary>
-    public byte G { readonly get; init; }
+    public byte G 
+    {
+        readonly get => (byte)((Value & GREEN_MASK) >> GREEN_SHIFT);
+        init => Value = (Value & ~GREEN_MASK) | ((uint)value << GREEN_SHIFT);
+    }
 
     /// <summary>
     /// The 8-bit value of the red component of this color.
     /// </summary>
-    public byte R { readonly get; init; }
+    public byte R 
+    { 
+        readonly get => (byte)((Value & RED_MASK) >> RED_SHIFT);
+        init => Value = (Value & ~RED_MASK) | ((uint)value << RED_SHIFT);
+    }
+
 
     /// <summary>
     /// The 32-bit, RGBA value of this color.
     /// </summary>
-    public uint Value
-    {
-        readonly get
-        {
-            return Unsafe.As<Color, uint>(ref Unsafe.AsRef(in this));
-        }
-        init
-        {
-            this = Unsafe.As<uint, Color>(ref value);
-        }
-    }
+    public uint Value { readonly get; init; }
 
     /// <summary>
     /// Creates a new color.

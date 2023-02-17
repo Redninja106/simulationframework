@@ -27,7 +27,11 @@ internal class OpenGLRenderer : IRenderer
     public StencilOperation StencilPassDepthFailOperation { get; set; }
     public StencilOperation StencilPassOperation { get; set; }
 
-    private int arrayBufferOffset, elementArrayBufferOffset; 
+    private int arrayBufferOffset, elementArrayBufferOffset;
+
+    public OpenGLRenderer()
+    {
+    }
 
     public void ClearDepthTarget(float depth)
     {
@@ -156,6 +160,51 @@ internal class OpenGLRenderer : IRenderer
     }
 
     public void Submit(IGraphicsQueue deferredQueue)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetVertexBuffer<T>(IBuffer<T>? vertexBuffer) where T : unmanaged
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetInstanceBuffer<T>(IBuffer<T>? instanceBuffer) where T : unmanaged
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetIndexBuffer(IBuffer<uint> indexBuffer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawPrimitives(PrimitiveKind kind, int vertexCount, int vertexOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawPrimitives(PrimitiveKind kind, int vertexCount, int instanceCount, int vertexOffset = 0, int instanceOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawPrimitives(PrimitiveKind kind, IBuffer<DrawCommand> commands, int commandOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawIndexedPrimitives(PrimitiveKind kind, int indexCount, int indexOffset = 0, int vertexOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawIndexedPrimitives(PrimitiveKind kind, int indexCount, int instanceCount, int indexOffset = 0, int instanceOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawIndexedPrimitives(PrimitiveKind kind, IBuffer<IndexedDrawCommand> commands, int commandOffset = 0)
     {
         throw new NotImplementedException();
     }

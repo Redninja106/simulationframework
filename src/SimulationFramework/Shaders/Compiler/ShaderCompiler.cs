@@ -27,6 +27,7 @@ public class ShaderCompiler
         Rules.Add(new PrintILRule());
         Rules.Add(new DependencyResolver());
         Rules.Add(new CallSubstitutions());
+        Rules.Add(new InlineSourceInsertion());
     }
 
     public ShaderCompilation? Compile(Type shaderType, ShaderSignature? signature, ShaderKind targetShaderKind)

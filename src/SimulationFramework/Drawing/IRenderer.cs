@@ -38,18 +38,21 @@ public interface IRenderer
     void ClearDepthTarget(float depth);
     void ClearStencilTarget(byte stencil);
 
-    void SetVertexBuffer<T>(IBuffer<T>? vertexBuffer, int offset = 0) where T : unmanaged;
-    void SetInstanceBuffer<T>(IBuffer<T>? instanceBuffer, int offset = 0) where T : unmanaged;
-    void SetIndexBuffer(IBuffer<uint>? indexBuffer, int offset = 0);
+    void SetVertexBuffer<T>(IBuffer<T>? vertexBuffer) where T : unmanaged;
+    void SetInstanceBuffer<T>(IBuffer<T>? instanceBuffer) where T : unmanaged;
+    void SetIndexBuffer(IBuffer<uint> indexBuffer);
     
     void SetVertexShader(IShader? shader);
     void SetGeometryShader(IShader? shader);
     void SetFragmentShader(IShader? shader);
 
-    void DrawPrimitives(PrimitiveKind kind, int count);
-    void DrawPrimitivesIndexed(PrimitiveKind kind, int count);
-    void DrawPrimitivesInstanced(PrimitiveKind kind, int primitives, int instances);
-    void DrawPrimitivesIndexedInstanced(PrimitiveKind kind, int primitives, int instances);
+    void DrawPrimitives(PrimitiveKind kind, int vertexCount, int vertexOffset = 0);
+    void DrawPrimitives(PrimitiveKind kind, int vertexCount, int instanceCount, int vertexOffset = 0, int instanceOffset = 0);
+    void DrawPrimitives(PrimitiveKind kind, IBuffer<DrawCommand> commands, int commandOffset = 0);
+
+    void DrawIndexedPrimitives(PrimitiveKind kind, int indexCount, int indexOffset = 0, int vertexOffset = 0);
+    void DrawIndexedPrimitives(PrimitiveKind kind, int indexCount, int instanceCount, int indexOffset = 0, int instanceOffset = 0);
+    void DrawIndexedPrimitives(PrimitiveKind kind, IBuffer<IndexedDrawCommand> commands, int commandOffset = 0);
 
     void DrawGeometry(IGeometry geometry);
     void DrawGeometryInstanced(IGeometry geometry, int instanceCount);
@@ -62,4 +65,23 @@ public interface IRenderer
     void ResetState();
 
     void Flush();
+}
+
+public struct DrawCommand
+{
+    public int VertexCount { get; set; }
+    public int InstanceCount { get; set; }
+
+    public int VertexOffset { get; set; }
+    public int InstanceOffset { get; set; }
+}
+
+public struct IndexedDrawCommand
+{
+    public int IndexCount { get; set; }
+    public int InstanceCount { get; set; }
+
+    public int IndexOffset { get; set; }
+    public int VertexOffset { get; set; }
+    public int InstanceOffset { get; set; }
 }

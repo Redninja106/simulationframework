@@ -3,6 +3,7 @@ using System.Numerics;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.OpenGL;
 using SimulationFramework.Drawing.Direct3D11;
+using SimulationFramework.ImGuiNET;
 
 namespace Basic3D;
 
@@ -11,6 +12,6 @@ internal class Program
     static void Main(string[] args)
     {
         var sim = new Basic3DSimulation();
-        sim.Run(new DesktopPlatform());
+        sim.Run(new DesktopPlatform().WithExtension(new ImGuiComponent()));
     }
 }
