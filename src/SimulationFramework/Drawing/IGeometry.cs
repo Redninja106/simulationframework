@@ -9,6 +9,4 @@ namespace SimulationFramework.Drawing;
 public interface IGeometry
 {
     PrimitiveKind PrimitiveKind { get; }
-
-    void Update(VertexData data);
 }

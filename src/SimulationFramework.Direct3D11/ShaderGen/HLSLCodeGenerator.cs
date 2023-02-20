@@ -97,6 +97,9 @@ public class HLSLCodeGenerator : CodeGenerator
     private static readonly Dictionary<InputSemantic, string> inputSemanticAliases = new()
     {
         [InputSemantic.Position] = "SV_Position",
+        [InputSemantic.ThreadID] = "SV_DispatchThreadID",
+        [InputSemantic.GroupID] = "SV_GroupID",
+        [InputSemantic.LocalThreadID] = "SV_GroupThreadID",
     };
 
     private static readonly Dictionary<OutputSemantic, string> outputSemanticAliases = new()
@@ -112,14 +115,30 @@ public class HLSLCodeGenerator : CodeGenerator
 
     protected override void VisitVariables(IEnumerable<CompiledVariable> variables)
     {
-        var uniforms = variables.Where(v => v.IsUniform);
-        
+        Writer.WriteLine();
+
+        foreach (var uniform in Compilation.IntrinsicUniforms)
+        {
+            if (uniform.VariableType.GetGenericTypeDefinition() == typeof(IBuffer<>))
+            {
+                Writer.Write("RWStructuredBuffer<");
+                VisitType(uniform.VariableType.GetGenericArguments()[0]);
+                Writer.Write("> ");
+                Writer.Write(uniform.Name);
+                Writer.WriteLine(";");
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+
         Writer.WriteLine();
         Writer.WriteLine("cbuffer __cbuffer : register(b0)");
         Writer.WriteLine("{");
         Writer.Indent++;
 
-        foreach (var uniform in uniforms)
+        foreach (var uniform in Compilation.Uniforms)
         {
             VisitType(uniform.VariableType);
             Writer.Write(' ');
@@ -249,8 +268,8 @@ public class HLSLCodeGenerator : CodeGenerator
         VisitIdentifier(field.Name);
 
         string semantic;
-        var inputAttribute = field.GetCustomAttribute<ShaderInputAttribute>();
-        var outputAttribute = field.GetCustomAttribute<ShaderOutputAttribute>();
+        var inputAttribute = field.GetCustomAttribute<InputAttribute>();
+        var outputAttribute = field.GetCustomAttribute<OutputAttribute>();
         if (inputAttribute is not null && inputSemanticAliases.ContainsKey(inputAttribute.Semantic))
         {
             semantic = inputSemanticAliases[inputAttribute.Semantic];
@@ -280,24 +299,33 @@ public class HLSLCodeGenerator : CodeGenerator
 
     protected override void VisitType(Type type)
     {
-        string name = null;
-
-        if (typeAliases.ContainsKey(type))
+        if (typeAliases.TryGetValue(type, out string value))
         {
-            name = typeAliases[type];
+            VisitIdentifier(value);
         }
         else
         {
-            name = type.Name;
+            base.VisitType(type);
         }
-
-        this.Writer.Write(name);
     }
 
     protected override void VisitMethod(CompiledMethod method)
     {
         if (method == this.Compilation.EntryPoint)
         {
+            // numthreads
+            if (Compilation.ShaderKind == ShaderKind.Compute)
+            {
+                var groupSize = method.Method.GetCustomAttribute<ThreadGroupSizeAttribute>();
+
+                int width = groupSize?.Width ?? 1;
+                int height = groupSize?.Height ?? 1;
+                int depth = groupSize?.Depth ?? 1;
+
+                Writer.WriteLine();
+                Writer.Write($"[numthreads({width}, {height}, {depth})]");
+            }
+
             Writer.WriteLine();
             Writer.Write("__outputstruct ");
             Writer.Write(method.Name);
@@ -353,13 +381,22 @@ public class HLSLCodeGenerator : CodeGenerator
         return base.VisitCompiledVariableExpression(node);
     }
 
-    protected override Expression VisitIntrinsicCall(IntrinsicCallExpression node)
+    protected override Expression VisitIntrinsicCallExpression(IntrinsicCallExpression node)
     {
         if (node.Method == typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Hlsl), 0, new[] { typeof(string) }))
         {
             return node;
         }
         
+        if (IsBufferAccessMethod(node.Method))
+        {
+            Visit(node.Arguments[0]);
+            Writer.Write('[');
+            Visit(node.Arguments[1]);
+            Writer.Write(']');
+            return node;
+        }
+
         string name;
         if (node.Method is MethodInfo i && intrinsicAliases.ContainsKey(i))
         {
@@ -388,6 +425,24 @@ public class HLSLCodeGenerator : CodeGenerator
         Writer.Write(')');
 
         return node;
+    }
+
+    private bool IsBufferAccessMethod(MethodInfo method)
+    {
+        const string indexerName = "get_Item";
+
+        var declaringType = method?.DeclaringType;
+
+        if (declaringType is null || !declaringType.IsGenericType)
+            return false;
+
+        if (declaringType.GetGenericTypeDefinition() != typeof(IBuffer<>))
+            return false;
+
+        if (method.Name != indexerName)
+            return false;
+
+        return true;
     }
 
     protected override Expression VisitMember(MemberExpression node)

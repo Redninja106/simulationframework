@@ -36,10 +36,10 @@ void Render(ICanvas canvas)
 
 struct VertexShader : IShader
 {
-    [ShaderInput]
+    [Input]
     Vector3 position;
 
-    [ShaderOutput(OutputSemantic.Position)]
+    [Output(OutputSemantic.Position)]
     Vector4 outPosition;
 
     public void Main()
@@ -50,10 +50,10 @@ struct VertexShader : IShader
 
 struct GeometryShader : IShader
 {
-    [ShaderInput(InputSemantic.Position)]
+    [Input(InputSemantic.Position)]
     TrianglePrimitive<Vector3> input;
 
-    [ShaderOutput, MaxVertices(4)]
+    [Output, MaxVertices(4)]
     TriangleStream<Vector3> output;
 
     public void Main()
@@ -68,10 +68,10 @@ struct GeometryShader : IShader
 
 struct FragmentShader : IShader
 {
-    [ShaderInput(InputSemantic.Position, LinkageName = "outPosition")]
+    [Input(InputSemantic.Position, LinkageName = "outPosition")]
     Vector3 position;
 
-    [ShaderOutput(OutputSemantic.Color)]
+    [Output(OutputSemantic.Color)]
     ColorF outColor;
 
     public void Main()

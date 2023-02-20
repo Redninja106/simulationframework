@@ -29,17 +29,17 @@ public class CompiledVariable
         this.VariableType = field.FieldType;
         this.Name = field.Name;
 
-        var inputAttribute = field.GetCustomAttribute<ShaderInputAttribute>();
+        var inputAttribute = field.GetCustomAttribute<InputAttribute>();
         this.IsInput = inputAttribute is not null;
         this.InputName = inputAttribute?.LinkageName ?? Name;
         this.InputSemantic = inputAttribute?.Semantic;
 
-        var outputAttribute = field.GetCustomAttribute<ShaderOutputAttribute>();
+        var outputAttribute = field.GetCustomAttribute<OutputAttribute>();
         this.IsOutput = outputAttribute is not null;
         this.OutputName = outputAttribute?.LinkageName ?? Name;
         this.OutputSemantic = outputAttribute?.Semantic;
 
-        this.IsUniform = field.GetCustomAttribute<ShaderUniformAttribute>() is not null;
+        this.IsUniform = field.GetCustomAttribute<UniformAttribute>() is not null;
 
         if (IsUniform && (IsOutput || IsInput))
         {

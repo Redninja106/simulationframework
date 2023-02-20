@@ -10,6 +10,5 @@ public enum OutputSemantic
 {
     None,
     Position,
-    TextureCoordinate,
-    Color,
+    Color
 }

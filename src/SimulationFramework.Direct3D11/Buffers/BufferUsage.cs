@@ -12,4 +12,5 @@ internal enum BufferUsage
     VertexBuffer,
     IndexBuffer,
     ConstantBuffer,
+    UnorderedAccessResource
 }

@@ -24,16 +24,14 @@ internal class D3D11GeometryShader<T> : D3D11Shader<T> where T : struct, IShader
         shader = Resources.Device.CreateGeometryShader(bytecode);
     }
 
-    public override void Apply(ID3D11DeviceContext context)
+    public override void ApplyShader(ID3D11DeviceContext context)
     {
         context.GSSetShader(shader);
-        base.Apply(context);
     }
 
     public override void ApplyConstantBuffer(ID3D11DeviceContext context, ID3D11Buffer constantBuffer)
     {
         context.GSSetConstantBuffer(0, constantBuffer);
-        base.ApplyConstantBuffer(context, constantBuffer);
     }
 
     public override void Dispose()

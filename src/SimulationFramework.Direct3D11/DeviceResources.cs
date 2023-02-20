@@ -17,12 +17,12 @@ internal sealed class DeviceResources : IDisposable
     public ID3D11Device Device { get; private set; }
     public IDXGISwapChain1 SwapChain { get; private set; }
     public ID3D11Debug Debug { get; private set; }
-    public List<D3D11Object> Shaders { get; private set; }
+    public ShaderManager ShaderManager { get; private set; }
 
     public DeviceResources(IntPtr hwnd)
     {
-        Shaders = new();
-
+        ShaderManager = new(this);
+        
         var hr = D3D11.D3D11CreateDevice(null, DriverType.Hardware, DeviceCreationFlags.Debug, new[] { FeatureLevel.Level_11_0 }, out var device);
         this.Device = device;
         this.Debug = device.QueryInterface<ID3D11Debug>();
@@ -66,11 +66,7 @@ internal sealed class DeviceResources : IDisposable
 
     public void Dispose()
     {
-        foreach (var shader in Shaders)
-        {
-            shader.Dispose();
-        }
-
+        ShaderManager.Dispose();
         SwapChain.Dispose();
         //Debug.ReportLiveDeviceObjects(ReportLiveDeviceObjectFlags.Detail);
         Debug.Dispose();

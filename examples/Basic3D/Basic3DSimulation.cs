@@ -141,8 +141,8 @@ internal class Basic3DSimulation : Simulation
         FragmentShader fragShader = new();
         fragShader.lightPosition = this.lightPosition;
 
-        renderer.RenderTarget = Graphics.GetDefaultRenderTarget();
-        renderer.DepthTarget = Graphics.GetDefaultDepthTarget();
+        renderer.RenderTarget = Graphics.DefaultRenderTarget;
+        renderer.DepthTarget = Graphics.DefaultDepthTarget;
         renderer.ClearRenderTarget(Color.FromHSV(0,0,.1f));
         renderer.ClearDepthTarget(1.0f);
         renderer.SetViewport(new(renderer.RenderTarget.Width, renderer.RenderTarget.Height, 0, 0));
@@ -194,23 +194,34 @@ internal class Basic3DSimulation : Simulation
 
     struct VertexShader : IShader
     {
-        [ShaderUniform]
+        [Uniform]
         public VertexShaderUniforms uniforms;
 
-        [ShaderInput] 
+        [Input] 
         Vertex vertex;
 
-        [ShaderOutput(OutputSemantic.Position)]
+        [Output(OutputSemantic.Position)]
         public Vector4 position;
-        [ShaderOutput]
+        [Output]
         public Vector2 uv;
-        [ShaderOutput]
+        [Output]
         public Vector3 normal;
-        [ShaderOutput]
+        [Output]
         public Vector3 fragPos;
 
         public void Main()
         {
+            //if (position.X < 12)
+            //{
+            //    position = Vector4.Zero;
+            //}
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    this.fragPos += normal * 2;
+            //}
+
+
             position = new Vector4(vertex.position, 1);
 
             position = Vector4.Transform(position, uniforms.World);
@@ -236,35 +247,35 @@ internal class Basic3DSimulation : Simulation
 
     struct FragmentShaderInput
     {
-        [ShaderInput(InputSemantic.Position)]
+        [Input(InputSemantic.Position)]
         public Vector4 position;
-        [ShaderInput]
+        [Input]
         public Vector2 uv;
-        [ShaderInput]
+        [Input]
         public Vector3 normal;
-        [ShaderInput]
+        [Input]
         public Vector3 fragPos;
     }
 
     struct FragmentShader : IShader
     {
-        [ShaderOutput(OutputSemantic.Color)]
+        [Output(OutputSemantic.Color)]
         private Vector4 color;
 
 
-        [ShaderInput(InputSemantic.Position)]
+        [Input(InputSemantic.Position)]
         public Vector4 position;
-        [ShaderInput]
+        [Input]
         public Vector2 uv;
-        [ShaderInput]
+        [Input]
         public Vector3 normal;
-        [ShaderInput]
+        [Input]
         public Vector3 fragPos;
 
 
-        [ShaderUniform] 
+        [Uniform] 
         public Vector3 lightPosition;
-        [ShaderUniform] 
+        [Uniform] 
         public Vector3 cameraPosition;
 
         public void Main()

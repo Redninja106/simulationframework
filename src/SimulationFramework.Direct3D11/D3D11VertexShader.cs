@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Shaders;
+using SimulationFramework.Shaders.Compiler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,17 +95,15 @@ internal class D3D11VertexShader<T> : D3D11Shader<T> where T : struct, IShader
         inputLayout = Resources.Device.CreateInputLayout(elements.ToArray(), bytecode);
     }
 
-    public override void Apply(ID3D11DeviceContext context)
-    {
-        context.IASetInputLayout(this.inputLayout);
-        context.VSSetShader(vertexShader);
-        base.Apply(context);
-    }
-
     public override void ApplyConstantBuffer(ID3D11DeviceContext context, ID3D11Buffer constantBuffer)
     {
         context.VSSetConstantBuffer(0, constantBuffer);
-        base.ApplyConstantBuffer(context, constantBuffer);
+    }
+
+    public override void ApplyShader(ID3D11DeviceContext context)
+    {
+        context.IASetInputLayout(this.inputLayout);
+        context.VSSetShader(vertexShader);
     }
 
     public override void Dispose()

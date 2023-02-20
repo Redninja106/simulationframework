@@ -9,6 +9,7 @@ using Vortice.Direct3D11;
 using Vortice.DXGI;
 using SimulationFramework.Shaders;
 using SimulationFramework.Shaders.Compiler;
+using System.Reflection;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
@@ -21,6 +22,8 @@ public class D3D11Graphics : IGraphicsProvider
     private D3D11ImmediateQueue immediateQueue;
 
     public IGraphicsQueue ImmediateQueue => immediateQueue;
+
+    public GraphicsCapabilities Capabilities { get; } = new D3D11GraphicsCapabilities();
 
     public D3D11Graphics(IntPtr hwnd)
     {
@@ -115,14 +118,14 @@ public class D3D11Graphics : IGraphicsProvider
 
         if (shaderObj is not null)
         {
-            resources.Shaders.Remove(shaderObj);
+            resources.ShaderManager.Shaders.Remove(shaderObj);
             shaderObj.Dispose();
         }
     }
 
     private D3D11Object FindShader(Type shaderType)
     {
-        return resources.Shaders.SingleOrDefault(obj => 
+        return resources.ShaderManager.Shaders.SingleOrDefault(obj => 
             obj.GetType().GenericTypeArguments.FirstOrDefault() == shaderType
             );
     }
@@ -137,6 +140,36 @@ public class D3D11Graphics : IGraphicsProvider
         }
 
         return new D3D11Renderer(resources, d3dQueue);
+    }
+
+    public void DispatchComputeShader(IShader shader, int groupsX, int groupsY, int groupsZ, IGraphicsQueue queue)
+    {
+        var m = this.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic).Single(m => m.Name == "DispatchComputeShader" && m.IsGenericMethod);
+        var mspec = m.MakeGenericMethod(
+                new[] { shader.GetType() }
+            );
+            
+        mspec.Invoke(
+                this,
+                new object[] { shader, groupsX, groupsY, groupsZ, queue }
+                );
+    }
+
+    private void DispatchComputeShader<TShader>(TShader shader, int groupsX, int groupsY, int groupsZ, IGraphicsQueue queue) where TShader : struct, IShader
+    {
+        queue ??= Graphics.ImmediateQueue;
+        var d3dQueue = queue as D3D11QueueBase ?? throw new Exception();
+        var d3dShader = resources.ShaderManager.GetComputeShader<TShader>();
+
+        d3dShader.Update(shader);
+        d3dShader.Apply(d3dQueue.DeviceContext);
+
+        d3dQueue.DeviceContext.Dispatch(groupsX, groupsY, groupsZ);
+    }
+
+    public IGraphicsQueue CreateDeferredQueue()
+    {
+        throw new NotImplementedException();
     }
 
     record NullCanvas(ITexture<Color> Target) : ICanvas
@@ -201,5 +234,4 @@ public class D3D11Graphics : IGraphicsProvider
         {
         }
     }
-
 }

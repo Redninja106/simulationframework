@@ -1,4 +1,5 @@
-﻿using SimulationFramework.Drawing.Direct3D11.ShaderGen;
+﻿using SimulationFramework.Drawing.Direct3D11.Buffers;
+using SimulationFramework.Drawing.Direct3D11.ShaderGen;
 using SimulationFramework.Shaders;
 using SimulationFramework.Shaders.Compiler;
 using System;
@@ -43,9 +44,16 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
         var source = sourceWriter.GetStringBuilder().ToString();
         Console.WriteLine(source);
         Console.WriteLine(new string('=', 100));
-        using var blob = Compiler.Compile(source, nameof(IShader.Main), ShaderType.Name, this.Profile, ShaderFlags.PackMatrixRowMajor);
-        var bytecode = blob.AsSpan();
-        CreateShader(bytecode);
+        try
+        {
+            using var blob = Compiler.Compile(source, nameof(IShader.Main), ShaderType.Name, this.Profile, ShaderFlags.PackMatrixRowMajor);
+            var bytecode = blob.AsSpan();
+            CreateShader(bytecode);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Internal Compiler Error: {ex.GetType()}", ex);
+        }
     }
 
     public override void Dispose()
@@ -97,6 +105,7 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
                 Resources.Device.ImmediateContext.UpdateSubresource(cbufferData, cbuffer);
             }
         }
+
     }
 
     static int CeilTo16(int value)
@@ -105,16 +114,16 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
         return remainder is 0 ? value : value + (16 - remainder);
     }
 
-    public virtual void Apply(ID3D11DeviceContext context)
+    public void Apply(ID3D11DeviceContext context)
     {
+        ApplyShader(context);
+
         if (cbuffer is not null)
         {
             ApplyConstantBuffer(context, this.cbuffer);
         }
     }
 
-    public virtual void ApplyConstantBuffer(ID3D11DeviceContext context, ID3D11Buffer constantBuffer)
-    {
-
-    }
+    public abstract void ApplyShader(ID3D11DeviceContext context);
+    public abstract void ApplyConstantBuffer(ID3D11DeviceContext context, ID3D11Buffer constantBuffer);
 }

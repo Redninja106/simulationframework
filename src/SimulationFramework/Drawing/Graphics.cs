@@ -33,23 +33,26 @@ public static class Graphics
         return LoadTexture(fileData, options);
     }
 
-    public static IRenderer CreateRenderer()
-    {
-        return Provider.CreateRenderer(null);
-    }
+    public static IGraphicsQueue ImmediateQueue => Provider.ImmediateQueue;
 
-    public static IRenderer CreateRenderer(IGraphicsQueue? queue)
+    public static GraphicsCapabilities Capabilities => Provider.Capabilities;
+
+    public static IRenderer CreateRenderer(IGraphicsQueue? queue = null)
     {
+        queue ??= ImmediateQueue;
+
         return Provider.CreateRenderer(queue);
     }
 
     public static IGraphicsQueue CreateDeferredQueue()
     {
-        throw new NotImplementedException();
+        return Provider.CreateDeferredQueue();
     }
 
     public static ICanvas CreateCanvas(IGraphicsQueue? queue = null)
     {
+        queue ??= ImmediateQueue;
+
         throw new NotImplementedException();
     }
 
@@ -63,7 +66,8 @@ public static class Graphics
         throw new NotImplementedException();
     }
 
-    public static IGeometry CreateGeometry(VertexData data)
+    public static IGeometry CreateGeometry<T>(VertexData<T> data)
+        where T : unmanaged, IVertex
     {
         throw new NotImplementedException();
     }
@@ -160,19 +164,25 @@ public static class Graphics
         return buffer;
     }
 
-    public static void DispatchComputeShader(IShader? shader, int threads, IGraphicsQueue? queue = null)
+    public static void DispatchComputeShader(IShader? shader, int groups, IGraphicsQueue? queue = null)
     {
-        DispatchComputeShader(shader, threads, 1, 1, queue);
+        queue ??= ImmediateQueue;
+
+        DispatchComputeShader(shader, groups, 1, 1, queue);
     }
 
-    public static void DispatchComputeShader(IShader? shader, int threadsX, int threadsY, IGraphicsQueue? queue = null)
+    public static void DispatchComputeShader(IShader? shader, int groupsX, int groupsY, IGraphicsQueue? queue = null)
     {
-        DispatchComputeShader(shader, threadsX, threadsY, 1, queue);
+        queue ??= ImmediateQueue;
+
+        DispatchComputeShader(shader, groupsX, groupsY, 1, queue);
     }
 
-    public static void DispatchComputeShader(IShader? shader, int threadsX, int threadsY, int threadsZ, IGraphicsQueue? queue = null)
+    public static void DispatchComputeShader(IShader? shader, int groupsX, int groupsY, int groupsZ, IGraphicsQueue? queue = null)
     {
-        throw new NotImplementedException();
+        queue ??= ImmediateQueue;
+
+        Provider.DispatchComputeShader(shader, groupsX, groupsY, groupsZ, queue);
     }
 
     public static int GetVertexCount(PrimitiveKind kind, int primitiveCount) => kind switch
@@ -254,15 +264,9 @@ public static class Graphics
     }
 
 
-    public static ITexture<Color> GetDefaultRenderTarget()
-    {
-        return Provider.GetDefaultRenderTarget();
-    }
+    public static ITexture<Color> DefaultRenderTarget => Provider.GetDefaultRenderTarget();
 
-    public static ITexture<float> GetDefaultDepthTarget()
-    {
-        return Provider.GetDefaultDepthTarget();
-    }
+    public static ITexture<float> DefaultDepthTarget => Provider.GetDefaultDepthTarget();
 
     public static ITexture<byte> GetDefaultStencilTarget()
     {

@@ -11,5 +11,7 @@ public enum InputSemantic
     None,
     Position,
     VertexID,
-    TextureCoordinate,
+    ThreadID,
+    GroupID,
+    LocalThreadID,
 }

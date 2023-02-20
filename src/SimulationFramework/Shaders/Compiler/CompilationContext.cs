@@ -17,10 +17,11 @@ public class CompilationContext
     public List<CompiledStruct> structs = new();
     public List<CompiledMethod> methods = new();
     public List<CompiledVariable> uniforms = new();
+    public List<CompiledVariable> intrinsicUniforms = new();
     public List<CompiledVariable> statics = new();
     public List<CompiledVariable> inputs = new();
     public List<CompiledVariable> outputs = new();
-    public IEnumerable<CompiledVariable> AllVariables => uniforms.Concat(statics).Concat(inputs).Concat(outputs);
+    public IEnumerable<CompiledVariable> AllVariables => uniforms.Concat(intrinsicUniforms).Concat(statics).Concat(inputs).Concat(outputs);
 
     public Type ShaderType;
     public CompiledMethod EntryPoint;
@@ -32,7 +33,7 @@ public class CompilationContext
 
     public ShaderCompilation GetResult()
     {
-        return new ShaderCompilation(this.kind, methods, structs, inputs, outputs, uniforms, statics) 
+        return new ShaderCompilation(this.kind, methods, structs, inputs, outputs, uniforms, intrinsicUniforms, statics) 
         { 
             EntryPoint = this.EntryPoint, 
             InputSignature = new ShaderSignature(inputs.Select(v => (v.VariableType, v.Name))),

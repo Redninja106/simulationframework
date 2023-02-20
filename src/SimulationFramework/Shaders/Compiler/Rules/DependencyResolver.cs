@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.Rules;
 
-internal class DependencyResolver : CompilerRule
+internal class DependencyResolver : CompilerPass
 {
     public List<MethodBase> methodDependencies = new();
 
@@ -92,7 +92,7 @@ internal class DependencyResolver : CompilerRule
 
     protected override Expression VisitMethodCall(MethodCallExpression node)
     {
-        if (node.Method.GetCustomAttribute<ShaderIntrinsicAttribute>() is null && !methodDependencies.Contains(node.Method))
+        if (node.Method.GetCustomAttribute<ReplaceAttribute>() is null && !methodDependencies.Contains(node.Method))
         {
             methodDependencies.Add(node.Method);
         }
@@ -102,7 +102,7 @@ internal class DependencyResolver : CompilerRule
 
     protected override Expression VisitNew(NewExpression node)
     {
-        if (node.Constructor!.GetCustomAttribute<ShaderIntrinsicAttribute>() is null)
+        if (node.Constructor!.GetCustomAttribute<ReplaceAttribute>() is null)
         {
             methodDependencies.Add(node.Constructor!);
         }

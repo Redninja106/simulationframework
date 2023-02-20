@@ -40,7 +40,7 @@ public sealed class ImGuiComponent : IApplicationComponent
     public void BeforeRender(RenderMessage message)
     {
         var io = ImGui.GetIO();
-        io.DisplaySize = new(Graphics.GetDefaultRenderTarget().Width, Graphics.GetDefaultRenderTarget().Width);
+        io.DisplaySize = new(Graphics.DefaultRenderTarget.Width, Graphics.DefaultRenderTarget.Width);
         io.DeltaTime = Time.DeltaTime;
         UpdateInput();
         ImGui.NewFrame();
@@ -125,7 +125,7 @@ public sealed class ImGuiComponent : IApplicationComponent
     {
         renderer.PushState();
 
-        renderer.RenderTarget = Graphics.GetDefaultRenderTarget();
+        renderer.RenderTarget = Graphics.DefaultRenderTarget;
         renderer.SetViewport(new(0, 0, renderer.RenderTarget.Width, renderer.RenderTarget.Height));
 
         if (drawData.TotalVtxCount > 0)
@@ -182,7 +182,7 @@ public sealed class ImGuiComponent : IApplicationComponent
         if (vertexBuffer is null || indexBuffer is null)
             throw new InvalidOperationException();
 
-        renderer.RenderTarget = Graphics.GetDefaultRenderTarget();
+        renderer.RenderTarget = Graphics.DefaultRenderTarget;
         renderer.SetVertexBuffer(vertexBuffer);
         renderer.CullMode = CullMode.None;
 

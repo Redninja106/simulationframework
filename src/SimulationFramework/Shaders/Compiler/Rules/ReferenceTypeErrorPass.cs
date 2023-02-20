@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.Rules;
-internal class ReferenceTypeErrorRule : CompilerRule
+internal class ReferenceTypeErrorPass : CompilerPass
 {
     public override void CheckMethod(CompilationContext context, CompiledMethod compiledMethod)
     {

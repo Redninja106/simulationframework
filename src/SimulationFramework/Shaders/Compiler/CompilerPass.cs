@@ -9,7 +9,7 @@ namespace SimulationFramework.Shaders.Compiler;
 
 internal class CompilerPass
 {
-    private readonly List<CompilerRule> rules = new();
+    private readonly List<Rules.CompilerPass> rules = new();
 
     public void Apply(CompilationContext context)
     {

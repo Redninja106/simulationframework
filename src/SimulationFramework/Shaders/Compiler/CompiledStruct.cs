@@ -10,7 +10,7 @@ public class CompiledStruct
 {
     public Type StructType { get; private set; }
     public IEnumerable<FieldInfo> Fields { get; private set; }
-
+    
     public CompiledStruct(Type structType)
     {
         StructType = structType;

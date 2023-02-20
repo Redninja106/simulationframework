@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ComputeShader": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimulationFramework.Shaders;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
 
+[ShaderIntrinsic]
 public interface IBuffer<T> : IResource where T : unmanaged
 {
     /// <summary>
@@ -24,9 +26,10 @@ public interface IBuffer<T> : IResource where T : unmanaged
     sealed unsafe void SetData(T data) => SetData(new Span<T>(&data, 1));
     sealed unsafe void SetData(T[] data) => SetData(data.AsSpan());
 
+    [ShaderIntrinsic]
     sealed ref T this[int index] => ref Data[index];
 
     Span<T> Data { get; }
-
+    T[] GetData();
     void ApplyChanges();
 }

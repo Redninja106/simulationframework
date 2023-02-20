@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.Rules;
 
-internal class CallSubstitutions : CompilerRule
+internal class CallSubstitutions : CompilerPass
 {
     private CompilationContext context;
 
@@ -36,9 +36,17 @@ internal class CallSubstitutions : CompilerRule
 
     protected override Expression VisitMethodCall(MethodCallExpression node)
     {
-        if (node.Method.GetCustomAttribute<ShaderIntrinsicAttribute>() is not null)
+        if (ShaderCompiler.IsMethodIntrinsic(node.Method))
         {
-            return new IntrinsicCallExpression(node.Method, this.Visit(node.Arguments));
+            IEnumerable<Expression> args = this.Visit(node.Arguments);
+            
+            var instance = node.Object;
+            if (instance is not null)
+            {
+                args = args.Prepend(Visit(instance));
+            }
+
+            return new IntrinsicCallExpression(node.Method, args);
         }
         else
         {

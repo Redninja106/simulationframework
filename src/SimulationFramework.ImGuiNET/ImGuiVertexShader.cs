@@ -13,25 +13,25 @@ internal struct ImGuiVertexShader : IShader
 {
     // https://github.com/ocornut/imgui/blob/588421986784df1ae3df16305d90cecdb07e9951/backends/imgui_impl_dx11.cpp#L384
 
-    [ShaderUniform]
+    [Uniform]
     public Matrix4x4 ProjectionMatrix;
 
-    [ShaderInput]
+    [Input]
     Vector2 position;
 
-    [ShaderInput]
+    [Input]
     Vector2 uv;
 
-    [ShaderInput]
+    [Input]
     uint color;
 
-    [ShaderOutput]
+    [Output]
     ColorF outColor;
 
-    [ShaderOutput]
+    [Output]
     Vector2 outUV;
 
-    [ShaderOutput(OutputSemantic.Position)]
+    [Output(OutputSemantic.Position)]
     Vector4 outPosition;
 
     public void Main()
@@ -47,6 +47,7 @@ internal struct ImGuiVertexShader : IShader
         //outColor.G = ((color & 0x00FF0000) >> 16) / 255f;
         //outColor.B = ((color & 0x0000FF00) >> 8) / 255f;
         //outColor.A = ((color & 0x000000FF) >> 0) / 255f;
+
         outUV = uv;
     }
 }

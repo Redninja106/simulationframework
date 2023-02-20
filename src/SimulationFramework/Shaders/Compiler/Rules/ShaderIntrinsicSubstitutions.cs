@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Shaders.Compiler.Rules;
 
 // replaces common methods with their shader intrinsic counterparts
-internal class ShaderIntrinsicSubstitutions : CompilerRule
+internal class ShaderIntrinsicSubstitutions : CompilerPass
 {
     private static readonly Dictionary<MethodBase, MethodInfo> substitutions = new();
 
@@ -24,7 +24,7 @@ internal class ShaderIntrinsicSubstitutions : CompilerRule
 
         foreach (var method in typeof(ShaderIntrinsics).GetMethods())
         {
-            var attribute = method.GetCustomAttribute<ShaderIntrinsicAttribute>();
+            var attribute = method.GetCustomAttribute<ReplaceAttribute>();
 
             if (attribute is null)
                 continue;
@@ -33,7 +33,7 @@ internal class ShaderIntrinsicSubstitutions : CompilerRule
 
             MethodBase targetMethod;
 
-            if (attribute.MethodName is ShaderIntrinsicAttribute.ConstructorMethodName)
+            if (attribute.MethodName is ReplaceAttribute.ConstructorMethodName)
             {
                 targetMethod = attribute.MethodType.GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, signature);
             }

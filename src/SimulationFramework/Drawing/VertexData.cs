@@ -7,12 +7,28 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
-public class VertexData
+
+public interface IVertex 
+{
+    public Vector3 Position { get; }
+    public Vector2 TextureCoordinates { get; }
+}
+
+[Flags]
+public enum VertexAttributeFlags 
+{
+    None = 0,
+    Position = 1 >> 1,
+    TextureCoordinate = 1 >> 2,
+
+}
+
+public class VertexData<TVertex> where TVertex : unmanaged, IVertex
 {
     private readonly List<Vector3> positions;
     private readonly List<Vector3> textureCoordinates;
 
-    private VertexData()
+    private VertexData(PrimitiveKind kind)
     {
         throw new NotImplementedException();
     }

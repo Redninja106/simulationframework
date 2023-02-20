@@ -54,8 +54,11 @@ internal class ExpressionBuilder
             builder.BuildArgumentExpr,
             builder.BuildNewObjExpr,
             builder.BuildCallExpr,
+            builder.BuildLoadIndirect,
+            builder.BuildStoreIndirect,
+            builder.BuildDup,
 
-            i => i.OpCode is OpCode.Dup or OpCode.Pop or OpCode.Br_S or OpCode.Ldobj,
+            i => i.OpCode is OpCode.Pop or OpCode.Br_S or OpCode.Ldobj,
 
             i => throw new NotSupportedException("Unsupported instruction '" + i.OpCode + "'."),
         };
@@ -73,6 +76,18 @@ internal class ExpressionBuilder
 
         Parameters = builder.Arguments;
         return Expression.Block(builder.ReturnType, builder.Locals, builder.Expressions.Reverse());
+    }
+
+    bool BuildDup(Instruction instruction)
+    {
+        if (instruction.OpCode is not OpCode.Dup)
+            return false;
+
+        var expr = Expressions.Pop();
+        Expressions.Push(expr);
+        Expressions.Push(expr);
+
+        return true;
     }
 
     static ParameterExpression[] GetArguments(MethodDisassembly disassembly)
@@ -420,5 +435,27 @@ internal class ExpressionBuilder
         return args;
     }
 
+    bool BuildLoadIndirect(Instruction instruction)
+    {
+        if (instruction.OpCode is not OpCode.Ldind_R4)
+            return false;
 
+        var refExpr = Expressions.Pop();
+        Expressions.Push(new DereferenceExpression(refExpr));
+
+        return true;
+    }
+
+    bool BuildStoreIndirect(Instruction instruction)
+    {
+        if (instruction.OpCode is not OpCode.Stind_R4)
+            return false;
+
+        var value = Expressions.Pop();
+        var reference = Expressions.Pop();
+
+        Expressions.Push(new ReferenceAssignmentExpression(reference, value));
+
+        return true;
+    }
 }

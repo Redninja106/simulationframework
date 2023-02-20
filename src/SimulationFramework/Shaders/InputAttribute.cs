@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders;
 
+/// <summary>
+/// Specifies that a field is a shader input.
+/// </summary>
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
-public class ShaderOutputAttribute : Attribute
+public class InputAttribute : Attribute
 {
-    public OutputSemantic Semantic { get; }
+    public InputSemantic Semantic { get; }
     public string? LinkageName { get; init; }
+    public bool Interpolated { get; init; }
 
-    public ShaderOutputAttribute() : this(OutputSemantic.None)
+    public InputAttribute() : this(InputSemantic.None)
     {
     }
 
-    public ShaderOutputAttribute(OutputSemantic semantic)
+    public InputAttribute(InputSemantic semantic)
     {
         Semantic = semantic;
     }

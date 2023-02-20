@@ -15,7 +15,8 @@ internal abstract class D3D11QueueBase : D3D11Object, IGraphicsQueue
         this.DeviceContext = context;
     }
 
-    public void WaitForCompleted(IGraphicsQueue other)
+    public void Flush()
     {
+        DeviceContext.Flush();
     }
 }

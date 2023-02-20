@@ -1,11 +1,10 @@
-﻿using SimulationFramework.Shaders.Compiler;
+﻿using SimulationFramework.Drawing;
 using SimulationFramework.Shaders.Compiler.ILDisassembler;
 using SimulationFramework.Shaders.Compiler.Rules;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
 using System.Reflection.Metadata;
@@ -14,20 +13,23 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler;
 
-public class ShaderCompiler
+public partial class ShaderCompiler
 {
-    private List<CompilerRule> Rules = new();
+    private List<Rules.CompilerPass> Rules = new()
+    {
+        new VariableAccessReplacements(),
+        new ShaderTypeParameterPass(),
+        new ShaderTypeRestrictions(),
+        new ShaderIntrinsicSubstitutions(),
+        new PrintILPass(),
+        new DependencyResolver(),
+        new CallSubstitutions(),
+        new InlineSourceInsertion(),
+    };
 
     public ShaderCompiler()
     {
-        Rules.Add(new VariableAccessReplacements());
-        Rules.Add(new ShaderTypeParameterRules());
-        // Rules.Add(new ShaderTypeRestrictions());
-        Rules.Add(new ShaderIntrinsicSubstitutions());
-        Rules.Add(new PrintILRule());
-        Rules.Add(new DependencyResolver());
-        Rules.Add(new CallSubstitutions());
-        Rules.Add(new InlineSourceInsertion());
+        
     }
 
     public ShaderCompilation? Compile(Type shaderType, ShaderSignature? signature, ShaderKind targetShaderKind)
@@ -105,6 +107,9 @@ public class ShaderCompiler
 
     internal void CompileMethod(CompilationContext context, MethodBase method)
     {
+        if (IsMethodIntrinsic(method))
+            return;
+
         CompiledMethod m = new CompiledMethod(method);
 
         foreach (var rule in this.Rules)
@@ -115,8 +120,37 @@ public class ShaderCompiler
         context.methods.Add(m);
     }
 
+    public static bool IsMethodIntrinsic(MethodBase method)
+    {
+        if (method.GetCustomAttribute<ShaderIntrinsicAttribute>() is not null)
+            return true;
+
+        var property = PropertyFromAccessor(method);
+
+        if (property is not null && property.GetCustomAttribute<ShaderIntrinsicAttribute>() is not null)
+            return true;
+
+        return false;
+    }
+
+    private static PropertyInfo? PropertyFromAccessor(MethodBase info)
+    {
+        var type = info.DeclaringType ?? throw new Exception();
+        foreach (var property in type.GetProperties())
+        {
+            if (property.GetAccessors().Contains(info))
+                return property;
+        }
+        return null;
+    }
+
+    public static bool IsTypeIntrinsic(Type type) => type.GetCustomAttribute<ShaderIntrinsicAttribute>() is not null;
+
     internal void CompileStruct(CompilationContext context, Type structType)
     {
+        if (IsTypeIntrinsic(structType))
+            return;
+
         CompiledStruct s = new CompiledStruct(structType);
 
         foreach (var rule in this.Rules)
@@ -142,7 +176,14 @@ public class ShaderCompiler
             }
             else if (variable.IsUniform)
             {
-                context.uniforms.Add(variable);
+                if (IsTypeIntrinsic(variable.VariableType))
+                {
+                    context.intrinsicUniforms.Add(variable);
+                }
+                else
+                {
+                    context.uniforms.Add(variable);
+                }
             }
             else
             {
@@ -174,49 +215,6 @@ public class ShaderCompiler
         }
 
         Debug.Assert(context.inputs.Where(v => v.InputSemantic is InputSemantic.None).Count() == 0);
-        context.inputs = inputsSorted;
-    }
-
-    class Translator : ExpressionVisitor
-    {
-        private TranslationProfile profile;
-
-        public Translator(TranslationProfile profile)
-        {
-            this.profile = profile;
-        }
-
-        protected override Expression VisitMethodCall(MethodCallExpression node)
-        {
-            if (profile.methods.ContainsKey(node.Method))
-            {
-                var replacement = profile.methods[node.Method] as MethodInfo;
-                return Expression.Call(node.Object, replacement!, node.Arguments);
-            }
-
-            return base.VisitMethodCall(node);
-        }
-
-        protected override Expression VisitNew(NewExpression node)
-        {
-            if (profile.methods.ContainsKey(node.Constructor!))
-            {
-                var replacement = profile.methods[node.Constructor!];
-                if (replacement is ConstructorInfo constructor)
-                {
-                    return Expression.New(constructor, node.Arguments);
-                }
-                else if (replacement is MethodInfo method)
-                {
-                    return Expression.Call(method, node.Arguments);
-                }
-                else
-                {
-                    throw new Exception();
-                }
-            }
-
-            return base.VisitNew(node);
-        }
+        context.inputs = inputsSorted.Concat(context.inputs).ToList();
     }
 }

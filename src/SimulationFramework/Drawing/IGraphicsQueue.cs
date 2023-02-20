@@ -10,5 +10,5 @@ public interface IGraphicsQueue : IDisposable
 {
     // event Action Completed;
     // void WaitForCompleted(IGraphicsQueue other);
-    // void Wait();
+    void Flush();
 }

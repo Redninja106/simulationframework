@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Shaders;
 
 /// <summary>
-/// Provides common interface for all kinds of shaders.
+/// Specifies that a field is a shader uniform.
 /// </summary>
-public interface IShader
+[AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
+public sealed class UniformAttribute : Attribute
 {
-    /// <summary>
-    /// The shader's entry point.
-    /// </summary>
-    void Main();
 }

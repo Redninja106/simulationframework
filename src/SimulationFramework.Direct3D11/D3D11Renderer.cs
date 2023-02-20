@@ -203,24 +203,24 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
             return;
         }
 
+
         this.GetType().GetMethod(nameof(SetVertexShader), BindingFlags.Instance | BindingFlags.NonPublic, new[] { shader.GetType() }).MakeGenericMethod(new[] { shader.GetType() }).Invoke(this, new[] { shader });
     }
 
     private void SetVertexShader<T>(IShader shader) where T : struct, IShader
     {
-        var shaderObject = Resources.Shaders.OfType<D3D11VertexShader<T>>().SingleOrDefault(s => s.ShaderType == shader.GetType());
+        var shaderObject = Resources.ShaderManager.Shaders.OfType<D3D11VertexShader<T>>().SingleOrDefault(s => s.ShaderType == shader.GetType());
 
         if (shaderObject is null)
         {
             shaderObject = new D3D11VertexShader<T>(this.Resources);
-            Resources.Shaders.Add(shaderObject);
+            Resources.ShaderManager.Shaders.Add(shaderObject);
         }
 
         shaderObject.Update(shader);
         shaderObject.Apply(this.CurrentQueue.DeviceContext);
         this.vertexShader = shader;
-
-        vsOutputSignature = shaderObject.Compilation.OutputSignature;
+        this.vsOutputSignature = shaderObject.Compilation.OutputSignature;
 
         // recompile dependent shader stages
         SetGeometryShader(this.geometryShader);
@@ -249,12 +249,12 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         if (shaderSignature is null)
             return;
 
-        var shaderObject = Resources.Shaders.OfType<D3D11GeometryShader<T>>().SingleOrDefault(s => s.ShaderType == shader.GetType() && s.InputSignature == shaderSignature);
+        var shaderObject = Resources.ShaderManager.Shaders.OfType<D3D11GeometryShader<T>>().SingleOrDefault(s => s.ShaderType == shader.GetType() && s.InputSignature == shaderSignature);
 
         if (shaderObject is null)
         {
             shaderObject = new D3D11GeometryShader<T>(this.Resources, shaderSignature);
-            Resources.Shaders.Add(shaderObject);
+            Resources.ShaderManager.Shaders.Add(shaderObject);
         }
 
         shaderObject.Update(shader);
@@ -288,12 +288,12 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         if (shaderSignature is null)
             return;
 
-        var shaderObject = Resources.Shaders.OfType<D3D11FragmentShader<T>>().SingleOrDefault(s => s.ShaderType == shader.GetType() && s.InputSignature == shaderSignature);
+        var shaderObject = Resources.ShaderManager.Shaders.OfType<D3D11FragmentShader<T>>().SingleOrDefault(s => s.ShaderType == shader.GetType() && s.InputSignature == shaderSignature);
 
         if (shaderObject is null)
         {
             shaderObject = new D3D11FragmentShader<T>(this.Resources, vsOutputSignature);
-            Resources.Shaders.Add(shaderObject);
+            Resources.ShaderManager.Shaders.Add(shaderObject);
         }
 
         shaderObject.Update(shader);

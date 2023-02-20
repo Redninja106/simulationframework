@@ -1,4 +1,5 @@
-﻿using SimulationFramework.Shaders.Compiler.Expressions;
+﻿using SimulationFramework.Shaders.Compiler.ControlFlow;
+using SimulationFramework.Shaders.Compiler.Expressions;
 using SimulationFramework.Shaders.Compiler.ILDisassembler;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,9 @@ public class CompiledMethod
         ReturnType = GetReturnType(method);
 
         Disassembly = new MethodDisassembly(method);
+
+        var graph = new ControlFlow.ControlFlowGraph(Disassembly);
+        DgmlBuilder.WriteDGML(method.Name, graph);
 
         Body = ExpressionBuilder.BuildExpression(Disassembly, out var parameters);
 

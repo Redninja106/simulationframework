@@ -7,6 +7,7 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
 {
     public IRenderer ImmediateRenderer { get; }
     public IGraphicsQueue ImmediateQueue { get; }
+    public GraphicsCapabilities Capabilities { get; }
 
     public OpenGLGraphicsProvider()
     {
@@ -62,6 +63,11 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
     }
 
     public IRenderer CreateRenderer(IGraphicsQueue? queue)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DispatchComputeShader(IShader? shader, int threadsX, int threadsY, int threadsZ, IGraphicsQueue? queue = null)
     {
         throw new NotImplementedException();
     }

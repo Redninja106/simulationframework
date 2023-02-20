@@ -9,9 +9,10 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SimulationFramework.Shaders.Compiler;
-public class CodeGenerator : ExpressionVisitor
+public class CodeGenerator : ExtendedExpressionVisitor
 {
     public ShaderCompilation Compilation { get; private set; }
 
@@ -108,7 +109,7 @@ public class CodeGenerator : ExpressionVisitor
     {
         Writer.WriteLine();
         Writer.Write("struct ");
-        VisitIdentifier(@struct.StructType.Name);
+        VisitType(@struct.StructType);
         Writer.WriteLine();
         Writer.WriteLine('{');
         Writer.Indent++;
@@ -123,7 +124,7 @@ public class CodeGenerator : ExpressionVisitor
         Writer.Write('}');
     }
 
-    protected virtual Expression VisitInlineSourceExpression(InlineSourceExpression expression)
+    protected override Expression VisitInlineSourceExpression(InlineSourceExpression expression)
     {
         Writer.Write(expression.Source);
         return expression;
@@ -138,7 +139,28 @@ public class CodeGenerator : ExpressionVisitor
 
     protected virtual void VisitType(Type type)
     {
-        Writer.Write(type.Name);
+        var name = FormatTypeName(type);
+
+        if (type.IsGenericType)
+        {
+            // trim `x
+            name = name[..name.IndexOf('`')];
+        }
+
+        Writer.Write(name);
+
+        foreach (var genericArg in type.GetGenericArguments())
+        {
+            Writer.Write('_');
+            VisitType(genericArg);
+        }
+    }
+
+    private string FormatTypeName(Type type)
+    {
+        var name = type.Name;
+
+        return name;
     }
 
     protected virtual void VisitIdentifier(string identifier)
@@ -281,37 +303,50 @@ public class CodeGenerator : ExpressionVisitor
         return node;
     }
 
-    protected override Expression VisitExtension(Expression node)
+    //protected override Expression VisitExtension(Expression node)
+    //{
+    //    if (node is CompiledMethodCallExpression compiledMethodCall)
+    //    {
+    //        return VisitCompiledMethodCall(compiledMethodCall);
+    //    }
+
+    //    if (node is IntrinsicCallExpression intrinsicCall)
+    //    {
+    //        return VisitIntrinsicCall(intrinsicCall);
+    //    }
+
+    //    if (node is CompiledVariableExpression compiledVariableExpression)
+    //    {
+    //        return VisitCompiledVariableExpression(compiledVariableExpression);
+    //    }
+
+    //    if (node is CompiledVariableAssignmentExpression compiledVariableAssignmentExpression)
+    //    {
+    //        return VisitCompiledVariableAssignmentExpression(compiledVariableAssignmentExpression);
+    //    }
+
+    //    if (node is InlineSourceExpression inlineSourceExpression)
+    //    {
+    //        return VisitInlineSourceExpression(inlineSourceExpression);
+    //    }
+
+    //    if (node is ReferenceAssignmentExpression referenceAssignmentExpression)
+    //    {
+    //        return VisitReferenceAssignmentExpression(referenceAssignmentExpression);
+    //    }
+
+    //    return base.VisitExtension(node);
+    //}
+
+    protected override Expression VisitReferenceAssignmentExpression(ReferenceAssignmentExpression node)
     {
-        if (node is CompiledMethodCallExpression compiledMethodCall)
-        {
-            return VisitCompiledMethodCall(compiledMethodCall);
-        }
-
-        if (node is IntrinsicCallExpression intrinsicCall)
-        {
-            return VisitIntrinsicCall(intrinsicCall);
-        }
-
-        if (node is CompiledVariableExpression compiledVariableExpression)
-        {
-            return VisitCompiledVariableExpression(compiledVariableExpression);
-        }
-
-        if (node is CompiledVariableAssignmentExpression compiledVariableAssignmentExpression)
-        {
-            return VisitCompiledVariableAssignmentExpression(compiledVariableAssignmentExpression);
-        }
-
-        if (node is InlineSourceExpression inlineSourceExpression)
-        {
-            return VisitInlineSourceExpression(inlineSourceExpression);
-        }
-
-        return base.VisitExtension(node);
+        Visit(node.Left);
+        Writer.Write(" = ");
+        Visit(node.Right);
+        return node;
     }
 
-    protected virtual Expression VisitCompiledMethodCall(CompiledMethodCallExpression node)
+    protected override Expression VisitCompiledMethodCallExpression(CompiledMethodCallExpression node)
     {
         VisitIdentifier(node.Method.Name);
         Writer.Write('(');
@@ -331,7 +366,7 @@ public class CodeGenerator : ExpressionVisitor
         return node;
     }
 
-    protected virtual Expression VisitIntrinsicCall(IntrinsicCallExpression node)
+    protected override Expression VisitIntrinsicCallExpression(IntrinsicCallExpression node)
     {
         VisitIdentifier(node.Method.Name);
 
@@ -349,13 +384,13 @@ public class CodeGenerator : ExpressionVisitor
         return node;
     }
 
-    protected virtual Expression VisitCompiledVariableExpression(CompiledVariableExpression node)
+    protected override Expression VisitCompiledVariableExpression(CompiledVariableExpression node)
     {
         VisitIdentifier(node.Variable.Name);
         return node;
     }
 
-    protected virtual Expression VisitCompiledVariableAssignmentExpression(CompiledVariableAssignmentExpression node)
+    protected override Expression VisitCompiledVariableAssignmentExpression(CompiledVariableAssignmentExpression node)
     {
         VisitCompiledVariableExpression(node.Left);
         Writer.Write(" = ");
@@ -378,7 +413,7 @@ public class CodeGenerator : ExpressionVisitor
             ExpressionType.RightShift => ">>",
             ExpressionType.Not => "-",
             ExpressionType.Negate => "-",
-            _ => "???"
+            _ => " ??? "
         };
     }
 

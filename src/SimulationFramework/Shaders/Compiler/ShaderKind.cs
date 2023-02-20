@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Shaders;
-public enum ShaderVariableInterpolation
+namespace SimulationFramework.Shaders.Compiler;
+
+public enum ShaderKind
 {
-    None,
-    Linear,
+    Vertex,
+    Geometry,
+    Fragment,
+    Compute
 }

@@ -63,4 +63,9 @@ internal class OpenGLBuffer<T> : IBuffer<T> where T : unmanaged
 
         return value;
     }
+
+    public T[] GetData()
+    {
+        throw new NotImplementedException();
+    }
 }

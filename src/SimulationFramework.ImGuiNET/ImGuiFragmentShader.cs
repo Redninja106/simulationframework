@@ -10,23 +10,94 @@ using System.Threading.Tasks;
 namespace SimulationFramework.ImGuiNET;
 internal struct ImGuiFragmentShader : IShader
 {
-    // public ITexture<Color> texture;
+    public ITexture<ColorF> texture;
 
-    [ShaderInput(InputSemantic.Position)]
-    Vector4 outPosition;
+    [Input, OverrideSemantic("color", InputSemantic.Position)] 
+    (Vector4 position, Vector2 uv, ColorF color) input;
 
-    [ShaderInput]
-    Vector2 outUV;
-
-    [ShaderInput]
-    ColorF outColor;
-
-    [ShaderOutput(OutputSemantic.Color)]
+    [Output(OutputSemantic.Color)]
     ColorF fragColor;
 
     public void Main()
     {
-        fragColor = outColor;
-        // color = color.ToVector4() * texture.Sample(uv).ToVector4());
+        fragColor = input.color;
+        // color = input.color * texture.Sample(input.uv);
     }
 }
+
+class OverrideSemanticAttribute : Attribute { public OverrideSemanticAttribute(string field, InputSemantic semantic) { } }
+
+//interface ISamplable<T> where T : ISamplable<T>
+//{
+//    static abstract T Lerp(T a, T b, float t);
+//}
+
+//static class SamplingExtensions
+//{
+//    public static T Sample<T>(this ITexture<T> texture, TextureSampler sampler)
+//        where T : ISamplable<T>
+//    {
+
+//    }
+//}
+
+//struct ColorF : ISamplable<ColorF>
+//{
+//    public static ColorF Lerp(ColorF a, ColorF b, float t)
+//    {
+//    }
+//}
+
+//struct TextureSampler
+//{
+//}
+
+//class UniformAttribute
+//{
+
+//}
+
+//class OutputAttribute
+//{
+//    public string? LinkageName { get; set; } = null;
+
+//    public OutputAttribute()
+//    {
+
+//    }
+
+//    public OutputAttribute(OutputSemantic semantic)
+//    {
+
+//    }
+//}
+
+
+//class InputAttribute : Attribute
+//{
+//    public string? LinkageName { get; set; } = null;
+
+//    public InputAttribute()
+//    {
+
+//    }
+
+//    public InputAttribute(InputSemantic semantic)
+//    {
+
+//    }
+//}
+
+
+//class OverrideSemanticAttribute : Attribute
+//{
+//    public OverrideSemanticAttribute(string fieldName, InputSemantic semantic)
+//    {
+
+//    }
+
+//    public OverrideSemanticAttribute(string fieldName, OutputSemantic semantic)
+//    {
+
+//    }
+//}

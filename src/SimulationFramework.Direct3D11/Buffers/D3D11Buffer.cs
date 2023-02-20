@@ -3,7 +3,7 @@ using Vortice.Direct3D11;
 
 namespace SimulationFramework.Drawing.Direct3D11.Buffers;
 
-internal sealed class D3D11Buffer<T> : IBuffer<T> where T : unmanaged
+internal sealed class D3D11Buffer<T> : IUnorderedAccessViewProvider, IBuffer<T> where T : unmanaged
 {
     public int Length { get; private set; }
     private int SizeInBytes => Length * Stride;
@@ -16,17 +16,39 @@ internal sealed class D3D11Buffer<T> : IBuffer<T> where T : unmanaged
     private ID3D11Buffer[] internalBuffers;
     private ResourceOptions options;
 
+    public LazyResource<ID3D11UnorderedAccessView> UnorderedAccessView { get; }
+
     public D3D11Buffer(DeviceResources resources, int length, ResourceOptions options)
     {
         this.resources = resources;
         this.Length = length;
         this.options = options;
+
         internalBuffers = new ID3D11Buffer[Enum.GetValues<BufferUsage>().Length];
+        UnorderedAccessView = new(resources, CreateUAV);
 
         if (!options.HasFlag(ResourceOptions.Readonly))
         {
             data = new T[length];
         }
+    }
+
+    ID3D11UnorderedAccessView IUnorderedAccessViewProvider.GetUnorderedAccessView() => this.UnorderedAccessView.GetValue();
+
+    private ID3D11UnorderedAccessView CreateUAV()
+    {
+        var desc = new UnorderedAccessViewDescription()
+        {
+            Format = Vortice.DXGI.Format.Unknown,
+            ViewDimension = UnorderedAccessViewDimension.Buffer,
+            Buffer = new() 
+            { 
+                NumElements = this.Length 
+            }
+        };
+
+        var buffer = GetInternalbuffer(BufferUsage.UnorderedAccessResource);
+        return resources.Device.CreateUnorderedAccessView(buffer, desc);
     }
 
     public void Dispose()
@@ -66,6 +88,21 @@ internal sealed class D3D11Buffer<T> : IBuffer<T> where T : unmanaged
             if (buffer is not null)
                 resources.Device.ImmediateContext.UpdateSubresource(data, buffer);
         }
+    }
+
+    public T[] GetData()
+    {
+        var queue = Graphics.ImmediateQueue as D3D11QueueBase;
+
+        var buffer = this.internalBuffers[(int)BufferUsage.UnorderedAccessResource];
+
+        var mapped = queue.DeviceContext.Map(buffer, MapMode.Read);
+        
+        T[] result = mapped.AsSpan<T>(buffer).ToArray();
+
+        queue.DeviceContext.Unmap(buffer);
+
+        return result;
     }
 
     // makes sure the internal buffer of a certain usage is initialized and the proper size
@@ -113,6 +150,12 @@ internal sealed class D3D11Buffer<T> : IBuffer<T> where T : unmanaged
             BufferUsage.VertexBuffer => baseDesc with { BindFlags = BindFlags.VertexBuffer },
             BufferUsage.ConstantBuffer => baseDesc with { BindFlags = BindFlags.ConstantBuffer },
             BufferUsage.IndexBuffer => baseDesc with { BindFlags = BindFlags.IndexBuffer },
+            BufferUsage.UnorderedAccessResource => baseDesc with 
+            { 
+                BindFlags = BindFlags.UnorderedAccess, 
+                CpuAccessFlags = CpuAccessFlags.Read,
+                OptionFlags = ResourceOptionFlags.BufferStructured,
+            },
             _ => throw new NotImplementedException(),
         };
     }

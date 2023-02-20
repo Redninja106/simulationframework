@@ -40,5 +40,11 @@ public interface IGraphicsProvider : IApplicationComponent
     IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged;
 
     void InvalidateShader(Type shaderType);
+
     IRenderer CreateRenderer(IGraphicsQueue? queue);
+
+    void DispatchComputeShader(IShader? shader, int groupsX, int groupsY, int groupsZ, IGraphicsQueue? queue = null);
+    IGraphicsQueue CreateDeferredQueue();
+
+    GraphicsCapabilities Capabilities { get; }
 }
