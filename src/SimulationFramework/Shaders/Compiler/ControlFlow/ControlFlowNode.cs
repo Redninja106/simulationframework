@@ -15,10 +15,12 @@ internal class ControlFlowNode
     private readonly List<ControlFlowNode> successors = new();
     internal readonly List<ControlFlowNode> dominators = new();
 
+    public ControlFlowNode? immediateDominator = null;
+
     public IReadOnlyList<ControlFlowNode> Predecessors => predecessors;
     public IReadOnlyList<ControlFlowNode> Successors => successors;
 
-    public ControlFlowGraph Graph { get; }
+    public ControlFlowGraph Graph { get; set; }
 
 
     public ControlFlowNode(ControlFlowGraph graph)
@@ -69,6 +71,6 @@ internal class ControlFlowNode
 
     public override string ToString()
     {
-        return $"node {DebugID}";
+        return $"{GetType().Name} {DebugID}";
     }
 }

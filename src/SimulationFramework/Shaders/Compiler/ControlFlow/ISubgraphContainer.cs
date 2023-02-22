@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.ControlFlow;
-
-internal class ConditionalNode
+internal interface ISubgraphContainer
 {
-
+    ControlFlowGraph Subgraph { get; }
 }

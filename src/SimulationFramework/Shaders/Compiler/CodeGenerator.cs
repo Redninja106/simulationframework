@@ -92,10 +92,37 @@ public class CodeGenerator : ExtendedExpressionVisitor
             Writer.WriteLine(";");
         }
 
-        Visit(method.Body);
+        foreach (var expr in method.Body.Expressions)
+        {
+            Visit(expr);
+            Writer.WriteLine(';');
+        }
 
         Writer.Indent--;
         Writer.Write('}');
+    }
+
+    protected override Expression VisitConditional(ConditionalExpression expression)
+    {
+        Writer.Write("if (");
+        Visit(expression.Test);
+        Writer.WriteLine(")");
+        Visit(expression.IfTrue);
+        if (!IsEmptyElseExpr(expression.IfFalse))
+        {
+            Writer.WriteLine("else");
+            Visit(expression.IfFalse);
+        }
+
+        return expression;
+    
+        static bool IsEmptyElseExpr(Expression expr)
+        {
+            while (expr.NodeType is ExpressionType.Block)
+                expr = (expr as BlockExpression)!.Expressions.First();
+
+            return expr.NodeType == ExpressionType.Default;
+        }
     }
 
     protected virtual void VisitParameterDeclaration(ParameterExpression parameter)
@@ -143,7 +170,7 @@ public class CodeGenerator : ExtendedExpressionVisitor
 
         if (type.IsGenericType)
         {
-            // trim `x
+            // trim TypeName`n
             name = name[..name.IndexOf('`')];
         }
 
@@ -189,11 +216,17 @@ public class CodeGenerator : ExtendedExpressionVisitor
 
     protected override Expression VisitBlock(BlockExpression node)
     {
+        Writer.WriteLine('{');
+        Writer.Indent++;
+
         foreach (var expr in node.Expressions)
         {
             Visit(expr);
             Writer.WriteLine(';');
         }
+
+        Writer.Indent--;
+        Writer.WriteLine('}');
 
         return node;
     }
@@ -413,6 +446,13 @@ public class CodeGenerator : ExtendedExpressionVisitor
             ExpressionType.RightShift => ">>",
             ExpressionType.Not => "-",
             ExpressionType.Negate => "-",
+            ExpressionType.Equal => "==",
+            ExpressionType.NotEqual => "!=",
+            ExpressionType.GreaterThan => ">",
+            ExpressionType.GreaterThanOrEqual => ">=",
+            ExpressionType.LessThan => "<",
+            ExpressionType.LessThanOrEqual => "<=",
+
             _ => " ??? "
         };
     }
@@ -430,10 +470,17 @@ public class CodeGenerator : ExtendedExpressionVisitor
         {
             ExpressionType.Assign => 14,
             
-            
             ExpressionType.Or => 10,
-            
+
             ExpressionType.And => 8,
+
+            ExpressionType.Equal or
+            ExpressionType.NotEqual => 7,
+
+            ExpressionType.GreaterThan or
+            ExpressionType.GreaterThanOrEqual or
+            ExpressionType.LessThan or
+            ExpressionType.LessThanOrEqual => 6,
 
             ExpressionType.LeftShift
             or ExpressionType.RightShift => 5,

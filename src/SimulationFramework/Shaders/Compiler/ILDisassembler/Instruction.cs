@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SimulationFramework.Shaders.Compiler.ILDisassembler;
@@ -16,6 +17,8 @@ internal class Instruction
 
     public int Location { get; set; }
     public int Size { get; set; }
+
+    public bool IsLast => this == Method.instructions.Last();
 
     public Instruction(MethodDisassembly method, Instruction? prefix, OpCode opCode, object? argument, int location, int size)
     {

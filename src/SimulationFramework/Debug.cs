@@ -41,7 +41,8 @@ internal static class Debug
         WriteOut($"Warning: {message}\n", ConsoleColor.Yellow);
     }
 
-    public static void Assert(bool condition, [CallerArgumentExpression("condition")] string? message = null)
+    [DebuggerHidden]
+    public static void Assert([DoesNotReturnIf(false)] bool condition, [CallerArgumentExpression("condition")] string? message = null)
     {
         if (condition)
             return;

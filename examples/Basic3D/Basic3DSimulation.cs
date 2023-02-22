@@ -211,16 +211,71 @@ internal class Basic3DSimulation : Simulation
 
         public void Main()
         {
-            //if (position.X < 12)
+            float a;
+
+            if (position.X < 12)
+            {
+                a = 23;
+
+                if (position.X < 11)
+                {
+                    a = 53;
+                }
+                else
+                {
+                    a = 1;
+                }
+
+                if (position.X < 12)
+                {
+                    a = 24;
+
+                    if (position.X < 14)
+                    {
+                        a = 42;
+                    }
+                    else
+                    {
+                        a = 51;
+                    }
+
+
+                }
+            }
+
+            if (position.X < 17)
+            {
+                a = 453;
+            }
+            //if (position.X < 3)
             //{
+            //    position = Vector4.One;
+
+            //    if (position.Y > 4)
+            //    {
+            //        position = Vector4.UnitX;
+
+            //    }
+
             //    position = Vector4.Zero;
             //}
 
             //for (int i = 0; i < 10; i++)
             //{
-            //    this.fragPos += normal * 2;
-            //}
+            //    Vector2 hello = new Vector2(1, 2);
 
+            //    //if (position.X < 12)
+            //    //{
+            //    //    position = Vector4.Zero;
+            //    //    continue;
+            //    //}
+
+            //    //if (position.X < 15)
+            //    //{
+            //    //    position = Vector4.Zero;
+            //    //    break;
+            //    //}
+            //}
 
             position = new Vector4(vertex.position, 1);
 
@@ -240,7 +295,7 @@ internal class Basic3DSimulation : Simulation
 
             normal = Vector3.TransformNormal(vertex.normal, uniforms.World);
 
-            Vector4 fragPos = Vector4.Transform(vertex.position, uniforms.World);
+            Vector4 fragPos = Vector4.Transform(new Vector4(vertex.position, 1), uniforms.World);
             this.fragPos = new(fragPos.X, fragPos.Y, fragPos.Z);
         }
     }
@@ -289,6 +344,13 @@ internal class Basic3DSimulation : Simulation
             var brightness = MathF.Max(0, Vector3.Dot(normal, lightDirection));
 
             brightness += .25f;
+
+            if (lightPosition.X > 0)
+            {
+                if (lightPosition.Y > 0)
+                    if (lightPosition.Z > 0)
+                        brightness = 0;
+            }
 
             color = new(brightness, brightness, brightness, 1);
         }

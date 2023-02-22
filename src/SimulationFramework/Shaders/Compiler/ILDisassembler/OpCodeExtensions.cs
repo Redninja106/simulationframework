@@ -91,6 +91,7 @@ internal static class OpCodeExtensions
             OpCode.Ldtoken,
             OpCode.Stfld,
             OpCode.Newobj,
+            OpCode.Initobj,
         },
     };
 
@@ -160,8 +161,6 @@ internal static class OpCodeExtensions
     public static Type? GetArgumentType(this OpCode opCode)
     {
         return argTypes.SingleOrDefault(pair => pair.Value.Contains(opCode)).Key;
-
-        var x = Matrix4x4.CreateTranslation(3, 2, 1) * Matrix4x4.CreateTranslation(1, 2, 3) * Matrix4x4.CreateTranslation(3, 2, 1) * Matrix4x4.CreateTranslation(1, 2, 3) * Matrix4x4.CreateTranslation(3, 2, 1) * Matrix4x4.CreateTranslation(1, 2, 3);
     }
 
 }

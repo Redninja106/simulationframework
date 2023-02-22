@@ -12,15 +12,19 @@ internal struct ImGuiFragmentShader : IShader
 {
     public ITexture<ColorF> texture;
 
-    [Input, OverrideSemantic("color", InputSemantic.Position)] 
-    (Vector4 position, Vector2 uv, ColorF color) input;
+    [Input(LinkageName = "outPosition")]
+    Vector4 position;
+    [Input(LinkageName = "outUV")]
+    Vector2 uv;
+    [Input(LinkageName = "outColor")]
+    ColorF color;
 
     [Output(OutputSemantic.Color)]
     ColorF fragColor;
 
     public void Main()
     {
-        fragColor = input.color;
+        fragColor = color;
         // color = input.color * texture.Sample(input.uv);
     }
 }

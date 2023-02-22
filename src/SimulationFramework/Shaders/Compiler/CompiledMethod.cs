@@ -26,10 +26,9 @@ public class CompiledMethod
 
         Disassembly = new MethodDisassembly(method);
 
-        var graph = new ControlFlow.ControlFlowGraph(Disassembly);
-        DgmlBuilder.WriteDGML(method.Name, graph);
+        var graph = new ControlFlowGraph(Disassembly);
 
-        Body = ExpressionBuilder.BuildExpression(Disassembly, out var parameters);
+        Body = ExpressionBuilder.BuildExpressions(graph, out var parameters);
 
         Parameters = new(parameters);
 

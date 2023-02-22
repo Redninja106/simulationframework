@@ -1,4 +1,5 @@
-﻿using SimulationFramework.Shaders.Compiler.Expressions;
+﻿using SimulationFramework.Shaders.Compiler.ControlFlow;
+using SimulationFramework.Shaders.Compiler.Expressions;
 using SimulationFramework.Shaders.Compiler.ILDisassembler;
 using System;
 using System.Collections.Generic;
@@ -15,25 +16,27 @@ internal class ExpressionBuilder
 {
     private MethodDisassembly Disassembly { get; set; }
     private InstructionStream InstructionStream { get; set; }
-    private Stack<Expression> Expressions { get; set; }
     private ParameterExpression[] Arguments { get; set; }
     private ParameterExpression[] Locals { get; set; }
     private LabelTarget ReturnTarget { get; set; }
     private Type ReturnType { get; set; }
     private bool IsConstructor { get; set; }
+    private Stack<Expression> Expressions { get; set; }
 
     private ExpressionBuilder(MethodDisassembly disassembly)
     {
         this.Disassembly = disassembly;
     }
 
-    public static BlockExpression BuildExpression(MethodDisassembly disassembly, out ParameterExpression[] Parameters)
+    public static BlockExpression BuildExpressions(ControlFlowGraph graph, out ParameterExpression[] Parameters)
     {
+        var disassembly = graph.Disassembly;
+
         ExpressionBuilder builder = new(disassembly);
 
+        builder.Expressions = new();
         builder.IsConstructor = disassembly.Method is ConstructorInfo;
 
-        builder.Expressions = new();
         builder.InstructionStream = new InstructionStream(disassembly);
 
         builder.Arguments = GetArguments(disassembly);
@@ -42,31 +45,50 @@ internal class ExpressionBuilder
         builder.ReturnType = disassembly.Method is MethodInfo method ? method.ReturnType : typeof(void);
         builder.ReturnTarget = Expression.Label(builder.ReturnType, "return");
 
+        var exprs = builder.BuildNodeChain(graph.EntryNode, graph.ExitNode);
+
+        Parameters = builder.Arguments;
+        
+        Expression result = Expression.Block(builder.ReturnType, builder.Locals, exprs);
+        result = builder.SimplifyExpression(result);
+
+        return result is BlockExpression blockExpr ? blockExpr : Expression.Block(builder.Locals, result);
+    }
+
+    Expression? BuildBasicBlockExpression(BasicBlockNode basicBlock)
+    {
+        if (basicBlock.Instructions.Count is 0)
+            return null;
+
+        Expressions.Clear();
+
+        // var instructions = new InstructionStream(this.Disassembly);
+        // instructions.Position = basicBlock.Instructions
+
         var builders = new Func<Instruction, bool>[]
         {
-            builder.BuildNopExpr,
-            builder.BuildBinaryExpr,
-            builder.BuildFieldExpr,
-            builder.BuildUnaryExpr,
-            builder.BuildLocalExpr,
-            builder.BuildReturnExpr,
-            builder.BuildConstantExpr,
-            builder.BuildArgumentExpr,
-            builder.BuildNewObjExpr,
-            builder.BuildCallExpr,
-            builder.BuildLoadIndirect,
-            builder.BuildStoreIndirect,
-            builder.BuildDup,
+            BuildNopExpr,
+            BuildBinaryExpr,
+            BuildFieldExpr,
+            BuildUnaryExpr,
+            BuildLocalExpr,
+            BuildReturnExpr,
+            BuildConstantExpr,
+            BuildArgumentExpr,
+            BuildNewObjExpr,
+            BuildCallExpr,
+            BuildLoadIndirect,
+            BuildStoreIndirect,
+            BuildDup,
+            BuildBranch,
 
-            i => i.OpCode is OpCode.Pop or OpCode.Br_S or OpCode.Ldobj,
+            i => i.OpCode is OpCode.Pop or OpCode.Initobj,
 
             i => throw new NotSupportedException("Unsupported instruction '" + i.OpCode + "'."),
         };
 
-        while (!builder.InstructionStream.IsAtEnd)
+        foreach (var instruction in basicBlock.Instructions)
         {
-            var instruction = builder.InstructionStream.Read();
-
             foreach (var b in builders)
             {
                 if (b(instruction))
@@ -74,8 +96,140 @@ internal class ExpressionBuilder
             }
         }
 
-        Parameters = builder.Arguments;
-        return Expression.Block(builder.ReturnType, builder.Locals, builder.Expressions.Reverse());
+        return CreateBlockExpressionIfNeeded(Expressions.Reverse(), Locals);
+    }
+
+    bool BuildBranch(Instruction instruction)
+    {
+        return IsBranchInstruction(instruction.OpCode);
+
+        bool IsBranchInstruction(OpCode opCode) =>
+            opCode is
+            OpCode.Br or
+            OpCode.Br_S or
+            OpCode.Brfalse or
+            OpCode.Brfalse_S or
+            OpCode.Brtrue or
+            OpCode.Brtrue_S or
+            OpCode.Beq or
+            OpCode.Beq_S or
+            OpCode.Bne_Un or
+            OpCode.Bne_Un_S or
+            OpCode.Bgt or
+            OpCode.Bgt_S or
+            OpCode.Bgt_Un or
+            OpCode.Bgt_Un_S or
+            OpCode.Blt or
+            OpCode.Blt_S or
+            OpCode.Blt_Un or
+            OpCode.Blt_Un_S;
+    }
+
+    Expression? BuildNode(ControlFlowNode node)
+    {
+        if (node is ConditionalNode conditional)
+        {
+            var beginExpr = BuildNode(conditional.Subgraph.EntryNode);
+
+            Debug.Assert(beginExpr is not null);
+
+            beginExpr = GetConditionExpression(SimplifyExpression(beginExpr), out var condition);
+
+            Debug.Assert(condition is not null);
+
+            var trueExpr = BuildNodeChain(conditional.TrueBranch, conditional.Subgraph.ExitNode);
+            Expression falseExpr = conditional.FalseBranch is null ? Expression.Default(trueExpr.Type) : BuildNodeChain(conditional.FalseBranch, conditional.Subgraph.ExitNode);
+            var condExpr = Expression.Condition(condition, trueExpr, falseExpr);
+            
+            var endExpr = BuildNode(conditional.Subgraph.ExitNode);
+
+            return CreateBlockExpressionIfNeeded(new Expression?[] { beginExpr, condExpr, endExpr }.Where(ex => ex is not null).Cast<Expression>());
+        }
+        else if (node is LoopNode loop)
+        {
+            throw new Exception();
+        }
+        else if (node is BasicBlockNode basicBlock)
+        {
+            return BuildBasicBlockExpression(basicBlock);
+        }
+        else
+        {
+            throw new Exception();
+        }
+    }
+
+    private Expression CreateBlockExpressionIfNeeded(IEnumerable<Expression?> expressions, IEnumerable<ParameterExpression>? parameters = null)
+    {
+        if (expressions.Count() is 1)
+            return expressions.Single()!;
+        
+        return Expression.Block(
+            parameters ?? Array.Empty<ParameterExpression>(),
+            expressions.Where(x => x is not null).Cast<Expression>()
+            );
+    }
+
+    // trims the last expr from a block used for grabbing head statements for ifs and loops
+    private Expression? GetConditionExpression(Expression expr, out Expression lastExpr)
+    {
+        if (expr is not BlockExpression blockExpr)
+        {
+            lastExpr = expr;
+            return null;
+        }
+
+        lastExpr = blockExpr.Expressions.Last();
+        return CreateBlockExpressionIfNeeded(blockExpr.Expressions.SkipLast(1), blockExpr.Variables);
+    }
+
+    BlockExpression BuildNodeChain(ControlFlowNode start, ControlFlowNode end)
+    {
+        Debug.Assert(start.Graph == end.Graph);
+
+        var graph = start.Graph;
+        List<Expression?> exprs = new();
+
+        var node = start;
+        while (node != end)
+        {
+            exprs.Add(BuildNode(node));
+            node = node.Successors.Single();
+        }
+
+        return Expression.Block(exprs.Where(ex => ex is not null).Cast<Expression>());
+    }
+
+    Expression SimplifyExpression(Expression expression)
+    {
+        if (expression is ConditionalExpression conditionalExpr)
+            return Expression.Condition(
+                SimplifyExpression(conditionalExpr.Test),
+                ForceVoidType(SimplifyExpression(conditionalExpr.IfTrue)),
+                ForceVoidType(SimplifyExpression(conditionalExpr.IfFalse))
+                );
+            
+        if (expression is not BlockExpression blockExpr)
+            return expression;
+
+        IEnumerable<Expression> expressions = Enumerable.Empty<Expression>();
+
+        foreach (var expr in blockExpr.Expressions.Select(SimplifyExpression))
+        {
+            expressions = expr is BlockExpression b ?
+                expressions.Concat(b.Expressions) :
+                expressions = expressions.Append(expr);
+        }
+
+        return CreateBlockExpressionIfNeeded(expressions, blockExpr.Variables);
+    }
+
+    Expression ForceVoidType(Expression expression)
+    {
+        if (expression.Type == typeof(void))
+            return expression;
+
+        return Expression.Block(typeof(void), expression);
     }
 
     bool BuildDup(Instruction instruction)
@@ -127,9 +281,9 @@ internal class ExpressionBuilder
         {
             Expressions.Push(Expression.MakeBinary(exprType.Value, left, right));
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException)
         {
-            Expressions.Push(Expression.MakeBinary(exprType.Value, left, Expression.Convert(right, typeof(uint))));
+            Expressions.Push(Expression.MakeBinary(exprType.Value, left, Expression.Convert(right, left.Type)));
         }
         return true;
 
@@ -146,6 +300,9 @@ internal class ExpressionBuilder
                 OpCode.Shr => ExpressionType.RightShift,
                 OpCode.Shr_Un => ExpressionType.RightShift,
                 OpCode.Shl => ExpressionType.LeftShift,
+                OpCode.Ceq => ExpressionType.Equal,
+                OpCode.Clt => ExpressionType.LessThan,
+                OpCode.Cgt => ExpressionType.GreaterThan,
                 _ => null
             };
 
@@ -290,7 +447,7 @@ internal class ExpressionBuilder
 
         var returnExpr = ReturnType == typeof(void) ? null : Expressions.Pop();
 
-        if (InstructionStream.IsAtEnd)
+        if (instruction.IsLast)
         {
             Expressions.Push(Expression.Label(ReturnTarget, returnExpr));
         }

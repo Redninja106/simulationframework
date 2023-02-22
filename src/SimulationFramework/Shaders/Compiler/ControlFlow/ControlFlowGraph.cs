@@ -1,8 +1,12 @@
 ﻿using SimulationFramework.Shaders.Compiler.ControlFlow;
 using SimulationFramework.Shaders.Compiler.ILDisassembler;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection.PortableExecutable;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,25 +14,67 @@ namespace SimulationFramework.Shaders.Compiler.ControlFlow;
 
 internal class ControlFlowGraph
 {
-    public BasicBlockNode EntryNode { get; }
-    public BasicBlockNode ExitNode { get; }
+    public ControlFlowNode EntryNode { get; set; }
+    public ControlFlowNode ExitNode { get; set; }
     public MethodDisassembly Disassembly { get; set; }
-    public List<Loop> Loops { get; set; }
+
+    public ControlFlowNode? Parent { get; set; }
 
     public readonly List<BasicBlockNode> BasicBlocks = new();
+    public readonly List<ControlFlowNode> Nodes = new();
 
     public ControlFlowGraph(MethodDisassembly disassembly)
     {
+        this.Parent = null;
         EntryNode = new BasicBlockNode(this);
         ExitNode = new BasicBlockNode(this);
-        BasicBlocks.Add(this.EntryNode);
-        BasicBlocks.Add(this.ExitNode);
+        AddNode(this.EntryNode);
+        AddNode(this.ExitNode);
 
         this.Disassembly = disassembly;
         EntryNode.AddSuccessor(GetBasicBlock(disassembly.instructions[0]));
 
         RecomputeDominators();
-        Loops = ComputeLoops();
+        DgmlBuilder.WriteDGML(disassembly.Method.DeclaringType.Name + "_" + disassembly.Method.Name, this);
+        ReplaceLoops();
+        ReplaceConditionals();
+    }
+
+    private ControlFlowGraph(ControlFlowNode parent, ControlFlowNode entryNode, ControlFlowNode exitNode, IEnumerable<ControlFlowNode> nodes)
+    {
+        this.Parent = parent;
+        this.EntryNode = entryNode;
+        this.ExitNode = exitNode;
+
+        foreach (var node in nodes)
+        {
+            if (node == node.Graph.EntryNode)
+                node.Graph.EntryNode = parent;
+
+            if (node == node.Graph.ExitNode)
+                node.Graph.ExitNode = parent;
+
+            node.Graph.RemoveNode(node);
+            node.Graph = this;
+        }
+
+        this.Nodes.AddRange(nodes);
+        RecomputeDominators();
+    }
+
+    public static ControlFlowGraph CreateConditionalSubgraph(ControlFlowNode parent, ControlFlowNode entryNode, ControlFlowNode exitNode)
+    {
+        Debug.Assert(exitNode.immediateDominator == entryNode);
+        Debug.Assert(entryNode.Graph == exitNode.Graph);
+
+        entryNode.Graph.RecomputeDominators();
+        var nodes = entryNode.Graph.GetNodesBetween(entryNode, exitNode);
+        var graph = new ControlFlowGraph(parent, entryNode, exitNode, nodes);
+
+        graph.EntryNode = entryNode;
+        graph.ExitNode = exitNode;
+
+        return graph;
     }
 
     public BasicBlockNode GetBasicBlock(Instruction startInstruction)
@@ -38,10 +84,11 @@ internal class ControlFlowGraph
         if (block is null)
         {
             block = new BasicBlockNode(this);
-            BasicBlocks.Add(block);
+            AddNode(block);
 
             var stream = new InstructionStream(Disassembly);
             stream.Position = startInstruction.Location;
+
             AddNextBlocks(block, stream);
         }
 
@@ -54,7 +101,7 @@ internal class ControlFlowGraph
         {
             var instruction = instructions.Peek();
 
-            if (node.Instructions.Count > 1 && instruction.IsBranchTarget())
+            if (node.Instructions.Count > 0 && instruction.IsBranchTarget())
             {
                 node.AddSuccessor(GetBasicBlock(instruction));
                 break;
@@ -80,10 +127,6 @@ internal class ControlFlowGraph
             if (branchBehavior is BranchBehavior.Return)
             {
                 node.AddSuccessor(this.ExitNode);
-
-                if (!this.BasicBlocks.Contains(this.ExitNode))
-                    this.BasicBlocks.Add(this.ExitNode);
-
                 break;
             }
         }
@@ -91,45 +134,68 @@ internal class ControlFlowGraph
 
     public void RecomputeDominators()
     {
-        foreach (var block in this.BasicBlocks)
+        foreach (var node in this.Nodes)
         {
-            block.dominators.Clear();
+            node.dominators.Clear();
 
-            if (block == this.EntryNode)
+            if (node == this.EntryNode)
             {
-                block.dominators.Add(block);
+                node.dominators.Add(node);
             }
             else
             {
-                block.dominators.AddRange(this.BasicBlocks);
+                node.dominators.AddRange(this.Nodes);
             }
         }
 
         bool changed;
-
         do
         {
             changed = false;
-            foreach (var block in this.BasicBlocks)
+            foreach (var node in this.Nodes)
             {
-                if (block == this.EntryNode)
+                if (node == this.EntryNode)
                     continue;
 
-                foreach (var pred in block.Predecessors)
+                foreach (var pred in node.Predecessors)
                 {
-                    var intersect = block.dominators.Intersect(pred.dominators).Append(block).Distinct().ToArray();
+                    var intersect = node.dominators.Intersect(pred.dominators).Append(node).Distinct().ToArray();
 
-                    if (!block.dominators.SequenceEqual(intersect))
+                    if (!node.dominators.SequenceEqual(intersect))
                     {
                         changed = true;
-                        block.dominators.Clear();
-                        block.dominators.AddRange(intersect);
+                        node.dominators.Clear();
+                        node.dominators.AddRange(intersect);
                     }
                 }
             }
         }
         while (changed);
 
+        // immediate dominators
+        foreach (var node in Nodes)
+        {
+            node.immediateDominator = null;
+            if (node == EntryNode)
+                continue;
+
+            foreach (var dominator in node.dominators)
+            {
+                if (node == dominator)
+                    continue;
+
+                if (node.immediateDominator is null)
+                { 
+                    node.immediateDominator = dominator;
+                    continue;
+                }
+
+                if (dominator.dominators.Contains(node.immediateDominator))
+                {
+                    node.immediateDominator = dominator;
+                }
+            }
+        }
     }
 
     Loop CreateLoop(BasicBlockNode header, BasicBlockNode tail)
@@ -137,15 +203,11 @@ internal class ControlFlowGraph
         Stack<BasicBlockNode> stack = new();
         Loop loop = new();
 
-        loop = new Loop();
-
-        loop.header = header;
-        loop.tail = tail;
-        loop.blocks.Add(header);
+        var nodes = new List<ControlFlowNode> { header };
 
         if (header != tail)
         {
-            loop.blocks.Add(tail);
+            nodes.Add(tail);
             stack.Push(tail);
         }
 
@@ -154,13 +216,21 @@ internal class ControlFlowGraph
             var block = stack.Pop();
             foreach (var pred in block.Predecessors)
             {
-                if (!loop.blocks.Contains(pred))
+                if (!nodes.Contains(pred))
                 {
-                    loop.blocks.Add(pred as BasicBlockNode);
+                    nodes.Add(pred as BasicBlockNode);
                     stack.Push(pred as BasicBlockNode);
                 }
             }
         }
+
+        loop = new Loop
+        {
+            header = header,
+            tail = tail,
+            subgraph = new(null, header, tail, nodes)
+        };
+
         return loop;
     }
 
@@ -176,9 +246,8 @@ internal class ControlFlowGraph
             foreach (var succ in block.Successors)
             {
                 // Every successor that dominates its predecessor
-                // must be the header of a loop.
-                // That is, block -> succ is a back edge.
-
+                // is a loop header
+                
                 if (block.dominators.Contains(succ))
                     loops.Add(CreateLoop(succ as BasicBlockNode, block));
             }
@@ -187,14 +256,47 @@ internal class ControlFlowGraph
         return loops;
     }
 
-    public void Traverse(Action<ControlFlowNode> visitNode)
+    public void RemoveNode(ControlFlowNode node)
+    {
+        Debug.Assert(Nodes.Remove(node));
+    }
+
+    public void DepthFirstTraverse(Action<ControlFlowNode> visitNode)
+    {
+        DepthFirstTraverse(visitNode, EntryNode);
+    }
+
+    public void DepthFirstTraverse(Action<ControlFlowNode> visitNode, ControlFlowNode startNode)
+    {
+        _ = DepthFirstSearch(node =>
+        {
+            visitNode(node);
+            return false;
+        }, startNode);
+    }
+
+    public List<ControlFlowNode> GetNodesBetween(ControlFlowNode top, ControlFlowNode bottom)
+    {
+        List<ControlFlowNode> nodes = Nodes.Where(node => node.dominators.Contains(top) && !node.dominators.Contains(bottom)).ToList();
+        nodes.Add(bottom);
+        return nodes;
+    }
+
+    public ControlFlowNode? DepthFirstSearch(Predicate<ControlFlowNode> predicate, bool searchSubgraphs = false)
+    {
+        return DepthFirstSearch(predicate, EntryNode, searchSubgraphs);
+    }
+
+    public ControlFlowNode? DepthFirstSearch(Predicate<ControlFlowNode> predicate, ControlFlowNode startNode, bool searchSubgraphs = false)
     {
         HashSet<ControlFlowNode> visited = new();
-        TraverseHelper(visitNode, this.EntryNode, visited);
+        return DepthFirstSearchHelper(predicate, startNode, visited, searchSubgraphs);
 
-        static void TraverseHelper(Action<ControlFlowNode> visitNode, ControlFlowNode current, HashSet<ControlFlowNode> visited)
+        static ControlFlowNode? DepthFirstSearchHelper(Predicate<ControlFlowNode> predicate, ControlFlowNode current, HashSet<ControlFlowNode> visited, bool searchSubgraphs)
         {
-            visitNode(current);
+            if (predicate(current))
+                return current;
+
             visited.Add(current);
 
             foreach (var successor in current.Successors)
@@ -202,14 +304,257 @@ internal class ControlFlowGraph
                 if (visited.Contains(successor))
                     continue;
 
-                TraverseHelper(visitNode, successor, visited);
+                ControlFlowNode? result = DepthFirstSearchHelper(predicate, successor, visited, searchSubgraphs);
+
+                if (result is not null)
+                    return result;
+            }
+
+            if (searchSubgraphs && current is ISubgraphContainer subgraphContainer)
+            {
+                subgraphContainer.Subgraph.DepthFirstSearch(predicate, subgraphContainer.Subgraph.EntryNode, searchSubgraphs);
+            }
+
+            return null;
+        }
+    }
+
+    public void BreadthFirstTraverse(Action<ControlFlowNode> visitNode, bool searchSubgraphs = false)
+    {
+        _ = BreadthFirstSearch(node =>
+        {
+            visitNode(node); 
+            return false;
+        });
+    }
+
+    public ControlFlowNode? BreadthFirstSearch(Predicate<ControlFlowNode> predicate, bool searchSubgraphs = false)
+    {
+        return BreadthFirstSearch(predicate, EntryNode, searchSubgraphs);
+    }
+
+    public ControlFlowNode? BreadthFirstSearch(Predicate<ControlFlowNode> predicate, ControlFlowNode startNode, bool searchSubgraphs = false)
+    {
+        Queue<ControlFlowNode> workingQueue = new();
+        HashSet<ControlFlowNode> visited = new();
+
+        workingQueue.Enqueue(startNode);
+        while (workingQueue.TryDequeue(out ControlFlowNode? node))
+        {
+            if (predicate(node))
+                return node;
+
+            foreach (var successor in node.Successors)
+            {
+                if (visited.Contains(successor))
+                    continue;
+
+                visited.Add(successor);
+                workingQueue.Enqueue(successor);
+            }
+
+            if (searchSubgraphs && node is ISubgraphContainer subgraphContainer)
+            {
+                workingQueue.Enqueue(subgraphContainer.Subgraph.EntryNode);
+                visited.Add(subgraphContainer.Subgraph.EntryNode);
             }
         }
+
+        return null;
+    }
+
+
+    public void AddNode(ControlFlowNode node)
+    {
+        Nodes.Add(node);
+
+        if (node is BasicBlockNode basicBlock)
+            BasicBlocks.Add(basicBlock);
+    }
+
+    public void ReplaceLoops()
+    {
+        var loops = ComputeLoops();
+
+        foreach (var loop in loops)
+        {
+            AddNode(new LoopNode(this, loop));
+            RecomputeDominators();
+        }
+    }
+
+
+    void ReplaceConditionals()
+    {
+        // a conditional is any node with two successors
+        // there are no loops at this point
+        for (int i = 0; i < Nodes.Count; i++)
+        {
+            var node = Nodes[i];
+
+            if (node == EntryNode)
+                continue;
+
+            if (node.Successors.Count is 2)
+            {
+                AddNode(new ConditionalNode(this, node));
+            }
+        }
+
+        for (int i = 0; i < Nodes.Count; i++)
+        {
+            var node = Nodes[i];
+
+            if (node is ISubgraphContainer container)
+            {
+                container.Subgraph.ReplaceConditionals();
+            }
+        }
+
+        DepthFirstTraverse(node => (node as ConditionalNode)?.FixConnections());
     }
 }
 class Loop
 {
-    public BasicBlockNode header;
-    public readonly List<BasicBlockNode> blocks = new();
-    public BasicBlockNode tail;
+    public ControlFlowNode header;
+    public ControlFlowNode tail;
+    public ControlFlowGraph subgraph;
+}
+
+class LoopNode : ControlFlowNode, ISubgraphContainer
+{
+    public ControlFlowNode Header { get; set; }
+
+    private Loop loop;
+
+    public ControlFlowNode BreakTarget;
+    public List<ControlFlowNode> BreakNodes;
+
+    public ControlFlowNode ContinueTarget;
+    public List<ControlFlowNode> ContinueNodes;
+
+    public ControlFlowGraph Subgraph => loop.subgraph;
+
+    public LoopNode(ControlFlowGraph graph, Loop loop) : base(graph)
+    {
+        this.loop = loop;
+
+        Header = loop.header;
+        ContinueTarget = Header;
+        BreakTarget = loop.header.Successors.Single(n => !loop.subgraph.Nodes.Contains(n)); // Should be postdominator
+
+        BreakNodes = loop.subgraph.Nodes.Where(b => b.Successors.SingleOrDefault(s => s == BreakTarget) is not null).ToList();
+        ContinueNodes = loop.subgraph.Nodes.Where(b => b.Successors.SingleOrDefault(s => s == ContinueTarget) is not null).ToList();
+
+        foreach (var pred in Header.Predecessors.ToArray())
+        {
+            if (loop.subgraph.Nodes.Contains(pred))
+                continue;
+
+            pred.RemoveSuccessor(Header);
+            pred.AddSuccessor(this);
+        }
+
+        foreach (var succ in Header.Successors.ToArray())
+        {
+            if (loop.subgraph.Nodes.Contains(succ))
+                continue;
+
+            succ.RemovePredecessor(Header);
+            succ.AddPredecessor(this);
+        }
+    }
+}
+
+class Conditional
+{
+    public bool inverted;
+    public ControlFlowNode trueBranch;
+    public ControlFlowNode? falseBranch;
+    public ControlFlowGraph subgraph;
+}
+
+class ConditionalNode : ControlFlowNode, ISubgraphContainer
+{
+    private Conditional conditional;
+
+    public bool Inverted => conditional.inverted;
+    public ControlFlowNode TrueBranch => conditional.trueBranch;
+    public ControlFlowNode? FalseBranch => conditional.falseBranch;
+    public ControlFlowGraph Subgraph => this.conditional.subgraph;
+
+    public ConditionalNode(ControlFlowGraph graph, ControlFlowNode startNode) : base(graph)
+    {
+        this.conditional = FindConditional(graph, startNode);
+
+        foreach (var predecessor in Subgraph.EntryNode.Predecessors.ToArray())
+        {
+            predecessor.RemoveSuccessor(Subgraph.EntryNode);
+            predecessor.AddSuccessor(this);
+        }
+
+        foreach (var sucessor in Subgraph.ExitNode.Successors.ToArray())
+        {
+            sucessor.RemovePredecessor(Subgraph.ExitNode);
+            sucessor.AddPredecessor(this);
+        }
+    }
+
+
+    Conditional FindConditional(ControlFlowGraph graph, ControlFlowNode startNode)
+    {
+        // look for idom & two preds
+        graph.RecomputeDominators();
+        var endNode = graph.DepthFirstSearch(node =>
+        {
+            return node.immediateDominator == startNode && node.Predecessors.Count >= 2;
+        }, startNode, true);
+
+        Debug.Assert(endNode is not null);
+
+        var firstSuccessor = startNode.Successors[0];
+        var secondSuccessor = startNode.Successors[1];
+
+        List<ControlFlowNode> nodes = graph.Nodes.Where(node => node.dominators.Contains(startNode) && !node.dominators.Contains(endNode)).ToList();
+        nodes.Add(endNode);
+
+        bool inverted = false;
+        if (firstSuccessor == endNode)
+        {
+            (firstSuccessor, secondSuccessor) = (secondSuccessor, firstSuccessor);
+            inverted = true;
+        }
+
+        if (secondSuccessor == endNode)
+        {
+            secondSuccessor = null;
+        }
+
+        return new Conditional()
+        {
+            inverted = inverted,
+            trueBranch = firstSuccessor,
+            falseBranch = secondSuccessor,
+            subgraph = ControlFlowGraph.CreateConditionalSubgraph(this, startNode, endNode)
+        };
+    }
+
+    // connections may not be to the correct subgraph after being
+    // simplified, walk up bad connection's parent until we are good
+    public void FixConnections()
+    {
+        conditional.trueBranch = FixConnectionsHelper(conditional.trueBranch);
+        
+        if (conditional.falseBranch is not null)
+            conditional.falseBranch = FixConnectionsHelper(conditional.falseBranch);
+
+        ControlFlowNode FixConnectionsHelper(ControlFlowNode node)
+        {
+            while (node.Graph != this.Subgraph)
+            {
+                node = node.Graph.Parent ?? throw new Exception();
+            }
+            return node;
+        }
+    }
 }

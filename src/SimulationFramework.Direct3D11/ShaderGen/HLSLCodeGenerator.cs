@@ -28,6 +28,7 @@ public class HLSLCodeGenerator : CodeGenerator
         [typeof(Matrix4x4)] = "float4x4",
         [typeof(Matrix3x2)] = "float3x2",
         [typeof(ColorF)] = "float4",
+        [typeof(bool)] = "bool",
     };
 
     private static readonly Dictionary<MethodInfo, string> intrinsicAliases = new()
@@ -86,6 +87,8 @@ public class HLSLCodeGenerator : CodeGenerator
         //[typeof(Matrix4x4).GetField(nameof(Matrix4x4.M44))] = "_44",
 
     };
+
+    private bool IsInEntryPoint = false;
 
     private static FieldInfo GetBackingField(PropertyInfo property)
     {
@@ -313,6 +316,8 @@ public class HLSLCodeGenerator : CodeGenerator
     {
         if (method == this.Compilation.EntryPoint)
         {
+            IsInEntryPoint = true;
+
             // numthreads
             if (Compilation.ShaderKind == ShaderKind.Compute)
             {
@@ -350,7 +355,7 @@ public class HLSLCodeGenerator : CodeGenerator
                 Writer.WriteLine(";");
             }
 
-            foreach (var expr in method.Body.Expressions.SkipLast(1))
+            foreach (var expr in method.Body.Expressions)
             {
                 Visit(expr);
                 Writer.WriteLine(";");
@@ -360,6 +365,8 @@ public class HLSLCodeGenerator : CodeGenerator
 
             Writer.Indent--;
             Writer.WriteLine("}");
+
+            IsInEntryPoint = false;
         }
         else
         {
@@ -472,5 +479,12 @@ public class HLSLCodeGenerator : CodeGenerator
     protected override Expression VisitMethodCall(MethodCallExpression node)
     {
         return base.VisitMethodCall(node);
+    }
+    protected override Expression VisitLabel(LabelExpression node)
+    {
+        if (IsInEntryPoint)
+            return node;
+
+        return base.VisitLabel(node);
     }
 }
