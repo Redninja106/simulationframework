@@ -6,7 +6,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Shaders.Compiler.Rules;
+namespace SimulationFramework.Shaders.Compiler.Passes;
 internal abstract class CompilerPass : ExpressionVisitor
 {
     public virtual bool AppliesTo(ShaderKind shaderKind) => true;

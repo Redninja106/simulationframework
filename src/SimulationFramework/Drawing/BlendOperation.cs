@@ -4,10 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Drawing.Direct3D11;
-
-internal enum TextureUsage
+namespace SimulationFramework.Drawing;
+public enum BlendOperation
 {
-    RenderTarget,
-    DepthStencil,
+    Add
 }

@@ -10,7 +10,8 @@ namespace SimulationFramework.Shaders;
 [AttributeUsage(AttributeTargets.Method)]
 internal class ReplaceAttribute : Attribute
 {
-    public const string ConstructorMethodName = ".ctor";
+    public const string Constructor = ".ctor";
+    public const string MultiplyOperator = "op_Multiply";
 
     public string MethodName { get; }
     public Type MethodType { get; }

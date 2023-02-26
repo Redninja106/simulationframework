@@ -6,12 +6,20 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders;
 
-public struct TriangleStream<T> : IPrimitiveStream<T>
-    where T : unmanaged
+public struct TriangleStream<TVertex> : IPrimitiveStream<TVertex>
+    where TVertex : unmanaged
 {
-    public void EmitVertex(T vertex)
+    public void EmitVertex(TVertex vertex)
     {
         throw new NotImplementedException();
+    }
+
+    public void EmitPrimitive(TrianglePrimitive<TVertex> primitive)
+    {
+        EndPrimitive();
+        EmitVertex(primitive.Vertex0);
+        EmitVertex(primitive.Vertex1);
+        EmitVertex(primitive.Vertex2);
     }
 
     public void EndPrimitive()

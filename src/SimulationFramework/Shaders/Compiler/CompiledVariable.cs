@@ -23,6 +23,8 @@ public class CompiledVariable
     public bool IsInput;
     public bool IsOutput;
 
+    public Type? SourceType;
+
     public CompiledVariable(FieldInfo field)
     {
         this.BackingField = field;
@@ -33,6 +35,7 @@ public class CompiledVariable
         this.IsInput = inputAttribute is not null;
         this.InputName = inputAttribute?.LinkageName ?? Name;
         this.InputSemantic = inputAttribute?.Semantic;
+        this.SourceType = inputAttribute?.SourceType;
 
         var outputAttribute = field.GetCustomAttribute<OutputAttribute>();
         this.IsOutput = outputAttribute is not null;

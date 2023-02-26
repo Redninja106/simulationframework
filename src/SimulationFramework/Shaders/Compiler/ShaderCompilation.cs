@@ -17,7 +17,7 @@ public class ShaderCompilation
     private List<CompiledVariable> outputs;
     private List<CompiledVariable> uniforms;
     private List<CompiledVariable> intrinsicUniforms;
-    private List<CompiledVariable> statics;
+    private List<CompiledVariable> globals;
 
     public CompiledMethod EntryPoint;
 
@@ -28,13 +28,13 @@ public class ShaderCompilation
     public IEnumerable<CompiledStruct> Structs => structs;
     public IEnumerable<CompiledVariable> Inputs => inputs;
     public IEnumerable<CompiledVariable> Outputs => outputs;
-    public IEnumerable<CompiledVariable> Statics => statics;
+    public IEnumerable<CompiledVariable> Globals => globals;
     public IEnumerable<CompiledVariable> IntrinsicUniforms => intrinsicUniforms;
     public IEnumerable<CompiledVariable> Uniforms => uniforms;
     public IEnumerable<CompiledVariable> AllUniforms => uniforms.Concat(intrinsicUniforms);
-    public IEnumerable<CompiledVariable> Variables => Inputs.Concat(outputs).Concat(statics).Concat(AllUniforms);
+    public IEnumerable<CompiledVariable> Variables => Inputs.Concat(outputs).Concat(globals).Concat(AllUniforms);
 
-    public ShaderCompilation(ShaderKind shaderKind, IEnumerable<CompiledMethod> methods, IEnumerable<CompiledStruct> structs, IEnumerable<CompiledVariable> inputs, IEnumerable<CompiledVariable> outputs, IEnumerable<CompiledVariable> uniforms, IEnumerable<CompiledVariable> intrinsicUniforms, IEnumerable<CompiledVariable> statics)
+    public ShaderCompilation(ShaderKind shaderKind, IEnumerable<CompiledMethod> methods, IEnumerable<CompiledStruct> structs, IEnumerable<CompiledVariable> inputs, IEnumerable<CompiledVariable> outputs, IEnumerable<CompiledVariable> uniforms, IEnumerable<CompiledVariable> intrinsicUniforms, IEnumerable<CompiledVariable> globals)
     {
         this.ShaderKind = shaderKind;
         this.methods = new(methods);
@@ -43,6 +43,6 @@ public class ShaderCompilation
         this.outputs = new(outputs);
         this.uniforms = new(uniforms);
         this.intrinsicUniforms = new(intrinsicUniforms);
-        this.statics = new(statics);
+        this.globals = new(globals);
     }
 }

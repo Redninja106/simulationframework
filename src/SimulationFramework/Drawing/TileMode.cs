@@ -1,24 +1,24 @@
 ﻿namespace SimulationFramework.Drawing;
 
 /// <summary>
-/// Options to control the behavior of gradients when drawn outside their bounds.
+/// Specifies the behavior of gradients, textures, and other resources when sampled outside their bounds.
 /// </summary>
 public enum TileMode
 {
     /// <summary>
+    /// Outside the region, fill with <see cref="Color.Transparent"/>.
+    /// </summary>
+    None,
+    /// <summary>
     /// Clamp outside the region to the color at the nearest border.
     /// </summary>
-    Clamp = 0,
+    Clamp,
     /// <summary>
     /// Repeat the contents of the region.
     /// </summary>
-    Repeat = 1,
+    Repeat,
     /// <summary>
     /// Repeat the contents of the region, with every other tile inverted.
     /// </summary>
-    Mirror = 2,
-    /// <summary>
-    /// Outside the region, fill with <see cref="Color.Transparent"/>.
-    /// </summary>
-    None = 3,
+    Mirror,
 }

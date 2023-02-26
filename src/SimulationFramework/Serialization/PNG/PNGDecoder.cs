@@ -14,6 +14,8 @@ namespace SimulationFramework.Serialization.PNG;
 
 public class PNGDecoder : IDisposable
 {
+    // https://www.w3.org/TR/png/
+
     public PNGMetadata Metadata { get; private set; }
 
     private Stream stream;
@@ -108,7 +110,7 @@ public class PNGDecoder : IDisposable
                 {
                     GetColors(new(4, 8), (pixelInfo, pixel) =>
                     {
-                        return new Color(pixel[0], pixel[1], pixel[2], pixel[3]);
+                        return new Color(pixel[3], pixel[0], pixel[1], pixel[2]);
                     }, colors);
                 }
                 else if (Metadata.BitDepth == 16)

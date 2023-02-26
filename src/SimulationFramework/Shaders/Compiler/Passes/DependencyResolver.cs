@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Shaders.Compiler.Rules;
+namespace SimulationFramework.Shaders.Compiler.Passes;
 
 internal class DependencyResolver : CompilerPass
 {

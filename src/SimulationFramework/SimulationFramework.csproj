@@ -33,10 +33,6 @@
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Shaders\Compiler\Rules\ComputeShader\" />
-  </ItemGroup>
   <PropertyGroup>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>	

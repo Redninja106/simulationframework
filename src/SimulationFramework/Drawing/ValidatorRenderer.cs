@@ -109,6 +109,11 @@ internal class ValidatorRenderer : IRenderer
     public StencilOperation StencilFailOperation { get; set; }
     public StencilOperation StencilPassDepthFailOperation { get; set; }
     public StencilOperation StencilPassOperation { get; set; }
+    public bool BlendEnabled { get; set; }
+    public BlendMode SourceBlend { get; set; }
+    public BlendMode DestinationBlend { get; set; }
+    public BlendOperation BlendEquation { get; set; }
+    public ColorF BlendConstant { get; set; }
 
     public void Clip(Rectangle? rectangle)
     {
@@ -280,6 +285,16 @@ internal class ValidatorRenderer : IRenderer
     }
 
     public void DrawIndexedPrimitives(PrimitiveKind kind, IBuffer<IndexedDrawCommand> commands, int commandOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void BlendState(BlendMode sourceBlend, BlendMode destinationBlend, BlendOperation operation = BlendOperation.Add)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void BlendState(BlendMode sourceBlend, BlendMode destinationBlend, BlendMode sourceBlendAlpha, BlendMode destinationBlendAlpha, BlendOperation operation = BlendOperation.Add, BlendOperation operationAlpha = BlendOperation.Add)
     {
         throw new NotImplementedException();
     }

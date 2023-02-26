@@ -32,7 +32,13 @@ public interface IRenderer
     StencilOperation StencilPassDepthFailOperation { get; set; }
     StencilOperation StencilPassOperation { get; set; }
 
+    bool BlendEnabled { get; set; }
+    ColorF BlendConstant { get; set; }
+
     void Submit(IGraphicsQueue deferredQueue);
+
+    void BlendState(BlendMode sourceBlend, BlendMode destinationBlend, BlendOperation operation = BlendOperation.Add);
+    void BlendState(BlendMode sourceBlend, BlendMode destinationBlend, BlendMode sourceBlendAlpha, BlendMode destinationBlendAlpha, BlendOperation operation = BlendOperation.Add, BlendOperation operationAlpha = BlendOperation.Add);
 
     void ClearRenderTarget(Color color);
     void ClearDepthTarget(float depth);

@@ -38,7 +38,7 @@ internal class D3D11VertexShader<T> : D3D11Shader<T> where T : struct, IShader
 
         foreach (var input in inputs.Reverse())
         {
-            types.Push((input.VariableType, input.Name));
+            types.Push((input.SourceType ?? input.VariableType, input.Name));
         }
 
         while (types.Any())
@@ -81,6 +81,14 @@ internal class D3D11VertexShader<T> : D3D11Shader<T> where T : struct, IShader
                 elements.Add(new InputElementDescription(name, 0, Vortice.DXGI.Format.R32G32B32_Float, 0));
                 elements.Add(new InputElementDescription(name, 1, Vortice.DXGI.Format.R32G32B32_Float, 0));
             }
+            else if (type == typeof(ColorF))
+            {
+                elements.Add(new InputElementDescription(name, 0, Vortice.DXGI.Format.R32G32B32A32_Float, 0));
+            }
+            else if (type == typeof(Color))
+            {
+                elements.Add(new InputElementDescription(name, 0, Vortice.DXGI.Format.R8G8B8A8_UNorm, 0));
+            }
             else
             {
                 var fields = type.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
@@ -111,5 +119,15 @@ internal class D3D11VertexShader<T> : D3D11Shader<T> where T : struct, IShader
         vertexShader.Dispose();
         inputLayout.Dispose();
         base.Dispose();
+    }
+
+    public override void ApplySamplerState(ID3D11DeviceContext context, ID3D11SamplerState samplerState, int slot)
+    {
+        context.VSSetSampler(slot, samplerState);
+    }
+
+    public override void ApplyShaderResourceView(ID3D11DeviceContext context, ID3D11ShaderResourceView shaderResourceView, int slot)
+    {
+        context.VSSetShaderResource(slot, shaderResourceView);
     }
 }

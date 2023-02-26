@@ -70,4 +70,15 @@ internal class D3D11ComputeShader<TShader> : D3D11Shader<TShader> where TShader 
             }
         }
     }
+
+    public override void ApplySamplerState(ID3D11DeviceContext context, ID3D11SamplerState samplerState, int slot)
+    {
+        context.CSSetSampler(slot, samplerState);
+    }
+
+    public override void ApplyShaderResourceView(ID3D11DeviceContext context, ID3D11ShaderResourceView shaderResourceView, int slot)
+    {
+        context.CSSetShaderResource(slot, shaderResourceView);
+    }
+
 }

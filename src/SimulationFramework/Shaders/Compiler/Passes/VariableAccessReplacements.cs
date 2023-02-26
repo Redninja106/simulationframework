@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Shaders.Compiler.Rules;
+namespace SimulationFramework.Shaders.Compiler.Passes;
 
 // converts this.* to CompiledVariableExpressions
 internal class VariableAccessReplacements : CompilerPass

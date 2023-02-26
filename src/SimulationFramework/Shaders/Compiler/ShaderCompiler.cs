@@ -1,6 +1,6 @@
 ﻿using SimulationFramework.Drawing;
 using SimulationFramework.Shaders.Compiler.ILDisassembler;
-using SimulationFramework.Shaders.Compiler.Rules;
+using SimulationFramework.Shaders.Compiler.Passes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -15,8 +15,9 @@ namespace SimulationFramework.Shaders.Compiler;
 
 public partial class ShaderCompiler
 {
-    private List<Rules.CompilerPass> Rules = new()
+    private List<Passes.CompilerPass> Rules = new()
     {
+        new ConstructorPass(),
         new VariableAccessReplacements(),
         new ShaderTypeParameterPass(),
         new ShaderTypeRestrictions(),
@@ -187,7 +188,7 @@ public partial class ShaderCompiler
             }
             else
             {
-                context.statics.Add(variable);
+                context.globals.Add(variable);
             }
 
             foreach (var rule in Rules)

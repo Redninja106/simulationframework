@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Shaders.Compiler.Rules;
+namespace SimulationFramework.Shaders.Compiler.Passes;
 
 // replaces common methods with their shader intrinsic counterparts
 internal class ShaderIntrinsicSubstitutions : CompilerPass
@@ -33,7 +33,7 @@ internal class ShaderIntrinsicSubstitutions : CompilerPass
 
             MethodBase targetMethod;
 
-            if (attribute.MethodName is ReplaceAttribute.ConstructorMethodName)
+            if (attribute.MethodName is ReplaceAttribute.Constructor)
             {
                 targetMethod = attribute.MethodType.GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance, signature);
             }

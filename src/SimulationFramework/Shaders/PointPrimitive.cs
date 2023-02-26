@@ -5,10 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders;
-
-public struct TrianglePrimitive<T> where T : unmanaged 
-{ 
-    public T Vertex0;
-    public T Vertex1;
-    public T Vertex2;
+public struct PointPrimitive<TVertex> where TVertex : unmanaged
+{
+    public TVertex Vertex;
 }

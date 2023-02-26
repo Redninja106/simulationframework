@@ -39,4 +39,14 @@ internal class D3D11GeometryShader<T> : D3D11Shader<T> where T : struct, IShader
         shader.Dispose();
         base.Dispose();
     }
+
+    public override void ApplySamplerState(ID3D11DeviceContext context, ID3D11SamplerState samplerState, int slot)
+    {
+        context.GSSetSampler(slot, samplerState);
+    }
+
+    public override void ApplyShaderResourceView(ID3D11DeviceContext context, ID3D11ShaderResourceView shaderResourceView, int slot)
+    {
+        context.GSSetShaderResource(slot, shaderResourceView);
+    }
 }

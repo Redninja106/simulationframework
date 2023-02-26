@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Shaders.Compiler.Rules;
+namespace SimulationFramework.Shaders.Compiler.Passes;
 internal class PrintILPass : CompilerPass
 {
     public override void CheckMethod(CompilationContext context, CompiledMethod compiledMethod)

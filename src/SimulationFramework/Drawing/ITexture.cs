@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimulationFramework.Shaders;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
 
+[ShaderIntrinsic]
 public interface ITexture<T> : IResource where T : unmanaged
 {
     /// <summary>
@@ -51,7 +53,7 @@ public interface ITexture<T> : IResource where T : unmanaged
     /// Applies any changes made do the texture's data using <see cref="Pixels"/> or <see cref="GetPixel(int, int)"/>.
     /// </summary>
     void ApplyChanges();
-    
+
     // MIPMAPS: 
     // // pass 0 for mips all the way to 1x1. size must be power of 2 in both directions
     // void GenerateMipmaps(int levels = 0);
@@ -59,5 +61,5 @@ public interface ITexture<T> : IResource where T : unmanaged
     // // gets the mipmap above or below this one.
     // ITexture<T> GetMipmap(int mipmap);
 
-
+    // ref T this[int x, int y] { get; }
 }

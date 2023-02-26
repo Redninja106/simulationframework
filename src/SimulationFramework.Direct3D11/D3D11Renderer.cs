@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Drawing.Direct3D11.Buffers;
+using SimulationFramework.Drawing.Direct3D11.Textures;
 using SimulationFramework.Shaders;
 using SimulationFramework.Shaders.Compiler;
 using System;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Vortice.Direct3D11;
 using Vortice.Direct3D11.Debug;
+using Vortice.Mathematics;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
@@ -27,9 +29,9 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         set => depthStencilManager.SetDepthTexture(value as D3D11Texture<float>);
     }
 
-    public D3D11QueueBase CurrentQueue { get; private set; }
+    public D3D11QueueBase D3D11Queue { get; private set; }
 
-    public IGraphicsQueue Queue { get => CurrentQueue; set => CurrentQueue = value as D3D11QueueBase; }
+    public IGraphicsQueue Queue { get => D3D11Queue; set => D3D11Queue = value as D3D11QueueBase; }
 
     public ITexture<byte> StencilTarget { get; set; }
     public DepthStencilComparison DepthComparison { get; set; }
@@ -69,10 +71,11 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     public StencilOperation StencilFailOperation { get; set; }
     public StencilOperation StencilPassDepthFailOperation { get; set; }
     public StencilOperation StencilPassOperation { get; set; }
+    public bool BlendEnabled { get; set; }
+    public ColorF BlendConstant { get; set; }
 
     private D3D11Texture<Color> currentRenderTarget;
     private D3D11Texture<float> currentDepthTarget;
-    private Dictionary<(CullMode cullMode, bool wireframe), ID3D11RasterizerState> rasterizerStates = new();
 
     private ShaderSignature vsOutputSignature;
     private ShaderSignature gsOutputSignature;
@@ -84,38 +87,36 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     private CullMode cullMode;
     private bool wireframe;
 
+    private readonly RasterizerStateManager rasterizerStateManager;
     private readonly DepthStencilManager depthStencilManager;
+    private readonly BlendStateManager blendStateManager;
+
+    private ID3D11BlendState blendState;
+    private Rectangle? clipRect;
 
     public D3D11Renderer(DeviceResources resources, D3D11QueueBase queue) : base(resources)
     {
-        this.CurrentQueue = queue;
+        this.D3D11Queue = queue;
         depthStencilManager = new(resources);
+        blendStateManager = new(resources);
+        rasterizerStateManager = new(resources);
     }
 
     public void PreDraw(PrimitiveKind primitiveKind)
     {
-        CurrentQueue.DeviceContext.IASetPrimitiveTopology(primitiveKind.AsPrimitiveTopology());
+        D3D11Queue.DeviceContext.IASetPrimitiveTopology(primitiveKind.AsPrimitiveTopology());
 
-        var vp = CurrentQueue.DeviceContext.RSGetViewport();
+        var vp = D3D11Queue.DeviceContext.RSGetViewport();
 
         if (vp.Width == 0 || vp.Height == 0)
         {
-            CurrentQueue.DeviceContext.RSSetViewport(0, 0, this.currentRenderTarget.Width, this.currentRenderTarget.Height, 0, 1);
+            D3D11Queue.DeviceContext.RSSetViewport(0, 0, this.currentRenderTarget.Width, this.currentRenderTarget.Height, 0, 1);
         }
 
-        if (rasterizerStates.Count is 0)
-        {
-            rasterizerStates[(CullMode.None, true)] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullNone with { FillMode = FillMode.Wireframe });
-            rasterizerStates[(CullMode.None, false)] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullNone with { FillMode = FillMode.Solid });
-            rasterizerStates[(CullMode.Front, true)] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullFront with { FillMode = FillMode.Wireframe });
-            rasterizerStates[(CullMode.Front, false)] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullFront with { FillMode = FillMode.Solid });
-            rasterizerStates[(CullMode.Back, true)] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullBack with { FillMode = FillMode.Wireframe });
-            rasterizerStates[(CullMode.Back, false)] = Resources.Device.CreateRasterizerState(RasterizerDescription.CullBack with {  FillMode = FillMode.Solid });
-        }
+        D3D11Queue.DeviceContext.RSSetState(rasterizerStateManager.GetRasterizerState(new(this.cullMode, this.wireframe, this.clipRect is not null)));
+        D3D11Queue.DeviceContext.OMSetBlendState(BlendEnabled ? this.blendState : null, blendFactor: new Color4(this.BlendConstant.ToVector4()));
 
-        CurrentQueue.DeviceContext.RSSetState(rasterizerStates[(this.CullMode, this.wireframe)]);
-
-        depthStencilManager.PreDraw(this.CurrentQueue.DeviceContext);
+        depthStencilManager.PreDraw(this.D3D11Queue.DeviceContext);
     }
 
     private void SetRenderTarget(ITexture<Color> renderTarget)
@@ -124,7 +125,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
             throw new ArgumentException(null, nameof(renderTarget));
 
         currentRenderTarget = d3dTexture;
-        CurrentQueue.DeviceContext.OMSetRenderTargets(d3dTexture.RenderTargetView, depthStencilManager.DepthStencilView);
+        D3D11Queue.DeviceContext.OMSetRenderTargets(d3dTexture.RenderTargetView, depthStencilManager.DepthStencilView);
     }
 
     public void BeginFrame()
@@ -132,34 +133,31 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         SetViewport(new(0, 0, 0, 0));
     }
 
-    public void SetVertexBuffer<T>(IBuffer<T> vertexBuffer, int offset = 0) where T : unmanaged
-    {
-       
-    }
-
     public void SetViewport(Rectangle viewport)
     {
-        CurrentQueue.DeviceContext.RSSetViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height, 0, 1);
+        D3D11Queue.DeviceContext.RSSetViewport(viewport.X, viewport.Y, viewport.Width, viewport.Height, 0, 1);
     }
 
     public override void Dispose()
     {
-        foreach (var (key, value) in rasterizerStates)
-        {
-            value.Dispose();
-        }
-        this.CurrentQueue.DeviceContext.Dispose();
+        this.D3D11Queue.DeviceContext.Dispose();
         this.depthStencilManager.Dispose();
         base.Dispose();
     }
 
-    public void SetIndexBuffer(IBuffer<uint> indexBuffer, int offset)
-    {
-        
-    }
-
     public void Clip(Rectangle? rectangle)
     {
+        clipRect = rectangle;
+
+        if (rectangle is not null) 
+        {
+            Rectangle rect = rectangle.Value;
+            this.D3D11Queue.DeviceContext.RSSetScissorRect((int)rect.X, (int)rect.Y, (int)rect.Width, (int)rect.Height);
+        }
+        else
+        {
+            this.D3D11Queue.DeviceContext.RSSetScissorRects(0, Array.Empty<Rectangle>());
+        }
     }
 
     public void PushState()
@@ -178,6 +176,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
     public void Flush()
     {
+        this.D3D11Queue.Flush();
     }
 
     public void SetInstanceBuffer<T>(IBuffer<T> instanceBuffer, int offset = 0) where T : unmanaged
@@ -218,7 +217,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         }
 
         shaderObject.Update(shader);
-        shaderObject.Apply(this.CurrentQueue.DeviceContext);
+        shaderObject.Apply(this.D3D11Queue.DeviceContext);
         this.vertexShader = shader;
         this.vsOutputSignature = shaderObject.Compilation.OutputSignature;
 
@@ -258,7 +257,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         }
 
         shaderObject.Update(shader);
-        shaderObject.Apply(this.CurrentQueue.DeviceContext);
+        shaderObject.Apply(this.D3D11Queue.DeviceContext);
 
         gsOutputSignature = shaderObject.Compilation.OutputSignature;
 
@@ -297,17 +296,17 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         }
 
         shaderObject.Update(shader);
-        shaderObject.Apply(this.CurrentQueue.DeviceContext);
+        shaderObject.Apply(this.D3D11Queue.DeviceContext);
     }
 
     public void ClearRenderTarget(Color color)
     {
-        CurrentQueue.DeviceContext.ClearRenderTargetView(this.currentRenderTarget.RenderTargetView, new(color.ToVector4()));
+        D3D11Queue.DeviceContext.ClearRenderTargetView(this.currentRenderTarget.RenderTargetView, new(color.ToVector4()));
     }
 
     public void ClearDepthTarget(float depth)
     {
-        CurrentQueue.DeviceContext.ClearDepthStencilView(this.depthStencilManager.DepthStencilView, DepthStencilClearFlags.Depth, depth, 0);
+        D3D11Queue.DeviceContext.ClearDepthStencilView(this.depthStencilManager.DepthStencilView, DepthStencilClearFlags.Depth, depth, 0);
     }
 
     public void ClearStencilTarget(byte stencil)
@@ -336,7 +335,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         if (vertexBuffer is not D3D11Buffer<T> d3dBuffer)
             throw new ArgumentException(null, nameof(vertexBuffer));
 
-        CurrentQueue.DeviceContext.IASetVertexBuffer(0, d3dBuffer.GetInternalbuffer(BufferUsage.VertexBuffer), d3dBuffer.Stride);
+        D3D11Queue.DeviceContext.IASetVertexBuffer(0, d3dBuffer.GetInternalbuffer(BufferUsage.VertexBuffer), d3dBuffer.Stride);
     }
 
     public void SetInstanceBuffer<T>(IBuffer<T> instanceBuffer) where T : unmanaged
@@ -349,14 +348,14 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         if (indexBuffer is not D3D11Buffer<uint> d3dBuffer)
             throw new();
 
-        CurrentQueue.DeviceContext.IASetIndexBuffer(d3dBuffer.GetInternalbuffer(BufferUsage.IndexBuffer), Vortice.DXGI.Format.R32_UInt, 0);
+        D3D11Queue.DeviceContext.IASetIndexBuffer(d3dBuffer.GetInternalbuffer(BufferUsage.IndexBuffer), Vortice.DXGI.Format.R32_UInt, 0);
     }
 
     public void DrawPrimitives(PrimitiveKind kind, int vertexCount, int vertexOffset = 0)
     {
         PreDraw(kind);
 
-        CurrentQueue.DeviceContext.Draw(vertexCount, vertexOffset);
+        D3D11Queue.DeviceContext.Draw(vertexCount, vertexOffset);
     }
 
     public void DrawPrimitives(PrimitiveKind kind, int vertexCount, int instanceCount, int vertexOffset = 0, int instanceOffset = 0)
@@ -373,7 +372,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     {
         PreDraw(kind);
 
-        CurrentQueue.DeviceContext.DrawIndexed(indexCount, indexOffset, vertexOffset);
+        D3D11Queue.DeviceContext.DrawIndexed(indexCount, indexOffset, vertexOffset);
     }
 
     public void DrawIndexedPrimitives(PrimitiveKind kind, int indexCount, int instanceCount, int indexOffset = 0, int instanceOffset = 0)
@@ -384,5 +383,16 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     public void DrawIndexedPrimitives(PrimitiveKind kind, IBuffer<IndexedDrawCommand> commands, int commandOffset = 0)
     {
         throw new NotImplementedException();
+    }
+
+    public void BlendState(BlendMode sourceBlend, BlendMode destinationBlend, BlendOperation operation = BlendOperation.Add)
+    {
+        BlendState(sourceBlend, destinationBlend, sourceBlend, destinationBlend, operation, operation);
+    }
+
+    public void BlendState(BlendMode sourceBlend, BlendMode destinationBlend, BlendMode sourceBlendAlpha, BlendMode destinationBlendAlpha, BlendOperation operation = BlendOperation.Add, BlendOperation operationAlpha = BlendOperation.Add)
+    {
+        var info = new BlendStateManager.BlendStateInfo(sourceBlend, destinationBlend, sourceBlendAlpha, destinationBlendAlpha, operation, operationAlpha);
+        blendState = blendStateManager.GetBlendState(info);
     }
 }

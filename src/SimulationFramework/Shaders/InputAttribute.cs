@@ -15,6 +15,7 @@ public class InputAttribute : Attribute
     public InputSemantic Semantic { get; }
     public string? LinkageName { get; init; }
     public bool Interpolated { get; init; }
+    public Type SourceType { get; init; }
 
     public InputAttribute() : this(InputSemantic.None)
     {

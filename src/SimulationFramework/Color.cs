@@ -18,7 +18,7 @@ namespace SimulationFramework;
 public readonly partial struct Color : IEquatable<Color>
 {
     private const uint RED_MASK   = 0xFF000000;
-    private const uint BLUE_MASK  = 0x00FF000;
+    private const uint BLUE_MASK  = 0x00FF0000;
     private const uint GREEN_MASK = 0x0000FF00;
     private const uint ALPHA_MASK = 0x000000FF;
 

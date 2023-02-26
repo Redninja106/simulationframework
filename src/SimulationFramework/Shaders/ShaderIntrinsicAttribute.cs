@@ -10,7 +10,7 @@ namespace SimulationFramework.Shaders;
 /// Specifies that a type or method is a shader intrinsic, and should not be compiled by the shader compiler.
 /// </summary>
 [AttributeUsage(TARGETS, AllowMultiple = false, Inherited = true)]
-public sealed class ShaderIntrinsicAttribute : Attribute
+internal sealed class ShaderIntrinsicAttribute : Attribute
 {
     private const AttributeTargets TARGETS = 
         AttributeTargets.Property |

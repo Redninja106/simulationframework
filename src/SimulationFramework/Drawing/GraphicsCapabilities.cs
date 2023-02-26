@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing;
 public abstract class GraphicsCapabilities
 {
-    // compute shader
     public abstract int MaxThreadGroupWidth { get; }
     public abstract int MaxThreadGroupHeight { get; }
     public abstract int MaxThreadGroupDepth { get; }

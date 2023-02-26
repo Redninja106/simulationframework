@@ -1,5 +1,7 @@
-﻿using SimulationFramework;
+﻿using ImGuiNET;
+using SimulationFramework;
 using SimulationFramework.Drawing;
+using SimulationFramework.ImGuiNET;
 using SimulationFramework.Shaders;
 using System;
 using System.Collections.Generic;
@@ -57,6 +59,7 @@ internal class Basic3DSimulation : Simulation
     IRenderer renderer;
 
     ITexture<float> depthTarget;
+    ITexture<Color> concrete;
 
     Vector3 lightPosition = Vector3.UnitY * 2;
 
@@ -73,11 +76,14 @@ internal class Basic3DSimulation : Simulation
         // indexBuffer = Graphics.CreateBuffer<uint>(inds);
 
         depthTarget = Graphics.CreateTexture<float>(1920, 1080);
+        //concrete = Graphics.LoadTexture("texture.png");
+        concrete = Graphics.LoadTexture("white.png");
     }
 
     public override void OnRender(ICanvas canvas)
     {
-        ImGuiNET.ImGui.ShowDemoWindow();
+        ImGui.Image(concrete.GetImGuiTextureID(), new(500));
+        ImGui.ShowDemoWindow();
 
         if (Mouse.IsButtonDown(MouseButton.Right))
         {
@@ -213,40 +219,40 @@ internal class Basic3DSimulation : Simulation
         {
             float a;
 
-            if (position.X < 12)
-            {
-                a = 23;
+            //if (position.X < 12)
+            //{
+            //    a = 23;
 
-                if (position.X < 11)
-                {
-                    a = 53;
-                }
-                else
-                {
-                    a = 1;
-                }
+            //    if (position.X < 11)
+            //    {
+            //        a = 53;
+            //    }
+            //    else
+            //    {
+            //        a = 1;
+            //    }
 
-                if (position.X < 12)
-                {
-                    a = 24;
+            //    if (position.X < 12)
+            //    {
+            //        a = 24;
 
-                    if (position.X < 14)
-                    {
-                        a = 42;
-                    }
-                    else
-                    {
-                        a = 51;
-                    }
+            //        if (position.X < 14)
+            //        {
+            //            a = 42;
+            //        }
+            //        else
+            //        {
+            //            a = 51;
+            //        }
 
 
-                }
-            }
+            //    }
+            //}
 
-            if (position.X < 17)
-            {
-                a = 453;
-            }
+            //if (position.X < 17)
+            //{
+            //    a = 453;
+            //}
             //if (position.X < 3)
             //{
             //    position = Vector4.One;
@@ -297,6 +303,19 @@ internal class Basic3DSimulation : Simulation
 
             Vector4 fragPos = Vector4.Transform(new Vector4(vertex.position, 1), uniforms.World);
             this.fragPos = new(fragPos.X, fragPos.Y, fragPos.Z);
+
+            st = new ST(10.00f);
+        }
+
+        ST st;
+
+        struct ST
+        {
+            float f;
+            public ST(float f)
+            {
+                this.f = f;
+            }
         }
     }
 
@@ -347,8 +366,8 @@ internal class Basic3DSimulation : Simulation
 
             if (lightPosition.X > 0)
             {
-                if (lightPosition.Y > 0)
-                    if (lightPosition.Z > 0)
+                //if (lightPosition.Y > 0)
+                //    if (lightPosition.Z > 0)
                         brightness = 0;
             }
 

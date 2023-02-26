@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using SimulationFramework.Drawing.Direct3D11.Textures;
 using Vortice.Direct3D11;
 using Vortice.DXGI;
 

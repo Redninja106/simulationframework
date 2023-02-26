@@ -149,7 +149,7 @@ public partial struct ColorF : IEquatable<ColorF>
     }
 
     /// <summary>
-    /// Returns this <see cref="Color"/> as a <see cref="Vector3"/>, with its R, G, and B values as X, Y, and Z, respectively.
+    /// Returns this <see cref="ColorF"/> as a <see cref="Vector3"/>, with its R, G, and B values as X, Y, and Z, respectively.
     /// </summary>
     /// <returns>The converted <see cref="Vector3"/>.</returns>
     public Vector3 ToVector3()
@@ -158,7 +158,7 @@ public partial struct ColorF : IEquatable<ColorF>
     }
 
     /// <summary>
-    /// Converts this <see cref="Color"/> to <see cref="Vector4"/>, with its R, G, B, and A values as X, Y, Z, and W, respectively.
+    /// Converts this <see cref="ColorF"/> to <see cref="Vector4"/>, with its R, G, B, and A values as X, Y, Z, and W, respectively.
     /// </summary>
     /// <returns>The converted <see cref="Vector4"/>.</returns>
     public Vector4 ToVector4()
@@ -297,5 +297,10 @@ public partial struct ColorF : IEquatable<ColorF>
     public static bool operator !=(ColorF left, ColorF right)
     {
         return !(left == right);
+    }
+
+    public static ColorF operator *(ColorF left, ColorF right)
+    {
+        return new(left.ToVector4() * right.ToVector4());
     }
 }

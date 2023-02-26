@@ -34,6 +34,16 @@ internal class D3D11FragmentShader<T> : D3D11Shader<T> where T : struct, IShader
         context.PSSetConstantBuffer(0, constantBuffer);
     }
 
+    public override void ApplySamplerState(ID3D11DeviceContext context, ID3D11SamplerState samplerState, int slot)
+    {
+        context.PSSetSampler(slot, samplerState);
+    }
+
+    public override void ApplyShaderResourceView(ID3D11DeviceContext context, ID3D11ShaderResourceView shaderResourceView, int slot)
+    {
+        context.PSSetShaderResource(slot, shaderResourceView);
+    }
+
     public override void Dispose()
     {
         shader.Dispose();

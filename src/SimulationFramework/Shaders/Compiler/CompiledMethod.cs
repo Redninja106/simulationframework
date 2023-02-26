@@ -14,7 +14,7 @@ public class CompiledMethod
 {
     public MethodBase Method { get; private set; }
     public Type ReturnType { get; private set; }
-    public BlockExpression Body { get; private set; }
+    public BlockExpression Body { get; set; }
     public string Name { get; private set; }
     public List<ParameterExpression> Parameters { get; private set; }
     internal MethodDisassembly Disassembly { get; private set; }
@@ -59,7 +59,7 @@ public class CompiledMethod
 
         if (method is ConstructorInfo constructor)
         {
-            return constructor.DeclaringType?.Name ?? throw new Exception();
+            return $"_ctor" ?? throw new Exception();
         }
 
         throw new Exception();

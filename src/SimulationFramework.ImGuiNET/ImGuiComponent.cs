@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -19,7 +20,7 @@ public sealed class ImGuiComponent : IApplicationComponent
     private List<int> keys = new List<int>();
     private IRenderer renderer;
 
-    public void Initialize(Application application)
+    void IApplicationComponent.Initialize(Application application)
     {
         renderer = Graphics.CreateRenderer();
 
@@ -35,9 +36,10 @@ public sealed class ImGuiComponent : IApplicationComponent
         io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 
         RecreateFontDeviceTexture();
+        SetupInput();
     }
 
-    public void BeforeRender(RenderMessage message)
+    private void BeforeRender(RenderMessage message)
     {
         var io = ImGui.GetIO();
         io.DisplaySize = new(Graphics.DefaultRenderTarget.Width, Graphics.DefaultRenderTarget.Width);
@@ -45,18 +47,19 @@ public sealed class ImGuiComponent : IApplicationComponent
         UpdateInput();
         ImGui.NewFrame();
     }
+
     private unsafe void RecreateFontDeviceTexture() 
     { 
         ImGuiIOPtr io = ImGui.GetIO(); 
         IntPtr pixels; 
-        int width, height, bytesPerPixel;
-        io.Fonts.GetTexDataAsRGBA32(out pixels, out width, out height, out bytesPerPixel);
+        int width, height;
+        io.Fonts.GetTexDataAsRGBA32(out pixels, out width, out height, out var bytesPerPixel);
         fontTexture = Graphics.CreateTexture(width, height, new Span<Color>(pixels.ToPointer(), width * height));
         loadedTextures.Add(fontTexture);
         io.Fonts.SetTexID(new(0));
     }
 
-    void UpdateInput()
+    private void UpdateInput()
     {
         var io = ImGui.GetIO();
 
@@ -76,7 +79,7 @@ public sealed class ImGuiComponent : IApplicationComponent
         io.KeyAlt = Keyboard.IsKeyDown(Key.LAlt) || Keyboard.IsKeyDown(Key.RAlt);
         io.KeySuper = Keyboard.IsKeyDown(Key.LMeta) || Keyboard.IsKeyDown(Key.RMeta);
 
-        io.DisplayFramebufferScale = new System.Numerics.Vector2(1f, 1f);
+        io.DisplayFramebufferScale = Vector2.One;
 
         io.MousePos = new Vector2(Mouse.Position.X, Mouse.Position.Y);
 
@@ -86,9 +89,10 @@ public sealed class ImGuiComponent : IApplicationComponent
 
         var scrollDelta = Mouse.ScrollWheelDelta;
         io.MouseWheel = scrollDelta > 0 ? 1 : scrollDelta < 0 ? -1 : 0;
+        io.DisplaySize = new(Graphics.DefaultRenderTarget.Width, Graphics.DefaultRenderTarget.Height);
     }
 
-    void SetupInput()
+    private void SetupInput()
     {
         var io = ImGui.GetIO();
 
@@ -114,14 +118,14 @@ public sealed class ImGuiComponent : IApplicationComponent
         keys.Add(io.KeyMap[(int)ImGuiKey.Z] = (int)Key.Z);
     }
 
-    public void AfterRender(RenderMessage message)
+    private void AfterRender(RenderMessage message)
     {
         ImGui.Render();
 
         RenderDrawData(ImGui.GetDrawData());
     }
 
-    public void RenderDrawData(ImDrawDataPtr drawData)
+    private void RenderDrawData(ImDrawDataPtr drawData)
     {
         renderer.PushState();
 
@@ -166,7 +170,7 @@ public sealed class ImGuiComponent : IApplicationComponent
                 for (int j = 0; j < indexData.Length; j++)
                 {
                     // widen to 32 bit indices
-                    indexBuffer.Data[j] = indexData[j];
+                    indexBuffer.Data[indexOffset + j] = indexData[j];
                 }
 
                 indexOffset += indexData.Length;
@@ -185,6 +189,8 @@ public sealed class ImGuiComponent : IApplicationComponent
         renderer.RenderTarget = Graphics.DefaultRenderTarget;
         renderer.SetVertexBuffer(vertexBuffer);
         renderer.CullMode = CullMode.None;
+        renderer.BlendEnabled = true;
+        renderer.BlendState(BlendMode.SourceAlpha, BlendMode.InverseSourceAlpha, BlendMode.One, BlendMode.InverseSourceAlpha);
 
         ImGuiVertexShader vertexShader = new()
         {
@@ -214,11 +220,11 @@ public sealed class ImGuiComponent : IApplicationComponent
 
                 ImGuiFragmentShader fragmentShader = new()
                 {
-                    //texture = loadedTextures[command.TextureId.ToInt32()]
+                    texture = loadedTextures[command.TextureId.ToInt32()],
+                    sampler = TextureSampler.Linear,
                 };
 
                 renderer.SetFragmentShader(fragmentShader);
-
 
                 renderer.DrawIndexedPrimitives(
                     PrimitiveKind.Triangles, 
@@ -236,5 +242,18 @@ public sealed class ImGuiComponent : IApplicationComponent
     {
         vertexBuffer?.Dispose();
         indexBuffer?.Dispose();
+    }
+
+    public nint GetOrRegisterTextureID(ITexture<Color> texture)
+    {
+        var result = loadedTextures.IndexOf(texture);
+
+        if (result is -1)
+        {
+            result = loadedTextures.Count;
+            loadedTextures.Add(texture);
+        }
+
+        return result;
     }
 }

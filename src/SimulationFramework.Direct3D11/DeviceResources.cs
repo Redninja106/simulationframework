@@ -1,4 +1,5 @@
 ﻿using SharpGen.Runtime;
+using SimulationFramework.Drawing.Direct3D11.Textures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,10 @@ internal sealed class DeviceResources : IDisposable
     public IDXGISwapChain1 SwapChain { get; private set; }
     public ID3D11Debug Debug { get; private set; }
     public ShaderManager ShaderManager { get; private set; }
+    public SamplerManager SamplerManager { get; private set; }
 
     public DeviceResources(IntPtr hwnd)
     {
-        ShaderManager = new(this);
-        
         var hr = D3D11.D3D11CreateDevice(null, DriverType.Hardware, DeviceCreationFlags.Debug, new[] { FeatureLevel.Level_11_0 }, out var device);
         this.Device = device;
         this.Debug = device.QueryInterface<ID3D11Debug>();
@@ -54,6 +54,9 @@ internal sealed class DeviceResources : IDisposable
         using var factory = adapter.GetParent<IDXGIFactory4>();
 
         SwapChain = factory.CreateSwapChainForHwnd(Device, hwnd, desc);
+
+        ShaderManager = new(this);
+        SamplerManager = new(this);
     }
 
     public void Resize(int width, int height)

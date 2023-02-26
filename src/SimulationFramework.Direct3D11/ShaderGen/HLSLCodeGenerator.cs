@@ -45,6 +45,9 @@ public class HLSLCodeGenerator : CodeGenerator
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Dot), new[] { typeof(Vector3), typeof(Vector3) })] = "dot",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.ColorF), new[] { typeof(float), typeof(float), typeof(float), typeof(float) })] = "float4",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Reflect), new[] { typeof(Vector3), typeof(Vector3) })] = "reflect",
+        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Clamp), new[] { typeof(float), typeof(float), typeof(float) })] = "clamp",
+
+        [typeof(SampleExtensions).GetMethod(nameof(SampleExtensions.Sample), new[] { typeof(ITexture<Color>), typeof(Vector2), typeof(TextureSampler) })] = "Sample",
     };
 
     private static readonly Dictionary<MemberInfo, string> memberAliases = new()
@@ -88,6 +91,13 @@ public class HLSLCodeGenerator : CodeGenerator
 
     };
 
+    private string[] keywords = new[]
+    {
+        "matrix",
+        "texture",
+        "sampler",
+    };
+
     private bool IsInEntryPoint = false;
 
     private static FieldInfo GetBackingField(PropertyInfo property)
@@ -122,18 +132,47 @@ public class HLSLCodeGenerator : CodeGenerator
 
         foreach (var uniform in Compilation.IntrinsicUniforms)
         {
-            if (uniform.VariableType.GetGenericTypeDefinition() == typeof(IBuffer<>))
+            if (uniform.VariableType.IsConstructedGenericType) 
             {
-                Writer.Write("RWStructuredBuffer<");
-                VisitType(uniform.VariableType.GetGenericArguments()[0]);
-                Writer.Write("> ");
-                Writer.Write(uniform.Name);
-                Writer.WriteLine(";");
+                var uniformType = uniform.VariableType.GetGenericTypeDefinition();
+                if (uniformType == typeof(IBuffer<>))
+                {
+                    Writer.Write("RWStructuredBuffer<");
+                    VisitType(uniform.VariableType.GetGenericArguments()[0]);
+                    Writer.Write("> ");
+                    VisitIdentifier(uniform.Name);
+                    Writer.WriteLine(";");
+                }
+                else if (uniformType == typeof(ITexture<>))
+                {
+                    Writer.Write("Texture2D ");
+                    VisitIdentifier(uniform.Name);
+                    Writer.WriteLine(";");
+                }
+                else
+                {
+                    throw new Exception();
+                }
             }
             else
             {
-                throw new Exception();
+                if (uniform.VariableType == typeof(TextureSampler))
+                {
+                    Writer.Write("SamplerState ");
+
+                    VisitIdentifier(uniform.Name);
+                    Writer.WriteLine(";");
+                }
             }
+        }
+
+        foreach (var staticVar in Compilation.Globals)
+        {
+            Writer.Write("static ");
+            VisitType(staticVar.VariableType);
+            Writer.Write(' ');
+            VisitIdentifier(staticVar.Name);
+            Writer.Write(';');
         }
 
         Writer.WriteLine();
@@ -183,7 +222,8 @@ public class HLSLCodeGenerator : CodeGenerator
                         input.VariableType == typeof(float) ||
                         input.VariableType == typeof(Vector2) ||
                         input.VariableType == typeof(Vector3) ||
-                        input.VariableType == typeof(Vector4))
+                        input.VariableType == typeof(Vector4) ||
+                        input.VariableType == typeof(ColorF))
                     {
                         semantic = input.Name;
                     }
@@ -256,9 +296,9 @@ public class HLSLCodeGenerator : CodeGenerator
 
     protected override void VisitIdentifier(string identifier)
     {
-        if (identifier == "matrix")
+        if (keywords.Contains(identifier))
         {
-            identifier = "_" + identifier;
+            Writer.Write("_");
         }
 
         base.VisitIdentifier(identifier);
@@ -374,6 +414,11 @@ public class HLSLCodeGenerator : CodeGenerator
         }
     }
 
+    protected override void VisitParameterDeclaration(ParameterExpression parameter)
+    {
+        base.VisitParameterDeclaration(parameter);
+    }
+
     protected override Expression VisitCompiledVariableExpression(CompiledVariableExpression node)
     {
         if (node.Variable.IsInput) 
@@ -394,8 +439,28 @@ public class HLSLCodeGenerator : CodeGenerator
         {
             return node;
         }
+
+        if (node.Method == typeof(SampleExtensions).GetMethod(nameof(SampleExtensions.Sample), new[] { typeof(ITexture<Color>), typeof(Vector2), typeof(TextureSampler) }))
+        {
+            Visit(node.Arguments[0]);
+            Writer.Write('.');
+            Writer.Write(node.Method.Name);
+            Writer.Write('(');
+            Visit(node.Arguments[2]);
+            Writer.Write(',');
+            Visit(node.Arguments[1]);
+            Writer.Write(')');
+
+            return node;
+        }
         
-        if (IsBufferAccessMethod(node.Method))
+        if (node.Method == typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Multiply), new[] { typeof(ColorF), typeof(ColorF) }))
+        {
+            Visit(Expression.Multiply(node.Arguments[0], node.Arguments[1]));
+            return node;
+        }
+
+        if (IsIndexerMethod(node.Method))
         {
             Visit(node.Arguments[0]);
             Writer.Write('[');
@@ -434,9 +499,9 @@ public class HLSLCodeGenerator : CodeGenerator
         return node;
     }
 
-    private bool IsBufferAccessMethod(MethodInfo method)
+    private bool IsIndexerMethod(MethodInfo method)
     {
-        const string indexerName = "get_Item";
+        const string indexerGetName = "get_Item";
 
         var declaringType = method?.DeclaringType;
 
@@ -446,7 +511,7 @@ public class HLSLCodeGenerator : CodeGenerator
         if (declaringType.GetGenericTypeDefinition() != typeof(IBuffer<>))
             return false;
 
-        if (method.Name != indexerName)
+        if (method.Name != indexerGetName)
             return false;
 
         return true;

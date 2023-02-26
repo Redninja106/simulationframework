@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static SimulationFramework.Shaders.Compiler.ControlFlow.DgmlBuilder;
 
 namespace SimulationFramework.Shaders.Compiler;
 public class CodeGenerator : ExtendedExpressionVisitor
@@ -61,11 +62,18 @@ public class CodeGenerator : ExtendedExpressionVisitor
         Writer.WriteLine();
         VisitType(method.ReturnType);
         Writer.Write(' ');
+        VisitTypeName(method.Method.DeclaringType);
+        Writer.Write('_');
         VisitIdentifier(method.Name);
         Writer.Write('(');
 
         if (method.Parameters.Any())
         {
+            if (method.Method is MethodInfo && !method.Method.IsStatic)
+            {
+                Writer.Write("inout ");
+            }
+
             VisitParameterDeclaration(method.Parameters.First());
             foreach (var parameter in method.Parameters.Skip(1))
             {
@@ -83,6 +91,13 @@ public class CodeGenerator : ExtendedExpressionVisitor
             Writer.Write(" ");
 
             VisitIdentifier(typeGroup.First().Name);
+            if (typeGroup.First().Name is "this")
+            {
+                Writer.Write(" = (");
+                VisitType(typeGroup.Key);
+                Writer.Write(")0");
+            }
+
             foreach (var element in typeGroup.Skip(1))
             {
                 Writer.Write(", ");
@@ -165,6 +180,11 @@ public class CodeGenerator : ExtendedExpressionVisitor
     }
 
     protected virtual void VisitType(Type type)
+    {
+        VisitTypeName(type);
+    }
+
+    protected virtual void VisitTypeName(Type type)
     {
         var name = FormatTypeName(type);
 
@@ -381,7 +401,10 @@ public class CodeGenerator : ExtendedExpressionVisitor
 
     protected override Expression VisitCompiledMethodCallExpression(CompiledMethodCallExpression node)
     {
+        VisitTypeName(node.Method.Method.DeclaringType);
+        Writer.Write('_');
         VisitIdentifier(node.Method.Name);
+
         Writer.Write('(');
 
         if (node.Arguments.Any())
@@ -401,6 +424,8 @@ public class CodeGenerator : ExtendedExpressionVisitor
 
     protected override Expression VisitIntrinsicCallExpression(IntrinsicCallExpression node)
     {
+        VisitTypeName(node.Method.DeclaringType);
+        Writer.Write('_');
         VisitIdentifier(node.Method.Name);
 
         Writer.Write("(");

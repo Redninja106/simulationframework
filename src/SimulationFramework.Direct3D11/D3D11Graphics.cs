@@ -10,6 +10,7 @@ using Vortice.DXGI;
 using SimulationFramework.Shaders;
 using SimulationFramework.Shaders.Compiler;
 using System.Reflection;
+using SimulationFramework.Drawing.Direct3D11.Textures;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
@@ -28,7 +29,7 @@ public class D3D11Graphics : IGraphicsProvider
     public D3D11Graphics(IntPtr hwnd)
     {
         resources = new DeviceResources(hwnd);
-        defaultRenderTarget = new D3D11Texture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
+        defaultRenderTarget = new D3D11BackBufferTexture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
 
         var swapchainDesc = resources.SwapChain.Description1;
         defaultDepthTarget = new D3D11Texture<float>(resources, swapchainDesc.Width, swapchainDesc.Height, Span<float>.Empty, ResourceOptions.None);
@@ -104,7 +105,7 @@ public class D3D11Graphics : IGraphicsProvider
         this.resources.Device.ImmediateContext.ClearState();
         defaultRenderTarget.Dispose();
         resources.Resize(message.Width, message.Height);
-        defaultRenderTarget = new D3D11Texture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
+        defaultRenderTarget = new D3D11BackBufferTexture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
     }
 
     public ICanvas GetFrameCanvas()
