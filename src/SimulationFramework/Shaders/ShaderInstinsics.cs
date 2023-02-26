@@ -24,9 +24,6 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic, Replace(ReplaceAttribute.Constructor, typeof(Vector3))]
     public static Vector3 Vec3(float x, float y, float z) => new(x, y, z);
 
-    [ShaderIntrinsic, Replace(ReplaceAttribute.Constructor, typeof(Vector3))]
-    public static Vector3 Vec3(float value) => new(value);
-
     [ShaderIntrinsic, Replace(nameof(MathF.Sqrt), typeof(MathF))]
     public static float Sqrt(float x) => MathF.Sqrt(x);
 

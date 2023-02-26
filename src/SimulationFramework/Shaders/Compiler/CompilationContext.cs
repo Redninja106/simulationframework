@@ -36,8 +36,8 @@ public class CompilationContext
         return new ShaderCompilation(this.kind, methods, structs, inputs, outputs, uniforms, intrinsicUniforms, globals) 
         { 
             EntryPoint = this.EntryPoint, 
-            InputSignature = new ShaderSignature(inputs.Select(v => (v.VariableType, v.Name))),
-            OutputSignature = new ShaderSignature(outputs.Select(v => (v.VariableType, v.Name))) 
+            InputSignature = new ShaderSignature(inputs.Where(v => v.InputSemantic is InputSemantic.None).Select(v => (v.VariableType, v.Name))),
+            OutputSignature = new ShaderSignature(outputs.Where(v => v.OutputSemantic is OutputSemantic.None).Select(v => (v.VariableType, v.Name))) 
         };
     }
 }

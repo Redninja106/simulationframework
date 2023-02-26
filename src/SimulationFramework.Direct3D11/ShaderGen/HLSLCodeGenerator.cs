@@ -38,7 +38,6 @@ public class HLSLCodeGenerator : CodeGenerator
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec4), new[] { typeof(Vector2), typeof(float), typeof(float) })] = "float4",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec4), new[] { typeof(float), typeof(float), typeof(float), typeof(float) })] = "float4",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec3), new[] { typeof(float), typeof(float), typeof(float) })] = "float3",
-        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec3), new[] { typeof(float) })] = "float3",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Sqrt), new[] { typeof(float) })] = "sqrt",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Max), new[] { typeof(float), typeof(float) })] = "max",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Normalize), new[] { typeof(Vector3) })] = "normalize",

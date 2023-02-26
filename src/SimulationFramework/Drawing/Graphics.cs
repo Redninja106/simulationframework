@@ -1,5 +1,4 @@
-﻿using SimulationFramework.Serialization.PNG;
-using SimulationFramework.Shaders;
+﻿using SimulationFramework.Shaders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -96,22 +95,7 @@ public static class Graphics
     /// <returns>The new texture.</returns>
     public static unsafe ITexture<Color> LoadTexture(Span<byte> encodedBytes, ResourceOptions options = ResourceOptions.None)
     {
-        fixed (byte* encodedBytesPtr = encodedBytes)
-        {
-            using var stream = new UnmanagedMemoryStream(encodedBytesPtr, encodedBytes.Length);
-            var decoder = new PNGDecoder(stream);
-
-            var metadata = decoder.Metadata;
-
-            stream.Position = 0;
-
-            var texture = CreateTexture<Color>((int)metadata.Width, (int)metadata.Height);
-
-            decoder.GetColors(texture.Pixels);
-            texture.ApplyChanges();
-
-            return texture;
-        }
+        return Provider.LoadTexture(encodedBytes, options);
     }
 
     /// <summary>

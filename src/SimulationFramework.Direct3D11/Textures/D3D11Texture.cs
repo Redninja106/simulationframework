@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StbImageSharp;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -27,6 +28,14 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T>, IShaderResourc
     public int Width { get; }
     public int Height { get; }
     public Span<T> Pixels => GetPixels();
+
+    public D3D11Texture(DeviceResources resources, ImageResult image, ResourceOptions options) : this(resources, image.Width, image.Height, Span<T>.Empty, options)
+    {
+        Debug.Assert(image.Comp is ColorComponents.RedGreenBlueAlpha);
+        var imageData = MemoryMarshal.Cast<byte, T>(image.Data);
+        imageData.CopyTo(GetPixels());
+        ApplyChanges();
+    }
 
     public unsafe D3D11Texture(DeviceResources resources, int width, int height, Span<T> data, ResourceOptions flags) : base(resources)
     {

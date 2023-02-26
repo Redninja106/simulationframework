@@ -14,7 +14,7 @@ namespace Basic3D;
 
 internal class Basic3DSimulation : Simulation
 {
-    static readonly Vertex[] vertices = new Vertex[]
+    static readonly Vertex[] cube = new Vertex[]
     {
         new(-1.0f,  1.0f, -1.0f, 0.0f, 0.0f,  0.0f,  0.0f, -1.0f),
         new( 1.0f,  1.0f, -1.0f, 1.0f, 0.0f,  0.0f,  0.0f, -1.0f),
@@ -54,36 +54,78 @@ internal class Basic3DSimulation : Simulation
         new( 1.0f, -1.0f,  1.0f, 1.0f, 1.0f,  0.0f, -1.0f,  0.0f),
     };
 
-    IBuffer<Vertex> vertexBuffer;
-    IBuffer<uint> indexBuffer;
+    IBuffer<Vertex> modelBuffer;
+    IBuffer<Vertex> cubeBuffer;
+
     IRenderer renderer;
 
-    ITexture<float> depthTarget;
     ITexture<Color> concrete;
 
     Vector3 lightPosition = Vector3.UnitY * 2;
 
     float camXRotation, camYRotation, camZoom;
     float xRotation, yRotation;
-    bool spin;
+    bool spin, demoWindow;
 
     public override void OnInitialize(AppConfig config)
     {
-        ObjLoader.Load("blender_monkey.obj", out Vertex[] verts, out uint[] inds);
+        ObjLoader.Load("F22A.obj", out Vertex[] verts, out _);
+        modelBuffer = Graphics.CreateBuffer<Vertex>(verts);
 
-        vertexBuffer = Graphics.CreateBuffer<Vertex>(verts);
+        cubeBuffer = Graphics.CreateBuffer<Vertex>(cube);
+
+        concrete = Graphics.LoadTexture("texture.png");
+        
         renderer = Graphics.CreateRenderer();
-        // indexBuffer = Graphics.CreateBuffer<uint>(inds);
-
-        depthTarget = Graphics.CreateTexture<float>(1920, 1080);
-        //concrete = Graphics.LoadTexture("texture.png");
-        concrete = Graphics.LoadTexture("white.png");
     }
 
     public override void OnRender(ICanvas canvas)
     {
         ImGui.Image(concrete.GetImGuiTextureID(), new(500));
-        ImGui.ShowDemoWindow();
+
+        if (demoWindow)
+            ImGui.ShowDemoWindow();
+
+        ProcessInput();
+
+        CameraTransforms camera = default;
+        camera.View = Matrix4x4.CreateLookAt(Vector3.Transform(Vector3.UnitZ * MathF.Pow(1.1f, camZoom), Matrix4x4.CreateRotationX(camXRotation) * Matrix4x4.CreateRotationY(camYRotation)), Vector3.Zero, Vector3.UnitY);
+        camera.Proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, 16f / 9f, 0.1f, 100f);
+
+        camera.World = Matrix4x4.CreateRotationX(xRotation) * Matrix4x4.CreateRotationY(yRotation);
+        VertexShader vertexShader = new() { camera = camera };
+        FragmentShader fragShader = new();
+        fragShader.lightPosition = this.lightPosition;
+        fragShader.texture = concrete;
+        fragShader.sampler = TextureSampler.Linear;
+
+        renderer.RenderTarget = Graphics.DefaultRenderTarget;
+        renderer.DepthTarget = Graphics.DefaultDepthTarget;
+        renderer.ClearRenderTarget(Color.FromHSV(0, 0, .1f));
+        renderer.ClearDepthTarget(1.0f);
+        renderer.SetViewport(new(renderer.RenderTarget.Width, renderer.RenderTarget.Height, 0, 0));
+        
+        renderer.CullMode = CullMode.None;
+
+        renderer.SetVertexBuffer(modelBuffer);
+
+        renderer.SetVertexShader(vertexShader);
+        renderer.SetFragmentShader(fragShader);
+
+        renderer.DrawPrimitives(PrimitiveKind.Triangles, modelBuffer.Length);
+
+        renderer.SetVertexBuffer(cubeBuffer);
+        camera.World = Matrix4x4.CreateTranslation(lightPosition);
+        renderer.SetVertexShader(new LightVertexShader() { camera = camera });
+        renderer.SetFragmentShader(new LightFragmentShader());
+
+        renderer.DrawPrimitives(PrimitiveKind.Triangles, cubeBuffer.Length);
+    }
+
+    private void ProcessInput()
+    {
+        if (Keyboard.IsKeyPressed(Key.F1))
+            demoWindow = !demoWindow;
 
         if (Mouse.IsButtonDown(MouseButton.Right))
         {
@@ -99,23 +141,23 @@ internal class Basic3DSimulation : Simulation
         if (Keyboard.IsKeyDown(Key.Minus))
             camZoom += Time.DeltaTime * 5;
 
-        if (Keyboard.IsKeyDown(Key.A)) 
+        if (Keyboard.IsKeyDown(Key.A))
             yRotation += Time.DeltaTime;
 
-        if (Keyboard.IsKeyDown(Key.D)) 
+        if (Keyboard.IsKeyDown(Key.D))
             yRotation -= Time.DeltaTime;
 
-        if (Keyboard.IsKeyDown(Key.W)) 
+        if (Keyboard.IsKeyDown(Key.W))
             xRotation -= Time.DeltaTime;
 
-        if (Keyboard.IsKeyDown(Key.S)) 
+        if (Keyboard.IsKeyDown(Key.S))
             xRotation += Time.DeltaTime;
-        
+
         if (Keyboard.IsKeyDown(Key.RShift))
             lightPosition.Z += Time.DeltaTime * 2;
 
         if (Keyboard.IsKeyDown(Key.RCtrl))
-            lightPosition.Z -= Time.DeltaTime * 2; 
+            lightPosition.Z -= Time.DeltaTime * 2;
 
         if (Keyboard.IsKeyDown(Key.LeftArrow))
             lightPosition.X -= Time.DeltaTime * 2;
@@ -130,38 +172,10 @@ internal class Basic3DSimulation : Simulation
             lightPosition.Y -= Time.DeltaTime * 2;
 
         if (spin)
-        {
             yRotation += Time.DeltaTime;
-        }
 
         if (Keyboard.IsKeyPressed(Key.Space))
-        {
             spin = !spin;
-        }
-
-        VertexShader vertexShader = new();
-        vertexShader.uniforms.World = Matrix4x4.CreateRotationX(xRotation) * Matrix4x4.CreateRotationY(yRotation);
-        vertexShader.uniforms.View = Matrix4x4.CreateLookAt(Vector3.Transform(Vector3.UnitZ * MathF.Pow(1.1f, camZoom), Matrix4x4.CreateRotationX(camXRotation) * Matrix4x4.CreateRotationY(camYRotation)), Vector3.Zero, Vector3.UnitY);
-        vertexShader.uniforms.Proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, 16f / 9f, 0.1f, 100f);
-
-        FragmentShader fragShader = new();
-        fragShader.lightPosition = this.lightPosition;
-
-        renderer.RenderTarget = Graphics.DefaultRenderTarget;
-        renderer.DepthTarget = Graphics.DefaultDepthTarget;
-        renderer.ClearRenderTarget(Color.FromHSV(0,0,.1f));
-        renderer.ClearDepthTarget(1.0f);
-        renderer.SetViewport(new(renderer.RenderTarget.Width, renderer.RenderTarget.Height, 0, 0));
-        
-        renderer.CullMode = CullMode.Front;
-
-        renderer.SetVertexBuffer(vertexBuffer);
-        // renderer.SetIndexBuffer(indexBuffer);
-
-        renderer.SetVertexShader(vertexShader);
-        renderer.SetFragmentShader(fragShader);
-
-        renderer.DrawPrimitives(PrimitiveKind.Triangles, vertexBuffer.Length);
     }
 
     struct Vertex
@@ -187,165 +201,61 @@ internal class Basic3DSimulation : Simulation
         }
     }
 
-    struct VertexShaderUniforms
+    struct CameraTransforms
     {
         public Matrix4x4 World;
         public Matrix4x4 View;
         public Matrix4x4 Proj;
     }
 
-    struct VertexShaderOutput
-    {
-    }
-
     struct VertexShader : IShader
     {
         [Uniform]
-        public VertexShaderUniforms uniforms;
+        public CameraTransforms camera;
 
-        [Input] 
+        [Input]
         Vertex vertex;
+
+        [Output]
+        public Vector2 uv;
+        [Output]
+        public Vector3 normal;
+        [Output]
+        public Vector3 fragPos;
 
         [Output(OutputSemantic.Position)]
         public Vector4 position;
-        [Output]
-        public Vector2 uv;
-        [Output]
-        public Vector3 normal;
-        [Output]
-        public Vector3 fragPos;
-
         public void Main()
         {
-            float a;
-
-            //if (position.X < 12)
-            //{
-            //    a = 23;
-
-            //    if (position.X < 11)
-            //    {
-            //        a = 53;
-            //    }
-            //    else
-            //    {
-            //        a = 1;
-            //    }
-
-            //    if (position.X < 12)
-            //    {
-            //        a = 24;
-
-            //        if (position.X < 14)
-            //        {
-            //            a = 42;
-            //        }
-            //        else
-            //        {
-            //            a = 51;
-            //        }
-
-
-            //    }
-            //}
-
-            //if (position.X < 17)
-            //{
-            //    a = 453;
-            //}
-            //if (position.X < 3)
-            //{
-            //    position = Vector4.One;
-
-            //    if (position.Y > 4)
-            //    {
-            //        position = Vector4.UnitX;
-
-            //    }
-
-            //    position = Vector4.Zero;
-            //}
-
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    Vector2 hello = new Vector2(1, 2);
-
-            //    //if (position.X < 12)
-            //    //{
-            //    //    position = Vector4.Zero;
-            //    //    continue;
-            //    //}
-
-            //    //if (position.X < 15)
-            //    //{
-            //    //    position = Vector4.Zero;
-            //    //    break;
-            //    //}
-            //}
-
             position = new Vector4(vertex.position, 1);
+            position = Vector4.Transform(position, camera.World);
+            position = Vector4.Transform(position, camera.View);
+            position = Vector4.Transform(position, camera.Proj);
 
-            position = Vector4.Transform(position, uniforms.World);
-            position = Vector4.Transform(position, uniforms.View);
-            position = Vector4.Transform(position, uniforms.Proj);
-
-            /*ShaderIntrinsics.Hlsl(@"
-    // __output.position = float4(__input.vertex.position, 1);
-    __output.position = __input.vertex.position * uniforms.World;
-    __output.position = __input.vertex.position * uniforms.View;
-    __output.position = __input.vertex.position * uniforms.Proj;
-
-");
-            */
             uv = vertex.uv;
+            normal = Vector3.TransformNormal(vertex.normal, camera.World);
 
-            normal = Vector3.TransformNormal(vertex.normal, uniforms.World);
-
-            Vector4 fragPos = Vector4.Transform(new Vector4(vertex.position, 1), uniforms.World);
+            Vector4 fragPos = Vector4.Transform(new Vector4(vertex.position, 1), camera.World);
             this.fragPos = new(fragPos.X, fragPos.Y, fragPos.Z);
-
-            st = new ST(10.00f);
         }
-
-        ST st;
-
-        struct ST
-        {
-            float f;
-            public ST(float f)
-            {
-                this.f = f;
-            }
-        }
-    }
-
-    struct FragmentShaderInput
-    {
-        [Input(InputSemantic.Position)]
-        public Vector4 position;
-        [Input]
-        public Vector2 uv;
-        [Input]
-        public Vector3 normal;
-        [Input]
-        public Vector3 fragPos;
     }
 
     struct FragmentShader : IShader
     {
+        [Uniform]
+        public ITexture<Color> texture;
+        [Uniform]
+        public TextureSampler sampler;
+
         [Output(OutputSemantic.Color)]
         private Vector4 color;
 
-
-        [Input(InputSemantic.Position)]
-        public Vector4 position;
         [Input]
         public Vector2 uv;
         [Input]
         public Vector3 normal;
         [Input]
         public Vector3 fragPos;
-
 
         [Uniform] 
         public Vector3 lightPosition;
@@ -354,26 +264,48 @@ internal class Basic3DSimulation : Simulation
 
         public void Main()
         {
-            ShaderIntrinsics.Hlsl(@"
-// hello world
-");
+            Vector3 lightDirection = Vector3.Normalize(lightPosition - fragPos);
 
-            Vector3 lightDirection = Vector3.Normalize(fragPos - lightPosition);
+            var albedo = texture.Sample(uv, sampler).ToVector3();
+            
+            var diffuse = MathF.Max(0, Vector3.Dot(normal, lightDirection));
+            var ambient = .25f;
 
-            var brightness = MathF.Max(0, Vector3.Dot(normal, lightDirection));
-
-            brightness += .25f;
-
-            if (lightPosition.X > 0)
-            {
-                //if (lightPosition.Y > 0)
-                //    if (lightPosition.Z > 0)
-                        brightness = 0;
-            }
-
-            color = new(brightness, brightness, brightness, 1);
+            color = new(albedo, 1);
         }
     }
+
+    struct LightVertexShader : IShader
+    {
+        [Uniform]
+        public CameraTransforms camera;
+
+        [Input]
+        Vertex vertex;
+
+        [Output(OutputSemantic.Position)]
+        Vector4 position;
+
+        public void Main()
+        {
+            position = new(vertex.position, 1);
+            position = Vector4.Transform(position, camera.World);
+            position = Vector4.Transform(position, camera.View);
+            position = Vector4.Transform(position, camera.Proj);
+        }
+    }
+
+    struct LightFragmentShader : IShader
+    {
+        [Output(OutputSemantic.Color)]
+        ColorF color;
+
+        public void Main()
+        {
+            color = new(1, 1, 1, 1);
+        }
+    }
+
 
     class ObjLoader
     {

@@ -88,10 +88,9 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
 
         foreach (var uniform in Compilation.Uniforms)
         {
-            var fieldOffset = Marshal.OffsetOf<T>(uniform.BackingField.Name);
             var fieldSize = Marshal.SizeOf(uniform.VariableType);
 
-            ref byte fieldReference = ref Unsafe.As<T, byte>(ref Unsafe.AddByteOffset(ref unboxedShader, fieldOffset));
+            ref byte fieldReference = ref Unsafe.As<T, byte>(ref Unsafe.AddByteOffset(ref unboxedShader, offset));
 
             Unsafe.CopyBlock(ref cbufferData[offset], ref fieldReference, (uint)fieldSize);
 
@@ -130,7 +129,7 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
             {
                 samplerStates[samplerStatesIndex++] = Resources.SamplerManager.GetSampler(sampler);
             }
-            else
+            else if (value is not null)
             {
                 throw new Exception();
             }

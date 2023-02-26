@@ -81,8 +81,8 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     private ShaderSignature gsOutputSignature;
 
     private IShader vertexShader;
-    private IShader geometryShader;
     private IShader fragmentShader;
+    bool vsCompiled, fsCompiled;
 
     private CullMode cullMode;
     private bool wireframe;
@@ -117,6 +117,11 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         D3D11Queue.DeviceContext.OMSetBlendState(BlendEnabled ? this.blendState : null, blendFactor: new Color4(this.BlendConstant.ToVector4()));
 
         depthStencilManager.PreDraw(this.D3D11Queue.DeviceContext);
+
+        if (!vsCompiled)
+            CompileVertexShader(this.vertexShader);
+        if (!fsCompiled)
+            CompileFragmentShader(this.fragmentShader);
     }
 
     private void SetRenderTarget(ITexture<Color> renderTarget)
@@ -196,17 +201,19 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
     public void SetVertexShader(IShader shader)
     {
-        if (shader is null)
-        {
-            this.vertexShader = null;
-            return;
-        }
-
-
-        this.GetType().GetMethod(nameof(SetVertexShader), BindingFlags.Instance | BindingFlags.NonPublic, new[] { shader.GetType() }).MakeGenericMethod(new[] { shader.GetType() }).Invoke(this, new[] { shader });
+        this.vertexShader = shader;
+        vsCompiled = false;
     }
 
-    private void SetVertexShader<T>(IShader shader) where T : struct, IShader
+    private void CompileVertexShader(IShader shader)
+    {
+        if (shader is null)
+            return;
+
+        this.GetType().GetMethod(nameof(CompileVertexShaderHelper), BindingFlags.Instance | BindingFlags.NonPublic, new[] { shader.GetType() }).MakeGenericMethod(new[] { shader.GetType() }).Invoke(this, new[] { shader });
+    }
+
+    private void CompileVertexShaderHelper<T>(IShader shader) where T : struct, IShader
     {
         var shaderObject = Resources.ShaderManager.Shaders.OfType<D3D11VertexShader<T>>().SingleOrDefault(s => s.ShaderType == shader.GetType());
 
@@ -220,28 +227,22 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         shaderObject.Apply(this.D3D11Queue.DeviceContext);
         this.vertexShader = shader;
         this.vsOutputSignature = shaderObject.Compilation.OutputSignature;
-
-        // recompile dependent shader stages
-        SetGeometryShader(this.geometryShader);
-        SetFragmentShader(this.fragmentShader);
+        vsCompiled = true;
     }
 
     public void SetGeometryShader(IShader shader)
     {
         if (shader is null)
         {
-            this.geometryShader = null;
             return;
         }    
 
-        this.GetType().GetMethod(nameof(SetGeometryShader), BindingFlags.Instance | BindingFlags.NonPublic, new[] { shader.GetType() }).MakeGenericMethod(new[] { shader.GetType() }).Invoke(this, new[] { shader });
+        this.GetType().GetMethod(nameof(CompileGeometryShader), BindingFlags.Instance | BindingFlags.NonPublic, new[] { shader.GetType() }).MakeGenericMethod(new[] { shader.GetType() }).Invoke(this, new[] { shader });
     }
 
-    private void SetGeometryShader<T>(IShader shader) where T : struct, IShader
+    private void CompileGeometryShader<T>(IShader shader) where T : struct, IShader
     {
         ShaderSignature shaderSignature = vsOutputSignature;
-
-        this.geometryShader = shader;
 
         // if theres no signature to compile against, wait until we have one
         // SetVertexShader() will call this method with the input signatures
@@ -267,17 +268,23 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
     public void SetFragmentShader(IShader shader)
     {
-        if (shader is null)
-        {
-            this.fragmentShader = null;
-            return;
-        }
-
-        this.GetType().GetMethod(nameof(SetFragmentShader), BindingFlags.Instance | BindingFlags.NonPublic, new[] { shader.GetType() }).MakeGenericMethod(new[] { shader.GetType() }).Invoke(this, new[] { shader });
+        this.fragmentShader = shader;
+        fsCompiled = false;
     }
 
-    private void SetFragmentShader<T>(IShader shader) where T : struct, IShader
+    private void CompileFragmentShader(IShader shader)
     {
+        if (shader is null)
+            return;
+
+        this.GetType().GetMethod(nameof(CompileFragmentShaderHelper), BindingFlags.Instance | BindingFlags.NonPublic, new[] { shader.GetType() }).MakeGenericMethod(new[] { shader.GetType() }).Invoke(this, new[] { shader });
+    }
+
+    private void CompileFragmentShaderHelper<T>(IShader shader) where T : struct, IShader
+    {
+        if (shader is null)
+            return;
+
         ShaderSignature shaderSignature = gsOutputSignature ?? vsOutputSignature;
 
         fragmentShader = shader;
@@ -297,6 +304,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
         shaderObject.Update(shader);
         shaderObject.Apply(this.D3D11Queue.DeviceContext);
+        fsCompiled = true;
     }
 
     public void ClearRenderTarget(Color color)

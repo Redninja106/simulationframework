@@ -1,5 +1,4 @@
-﻿using SimulationFramework.Serialization.PNG;
-using SimulationFramework.Drawing.Direct3D11.Buffers;
+﻿using SimulationFramework.Drawing.Direct3D11.Buffers;
 using SimulationFramework.Messaging;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -11,6 +10,7 @@ using SimulationFramework.Shaders;
 using SimulationFramework.Shaders.Compiler;
 using System.Reflection;
 using SimulationFramework.Drawing.Direct3D11.Textures;
+using StbImageSharp;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
@@ -56,6 +56,7 @@ public class D3D11Graphics : IGraphicsProvider
     public void Dispose()
     {
         defaultRenderTarget.Dispose();
+        defaultDepthTarget.Dispose();
         resources.Dispose();
     }
 
@@ -68,17 +69,15 @@ public class D3D11Graphics : IGraphicsProvider
         return defaultDepthTarget;
     }
 
-    public ITexture<Color> LoadTexture(Span<byte> encodedData, ResourceOptions flags)
+    public unsafe ITexture<Color> LoadTexture(Span<byte> encodedData, ResourceOptions options)
     {
-        using var stream = new MemoryStream(encodedData.Length);
-        stream.Write(encodedData);
-        stream.Position = 0;
+        fixed (byte* dataPtr = encodedData) 
+        {
+            using var stream = new UnmanagedMemoryStream(dataPtr, encodedData.Length);
+            var result = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
 
-        var decoder = new PNGDecoder(stream);
-
-        //var result = Graphics.Create
-
-        return null;
+            return new D3D11Texture<Color>(resources, result, options);
+        }
     }
 
     public void SetResourceLifetime(int lifetimeInFrames)
@@ -103,9 +102,14 @@ public class D3D11Graphics : IGraphicsProvider
             return;
 
         this.resources.Device.ImmediateContext.ClearState();
+
         defaultRenderTarget.Dispose();
+        defaultDepthTarget.Dispose();
+
         resources.Resize(message.Width, message.Height);
+
         defaultRenderTarget = new D3D11BackBufferTexture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
+        defaultDepthTarget = new D3D11Texture<float>(resources, message.Width, message.Height, Span<float>.Empty, ResourceOptions.None);
     }
 
     public ICanvas GetFrameCanvas()

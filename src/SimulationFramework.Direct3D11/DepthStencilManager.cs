@@ -13,6 +13,7 @@ internal class DepthStencilManager : D3D11Object
 {
     private ID3D11DepthStencilState depthStencilState;
 
+    private readonly Dictionary<D3D11Texture<float>, ID3D11DepthStencilView> views = new();
     public D3D11Texture<float> DepthTexture { get; private set; }
     public ID3D11DepthStencilView DepthStencilView { get; private set; }
 
@@ -24,7 +25,14 @@ internal class DepthStencilManager : D3D11Object
     public void SetDepthTexture(D3D11Texture<float> texture)
     {
         this.DepthTexture = texture;
-        DepthStencilView = CreateDepthStencilView();
+        
+        if (!views.TryGetValue(texture, out var view))
+        {
+            view = CreateDepthStencilView();
+            views.Add(texture, view);
+        }
+
+        DepthStencilView = view;
     }
 
     public void PreDraw(ID3D11DeviceContext deviceContext)

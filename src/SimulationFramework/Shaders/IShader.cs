@@ -14,5 +14,6 @@ public interface IShader
     /// <summary>
     /// The shader's entry point.
     /// </summary>
+    [ShaderMethod]
     void Main();
 }
