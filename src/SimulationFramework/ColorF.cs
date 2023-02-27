@@ -43,12 +43,11 @@ public partial struct ColorF : IEquatable<ColorF>
     }
 
     /// <summary>
-    /// Creates a new <see cref="ColorF"/>.
+    /// Creates a new <see cref="ColorF"/> with an alpha value of 1.
     /// </summary>
     /// <param name="rgb">The RGB values of the color.</param>
     public ColorF(Vector3 rgb) : this(rgb.X, rgb.Y, rgb.Z)
     {
-    
     }
 
     /// <summary>

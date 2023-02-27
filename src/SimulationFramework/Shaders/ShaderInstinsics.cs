@@ -27,6 +27,9 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic, Replace(nameof(MathF.Sqrt), typeof(MathF))]
     public static float Sqrt(float x) => MathF.Sqrt(x);
 
+    [ShaderIntrinsic, Replace(nameof(MathF.Pow), typeof(MathF))]
+    public static float Pow(float x, float y) => MathF.Pow(x, y);
+
     [ShaderIntrinsic, Replace(nameof(Vector3.Dot), typeof(Vector3))]
     public static float Dot(Vector3 vector1, Vector3 vector2) => Vector3.Dot(vector1, vector2);
 

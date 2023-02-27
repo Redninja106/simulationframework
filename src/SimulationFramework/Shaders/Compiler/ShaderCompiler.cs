@@ -22,9 +22,9 @@ public partial class ShaderCompiler
         new ShaderTypeParameterPass(),
         new ShaderTypeRestrictions(),
         new ShaderIntrinsicSubstitutions(),
-        new PrintILPass(),
         new DependencyResolver(),
         new CallSubstitutions(),
+        new GlobalMethodCall(),
         new InlineSourceInsertion(),
     };
 
@@ -83,13 +83,12 @@ public partial class ShaderCompiler
         var entryPoint = GetShaderEntryPoint(shaderType);
 
         var context = new CompilationContext(this);
+        
         context.ShaderType = shaderType;
         context.kind = targetShaderKind;
 
         CompileShaderType(context, shaderType, signature);
-        CompileMethod(context, entryPoint);
-
-        context.EntryPoint = context.methods.Single(m => m.Method == entryPoint);
+        CompileMethod(context, entryPoint, true);
 
         return context.GetResult();
     }
@@ -106,12 +105,17 @@ public partial class ShaderCompiler
         return interfaceMap.TargetMethods.Single(m => m.Name is nameof(IShader.Main));
     }
 
-    internal void CompileMethod(CompilationContext context, MethodBase method)
+    internal void CompileMethod(CompilationContext context, MethodBase method, bool isEntryPoint = false)
     {
         if (IsMethodIntrinsic(method))
             return;
 
         CompiledMethod m = new CompiledMethod(method);
+
+        if (isEntryPoint)
+        {
+            context.EntryPoint = m;
+        }
 
         foreach (var rule in this.Rules)
         {

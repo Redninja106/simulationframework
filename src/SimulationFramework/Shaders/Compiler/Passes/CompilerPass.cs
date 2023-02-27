@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimulationFramework.Shaders.Compiler.Expressions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.Passes;
-internal abstract class CompilerPass : ExpressionVisitor
+internal abstract class CompilerPass : ExtendedExpressionVisitor
 {
     public virtual bool AppliesTo(ShaderKind shaderKind) => true;
 

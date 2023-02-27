@@ -16,7 +16,7 @@ public class DereferenceExpression : Expression
     }
 
     public override ExpressionType NodeType => ExpressionType.Extension;
-    public override Type Type => Operand.Type.GetElementType() ?? throw new Exception();
+    public override Type Type => Operand.Type.GetElementType() ?? Operand.Type;
 
     protected override Expression Accept(ExpressionVisitor visitor)
     {

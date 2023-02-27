@@ -62,6 +62,18 @@ internal class ControlFlowGraph
         RecomputeDominators();
     }
 
+    public ControlFlowGraph GetRootGraph()
+    {
+        var graph = this;
+
+        while (graph.Parent is not null)
+        {
+            graph = graph.Parent.Graph;
+        }
+
+        return graph;
+    }
+
     public static ControlFlowGraph CreateConditionalSubgraph(ControlFlowNode parent, ControlFlowNode entryNode, ControlFlowNode exitNode)
     {
         Debug.Assert(exitNode.immediateDominator == entryNode);
@@ -500,7 +512,6 @@ class ConditionalNode : ControlFlowNode, ISubgraphContainer
         }
     }
 
-
     Conditional FindConditional(ControlFlowGraph graph, ControlFlowNode startNode)
     {
         // look for idom & two preds
@@ -511,7 +522,7 @@ class ConditionalNode : ControlFlowNode, ISubgraphContainer
         }, startNode, true);
 
         Debug.Assert(endNode is not null);
-
+        
         var firstSuccessor = startNode.Successors[0];
         var secondSuccessor = startNode.Successors[1];
 

@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ShaderGen\hlsl_keywords.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ShaderGen\hlsl_keywords.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="StbImageSharp" Version="2.27.13" />
     <PackageReference Include="Vortice.D3DCompiler" Version="2.1.2" />
     <PackageReference Include="Vortice.Direct3D11" Version="2.1.2" />

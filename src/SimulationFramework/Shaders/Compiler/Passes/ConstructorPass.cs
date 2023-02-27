@@ -20,9 +20,9 @@ internal class ConstructorPass : CompilerPass
         {
             var thisParam = compiledMethod.Parameters[0];
             compiledMethod.Parameters.Remove(thisParam);
-            compiledMethod.Body = compiledMethod.Body.Update(compiledMethod.Body.Variables.Prepend(thisParam), compiledMethod.Body.Expressions);
+            compiledMethod.Body = compiledMethod.Body.Update(compiledMethod.Body.Variables.Prepend(thisParam.expr), compiledMethod.Body.Expressions);
 
-            this.thisParam = thisParam;
+            this.thisParam = thisParam.expr;
             this.currentMethod = compiledMethod;
             compiledMethod.TransformBody(this);
 

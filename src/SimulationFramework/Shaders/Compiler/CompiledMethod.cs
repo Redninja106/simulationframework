@@ -16,7 +16,7 @@ public class CompiledMethod
     public Type ReturnType { get; private set; }
     public BlockExpression Body { get; set; }
     public string Name { get; private set; }
-    public List<ParameterExpression> Parameters { get; private set; }
+    public List<(ParameterExpression expr, ParamModifier modifier)> Parameters { get; private set; }
     internal MethodDisassembly Disassembly { get; private set; }
 
     public CompiledMethod(MethodBase method)
@@ -25,6 +25,13 @@ public class CompiledMethod
         ReturnType = GetReturnType(method);
 
         Disassembly = new MethodDisassembly(method);
+
+        foreach (var i in this.Disassembly.instructions)
+        {
+            Console.WriteLine(i);
+        }
+
+        Console.WriteLine(new string('=', 100));
 
         var graph = new ControlFlowGraph(Disassembly);
 

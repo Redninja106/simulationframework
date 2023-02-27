@@ -4,6 +4,7 @@ using SimulationFramework.Shaders.Compiler;
 using SimulationFramework.Shaders.Compiler.Expressions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
@@ -39,6 +40,7 @@ public class HLSLCodeGenerator : CodeGenerator
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec4), new[] { typeof(float), typeof(float), typeof(float), typeof(float) })] = "float4",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec3), new[] { typeof(float), typeof(float), typeof(float) })] = "float3",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Sqrt), new[] { typeof(float) })] = "sqrt",
+        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Pow), new[] { typeof(float), typeof(float) })] = "pow",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Max), new[] { typeof(float), typeof(float) })] = "max",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Normalize), new[] { typeof(Vector3) })] = "normalize",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Dot), new[] { typeof(Vector3), typeof(Vector3) })] = "dot",
@@ -90,12 +92,7 @@ public class HLSLCodeGenerator : CodeGenerator
 
     };
 
-    private string[] keywords = new[]
-    {
-        "matrix",
-        "texture",
-        "sampler",
-    };
+    private string[] keywords;
 
     private bool IsInEntryPoint = false;
 
@@ -122,7 +119,11 @@ public class HLSLCodeGenerator : CodeGenerator
 
     public HLSLCodeGenerator(ShaderCompilation compilation) : base(compilation)
     {
-
+        const string keywordsResourcePath = "SimulationFramework.Drawing.Direct3D11.ShaderGen.hlsl_keywords.txt";
+        using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(keywordsResourcePath);
+        Debug.Assert(stream is not null);
+        using StreamReader reader = new(stream);
+        keywords = reader.ReadToEnd().Split("\r\n");
     }
 
     protected override void VisitVariables(IEnumerable<CompiledVariable> variables)
@@ -385,10 +386,17 @@ public class HLSLCodeGenerator : CodeGenerator
                 Writer.Write(" ");
 
                 VisitIdentifier(typeGroup.First().Name);
+                Writer.Write(" = (");
+                VisitType(typeGroup.Key);
+                Writer.Write(")0");
+
                 foreach (var element in typeGroup.Skip(1))
                 {
                     Writer.Write(", ");
                     VisitIdentifier(element.Name);
+                    Writer.Write(" = (");
+                    VisitType(typeGroup.Key);
+                    Writer.Write(")0");
                 }
 
                 Writer.WriteLine(";");
@@ -452,7 +460,7 @@ public class HLSLCodeGenerator : CodeGenerator
 
             return node;
         }
-        
+
         if (node.Method == typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Multiply), new[] { typeof(ColorF), typeof(ColorF) }))
         {
             Visit(Expression.Multiply(node.Arguments[0], node.Arguments[1]));

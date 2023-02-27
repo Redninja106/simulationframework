@@ -116,7 +116,6 @@ internal static class OpCodeExtensions
             OpCode.Bgt_Un_S,
             OpCode.Ble_Un_S,
             OpCode.Blt_Un_S,
-            OpCode.Br,
             OpCode.Brfalse,
             OpCode.Brtrue,
             OpCode.Beq,

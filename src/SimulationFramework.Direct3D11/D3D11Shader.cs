@@ -78,24 +78,20 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
             int size = 0;
             foreach (var uniform in Compilation.Uniforms)
             {
-                size += Marshal.SizeOf(uniform.BackingField.FieldType);
+                var uniformSize = Marshal.SizeOf(uniform.BackingField.FieldType);
+                
+                if (uniformSize + (size % 16) > 16)
+                {
+                    size = CeilTo16(size);
+                }
+
+                size += uniformSize;
             }
 
             cbufferData = new byte[size];
         }
 
-        int offset = 0;
-
-        foreach (var uniform in Compilation.Uniforms)
-        {
-            var fieldSize = Marshal.SizeOf(uniform.VariableType);
-
-            ref byte fieldReference = ref Unsafe.As<T, byte>(ref Unsafe.AddByteOffset(ref unboxedShader, offset));
-
-            Unsafe.CopyBlock(ref cbufferData[offset], ref fieldReference, (uint)fieldSize);
-
-            offset += fieldSize;
-        }
+        CopyUniforms(shader);
         
         if (cbufferData.Length > 0)
         {
@@ -133,8 +129,36 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
             {
                 throw new Exception();
             }
-
         }
+    }
+
+    private void CopyUniforms(IShader shader)
+    {
+        // https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules
+
+        int offset = 0;
+
+        MethodInfo copyValueGeneric = this.GetType().GetMethod(nameof(CopyUniform), BindingFlags.Instance | BindingFlags.Public);
+        
+        foreach (var uniform in Compilation.Uniforms)
+        {
+            var copyValue = copyValueGeneric.MakeGenericMethod(uniform.VariableType);
+            var size = Marshal.SizeOf(uniform.VariableType);
+            
+            if (size + (offset % 16) > 16)
+            {
+                offset = CeilTo16(offset);
+            }
+
+            offset += (int)copyValue.Invoke(this, new[] { offset, uniform.BackingField.GetValue(shader) });
+        }
+    }
+    
+    public int CopyUniform<TVariable>(int offset, TVariable value) where TVariable : unmanaged
+    {
+        var bytes = MemoryMarshal.AsBytes(new Span<TVariable>(ref value));
+        bytes.CopyTo(cbufferData.AsSpan(offset));
+        return Unsafe.SizeOf<TVariable>();
     }
 
     static int CeilTo16(int value)

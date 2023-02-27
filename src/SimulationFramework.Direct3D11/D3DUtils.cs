@@ -25,6 +25,9 @@ internal static class D3DUtils
         return primitiveKind switch
         {
             PrimitiveKind.Triangles => PrimitiveTopology.TriangleList,
+            PrimitiveKind.TriangleStrip => PrimitiveTopology.TriangleStrip,
+            PrimitiveKind.Lines => PrimitiveTopology.LineList,
+            PrimitiveKind.LineStrip => PrimitiveTopology.LineStrip,
             _ => throw new NotImplementedException(),
         };
     }

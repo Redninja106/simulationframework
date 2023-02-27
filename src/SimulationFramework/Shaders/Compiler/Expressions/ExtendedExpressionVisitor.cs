@@ -55,41 +55,41 @@ public abstract class ExtendedExpressionVisitor : ExpressionVisitor
 
     protected virtual Expression VisitIntrinsicCallExpression(IntrinsicCallExpression intrinsicCallExpression)
     {
-        return intrinsicCallExpression;
+        return base.VisitExtension(intrinsicCallExpression);
     }
 
     protected virtual Expression VisitReferenceAssignmentExpression(ReferenceAssignmentExpression referenceAssignmentExpression)
     {
-        return referenceAssignmentExpression;
+        return base.VisitExtension(referenceAssignmentExpression);
     }
 
     protected virtual Expression VisitInlineSourceExpression(InlineSourceExpression inlineSourceExpression)
     {
-        return inlineSourceExpression;
+        return base.VisitExtension(inlineSourceExpression);
     }
 
     protected virtual Expression VisitDereferenceExpression(DereferenceExpression dereferenceExpression)
     {
-        return dereferenceExpression;
+        return base.VisitExtension(dereferenceExpression);
     }
 
     protected virtual Expression VisitConstructorCallExpression(ConstructorCallExpression constructorCallExpression)
     {
-        return constructorCallExpression;
+        return base.VisitExtension(constructorCallExpression);
     }
 
     protected virtual Expression VisitCompiledVariableExpression(CompiledVariableExpression variableExpression)
     {
-        return variableExpression;
+        return base.VisitExtension(variableExpression);
     }
 
     protected virtual Expression VisitCompiledVariableAssignmentExpression(CompiledVariableAssignmentExpression variableAssignmentExpression)
     {
-        return variableAssignmentExpression;
+        return base.VisitExtension(variableAssignmentExpression);
     }
 
     protected virtual Expression VisitCompiledMethodCallExpression(CompiledMethodCallExpression methodCall)
     {
-        return methodCall;
+        return base.VisitExtension(methodCall);
     }
 }

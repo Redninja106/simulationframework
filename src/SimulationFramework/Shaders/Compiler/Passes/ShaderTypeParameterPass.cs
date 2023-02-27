@@ -15,7 +15,7 @@ internal class ShaderTypeParameterPass : CompilerPass
     {
         this.context = context;
 
-        var shaderTypeParameters = compiledMethod.Parameters.Where(p => p.Type == context.ShaderType);
+        var shaderTypeParameters = compiledMethod.Parameters.Where(p => p.expr.Type == context.ShaderType);
         if (shaderTypeParameters.Any())
         {
             foreach (var param in shaderTypeParameters.ToArray())

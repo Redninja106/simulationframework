@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -69,18 +70,21 @@ public class CodeGenerator : ExtendedExpressionVisitor
 
         if (method.Parameters.Any())
         {
-            if (method.Method is MethodInfo && !method.Method.IsStatic)
-            {
-                Writer.Write("inout ");
-            }
-
-            VisitParameterDeclaration(method.Parameters.First());
-            foreach (var parameter in method.Parameters.Skip(1))
+            // if (method.Method is MethodInfo && !method.Method.IsStatic && method.Method.DeclaringType != Compilation.EntryPoint.Method.DeclaringType)
+            // {
+            //     Writer.Write("inout ");
+            // }
+            var first = method.Parameters.First();
+            VisitParameterModifier(first.modifier);
+            VisitParameterDeclaration(first.expr);
+            foreach (var (parameter, modifier) in method.Parameters.Skip(1))
             {
                 Writer.Write(", ");
+                VisitParameterModifier(modifier);
                 VisitParameterDeclaration(parameter);
             }
         }
+
         Writer.WriteLine(')');
         Writer.WriteLine('{');
         Writer.Indent++;
@@ -91,17 +95,17 @@ public class CodeGenerator : ExtendedExpressionVisitor
             Writer.Write(" ");
 
             VisitIdentifier(typeGroup.First().Name);
-            if (typeGroup.First().Name is "this")
-            {
-                Writer.Write(" = (");
-                VisitType(typeGroup.Key);
-                Writer.Write(")0");
-            }
+            Writer.Write(" = (");
+            VisitType(typeGroup.Key);
+            Writer.Write(")0");
 
             foreach (var element in typeGroup.Skip(1))
             {
                 Writer.Write(", ");
                 VisitIdentifier(element.Name);
+                Writer.Write(" = (");
+                VisitType(typeGroup.Key);
+                Writer.Write(")0");
             }
 
             Writer.WriteLine(";");
@@ -119,6 +123,18 @@ public class CodeGenerator : ExtendedExpressionVisitor
 
     protected override Expression VisitConditional(ConditionalExpression expression)
     {
+        if (expression.IfFalse is not BlockExpression && expression.IfTrue is not BlockExpression)
+        {
+            // ternary
+            Visit(expression.Test);
+            Writer.Write(" ? ");
+            Visit(expression.IfTrue);
+            Writer.Write(" : ");
+            Visit(expression.IfFalse);
+
+            return expression;
+        }
+
         Writer.Write("if (");
         Visit(expression.Test);
         Writer.WriteLine(")");
@@ -145,6 +161,24 @@ public class CodeGenerator : ExtendedExpressionVisitor
         VisitType(parameter.Type);
         Writer.Write(' ');
         VisitIdentifier(parameter.Name);
+    }
+
+    protected virtual void VisitParameterModifier(ParamModifier modifier) 
+    {
+        switch (modifier)
+        {
+            case ParamModifier.In:
+                Writer.Write("in ");
+                break;
+            case ParamModifier.Out:
+                Writer.Write("out ");
+                break;
+            case ParamModifier.Ref:
+                Writer.Write("inout ");
+                break;
+            default:
+                throw new Exception();
+        }
     }
 
     protected virtual void VisitStruct(CompiledStruct @struct)
@@ -234,6 +268,12 @@ public class CodeGenerator : ExtendedExpressionVisitor
         Writer.Write(';');
     }
 
+    protected override Expression VisitDereferenceExpression(DereferenceExpression dereferenceExpression)
+    {
+        Visit(dereferenceExpression.Operand);
+        return dereferenceExpression;
+    }
+
     protected override Expression VisitBlock(BlockExpression node)
     {
         Writer.WriteLine('{');
@@ -286,6 +326,13 @@ public class CodeGenerator : ExtendedExpressionVisitor
     {
         if (node.NodeType is ExpressionType.Convert)
         {
+            // workaround for linq.expressions type checking
+            if (node.Type == typeof(object))
+            {       
+                Visit(node.Operand);
+                return node;
+            }
+
             Writer.Write('(');
             VisitType(node.Type);
             Writer.Write(')');
@@ -313,6 +360,31 @@ public class CodeGenerator : ExtendedExpressionVisitor
 
     protected override Expression VisitConstant(ConstantExpression node)
     {
+        if (node.Type == typeof(bool))
+        {
+            Writer.Write(node.Value?.ToString()?.ToLower());
+            return node;
+        }
+
+        if (node.Type == typeof(float))
+        {
+            if (node.Value is float.PositiveInfinity)
+            {
+                Writer.Write("(1.0/0.0)");
+                return node;
+            }
+            if (node.Value is float.NegativeInfinity)
+            {
+                Writer.Write("(1.0/-0.0)");
+                return node;
+            }
+            if (node.Value is float.NaN)
+            {
+                Writer.Write("(0.0/0.0)");
+                return node;
+            }
+        }
+
         Writer.Write(node.Value?.ToString());
 
         return node;
@@ -398,7 +470,7 @@ public class CodeGenerator : ExtendedExpressionVisitor
         Visit(node.Right);
         return node;
     }
-
+    
     protected override Expression VisitCompiledMethodCallExpression(CompiledMethodCallExpression node)
     {
         VisitTypeName(node.Method.Method.DeclaringType);
@@ -469,7 +541,7 @@ public class CodeGenerator : ExtendedExpressionVisitor
             ExpressionType.Or => "|",
             ExpressionType.LeftShift => "<<",
             ExpressionType.RightShift => ">>",
-            ExpressionType.Not => "-",
+            ExpressionType.Not => "!",
             ExpressionType.Negate => "-",
             ExpressionType.Equal => "==",
             ExpressionType.NotEqual => "!=",
@@ -478,13 +550,13 @@ public class CodeGenerator : ExtendedExpressionVisitor
             ExpressionType.LessThan => "<",
             ExpressionType.LessThanOrEqual => "<=",
 
-            _ => " ??? "
+            _ => throw new Exception()
         };
     }
 
     private bool NeedsParentheses(ExpressionType parent, ExpressionType child)
     {
-        return GetPrecedence(parent) < GetPrecedence(child);
+        return GetPrecedence(parent) <= GetPrecedence(child);
     }
 
     private int GetPrecedence(ExpressionType expression)

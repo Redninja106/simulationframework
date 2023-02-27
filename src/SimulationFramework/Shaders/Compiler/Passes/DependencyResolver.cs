@@ -18,6 +18,7 @@ internal class DependencyResolver : CompilerPass
 
     private static readonly List<Type> intrinsicTypes = new()
     {
+        typeof(bool),
         typeof(float),
         typeof(int),
         typeof(uint),
@@ -38,7 +39,7 @@ internal class DependencyResolver : CompilerPass
 
         foreach (var param in compiledMethod.Parameters)
         {
-            RequireType(context, param.Type);
+            RequireType(context, param.expr.Type);
         }
 
         Visit(compiledMethod.Body);
@@ -92,7 +93,7 @@ internal class DependencyResolver : CompilerPass
 
     protected override Expression VisitMethodCall(MethodCallExpression node)
     {
-        if (node.Method.GetCustomAttribute<ReplaceAttribute>() is null && !methodDependencies.Contains(node.Method))
+        if (node.Method.GetCustomAttribute<ShaderIntrinsicAttribute>() is null && !methodDependencies.Contains(node.Method))
         {
             methodDependencies.Add(node.Method);
         }
@@ -115,7 +116,6 @@ internal class DependencyResolver : CompilerPass
         if (node is ConstructorCallExpression ctorCall)
         {
             methodDependencies.Add(ctorCall.Constructor);
-            return node;
         }
 
         return base.VisitExtension(node);

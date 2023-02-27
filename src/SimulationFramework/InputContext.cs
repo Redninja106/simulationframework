@@ -116,6 +116,8 @@ public sealed class InputContext : IApplicationComponent
 
         lastMousePosition = mousePosition;
         scrollDelta = 0;
+
+        typedKeys.Clear();
     }
 
     public void Dispose()
