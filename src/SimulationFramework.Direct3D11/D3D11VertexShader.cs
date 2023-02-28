@@ -100,6 +100,9 @@ internal class D3D11VertexShader<T> : D3D11Shader<T> where T : struct, IShader
             }
         }
 
+        if (!elements.Any())
+            throw new Exception("Vertex Shader must have at least one input!");
+
         inputLayout = Resources.Device.CreateInputLayout(elements.ToArray(), bytecode);
     }
 

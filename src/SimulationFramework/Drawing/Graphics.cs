@@ -148,6 +148,11 @@ public static class Graphics
         return buffer;
     }
 
+    public static IBuffer<T> CreateBuffer<T>(T[] data) where T : unmanaged
+    {
+        return CreateBuffer(data.AsSpan());
+    }
+
     public static void DispatchComputeShader(IShader? shader, int groups, IGraphicsQueue? queue = null)
     {
         queue ??= ImmediateQueue;

@@ -29,4 +29,10 @@ internal class D3D11BackBufferTexture<T> : D3D11Texture<T> where T : unmanaged
 
         return base.CreateInternalTexture(usage);
     }
+
+    public override void Dispose()
+    {
+        backBuffer.Dispose();
+        base.Dispose();
+    }
 }

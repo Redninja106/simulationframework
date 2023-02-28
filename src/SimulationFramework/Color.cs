@@ -18,13 +18,13 @@ namespace SimulationFramework;
 public readonly partial struct Color : IEquatable<Color>
 {
     private const uint RED_MASK   = 0xFF000000;
-    private const uint BLUE_MASK  = 0x00FF0000;
-    private const uint GREEN_MASK = 0x0000FF00;
+    private const uint GREEN_MASK = 0x00FF0000;
+    private const uint BLUE_MASK  = 0x0000FF00;
     private const uint ALPHA_MASK = 0x000000FF;
 
     private const int RED_SHIFT = 24;
-    private const int BLUE_SHIFT = 16;
-    private const int GREEN_SHIFT = 8;
+    private const int GREEN_SHIFT = 16;
+    private const int BLUE_SHIFT = 8;
     private const int ALPHA_SHIFT = 0;
 
 

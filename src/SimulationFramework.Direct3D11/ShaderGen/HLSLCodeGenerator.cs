@@ -34,21 +34,11 @@ public class HLSLCodeGenerator : CodeGenerator
 
     private static readonly Dictionary<MethodInfo, string> intrinsicAliases = new()
     {
-        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Mul))] = "mul",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec4), new[] { typeof(Vector3), typeof(float) })] = "float4",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec4), new[] { typeof(Vector2), typeof(float), typeof(float) })] = "float4",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec4), new[] { typeof(float), typeof(float), typeof(float), typeof(float) })] = "float4",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Vec3), new[] { typeof(float), typeof(float), typeof(float) })] = "float3",
-        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Sqrt), new[] { typeof(float) })] = "sqrt",
-        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Pow), new[] { typeof(float), typeof(float) })] = "pow",
-        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Max), new[] { typeof(float), typeof(float) })] = "max",
-        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Normalize), new[] { typeof(Vector3) })] = "normalize",
-        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Dot), new[] { typeof(Vector3), typeof(Vector3) })] = "dot",
         [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.ColorF), new[] { typeof(float), typeof(float), typeof(float), typeof(float) })] = "float4",
-        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Reflect), new[] { typeof(Vector3), typeof(Vector3) })] = "reflect",
-        [typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.Clamp), new[] { typeof(float), typeof(float), typeof(float) })] = "clamp",
-
-        [typeof(SampleExtensions).GetMethod(nameof(SampleExtensions.Sample), new[] { typeof(ITexture<Color>), typeof(Vector2), typeof(TextureSampler) })] = "Sample",
     };
 
     private static readonly Dictionary<MemberInfo, string> memberAliases = new()
@@ -483,7 +473,7 @@ public class HLSLCodeGenerator : CodeGenerator
         }
         else
         {
-            name = node.Method.Name;
+            name = node.Method.Name.ToLower();
         }
 
         VisitIdentifier(name);

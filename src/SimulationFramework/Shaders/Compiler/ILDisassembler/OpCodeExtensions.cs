@@ -88,6 +88,7 @@ internal static class OpCodeExtensions
             OpCode.Ldsfld,
             OpCode.Ldsflda,
             OpCode.Ldobj,
+            OpCode.Stobj,
             OpCode.Ldtoken,
             OpCode.Stfld,
             OpCode.Newobj,

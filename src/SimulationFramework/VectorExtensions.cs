@@ -111,4 +111,20 @@ public static class VectorExtensions
         z = vector.Z;
         w = vector.W;
     }
+
+    /// <summary>
+    /// Drops the W component of a <see cref="Vector4"/>.
+    /// </summary>
+    public static Vector3 ToVector3(this Vector4 vector)
+    {
+        return new(vector.X, vector.Y, vector.Z);
+    }
+
+    /// <summary>
+    /// Drops the Z component of a <see cref="Vector3"/>.
+    /// </summary>
+    public static Vector2 ToVector2(this Vector3 vector)
+    {
+        return new(vector.X, vector.Y);
+    }
 }

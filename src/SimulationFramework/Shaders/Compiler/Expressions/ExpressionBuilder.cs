@@ -720,14 +720,24 @@ internal class ExpressionBuilder
 
     bool BuildStoreIndirect(Instruction instruction)
     {
-        if (instruction.OpCode is not OpCode.Stind_R4)
-            return false;
+        switch (instruction.OpCode)
+        {
+            case OpCode.Stind_I:
+            case OpCode.Stind_I1:
+            case OpCode.Stind_I2:
+            case OpCode.Stind_I4:
+            case OpCode.Stind_I8:
+            case OpCode.Stind_R4:
+            case OpCode.Stind_R8:
+            case OpCode.Stind_Ref:
+            case OpCode.Stobj:
+                var value = Expressions.Pop();
+                var reference = Expressions.Pop();
 
-        var value = Expressions.Pop();
-        var reference = Expressions.Pop();
-
-        Expressions.Push(new ReferenceAssignmentExpression(reference, value));
-
-        return true;
+                Expressions.Push(new ReferenceAssignmentExpression(reference, value));
+                return true;
+            default:
+                return false;
+        }
     }
 }

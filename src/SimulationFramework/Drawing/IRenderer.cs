@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing;
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-public interface IRenderer
+public interface IRenderer : IDisposable
 {
     IGraphicsQueue Queue { get; set; }
     

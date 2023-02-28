@@ -26,7 +26,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
     public ITexture<float> DepthTarget
     {
         get => currentDepthTarget;
-        set => depthStencilManager.SetDepthTexture(value as D3D11Texture<float>);
+        set => SetDepthTarget(value);
     }
 
     public D3D11QueueBase D3D11Queue { get; private set; }
@@ -100,6 +100,7 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
         depthStencilManager = new(resources);
         blendStateManager = new(resources);
         rasterizerStateManager = new(resources);
+        RenderTarget = Graphics.DefaultRenderTarget;
     }
 
     public void PreDraw(PrimitiveKind primitiveKind)
@@ -130,7 +131,18 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
             throw new ArgumentException(null, nameof(renderTarget));
 
         currentRenderTarget = d3dTexture;
-        D3D11Queue.DeviceContext.OMSetRenderTargets(d3dTexture.RenderTargetView, depthStencilManager.DepthStencilView);
+        D3D11Queue.DeviceContext.OMSetRenderTargets(d3dTexture.RenderTargetView);
+    }
+
+    private void SetDepthTarget(ITexture<float> texture)
+    {
+        if (texture is not D3D11Texture<float> d3dTexture)
+            throw new ArgumentException(null, nameof(texture));
+
+        currentDepthTarget = d3dTexture;
+
+        depthStencilManager.SetDepthTexture(d3dTexture);
+        D3D11Queue.DeviceContext.OMSetRenderTargets(currentRenderTarget.RenderTargetView, depthStencilManager.DepthStencilView);
     }
 
     public void BeginFrame()
@@ -340,6 +352,12 @@ internal sealed class D3D11Renderer : D3D11Object, IRenderer
 
     public void SetVertexBuffer<T>(IBuffer<T> vertexBuffer) where T : unmanaged
     {
+        if (vertexBuffer is null)
+        {
+            D3D11Queue.DeviceContext.IASetVertexBuffer(0, null, 0);
+            return;
+        }
+
         if (vertexBuffer is not D3D11Buffer<T> d3dBuffer)
             throw new ArgumentException(null, nameof(vertexBuffer));
 

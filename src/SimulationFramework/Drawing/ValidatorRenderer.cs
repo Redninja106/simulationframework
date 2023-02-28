@@ -298,4 +298,9 @@ internal class ValidatorRenderer : IRenderer
     {
         throw new NotImplementedException();
     }
+
+    public void Dispose()
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -51,6 +51,12 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic, Replace(ReplaceAttribute.MultiplyOperator, typeof(ColorF))]
     public static ColorF Multiply(ColorF left, ColorF right) => left * right;
 
+    [ShaderIntrinsic, Replace(nameof(MathF.Sin), typeof(MathF))]
+    public static float Sin(float x) => MathF.Sin(x);
+
+    [ShaderIntrinsic, Replace(nameof(MathF.Cos), typeof(MathF))]
+    public static float Cos(float x) => MathF.Cos(x);
+
     // inline hlsl, only supported on directx, will be removed
     [ShaderIntrinsic, Replace(nameof(ShaderIntrinsics.Hlsl), typeof(ShaderIntrinsics))]
     public static void Hlsl(string hlsl) { }
