@@ -12,5 +12,6 @@ internal enum BufferUsage
     VertexBuffer,
     IndexBuffer,
     ConstantBuffer,
-    UnorderedAccessResource
+    UnorderedAccessResource,
+    ShaderResource,
 }

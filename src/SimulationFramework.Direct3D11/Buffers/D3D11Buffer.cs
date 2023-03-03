@@ -1,9 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 using Vortice.Direct3D11;
+using Vortice.DXGI;
 
 namespace SimulationFramework.Drawing.Direct3D11.Buffers;
 
-internal sealed class D3D11Buffer<T> : IUnorderedAccessViewProvider, IBuffer<T> where T : unmanaged
+internal sealed class D3D11Buffer<T> : IUnorderedAccessViewProvider, IShaderResourceViewProvider, IBuffer<T> where T : unmanaged
 {
     public int Length { get; private set; }
     private int SizeInBytes => Length * Stride;
@@ -17,6 +18,7 @@ internal sealed class D3D11Buffer<T> : IUnorderedAccessViewProvider, IBuffer<T> 
     private ResourceOptions options;
 
     public LazyResource<ID3D11UnorderedAccessView> UnorderedAccessView { get; }
+    public LazyResource<ID3D11ShaderResourceView> ShaderResourceView { get; }
 
     public D3D11Buffer(DeviceResources resources, int length, ResourceOptions options)
     {
@@ -26,6 +28,7 @@ internal sealed class D3D11Buffer<T> : IUnorderedAccessViewProvider, IBuffer<T> 
 
         internalBuffers = new ID3D11Buffer[Enum.GetValues<BufferUsage>().Length];
         UnorderedAccessView = new(resources, CreateUAV);
+        ShaderResourceView = new(resources, CreateSRV);
 
         if (!options.HasFlag(ResourceOptions.Readonly))
         {
@@ -39,7 +42,7 @@ internal sealed class D3D11Buffer<T> : IUnorderedAccessViewProvider, IBuffer<T> 
     {
         var desc = new UnorderedAccessViewDescription()
         {
-            Format = Vortice.DXGI.Format.Unknown,
+            Format = Format.Unknown,
             ViewDimension = UnorderedAccessViewDimension.Buffer,
             Buffer = new() 
             { 
@@ -49,6 +52,22 @@ internal sealed class D3D11Buffer<T> : IUnorderedAccessViewProvider, IBuffer<T> 
 
         var buffer = GetInternalbuffer(BufferUsage.UnorderedAccessResource);
         return resources.Device.CreateUnorderedAccessView(buffer, desc);
+    }
+
+    private ID3D11ShaderResourceView CreateSRV()
+    {
+        var desc = new ShaderResourceViewDescription()
+        {
+            Format = Vortice.DXGI.Format.Unknown,
+            ViewDimension = Vortice.Direct3D.ShaderResourceViewDimension.Buffer,
+            Buffer = new BufferShaderResourceView()
+            {
+                ElementWidth = this.SizeInBytes / this.Length,
+            }
+        };
+
+        var buffer = GetInternalbuffer(BufferUsage.ShaderResource);
+        return resources.Device.CreateShaderResourceView(buffer, desc);
     }
 
     public void Dispose()
@@ -150,6 +169,7 @@ internal sealed class D3D11Buffer<T> : IUnorderedAccessViewProvider, IBuffer<T> 
             BufferUsage.VertexBuffer => baseDesc with { BindFlags = BindFlags.VertexBuffer },
             BufferUsage.ConstantBuffer => baseDesc with { BindFlags = BindFlags.ConstantBuffer },
             BufferUsage.IndexBuffer => baseDesc with { BindFlags = BindFlags.IndexBuffer },
+            BufferUsage.ShaderResource => baseDesc with { BindFlags = BindFlags.ShaderResource, OptionFlags = ResourceOptionFlags.BufferStructured },
             BufferUsage.UnorderedAccessResource => baseDesc with 
             { 
                 BindFlags = BindFlags.UnorderedAccess, 
@@ -164,6 +184,8 @@ internal sealed class D3D11Buffer<T> : IUnorderedAccessViewProvider, IBuffer<T> 
     {
         SetData(this.Data);
     }
+
+    public ID3D11ShaderResourceView GetShaderResourceView() => ShaderResourceView.GetValue();
 
     ~D3D11Buffer()
     {

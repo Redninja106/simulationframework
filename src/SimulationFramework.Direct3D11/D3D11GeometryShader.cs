@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 using Vortice.Direct3D11;
 
 namespace SimulationFramework.Drawing.Direct3D11;
-internal class D3D11GeometryShader<T> : D3D11Shader<T> where T : struct, IShader
+internal class D3D11GeometryShader : D3D11Shader
 {
     protected override ShaderKind Kind => ShaderKind.Geometry;
     protected override string Profile => "gs_5_0";
 
     private ID3D11GeometryShader shader;
 
-    public D3D11GeometryShader(DeviceResources deviceResources, ShaderSignature inputSignature) : base(deviceResources, inputSignature)
+    public D3D11GeometryShader(DeviceResources deviceResources, Type shaderType, ShaderSignature inputSignature) : base(deviceResources, shaderType, inputSignature)
     {
     }
 

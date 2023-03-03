@@ -17,7 +17,7 @@ void Init(AppConfig config)
 
     ComputeShader shader = new() { buffer = buffer };
 
-    Graphics.DispatchComputeShader(shader, 100, 100);
+    Graphics.DispatchComputeShader(shader, 100);
     Graphics.ImmediateQueue.Flush();
 
     var data = buffer.GetData();
