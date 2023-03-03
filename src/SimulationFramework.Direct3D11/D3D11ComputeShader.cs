@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using Vortice.Direct3D11;
 
 namespace SimulationFramework.Drawing.Direct3D11;
-internal class D3D11ComputeShader<TShader> : D3D11Shader<TShader> where TShader : struct, IShader
+internal class D3D11ComputeShader : D3D11Shader
 {
     private ID3D11ComputeShader shader;
     private ID3D11UnorderedAccessView[] uavs;
 
-    public D3D11ComputeShader(DeviceResources deviceResources, ShaderSignature inputSignature) : base(deviceResources, inputSignature)
+    public D3D11ComputeShader(DeviceResources deviceResources, Type shaderType) : base(deviceResources, shaderType, null)
     {
     }
 

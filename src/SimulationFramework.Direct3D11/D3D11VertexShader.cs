@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Vortice.Direct3D11;
 
 namespace SimulationFramework.Drawing.Direct3D11;
-internal class D3D11VertexShader<T> : D3D11Shader<T> where T : struct, IShader
+internal class D3D11VertexShader : D3D11Shader
 {
     protected override ShaderKind Kind => ShaderKind.Vertex;
     protected override string Profile => "vs_5_0";
@@ -18,7 +18,7 @@ internal class D3D11VertexShader<T> : D3D11Shader<T> where T : struct, IShader
     private ID3D11VertexShader vertexShader;
     private ID3D11InputLayout inputLayout;
 
-    public D3D11VertexShader(DeviceResources deviceResources) : base(deviceResources, null)
+    public D3D11VertexShader(DeviceResources deviceResources, Type shaderType) : base(deviceResources, shaderType, null)
     {
     }
 

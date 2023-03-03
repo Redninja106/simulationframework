@@ -15,7 +15,7 @@ using Vortice.D3DCompiler;
 using Vortice.Direct3D11;
 
 namespace SimulationFramework.Drawing.Direct3D11;
-internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
+internal abstract class D3D11Shader : D3D11Object
 {
     private static ShaderCompiler compiler = new();
 
@@ -32,9 +32,9 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
     private ID3D11ShaderResourceView[] resourceViews;
     private ID3D11SamplerState[] samplerStates;
 
-    protected D3D11Shader(DeviceResources deviceResources, ShaderSignature inputSignature) : base(deviceResources)
+    protected D3D11Shader(DeviceResources deviceResources, Type shaderType, ShaderSignature inputSignature) : base(deviceResources)
     {
-        this.ShaderType = typeof(T);
+        this.ShaderType = shaderType;
         this.InputSignature = inputSignature;
 
         Compilation = compiler.Compile(ShaderType, inputSignature, Kind);
@@ -68,11 +68,6 @@ internal abstract class D3D11Shader<T> : D3D11Object where T : struct, IShader
 
     public virtual void Update(IShader shader)
     {
-        if (shader is not T unboxedShader)
-        {
-            throw new Exception();
-        }
-
         if (cbufferData is null)
         {
             int size = 0;

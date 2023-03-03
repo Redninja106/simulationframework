@@ -149,22 +149,9 @@ public class D3D11Graphics : IGraphicsProvider
 
     public void DispatchComputeShader(IShader shader, int groupsX, int groupsY, int groupsZ, IGraphicsQueue queue)
     {
-        var m = this.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic).Single(m => m.Name == "DispatchComputeShader" && m.IsGenericMethod);
-        var mspec = m.MakeGenericMethod(
-                new[] { shader.GetType() }
-            );
-            
-        mspec.Invoke(
-                this,
-                new object[] { shader, groupsX, groupsY, groupsZ, queue }
-                );
-    }
-
-    private void DispatchComputeShader<TShader>(TShader shader, int groupsX, int groupsY, int groupsZ, IGraphicsQueue queue) where TShader : struct, IShader
-    {
         queue ??= Graphics.ImmediateQueue;
         var d3dQueue = queue as D3D11QueueBase ?? throw new Exception();
-        var d3dShader = resources.ShaderManager.GetComputeShader<TShader>();
+        var d3dShader = resources.ShaderManager.GetComputeShader(shader.GetType());
 
         d3dShader.Update(shader);
         d3dShader.Apply(d3dQueue.DeviceContext);
