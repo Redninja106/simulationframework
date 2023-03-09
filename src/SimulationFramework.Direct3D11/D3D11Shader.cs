@@ -1,5 +1,4 @@
-﻿using SimulationFramework.Drawing.Direct3D11.Buffers;
-using SimulationFramework.Drawing.Direct3D11.ShaderGen;
+﻿using SimulationFramework.Drawing.Direct3D11.ShaderGen;
 using SimulationFramework.Shaders;
 using SimulationFramework.Shaders.Compiler;
 using System;
@@ -49,7 +48,7 @@ internal abstract class D3D11Shader : D3D11Object
 
         try
         {
-            using var blob = Compiler.Compile(source, nameof(IShader.Main), ShaderType.Name, this.Profile, ShaderFlags.PackMatrixRowMajor | ShaderFlags.SkipOptimization);
+            using var blob = Compiler.Compile(source, nameof(IShader.Main), ShaderType.Name, this.Profile, ShaderFlags.PackMatrixColumnMajor);
             var bytecode = blob.AsSpan();
             CreateShader(bytecode);
         }
@@ -68,24 +67,6 @@ internal abstract class D3D11Shader : D3D11Object
 
     public virtual void Update(IShader shader)
     {
-        if (cbufferData is null)
-        {
-            int size = 0;
-            foreach (var uniform in Compilation.Uniforms)
-            {
-                var uniformSize = Marshal.SizeOf(uniform.BackingField.FieldType);
-                
-                if (uniformSize + (size % 16) > 16)
-                {
-                    size = CeilTo16(size);
-                }
-
-                size += uniformSize;
-            }
-
-            cbufferData = new byte[size];
-        }
-
         CopyUniforms(shader);
         
         if (cbufferData.Length > 0)
@@ -112,13 +93,14 @@ internal abstract class D3D11Shader : D3D11Object
         {
             var value = uniform.BackingField.GetValue(shader);
 
-            if (value is IShaderResourceViewProvider srvProvider)
+            if (value is IResourceProvider<ID3D11ShaderResourceView> srvProvider)
             {
-                resourceViews[resourceViewsIndex++] = srvProvider.GetShaderResourceView();
+                srvProvider.NotifyBound((GraphicsQueueBase)Graphics.ImmediateQueue, BindingUsage.ShaderResource, false);
+                srvProvider.GetResource(out resourceViews[resourceViewsIndex++]);
             }
             else if (value is TextureSampler sampler)
             {
-                samplerStates[samplerStatesIndex++] = Resources.SamplerManager.GetSampler(sampler);
+                samplerStates[samplerStatesIndex++] = Resources.SamplerProvider.GetSampler(sampler);
             }
             else if (value is not null)
             {
@@ -129,6 +111,24 @@ internal abstract class D3D11Shader : D3D11Object
 
     private void CopyUniforms(IShader shader)
     {
+        if (cbufferData is null)
+        {
+            int size = 0;
+            foreach (var uniform in Compilation.Uniforms)
+            {
+                var uniformSize = Marshal.SizeOf(uniform.BackingField.FieldType);
+
+                if (uniformSize + (size % 16) >= 16)
+                {
+                    size = CeilTo16(size);
+                }
+
+                size += uniformSize;
+            }
+
+            cbufferData = new byte[size];
+        }
+
         // https://learn.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules
 
         int offset = 0;
@@ -140,7 +140,7 @@ internal abstract class D3D11Shader : D3D11Object
             var copyValue = copyValueGeneric.MakeGenericMethod(uniform.VariableType);
             var size = Marshal.SizeOf(uniform.VariableType);
             
-            if (size + (offset % 16) > 16)
+            if (size + (offset % 16) >= 16)
             {
                 offset = CeilTo16(offset);
             }
@@ -151,6 +151,16 @@ internal abstract class D3D11Shader : D3D11Object
     
     public int CopyUniform<TVariable>(int offset, TVariable value) where TVariable : unmanaged
     {
+        if (value is Matrix4x4 matrix)
+        {
+            matrix = Matrix4x4.Transpose(matrix);
+
+            if (matrix is TVariable variable)
+            {
+                value = variable;
+            }
+        }
+
         var bytes = MemoryMarshal.AsBytes(new Span<TVariable>(ref value));
         bytes.CopyTo(cbufferData.AsSpan(offset));
         return Unsafe.SizeOf<TVariable>();

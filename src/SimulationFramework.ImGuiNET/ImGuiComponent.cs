@@ -15,10 +15,10 @@ public sealed class ImGuiComponent : IApplicationComponent
 
     private readonly List<ITexture<Color>> loadedTextures = new();
     private IBuffer<ImDrawVert>? vertexBuffer;
-    private IBuffer<uint>? indexBuffer;
+    private IBuffer<ushort>? indexBuffer;
     private ITexture<Color>? fontTexture;
     private List<int> keys = new List<int>();
-    private IRenderer renderer;
+    private IRenderingContext renderer;
 
     void IApplicationComponent.Initialize(Application application)
     {
@@ -127,8 +127,6 @@ public sealed class ImGuiComponent : IApplicationComponent
 
     private void RenderDrawData(ImDrawDataPtr drawData)
     {
-        renderer.PushState();
-
         renderer.RenderTarget = Graphics.DefaultRenderTarget;
         renderer.SetViewport(new(0, 0, renderer.RenderTarget.Width, renderer.RenderTarget.Height));
 
@@ -137,8 +135,6 @@ public sealed class ImGuiComponent : IApplicationComponent
             UpdateBuffers(drawData);
             RenderCommandLists(renderer, drawData);
         }
-
-        renderer.PopState();
     }
 
     private void UpdateBuffers(ImDrawDataPtr drawData)
@@ -150,7 +146,7 @@ public sealed class ImGuiComponent : IApplicationComponent
 
         if (indexBuffer is null || indexBuffer.Length < drawData.TotalIdxCount)
         {
-            indexBuffer = Graphics.CreateBuffer<uint>((int)(drawData.TotalIdxCount * 1.5f));
+            indexBuffer = Graphics.CreateBuffer<ushort>((int)(drawData.TotalIdxCount * 1.5f));
         }
 
         int vertexOffset = 0, indexOffset = 0;
@@ -162,26 +158,17 @@ public sealed class ImGuiComponent : IApplicationComponent
             unsafe
             {
                 var vertexData = new Span<ImDrawVert>(cmdList.VtxBuffer.Data.ToPointer(), cmdList.VtxBuffer.Size);
-                vertexData.CopyTo(vertexBuffer.Data[vertexOffset..]);
+                vertexBuffer.Update(vertexData, vertexOffset);
                 vertexOffset += vertexData.Length;
 
                 var indexData = new Span<ushort>(cmdList.IdxBuffer.Data.ToPointer(), cmdList.IdxBuffer.Size);
-
-                for (int j = 0; j < indexData.Length; j++)
-                {
-                    // widen to 32 bit indices
-                    indexBuffer.Data[indexOffset + j] = indexData[j];
-                }
-
+                indexBuffer.Update(indexData, indexOffset);
                 indexOffset += indexData.Length;
             }
         }
-
-        vertexBuffer.ApplyChanges();
-        indexBuffer.ApplyChanges();
     }
 
-    private void RenderCommandLists(IRenderer renderer, ImDrawDataPtr drawData)
+    private void RenderCommandLists(IRenderingContext renderer, ImDrawDataPtr drawData)
     {
         if (vertexBuffer is null || indexBuffer is null)
             throw new InvalidOperationException();
@@ -189,8 +176,9 @@ public sealed class ImGuiComponent : IApplicationComponent
         renderer.RenderTarget = Graphics.DefaultRenderTarget;
         renderer.SetVertexBuffer(vertexBuffer);
         renderer.CullMode = CullMode.None;
-        renderer.BlendEnabled = true;
-        renderer.BlendState(BlendMode.SourceAlpha, BlendMode.InverseSourceAlpha, BlendMode.One, BlendMode.InverseSourceAlpha);
+        renderer.SetBlendEnabled(true);
+        renderer.SetBlendMode(BlendMode.SourceAlpha, BlendMode.InverseSourceAlpha);
+        renderer.SetAlphaBlendMode(BlendMode.One, BlendMode.InverseSourceAlpha);
 
         ImGuiVertexShader vertexShader = new()
         {
@@ -216,7 +204,7 @@ public sealed class ImGuiComponent : IApplicationComponent
                     continue;
 
                 var clipRect = Rectangle.CreateLTRB(command.ClipRect.X, command.ClipRect.Y, command.ClipRect.Z, command.ClipRect.W);
-                renderer.Clip(clipRect);
+                renderer.SetClipRectangle(clipRect);
 
                 ImGuiFragmentShader fragmentShader = new()
                 {

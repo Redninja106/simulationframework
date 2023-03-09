@@ -549,6 +549,7 @@ public class CodeGenerator : ExtendedExpressionVisitor
             ExpressionType.GreaterThanOrEqual => ">=",
             ExpressionType.LessThan => "<",
             ExpressionType.LessThanOrEqual => "<=",
+            ExpressionType.Modulo => "%",
 
             _ => throw new Exception()
         };

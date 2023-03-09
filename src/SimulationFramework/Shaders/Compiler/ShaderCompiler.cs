@@ -154,7 +154,20 @@ public partial class ShaderCompiler
     internal void CompileStruct(CompilationContext context, Type structType)
     {
         if (IsTypeIntrinsic(structType))
+        {
+            foreach (var genericArg in structType.GetGenericArguments())
+            {
+                if (context.structs.Any(s => s.StructType == genericArg))
+                    continue;
+
+                if (DependencyResolver.intrinsicTypes.Contains(genericArg))
+                    continue;
+
+                CompileStruct(context, genericArg);
+            }
+
             return;
+        }
 
         CompiledStruct s = new CompiledStruct(structType);
 

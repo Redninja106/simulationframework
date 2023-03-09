@@ -9,7 +9,7 @@ namespace SimulationFramework.Drawing.Direct3D11;
 internal class LazyResource<T> : D3D11Object, IDisposable where T : class, IDisposable
 {
     private Func<T> valueFactory;
-    private T value;
+    private T? value;
 
     /// <summary>
     /// This should not be called outside of the DeviceResources class.
@@ -21,16 +21,18 @@ internal class LazyResource<T> : D3D11Object, IDisposable where T : class, IDisp
 
     public T GetValue()
     {
-        if (value is null)
-            value = valueFactory();
-
-        return value;
+        return value ??= valueFactory();
     }
 
     public override void Dispose()
     {
+        DisposeValue();
+        base.Dispose();
+    }
+
+    public void DisposeValue()
+    {
         value?.Dispose();
         value = null;
-        base.Dispose();
     }
 }

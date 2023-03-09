@@ -7,11 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Direct3D11;
-internal class ShaderManager : D3D11Object
+internal class ShaderProvider : D3D11Object
 {
     public List<D3D11Shader> Shaders { get; private set; }
     
-    public ShaderManager(DeviceResources deviceResources) : base(deviceResources)
+    public ShaderProvider(DeviceResources deviceResources) : base(deviceResources)
     {
         Shaders = new();
     }
@@ -49,26 +49,26 @@ internal class ShaderManager : D3D11Object
         return result;
     }
 
-    public D3D11VertexShader GetVertexShader(Type shaderType)
+    public VertexShader GetVertexShader(Type shaderType)
     {
-        D3D11VertexShader result = Shaders.OfType<D3D11VertexShader>().SingleOrDefault(s => s.ShaderType == shaderType);
+        VertexShader result = Shaders.OfType<VertexShader>().SingleOrDefault(s => s.ShaderType == shaderType);
 
         if (result is null)
         {
-            result = new D3D11VertexShader(this.Resources, shaderType);
+            result = new VertexShader(this.Resources, shaderType);
             Shaders.Add(result);
         }
 
         return result;
     }
 
-    public D3D11FragmentShader GetFragmentShader(Type shaderType, ShaderSignature shaderSignature)
+    public FragmentShader GetFragmentShader(Type shaderType, ShaderSignature shaderSignature)
     {
-        D3D11FragmentShader result = Shaders.OfType<D3D11FragmentShader>().SingleOrDefault(s => s.ShaderType == shaderType);
+        FragmentShader result = Shaders.OfType<FragmentShader>().SingleOrDefault(s => s.ShaderType == shaderType);
 
         if (result is null)
         {
-            result = new D3D11FragmentShader(this.Resources, shaderType, shaderSignature);
+            result = new FragmentShader(this.Resources, shaderType, shaderSignature);
             Shaders.Add(result);
         }
 

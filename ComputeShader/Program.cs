@@ -1,9 +1,11 @@
 ﻿using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Shaders;
+using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
-const int THREADS = 100;
+const int THREADS = 500;
 
 IBuffer<float>? buffer = null;
 
@@ -13,14 +15,13 @@ s.Run();
 void Init(AppConfig config)
 {
     float[] bufferData = Enumerable.Range(0, THREADS).Select(i => (float)i).ToArray();
-    buffer = Graphics.CreateBuffer<float>(bufferData);
+    buffer = Graphics.CreateBuffer(bufferData);
 
     ComputeShader shader = new() { buffer = buffer };
 
-    Graphics.DispatchComputeShader(shader, 100);
-    Graphics.ImmediateQueue.Flush();
+    Graphics.DispatchComputeShader(shader, THREADS);
 
-    var data = buffer.GetData();
+    var data = buffer.GetSpan();
 
     foreach (var value in data)
     {
@@ -37,10 +38,7 @@ struct ComputeShader : IShader
     [Uniform] 
     public IBuffer<float> buffer;
 
-    [Uniform]
-    public float DeltaTime;
-
-    [Input(InputSemantic.ThreadID)]
+    [Input(InputSemantic.ThreadIndex)]
     readonly int threadID;
 
     public void Main()

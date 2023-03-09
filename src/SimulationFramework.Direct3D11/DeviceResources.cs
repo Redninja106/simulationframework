@@ -15,20 +15,29 @@ namespace SimulationFramework.Drawing.Direct3D11;
 
 internal sealed class DeviceResources : IDisposable
 {
-    public ID3D11Device Device { get; private set; }
+    public ID3D11Device5 Device { get; private set; }
     public IDXGISwapChain1 SwapChain { get; private set; }
     public ID3D11Debug Debug { get; private set; }
-    public ShaderManager ShaderManager { get; private set; }
-    public SamplerManager SamplerManager { get; private set; }
+    public ShaderProvider ShaderProvider { get; private set; }
+    public SamplerProvider SamplerProvider { get; private set; }
+    public RasterizerStateProvider RasterizerStateProvider { get; private set; }
+    public BlendStateProvider BlendStateProvider { get; private set; }
+    public InputLayoutProvider InputLayoutProvider {  get; private set;  }
+    public DepthStencilStateProvider DepthStencilStateProvider { get; private set; }
+
+    public event Action clearState;
 
     public DeviceResources(IntPtr hwnd)
     {
         var hr = D3D11.D3D11CreateDevice(null, DriverType.Hardware, DeviceCreationFlags.Debug, new[] { FeatureLevel.Level_11_0 }, out var device);
-        this.Device = device;
-        this.Debug = device.QueryInterface<ID3D11Debug>();
-        
+
         if (hr.Failure)
             throw new Exception();
+
+        this.Device = device!.QueryInterface<ID3D11Device5>();
+        this.Debug = device!.QueryInterface<ID3D11Debug>();
+
+        device.Dispose();
 
         Win32.GetWindowRect(hwnd, out var windowBounds);
         
@@ -55,8 +64,12 @@ internal sealed class DeviceResources : IDisposable
 
         SwapChain = factory.CreateSwapChainForHwnd(Device, hwnd, desc);
 
-        ShaderManager = new(this);
-        SamplerManager = new(this);
+        ShaderProvider = new(this);
+        SamplerProvider = new(this);
+        RasterizerStateProvider = new(this);
+        BlendStateProvider = new(this);
+        InputLayoutProvider = new(this);
+        DepthStencilStateProvider = new(this);
     }
 
     public void Resize(int width, int height)
@@ -69,7 +82,7 @@ internal sealed class DeviceResources : IDisposable
 
     public void Dispose()
     {
-        ShaderManager.Dispose();
+        ShaderProvider.Dispose();
         SwapChain.Dispose();
         //Debug.ReportLiveDeviceObjects(ReportLiveDeviceObjectFlags.Detail);
         Debug.Dispose();

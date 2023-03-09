@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Vortice.Direct3D11;
 
 namespace SimulationFramework.Drawing.Direct3D11.Textures;
-internal class SamplerManager : D3D11Object
+internal class SamplerProvider : D3D11Object
 {
     private Dictionary<TextureSampler, ID3D11SamplerState> samplers;
 
-    public SamplerManager(DeviceResources deviceResources) : base(deviceResources)
+    public SamplerProvider(DeviceResources deviceResources) : base(deviceResources)
     {
         samplers = new();
     }

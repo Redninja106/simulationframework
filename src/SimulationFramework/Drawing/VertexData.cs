@@ -3,31 +3,46 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
 
-public interface IVertex 
+
+public interface IVertex
 {
-    public Vector3 Position { get; }
-    public Vector2 TextureCoordinates { get; }
 }
 
-[Flags]
-public enum VertexAttributeFlags 
+struct MyVertex : IVertex
 {
-    None = 0,
-    Position = 1 >> 1,
-    TextureCoordinate = 1 >> 2,
+    public Vector3 Position;
+    public Vector2 UV;
+    public float custom;
 
+    public void Populate(VertexDataEntry entry)
+    {
+        entry.AddAttribute(Position, VertexAttributeKind.Position);
+        entry.AddAttribute(UV, VertexAttributeKind.TextureCoordinate);
+        entry.AddAttribute(custom, VertexAttributeKind.Unknown);
+    }
 }
 
-public class VertexData<TVertex> where TVertex : unmanaged, IVertex
-{
-    private readonly List<Vector3> positions;
-    private readonly List<Vector3> textureCoordinates;
 
+public enum VertexAttributeKind 
+{
+    Position,
+    TextureCoordinate,
+    Color,
+    Normal,
+    Tangent,
+    Bitangent,
+    AnimationWeight,
+    Unknown,
+}
+
+public class VertexData<T> where T : unmanaged
+{
     private VertexData(PrimitiveKind kind)
     {
         throw new NotImplementedException();
@@ -54,24 +69,13 @@ public class VertexData<TVertex> where TVertex : unmanaged, IVertex
     }
 }
 
-public record VertexDataEntry
+public ref struct VertexDataEntry
 {
-    public int VertexIndex;
-    public Vector3? Position;
-    public Vector2? TextureCoordinate;
-    public ColorF? Color;
-    public Vector3? Normal;
-    public Vector3? Tangent;
-    public Vector3? Bitangent;
-}
+    private VertexData<int> vertexData;
+    public int Index;
 
-enum VertexAttributeKind
-{
-    Position,
-    TextureCoordinates,
-    Color,
-    Normal,
-    Tangent,
-    Bitangent,
-    AnimWeights
+    public void AddAttribute<T>(T value, VertexAttributeKind attributeKind) where T : unmanaged
+    {
+    }
+
 }

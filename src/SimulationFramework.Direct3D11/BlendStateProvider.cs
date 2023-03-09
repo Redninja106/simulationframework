@@ -3,11 +3,11 @@ using D3D11BlendOperation = Vortice.Direct3D11.BlendOperation;
 
 namespace SimulationFramework.Drawing.Direct3D11;
 
-internal class BlendStateManager : D3D11Object
+internal class BlendStateProvider : D3D11Object
 {
     private Dictionary<BlendStateInfo, ID3D11BlendState> blendStates = new();
 
-    public BlendStateManager(DeviceResources deviceResources) : base(deviceResources)
+    public BlendStateProvider(DeviceResources deviceResources) : base(deviceResources)
     {
     }
 
@@ -28,7 +28,7 @@ internal class BlendStateManager : D3D11Object
         var desc = new BlendDescription();
         desc.AlphaToCoverageEnable = false;
         desc.IndependentBlendEnable = false;
-        desc.RenderTarget[0].IsBlendEnabled = true;
+        desc.RenderTarget[0].IsBlendEnabled = info.BlendEnabled;
         desc.RenderTarget[0].SourceBlend = GetD3D11Blend(info.SourceBlend);
         desc.RenderTarget[0].DestinationBlend = GetD3D11Blend(info.DestinationBlend);
         desc.RenderTarget[0].BlendOperation = GetD3D11BlendOperation(info.BlendOperation);
@@ -62,6 +62,7 @@ internal class BlendStateManager : D3D11Object
     }
 
     public record struct BlendStateInfo(
+        bool BlendEnabled,
         BlendMode SourceBlend, BlendMode DestinationBlend,
         BlendMode SourceBlendAlpha, BlendMode DestinationBlendAlpha,
         BlendOperation BlendOperation, BlendOperation BlendOperationAlpha);

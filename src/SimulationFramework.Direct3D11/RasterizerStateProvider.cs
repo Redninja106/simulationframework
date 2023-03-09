@@ -7,11 +7,11 @@ using Vortice.Direct3D11;
 using D3D11CullMode = Vortice.Direct3D11.CullMode;
 
 namespace SimulationFramework.Drawing.Direct3D11;
-internal class RasterizerStateManager : D3D11Object
+internal class RasterizerStateProvider : D3D11Object
 {
     private readonly Dictionary<RasterizerStateInfo, ID3D11RasterizerState> rasterizerStates = new();
 
-    public RasterizerStateManager(DeviceResources deviceResources) : base(deviceResources)
+    public RasterizerStateProvider(DeviceResources deviceResources) : base(deviceResources)
     {
     }
 

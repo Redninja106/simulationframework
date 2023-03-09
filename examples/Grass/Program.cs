@@ -11,7 +11,7 @@ GrassRenderer grassRenderer = null!;
 FreeCamera freeCam = null!;
 ColorF floorColor = default;
 IBuffer<Vector3> floor = null!;
-IRenderer floorRenderer = null!;
+IRenderingContext floorRenderer = null!;
 
 Simulation.Create(Init, Render).Run(new DesktopPlatform().WithExtension(new ImGuiComponent()));
 
@@ -84,7 +84,7 @@ void Layout()
 
 struct FloorVertexShader : IShader
 {
-    [Input]
+    [Input(InputSemantic.Vertex)]
     Vector3 vertexPosition;
 
     [Output(OutputSemantic.Position)]

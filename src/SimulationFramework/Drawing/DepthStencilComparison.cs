@@ -13,7 +13,7 @@ public enum DepthStencilComparison
     Equal,
     NotEqual,
     LessThan,
-    LessThanEqual,
+    LessThanOrEqual,
     GreaterThan,
-    GreaterThanEqual,
+    GreaterThanOrEqual,
 }

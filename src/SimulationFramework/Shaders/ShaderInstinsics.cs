@@ -61,6 +61,12 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic, Replace(nameof(ShaderIntrinsics.Hlsl), typeof(ShaderIntrinsics))]
     public static void Hlsl(string hlsl) { }
 
+    [ShaderIntrinsic]
+    public static int AsInt(bool value) => value ? 1 : 0;
+
+    [ShaderIntrinsic]
+    public static bool AsBool(int value) => value > 0;
+
     // inline hlsl, only supported on directx, will be removed
     // [ShaderIntrinsic(nameof(ShaderIntrinsics.Hlsl<>), typeof(ShaderIntrinsics))]
     // public static T? Hlsl<T>(string hlsl) => default;

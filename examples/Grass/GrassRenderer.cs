@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Grass;
 internal class GrassRenderer : IDisposable
 {
-    IRenderer renderer;
+    IRenderingContext renderer;
     IBuffer<GrassVertex> vertexBuffer;
 
     public ref ColorF GrassTopColor => ref fragmentShader.TopColor;
@@ -24,6 +24,9 @@ internal class GrassRenderer : IDisposable
     {
         Regenerate(options);
         renderer = Graphics.CreateRenderer();
+
+        renderer.RenderTarget = Graphics.DefaultRenderTarget;
+        renderer.DepthTarget = Graphics.DefaultDepthTarget;
     }
 
     public void Render()

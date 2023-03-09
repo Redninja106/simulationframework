@@ -16,7 +16,7 @@ internal class DependencyResolver : CompilerPass
 {
     public List<MethodBase> methodDependencies = new();
 
-    private static readonly List<Type> intrinsicTypes = new()
+    internal static readonly List<Type> intrinsicTypes = new()
     {
         typeof(bool),
         typeof(float),
@@ -29,6 +29,7 @@ internal class DependencyResolver : CompilerPass
         typeof(Vector3),
         typeof(Vector4),
         typeof(ColorF),
+        typeof(Color),
         typeof(Matrix4x4),
         typeof(Matrix3x2),
     };
@@ -76,7 +77,6 @@ internal class DependencyResolver : CompilerPass
 
             RequireType(context, field.FieldType);
         }
-
         base.CheckStruct(context, compiledStruct);
     }
 

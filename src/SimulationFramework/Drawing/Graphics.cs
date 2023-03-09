@@ -36,7 +36,7 @@ public static class Graphics
 
     public static GraphicsCapabilities Capabilities => Provider.Capabilities;
 
-    public static IRenderer CreateRenderer(IGraphicsQueue? queue = null)
+    public static IRenderingContext CreateRenderer(IGraphicsQueue? queue = null)
     {
         queue ??= ImmediateQueue;
 
@@ -144,7 +144,7 @@ public static class Graphics
     public static IBuffer<T> CreateBuffer<T>(Span<T> data) where T : unmanaged
     {
         var buffer = Provider.CreateBuffer<T>(data.Length, 0);
-        buffer.SetData(data);
+        buffer.Update(data);
         return buffer;
     }
 
@@ -258,6 +258,12 @@ public static class Graphics
     public static ITexture<float> DefaultDepthTarget => Provider.GetDefaultDepthTarget();
 
     public static ITexture<byte> GetDefaultStencilTarget()
+    {
+        throw new NotImplementedException();
+    }
+
+    public static void GetBufferPointer<T>(IBuffer<T> buffer, out nint pointer, out nint length) 
+        where T : unmanaged
     {
         throw new NotImplementedException();
     }

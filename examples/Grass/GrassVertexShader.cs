@@ -6,7 +6,7 @@ namespace Grass;
 
 struct GrassVertexShader : IShader
 {
-    [Input]
+    [Input(InputSemantic.Vertex)]
     public GrassVertex input;
 
     [Output]

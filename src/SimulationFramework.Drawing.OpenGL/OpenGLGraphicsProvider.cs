@@ -5,7 +5,7 @@ namespace SimulationFramework.Drawing.OpenGL;
 
 public class OpenGLGraphicsProvider : IGraphicsProvider
 {
-    public IRenderer ImmediateRenderer { get; }
+    public IRenderingContext ImmediateRenderer { get; }
     public IGraphicsQueue ImmediateQueue { get; }
     public GraphicsCapabilities Capabilities { get; }
 
@@ -52,7 +52,7 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
         throw new NotImplementedException();
     }
 
-    public IRenderer CreateRenderer()
+    public IRenderingContext CreateRenderer()
     {
         throw new NotImplementedException();
     }
@@ -62,7 +62,7 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
         throw new NotImplementedException();
     }
 
-    public IRenderer CreateRenderer(IGraphicsQueue? queue)
+    public IRenderingContext CreateRenderer(IGraphicsQueue? queue)
     {
         throw new NotImplementedException();
     }

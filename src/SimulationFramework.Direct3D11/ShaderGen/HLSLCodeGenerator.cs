@@ -29,6 +29,7 @@ public class HLSLCodeGenerator : CodeGenerator
         [typeof(Matrix4x4)] = "float4x4",
         [typeof(Matrix3x2)] = "float3x2",
         [typeof(ColorF)] = "float4",
+        [typeof(Color)] = "uint",
         [typeof(bool)] = "bool",
     };
 
@@ -80,6 +81,15 @@ public class HLSLCodeGenerator : CodeGenerator
         //[typeof(Matrix4x4).GetField(nameof(Matrix4x4.M43))] = "_43",
         //[typeof(Matrix4x4).GetField(nameof(Matrix4x4.M44))] = "_44",
 
+        [typeof(Matrix3x2).GetField(nameof(Matrix3x2.M11))] = "_11",
+        [typeof(Matrix3x2).GetField(nameof(Matrix3x2.M12))] = "_12",
+
+        [typeof(Matrix3x2).GetField(nameof(Matrix3x2.M21))] = "_21",
+        [typeof(Matrix3x2).GetField(nameof(Matrix3x2.M22))] = "_22",
+
+        [typeof(Matrix3x2).GetField(nameof(Matrix3x2.M31))] = "_31",
+        [typeof(Matrix3x2).GetField(nameof(Matrix3x2.M32))] = "_32",
+
     };
 
     private string[] keywords;
@@ -96,9 +106,10 @@ public class HLSLCodeGenerator : CodeGenerator
     private static readonly Dictionary<InputSemantic, string> inputSemanticAliases = new()
     {
         [InputSemantic.Position] = "SV_Position",
-        [InputSemantic.ThreadID] = "SV_DispatchThreadID",
-        [InputSemantic.GroupID] = "SV_GroupID",
-        [InputSemantic.LocalThreadID] = "SV_GroupThreadID",
+        [InputSemantic.ThreadIndex] = "SV_DispatchThreadID",
+        [InputSemantic.GroupIndex] = "SV_GroupID",
+        [InputSemantic.LocalThreadIndex] = "SV_GroupThreadID",
+        [InputSemantic.VertexIndex] = "SV_VertexID",
     };
 
     private static readonly Dictionary<OutputSemantic, string> outputSemanticAliases = new()
@@ -223,6 +234,9 @@ public class HLSLCodeGenerator : CodeGenerator
 
             if (semantic is not null)
             {
+                if (char.IsNumber(semantic.Last()) && !(semantic.Length > 7 && semantic[..8] is "TEXCOORD"))
+                    semantic += '_';
+
                 Writer.Write(" : ");
                 Writer.Write(semantic);
             }
@@ -265,6 +279,9 @@ public class HLSLCodeGenerator : CodeGenerator
 
             if (semantic is not null)
             {
+                if (char.IsNumber(semantic.Last()) && !(semantic.Length > 7 && semantic[..8] is "TEXCOORD"))
+                    semantic += '_';
+
                 Writer.Write(" : ");
                 Writer.Write(semantic);
             }
@@ -323,6 +340,9 @@ public class HLSLCodeGenerator : CodeGenerator
         {
             semantic = field.Name;
         }
+
+        if (char.IsNumber(semantic.Last()) && !(semantic.Length > 7 && semantic[..8] is "TEXCOORD"))
+            semantic += '_';
 
         Writer.Write(" : ");
         Writer.Write(semantic);
@@ -457,13 +477,26 @@ public class HLSLCodeGenerator : CodeGenerator
             return node;
         }
 
-        if (IsIndexerMethod(node.Method))
+        if (IsBufferIndexerMethod(node.Method))
         {
-            Visit(node.Arguments[0]);
-            Writer.Write('[');
-            Visit(node.Arguments[1]);
-            Writer.Write(']');
-            return node;
+            if (node.Method.Name == "get_Item")
+            {
+                Visit(node.Arguments[0]);
+                Writer.Write('[');
+                Visit(node.Arguments[1]);
+                Writer.Write(']');
+                return node;
+            }
+            else // set_Item
+            {
+                Visit(node.Arguments[0]);
+                Writer.Write('[');
+                Visit(node.Arguments[1]);
+                Writer.Write(']');
+                Writer.Write(" = ");
+                Visit(node.Arguments[2]);
+                return node;
+            }
         }
 
         string name;
@@ -496,9 +529,10 @@ public class HLSLCodeGenerator : CodeGenerator
         return node;
     }
 
-    private bool IsIndexerMethod(MethodInfo method)
+    private bool IsBufferIndexerMethod(MethodInfo method)
     {
         const string indexerGetName = "get_Item";
+        const string indexerSetName = "set_Item";
 
         var declaringType = method?.DeclaringType;
 
@@ -508,7 +542,7 @@ public class HLSLCodeGenerator : CodeGenerator
         if (declaringType.GetGenericTypeDefinition() != typeof(IBuffer<>))
             return false;
 
-        if (method.Name != indexerGetName)
+        if (method?.Name is not (indexerGetName or indexerSetName))
             return false;
 
         return true;

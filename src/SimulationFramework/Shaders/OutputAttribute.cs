@@ -16,11 +16,7 @@ public class OutputAttribute : Attribute
     public OutputSemantic Semantic { get; }
     public string? LinkageName { get; init; }
 
-    public OutputAttribute() : this(OutputSemantic.None)
-    {
-    }
-
-    public OutputAttribute(OutputSemantic semantic)
+    public OutputAttribute(OutputSemantic semantic = OutputSemantic.None)
     {
         Semantic = semantic;
     }

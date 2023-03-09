@@ -375,7 +375,7 @@ internal class ExpressionBuilder
                 OpCode.Add => ExpressionType.Add,
                 OpCode.Sub => ExpressionType.Subtract,
                 OpCode.Mul => ExpressionType.Multiply,
-                OpCode.Div => ExpressionType.Divide,
+                OpCode.Div or OpCode.Div_Un => ExpressionType.Divide,
                 OpCode.And => ExpressionType.And,
                 OpCode.Or => ExpressionType.Or,
                 OpCode.Shr => ExpressionType.RightShift,
@@ -384,6 +384,9 @@ internal class ExpressionBuilder
                 OpCode.Ceq => ExpressionType.Equal,
                 OpCode.Clt => ExpressionType.LessThan,
                 OpCode.Cgt => ExpressionType.GreaterThan,
+                OpCode.Rem => ExpressionType.Modulo,
+                OpCode.Rem_Un => ExpressionType.Modulo,
+
                 _ => null
             };
 

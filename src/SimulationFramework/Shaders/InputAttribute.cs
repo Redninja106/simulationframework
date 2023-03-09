@@ -17,11 +17,7 @@ public class InputAttribute : Attribute
     public bool Interpolated { get; init; }
     public Type SourceType { get; init; }
 
-    public InputAttribute() : this(InputSemantic.None)
-    {
-    }
-
-    public InputAttribute(InputSemantic semantic)
+    public InputAttribute(InputSemantic semantic = InputSemantic.None)
     {
         Semantic = semantic;
     }

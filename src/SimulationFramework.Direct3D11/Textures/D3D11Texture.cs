@@ -13,20 +13,27 @@ using Vortice.DXGI;
 
 namespace SimulationFramework.Drawing.Direct3D11.Textures;
 
-internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T>, IShaderResourceViewProvider where T : unmanaged
+internal unsafe class D3D11Texture<T> : D3D11Object, 
+    ITexture<T>, 
+    IShaderResourceViewProvider,
+    IResourceProvider<ID3D11RenderTargetView>,
+    IResourceProvider<ID3D11DepthStencilView>,
+    IResourceProvider<ID3D11ShaderResourceView>
+    where T : unmanaged
 {
-    private LazyResource<ID3D11RenderTargetView> renderTargetView;
-    private LazyResource<ID3D11ShaderResourceView> shaderResourceView;
+    internal LazyResource<ID3D11RenderTargetView> renderTargetView;
+    internal LazyResource<ID3D11DepthStencilView> depthStencilView;
+    internal LazyResource<ID3D11ShaderResourceView> shaderResourceView;
 
     public ID3D11RenderTargetView RenderTargetView => renderTargetView.GetValue();
     public ID3D11ShaderResourceView ShaderResourceView => shaderResourceView.GetValue();
 
     private T[] cpuData;
-    private ID3D11Texture2D[] internalTextures;
+    private ID3D11Texture2D?[] internalTextures;
     private Format format;
 
-    public int Width { get; }
-    public int Height { get; }
+    public virtual int Width { get; private set; }
+    public virtual int Height { get; private set; }
     public Span<T> Pixels => GetPixels();
 
     public D3D11Texture(DeviceResources resources, ImageResult image, ResourceOptions options) : this(resources, image.Width, image.Height, Span<T>.Empty, options)
@@ -62,6 +69,7 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T>, IShaderResourc
 
         renderTargetView = new(resources, CreateRenderTargetView);
         shaderResourceView = new(resources, CreateShaderResourceView);
+        depthStencilView = new(resources, CreateDepthStencilView);
 
         if (!data.IsEmpty)
         {
@@ -105,6 +113,7 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T>, IShaderResourc
     {
         this.shaderResourceView?.Dispose();
         this.renderTargetView?.Dispose();
+        this.shaderResourceView?.Dispose();
 
         foreach (var texture in internalTextures)
         {
@@ -115,6 +124,23 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T>, IShaderResourc
     public ref Color GetPixel(int x, int y)
     {
         throw new NotImplementedException();
+    }
+
+    private ID3D11DepthStencilView CreateDepthStencilView()
+    {
+        var texture = GetInternalTexture(TextureUsage.DepthStencil);
+
+        var desc = new DepthStencilViewDescription()
+        {
+            Format = texture.Description.Format,
+            ViewDimension = DepthStencilViewDimension.Texture2D,
+            Texture2D = new Texture2DDepthStencilView()
+            {
+                MipSlice = 0,
+            }
+        };
+
+        return Resources.Device.CreateDepthStencilView(texture, desc);
     }
 
     private ID3D11RenderTargetView CreateRenderTargetView()
@@ -154,6 +180,9 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T>, IShaderResourc
 
     public ID3D11Texture2D GetInternalTexture(TextureUsage usage)
     {
+        if (internalTextures[(int)usage]?.NativePointer == 0)
+            internalTextures[(int)usage] = null;
+
         return internalTextures[(int)usage] ??= CreateInternalTexture(usage);
     }
 
@@ -210,5 +239,51 @@ internal unsafe class D3D11Texture<T> : D3D11Object, ITexture<T>, IShaderResourc
     public ID3D11ShaderResourceView GetShaderResourceView()
     {
         return ShaderResourceView;
+    }
+
+    public void NotifyBound(GraphicsQueueBase queue, BindingUsage usage, bool mayWrite)
+    {
+    }
+
+    public void GetResource(out ID3D11DepthStencilView resource)
+    {
+        if (typeof(T) != typeof(float))
+            throw new Exception();
+
+        resource = this.depthStencilView.GetValue();
+    }
+
+    public void GetResource(out ID3D11RenderTargetView resource)
+    {
+        if (typeof(T) != typeof(Color))
+            throw new Exception();
+
+        resource = this.renderTargetView.GetValue();
+    }
+
+    public void ResizeInternal(int width, int height)
+    {
+        this.Width = width;
+        this.Height = height;
+
+        for (int i = 0; i < internalTextures.Length; i++)
+        {
+            internalTextures[i]?.Dispose();
+            internalTextures[i] = null;
+        }
+
+        renderTargetView.DisposeValue();
+        depthStencilView.DisposeValue();
+        shaderResourceView.DisposeValue();
+    }
+
+    public void GetResource(out ID3D11ShaderResourceView resource)
+    {
+        resource = this.GetShaderResourceView();
+    }
+
+    public void NotifyUnbound(GraphicsQueueBase queue)
+    {
+        throw new NotImplementedException();
     }
 }

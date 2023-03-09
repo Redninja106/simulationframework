@@ -8,10 +8,11 @@ using System.Threading.Tasks;
 using Vortice.Direct3D11;
 
 namespace SimulationFramework.Drawing.Direct3D11;
-internal class D3D11ComputeShader : D3D11Shader
+internal class D3D11ComputeShader : D3D11Shader, IBindableResource
 {
     private ID3D11ComputeShader shader;
     private ID3D11UnorderedAccessView[] uavs;
+    private IResourceProvider<ID3D11UnorderedAccessView>[] uavProviders;
 
     public D3D11ComputeShader(DeviceResources deviceResources, Type shaderType) : base(deviceResources, shaderType, null)
     {
@@ -50,6 +51,7 @@ internal class D3D11ComputeShader : D3D11Shader
     void UpdateUAVs(IShader shader)
     {
         uavs ??= new ID3D11UnorderedAccessView[Compilation.IntrinsicUniforms.Count()];
+        uavProviders ??= new IResourceProvider<ID3D11UnorderedAccessView>[Compilation.IntrinsicUniforms.Count()];
 
         for (int i = 0; i < uavs.Length; i++)
         {
@@ -60,9 +62,11 @@ internal class D3D11ComputeShader : D3D11Shader
             if (value is null)
                 continue;
 
-            if (value is IUnorderedAccessViewProvider uavProvider)
+            if (value is IResourceProvider<ID3D11UnorderedAccessView> uavProvider)
             {
-                uavs[i] = uavProvider.GetUnorderedAccessView();
+                uavProviders[i] = uavProvider;
+                uavProvider.NotifyBound((GraphicsQueueBase)Graphics.ImmediateQueue, BindingUsage.UnorderedAccess, true);
+                uavProvider.GetResource(out uavs[i]);
             }
             else
             {
@@ -81,4 +85,15 @@ internal class D3D11ComputeShader : D3D11Shader
         context.CSSetShaderResource(slot, shaderResourceView);
     }
 
+    public void NotifyBound(GraphicsQueueBase queue, BindingUsage usage, bool mayWrite)
+    {
+    }
+
+    public void NotifyUnbound(GraphicsQueueBase queue)
+    {
+        for (int i = 0; i < uavProviders.Length; i++)
+        {
+            uavProviders[i]?.NotifyUnbound(queue);
+        }
+    }
 }

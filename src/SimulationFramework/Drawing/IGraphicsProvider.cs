@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Shaders;
+using SimulationFramework.Shaders.Compiler;
 using System;
 
 namespace SimulationFramework.Drawing;
@@ -41,10 +42,11 @@ public interface IGraphicsProvider : IApplicationComponent
 
     void InvalidateShader(Type shaderType);
 
-    IRenderer CreateRenderer(IGraphicsQueue? queue);
+    IRenderingContext CreateRenderer(IGraphicsQueue? queue);
 
     void DispatchComputeShader(IShader? shader, int groupsX, int groupsY, int groupsZ, IGraphicsQueue? queue = null);
     IGraphicsQueue CreateDeferredQueue();
+
 
     GraphicsCapabilities Capabilities { get; }
 }

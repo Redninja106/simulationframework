@@ -124,14 +124,13 @@ public interface ICanvas : IDisposable
     /// <param name="position">The position of the rectangle.</param>
     /// <param name="size">The size of the rectangle.</param>
     /// <param name="alignment">The point on the rectangle to align to the provided position.</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     sealed void DrawRect(Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawRect(new(position, size, alignment));
 
     /// <summary>
     /// Draws a rectangle to the canvas, using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="rect">The rectangle to draw.</param>
-    sealed void DrawRect(Rectangle rect) => DrawRoundedRect(rect, 0);
+    void DrawRect(Rectangle rect);
 
     /// <summary>
     /// Draws a rounded rectangle to the canvas, using the current transform, clipping, and drawing settings.

@@ -15,6 +15,9 @@ internal class OpenGLBuffer<T> : IBuffer<T> where T : unmanaged
     public ResourceOptions Options { get; }
     public Span<T> Data => data;
 
+    public T this[uint index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public T this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
     private T[] data;
 
     public OpenGLBuffer(int length, ResourceOptions options)
@@ -65,6 +68,41 @@ internal class OpenGLBuffer<T> : IBuffer<T> where T : unmanaged
     }
 
     public T[] GetData()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Update(nint data, nint length)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Update(Span<T> data, int offset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Update(T[] data, int offset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ReadOnlySpan<T> GetSpan()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Update(nint data, nint length, IGraphicsQueue? queue = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Update(ReadOnlySpan<T> data, int offset = 0, IGraphicsQueue? queue = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Update(T[] data, int offset = 0, IGraphicsQueue? queue = null)
     {
         throw new NotImplementedException();
     }

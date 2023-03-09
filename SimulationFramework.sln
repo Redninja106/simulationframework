@@ -43,7 +43,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeShader", "ComputeSha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Raytracer", "Examples\Raytracer\Raytracer.csproj", "{A302831A-0643-4478-92FF-7DFE6C89C408}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grass", "examples\Grass\Grass.csproj", "{632B3FEB-5D11-4AE4-9470-53ABDA5F8E72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grass", "examples\Grass\Grass.csproj", "{632B3FEB-5D11-4AE4-9470-53ABDA5F8E72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloTriangle", "examples\HelloTriangle\HelloTriangle.csproj", "{03051CED-216E-4851-B24A-B1DAA99E1B59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +117,10 @@ Global
 		{632B3FEB-5D11-4AE4-9470-53ABDA5F8E72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{632B3FEB-5D11-4AE4-9470-53ABDA5F8E72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{632B3FEB-5D11-4AE4-9470-53ABDA5F8E72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03051CED-216E-4851-B24A-B1DAA99E1B59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03051CED-216E-4851-B24A-B1DAA99E1B59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03051CED-216E-4851-B24A-B1DAA99E1B59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03051CED-216E-4851-B24A-B1DAA99E1B59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,6 +141,7 @@ Global
 		{0E0E2792-02A3-4492-858C-55D9467E79AB} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 		{A302831A-0643-4478-92FF-7DFE6C89C408} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 		{632B3FEB-5D11-4AE4-9470-53ABDA5F8E72} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
+		{03051CED-216E-4851-B24A-B1DAA99E1B59} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09D3B2BE-AC85-48C2-835F-6B781E265873}

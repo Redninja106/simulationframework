@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 using Vortice.Direct3D11;
 
 namespace SimulationFramework.Drawing.Direct3D11;
-internal class D3D11FragmentShader : D3D11Shader
+internal class FragmentShader : D3D11Shader
 {
     private ID3D11PixelShader shader;
 
     protected override ShaderKind Kind => ShaderKind.Fragment;
     protected override string Profile => "ps_5_0";
 
-    public D3D11FragmentShader(DeviceResources deviceResources, Type shaderType, ShaderSignature signature) : base(deviceResources, shaderType, signature)
+    public FragmentShader(DeviceResources deviceResources, Type shaderType, ShaderSignature signature) : base(deviceResources, shaderType, signature)
     {
     }
 

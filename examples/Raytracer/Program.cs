@@ -8,7 +8,7 @@ using SimulationFramework.ImGuiNET;
 using SimulationFramework.Shaders;
 using System.Numerics;
 
-IRenderer renderer = null!;
+IRenderingContext renderer = null!;
 IBuffer<Vector2> quadBuffer = null!;
 Vector3 position = Vector3.Zero;
 float camRotationX = 0, camRotationY = 0;
@@ -97,7 +97,7 @@ void LayoutImGui()
 
 struct VertexShader : IShader
 {
-    [Input]
+    [Input(InputSemantic.Vertex)]
     Vector2 vertexPosition;
 
     [Output(OutputSemantic.Position)]

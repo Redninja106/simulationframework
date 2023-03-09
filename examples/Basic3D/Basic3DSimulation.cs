@@ -57,7 +57,7 @@ internal class Basic3DSimulation : Simulation
     IBuffer<Vertex> modelBuffer;
     IBuffer<Vertex> cubeBuffer;
 
-    IRenderer renderer;
+    IRenderingContext renderer;
 
     ITexture<Color> concrete;
 
@@ -100,9 +100,9 @@ internal class Basic3DSimulation : Simulation
         fragShader.sampler = TextureSampler.Linear;
 
         renderer.RenderTarget = Graphics.DefaultRenderTarget;
-        renderer.DepthTarget = Graphics.DefaultDepthTarget;
+        // renderer.DepthTarget = Graphics.DefaultDepthTarget;
         renderer.ClearRenderTarget(Color.FromHSV(0, 0, .1f));
-        renderer.ClearDepthTarget(1.0f);
+        // renderer.ClearDepthTarget(1.0f);
         renderer.SetViewport(new(renderer.RenderTarget.Width, renderer.RenderTarget.Height, 0, 0));
         
         renderer.CullMode = CullMode.None;
@@ -213,7 +213,7 @@ internal class Basic3DSimulation : Simulation
         [Uniform]
         public CameraTransforms camera;
 
-        [Input]
+        [Input(InputSemantic.Vertex)]
         Vertex vertex;
 
         [Output]
@@ -280,7 +280,7 @@ internal class Basic3DSimulation : Simulation
         [Uniform]
         public CameraTransforms camera;
 
-        [Input]
+        [Input(InputSemantic.Vertex)]
         Vertex vertex;
 
         [Output(OutputSemantic.Position)]

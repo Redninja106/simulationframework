@@ -13,7 +13,12 @@ namespace SimulationFramework;
 public static class Performance
 {
     /// <summary>
-    /// The simulations current framerate.
+    /// The simulation's current framerate.
     /// </summary>
     public static float Framerate => 1f / (Application.Current?.GetComponent<ITimeProvider>() ?? throw Exceptions.CoreComponentNotFound()).GetDeltaTime();
+
+    /// <summary>
+    /// The number of frames since the simulation started.
+    /// </summary>
+    public static ulong FrameCount => Application.Current?.frameCount ?? throw Exceptions.CoreComponentNotFound();
 }     

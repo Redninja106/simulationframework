@@ -10,8 +10,11 @@ public enum InputSemantic
 {
     None,
     Position,
-    VertexID,
-    ThreadID,
-    GroupID,
-    LocalThreadID,
+    VertexIndex,
+    ThreadIndex,
+    GroupIndex,
+    LocalThreadIndex,
+
+    Vertex,
+    Instance
 }

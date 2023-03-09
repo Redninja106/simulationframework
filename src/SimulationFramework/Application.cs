@@ -29,6 +29,8 @@ public sealed class Application : IDisposable
     private readonly IApplicationPlatform platform;
     private bool initialized;
 
+    internal ulong frameCount;
+
     /// <summary>
     /// Creates a new instance of the <see cref="Application"/> class.
     /// </summary>
@@ -50,6 +52,11 @@ public sealed class Application : IDisposable
 
             this.initialized = true;
         }, ListenerPriority.Internal);
+
+        Dispatcher.Subscribe<FrameEndMessage>(m =>
+        {
+            frameCount++;
+        });
     }
 
     /// <summary>

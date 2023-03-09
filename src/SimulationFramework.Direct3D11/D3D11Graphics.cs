@@ -1,5 +1,4 @@
-﻿using SimulationFramework.Drawing.Direct3D11.Buffers;
-using SimulationFramework.Messaging;
+﻿using SimulationFramework.Messaging;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using Vortice.D3DCompiler;
@@ -17,9 +16,8 @@ namespace SimulationFramework.Drawing.Direct3D11;
 public class D3D11Graphics : IGraphicsProvider
 {
     private DeviceResources resources;
-    private D3D11Texture<Color> defaultRenderTarget;
+    private BackBufferTexture defaultRenderTarget;
     private D3D11Texture<float> defaultDepthTarget;
-    private NullCanvas frameCanvas;
     private D3D11ImmediateQueue immediateQueue;
 
     public IGraphicsQueue ImmediateQueue => immediateQueue;
@@ -29,11 +27,10 @@ public class D3D11Graphics : IGraphicsProvider
     public D3D11Graphics(IntPtr hwnd)
     {
         resources = new DeviceResources(hwnd);
-        defaultRenderTarget = new D3D11BackBufferTexture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
+        defaultRenderTarget = new BackBufferTexture(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
 
         var swapchainDesc = resources.SwapChain.Description1;
         defaultDepthTarget = new D3D11Texture<float>(resources, swapchainDesc.Width, swapchainDesc.Height, Span<float>.Empty, ResourceOptions.None);
-        frameCanvas = new NullCanvas(defaultRenderTarget);
 
         immediateQueue = new D3D11ImmediateQueue(resources);
     }
@@ -45,7 +42,7 @@ public class D3D11Graphics : IGraphicsProvider
 
     public IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged
     {
-        return new D3D11Buffer<T>(this.resources, size, flags);
+        return new Buffer<T>(this.resources, size, flags);
     }
 
     public ITexture<T> CreateTexture<T>(int width, int height, Span<T> data, ResourceOptions flags) where T : unmanaged
@@ -103,115 +100,47 @@ public class D3D11Graphics : IGraphicsProvider
 
         this.resources.Device.ImmediateContext.ClearState();
 
-        defaultRenderTarget.Dispose();
-        defaultDepthTarget.Dispose();
-
+        defaultRenderTarget.FreeBackBufferReferences();
+        
         resources.Resize(message.Width, message.Height);
 
-        defaultRenderTarget = new D3D11BackBufferTexture<Color>(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
-        defaultDepthTarget = new D3D11Texture<float>(resources, message.Width, message.Height, Span<float>.Empty, ResourceOptions.None);
-    }
-
-    public ICanvas GetFrameCanvas()
-    {
-        return this.frameCanvas;
+        defaultRenderTarget.RestoreBackBuffer(resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
+        defaultDepthTarget.ResizeInternal(message.Width, message.Height);
     }
 
     public void InvalidateShader(Type shaderType)
     {
-        resources.ShaderManager.Invalidate(shaderType);
+        resources.ShaderProvider.Invalidate(shaderType);
     }
 
-
-    public IRenderer CreateRenderer(IGraphicsQueue queue)
+    public IRenderingContext CreateRenderer(IGraphicsQueue queue)
     {
         queue ??= this.immediateQueue;
 
-        if (queue is not D3D11QueueBase d3dQueue)
+        if (queue is not GraphicsQueueBase d3dQueue)
         {
             throw new Exception();
         }
 
-        return new D3D11Renderer(resources, d3dQueue);
+        return new D3D11RenderingContext(resources, d3dQueue);
     }
 
     public void DispatchComputeShader(IShader shader, int groupsX, int groupsY, int groupsZ, IGraphicsQueue queue)
     {
         queue ??= Graphics.ImmediateQueue;
-        var d3dQueue = queue as D3D11QueueBase ?? throw new Exception();
-        var d3dShader = resources.ShaderManager.GetComputeShader(shader.GetType());
+        var d3dQueue = queue as GraphicsQueueBase ?? throw new Exception();
+        var d3dShader = resources.ShaderProvider.GetComputeShader(shader.GetType());
 
         d3dShader.Update(shader);
         d3dShader.Apply(d3dQueue.DeviceContext);
 
         d3dQueue.DeviceContext.Dispatch(groupsX, groupsY, groupsZ);
+
+        d3dShader.NotifyUnbound(d3dQueue);
     }
 
     public IGraphicsQueue CreateDeferredQueue()
     {
         throw new NotImplementedException();
-    }
-
-    record NullCanvas(ITexture<Color> Target) : ICanvas
-    {
-        public CanvasState State { get; } = new NullCanvasState();
-
-        public void Clear(Color color)
-        {
-        }
-
-        public void Dispose()
-        {
-        }
-
-        public void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter)
-        {
-        }
-
-        public void DrawLine(Vector2 p1, Vector2 p2)
-        {
-        }
-
-        public void DrawPolygon(Span<Vector2> polygon)
-        {
-        }
-
-        public void DrawRoundedRect(Rectangle rect, float radius)
-        {
-        }
-
-        public void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft)
-        {
-        }
-
-        public void DrawTexture(ITexture<Color> texture, Rectangle source, Rectangle destination)
-        {
-        }
-
-        public void Flush()
-        {
-        }
-
-        public Vector2 MeasureText(string text, float maxLength, out int charsMeasured)
-        {
-            charsMeasured = 0;
-            return default;
-        }
-
-        public void PopState()
-        {
-        }
-
-        public void ResetState()
-        {
-        }
-
-        void ICanvas.PushState()
-        {
-        }
-
-        class NullCanvasState : CanvasState
-        {
-        }
     }
 }

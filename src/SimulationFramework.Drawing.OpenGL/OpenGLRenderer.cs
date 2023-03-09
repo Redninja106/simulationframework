@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.OpenGL;
-internal class OpenGLRenderer : IRenderer
+internal class OpenGLRenderer : IRenderingContext
 {
     public ITexture<Color>? RenderTarget { get; set; }
     public ITexture<float>? DepthTarget { get; set; }
@@ -31,6 +31,7 @@ internal class OpenGLRenderer : IRenderer
     public BlendMode DestinationBlend { get; set; }
     public BlendOperation BlendEquation { get; set; }
     public ColorF BlendConstant { get; set; }
+    public byte StencilTestValue { get; set; }
 
     private int arrayBufferOffset, elementArrayBufferOffset;
 
@@ -55,7 +56,7 @@ internal class OpenGLRenderer : IRenderer
         throw new NotImplementedException();
     }
 
-    public void Clip(Rectangle? rectangle)
+    public void SetClipRectangle(Rectangle? rectangle)
     {
         if (rectangle is not null)
         {
@@ -214,17 +215,102 @@ internal class OpenGLRenderer : IRenderer
         throw new NotImplementedException();
     }
 
-    public void BlendState(BlendMode sourceBlend, BlendMode destinationBlend, BlendOperation operation = BlendOperation.Add)
+    public void SetBlendMode(BlendMode sourceBlend, BlendMode destinationBlend, BlendOperation operation = BlendOperation.Add)
     {
         throw new NotImplementedException();
     }
 
-    public void BlendState(BlendMode sourceBlend, BlendMode destinationBlend, BlendMode sourceBlendAlpha, BlendMode destinationBlendAlpha, BlendOperation operation = BlendOperation.Add, BlendOperation operationAlpha = BlendOperation.Add)
+    public void SetBlendMode(BlendMode sourceBlend, BlendMode destinationBlend, BlendMode sourceBlendAlpha, BlendMode destinationBlendAlpha, BlendOperation operation = BlendOperation.Add, BlendOperation operationAlpha = BlendOperation.Add)
     {
         throw new NotImplementedException();
     }
 
     public void Dispose()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetStencilMode(DepthStencilComparison comparison, StencilOperation pass, StencilOperation fail)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetBlend()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetIndexBuffer(IBuffer<ushort>? indexBuffer)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawInstancedPrimitives(PrimitiveKind kind, int vertexCount, int instanceCount, int vertexOffset = 0, int instanceOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawIndexedInstancedPrimitives(PrimitiveKind kind, int indexCount, int instanceCount, int indexOffset = 0, int instanceOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawInstancedPrimitives(PrimitiveKind kind, IBuffer<DrawCommand> commands, int commandOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawIndexedInstancedPrimitives(PrimitiveKind kind, IBuffer<IndexedDrawCommand> commands, int commandOffset = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawInstancedGeometry(IGeometry geometry, int instanceCount)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetBlendEnabled(bool enabled)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetAlphaBlendMode(BlendMode sourceBlend, BlendMode destinationBlend, BlendOperation operation = BlendOperation.Add)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetStencilMasks(byte readMask, byte writeMask)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetDepthComparison(DepthStencilComparison comparison, bool writeDepth, float depthBias = 0)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetIndexBuffer<T>(IBuffer<T>? indexBuffer) where T : unmanaged
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawInstancedPrimitives(PrimitiveKind kind, IBuffer<DrawCommand> commands, int commandOffset = 0, int? commandCount = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DrawIndexedInstancedPrimitives(PrimitiveKind kind, IBuffer<IndexedDrawCommand> commands, int commandOffset = 0, int? commandCount = null)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetViewport(Rectangle viewport, float minDepth = 0, float maxDepth = 1)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetDepthMode(DepthStencilComparison comparison, bool readOnly, float depthBias)
     {
         throw new NotImplementedException();
     }

@@ -17,19 +17,16 @@ public interface IBuffer<T> : IResource where T : unmanaged
 
     ResourceOptions Options { get; }
 
-    /// <summary>
-    /// Sets the content of the buffer.
-    /// </summary>
-    /// <param name="data">A span of <typeparamref name="T"/> elements, containing the new data of the buffer. Must have the same length as the buffer.</param>
-    void SetData(Span<T> data);
-    sealed unsafe void SetData(IntPtr data, int length) => SetData(new Span<T>(data.ToPointer(), length));
-    sealed unsafe void SetData(T data) => SetData(new Span<T>(&data, 1));
-    sealed unsafe void SetData(T[] data) => SetData(data.AsSpan());
+    [ShaderIntrinsic]
+    T this[int index] { get; set; }
 
     [ShaderIntrinsic]
-    sealed ref T this[int index] => ref Data[index];
+    T this[uint index] { get; set; }
 
-    Span<T> Data { get; }
-    T[] GetData();
-    void ApplyChanges();
+    ReadOnlySpan<T> GetSpan();
+
+    void Update(nint data, nint length, IGraphicsQueue? queue = null);
+    void Update(ReadOnlySpan<T> data, int offset = 0, IGraphicsQueue? queue = null);
+    void Update(T[] data, int offset = 0, IGraphicsQueue? queue = null);
+
 }

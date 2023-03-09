@@ -45,4 +45,9 @@ public class ShaderCompilation
         this.intrinsicUniforms = new(intrinsicUniforms);
         this.globals = new(globals);
     }
+
+    public IEnumerable<CompiledVariable> GetInputs(InputSemantic semantic)
+    {
+        return inputs.Where(i => i.InputSemantic == semantic);
+    }
 }
