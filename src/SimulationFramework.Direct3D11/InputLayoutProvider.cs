@@ -41,7 +41,7 @@ internal class InputLayoutProvider : D3D11Object
             inputElementDescs = inputElementDescs.Concat(CreateInputElementDescriptions(instanceVars, 1, InputClassification.PerInstanceData));
         }
 
-        return Resources.Device.CreateInputLayout(inputElementDescs.ToArray(), vertexShader.bytecode);
+        return Resources.Device.CreateInputLayout(inputElementDescs.Reverse().ToArray(), vertexShader.bytecode);
     }
 
     private static IEnumerable<InputElementDescription> CreateInputElementDescriptions(IEnumerable<CompiledVariable> variables, int slot, InputClassification classification)
@@ -50,7 +50,7 @@ internal class InputLayoutProvider : D3D11Object
 
         foreach (var variable in variables)
         {
-            typeStack.Push((variable.VariableType, variable.Name));
+            typeStack.Push((variable.SourceType ?? variable.VariableType, variable.Name));
         }
 
         InputElementDescription baseDesc = new(string.Empty, 0, Format.Unknown, InputElementDescription.AppendAligned, slot, classification, 0);
