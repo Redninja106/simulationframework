@@ -10,8 +10,8 @@ public class CompiledVariableExpression : Expression
 {
     public override ExpressionType NodeType => ExpressionType.Extension;
     public override Type Type => Variable.VariableType;
-    public CompiledVariable Variable { get; private set; }
-    public CompiledVariableExpression(CompiledVariable variable)
+    public ShaderVariable Variable { get; private set; }
+    public CompiledVariableExpression(ShaderVariable variable)
     {
         Variable = variable;
     }

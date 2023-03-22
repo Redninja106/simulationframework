@@ -67,8 +67,14 @@ internal class FreeCamera
         if (Keyboard.IsKeyDown(Key.Space)) 
             delta += Vector3.UnitY;
 
+        float speed = 1;
+        if (Keyboard.IsKeyDown(Key.LShift))
+            speed *= 5;
+        if (Keyboard.IsKeyDown(Key.LAlt))
+            speed /= 5;
+
         Vector3 transformedDelta = Vector3.Transform(delta, rotationMatrix);
-        this.Position += transformedDelta * Time.DeltaTime * MoveSpeed;
+        this.Position += transformedDelta * Time.DeltaTime * MoveSpeed * speed;
 
         ViewMatrix = Matrix4x4.CreateLookAt(this.position, this.position + Vector3.Transform(Vector3.UnitZ, rotationMatrix), Vector3.Transform(Vector3.UnitY, rotationMatrix));
 

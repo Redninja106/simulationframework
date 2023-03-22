@@ -20,7 +20,7 @@ internal class ShaderTypeRestrictions : CompilerPass
         base.CheckStruct(context, compiledStruct);
     }
 
-    public override void CheckVariable(CompilationContext context, CompiledVariable compiledVariable)
+    public override void CheckVariable(CompilationContext context, ShaderVariable compiledVariable)
     {
 
         base.CheckVariable(context, compiledVariable);

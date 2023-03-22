@@ -17,8 +17,6 @@ internal abstract class GraphicsQueueBase : D3D11Object, IGraphicsQueue
         this.DeviceContext = context;
         
         Fence = resources.Device.CreateFence<ID3D11Fence>(0, 0);
-
-        resources.clearState += () => { context.Flush(); context.ClearState(); };
     }
 
     public void Flush()

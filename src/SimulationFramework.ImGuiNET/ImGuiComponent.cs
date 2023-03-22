@@ -22,7 +22,7 @@ public sealed class ImGuiComponent : IApplicationComponent
 
     void IApplicationComponent.Initialize(Application application)
     {
-        renderer = Graphics.CreateRenderer();
+        renderer = Graphics.CreateRenderingContext();
 
         application.Dispatcher.Subscribe<RenderMessage>(BeforeRender, ListenerPriority.Before);
         application.Dispatcher.Subscribe<RenderMessage>(AfterRender, ListenerPriority.Low);

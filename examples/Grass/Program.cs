@@ -24,7 +24,7 @@ void Init(AppConfig config)
         Yaw = MathHelper.DegreesToRadians(225)
     };
 
-    floorRenderer = Graphics.CreateRenderer();
+    floorRenderer = Graphics.CreateRenderingContext();
     floor = Graphics.CreateBuffer(new Vector3[] 
     {  
         new(-1, 0, +1),
@@ -33,7 +33,7 @@ void Init(AppConfig config)
         new(+1, 0, -1),
     });
 
-    grassRenderer = new(new(100000, 0.1f, 0.15f));
+    grassRenderer = new(new(20000, 0.1f, 0.15f));
     grassRenderer.GrassTopColor = new(ColorF.LawnGreen.ToVector3() * .75f);
     floorColor = grassRenderer.GrassBottomColor = new(ColorF.LawnGreen.ToVector3() * .5f);
     
@@ -64,6 +64,7 @@ void Render(ICanvas canvas)
     floorRenderer.DrawPrimitives(PrimitiveKind.TriangleStrip, floor.Length);
 
     grassRenderer.TransformMatrix = cameraMatrix;
+    grassRenderer.CameraPosition = freeCam.Position;
     grassRenderer.Render();
 }
 
@@ -84,7 +85,7 @@ void Layout()
 
 struct FloorVertexShader : IShader
 {
-    [Input(InputSemantic.Vertex)]
+    [Input(InputSemantic.VertexElement)]
     Vector3 vertexPosition;
 
     [Output(OutputSemantic.Position)]

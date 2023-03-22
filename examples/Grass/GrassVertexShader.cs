@@ -6,11 +6,8 @@ namespace Grass;
 
 struct GrassVertexShader : IShader
 {
-    [Input(InputSemantic.Vertex)]
+    [Input(InputSemantic.VertexElement)]
     public GrassVertex input;
-
-    [Output]
-    Vector3 fragPos;
 
     [Output]
     float scaledHeight;
@@ -22,20 +19,27 @@ struct GrassVertexShader : IShader
     public Matrix4x4 TransformMatrix;
 
     [Uniform]
-    public float time;
+    public float Time;
+
+    [Uniform]
+    public Vector3 CameraPosition;
 
     [Uniform]
     public float windHeading;
 
     public void Main()
     {
-        Vector3 offset = new(MathF.Cos(windHeading), 0, MathF.Sin(windHeading));
-        offset *= MathF.Cos(time + input.RandomValue * MathF.Tau);
+        Vector3 cameraDir = CameraPosition - input.Position;
 
+        Vector3 offset = new(MathF.Cos(windHeading), 0, MathF.Sin(windHeading));
+        offset += cameraDir;
+        offset *= MathF.Cos(Time + input.RandomValue * (MathF.Tau / 6f));
+
+        offset += CameraPosition;// Vector3.UnitY * cameraDir.Length();
+            
         input.Position += offset * .01f * input.PivotWeight;
 
-        fragPos = input.Position;
-        scaledHeight = fragPos.Y / input.height;
+        scaledHeight = input.Position.Y / input.height;
 
         position = new(input.Position, 1);
         position = Vector4.Transform(position, TransformMatrix);

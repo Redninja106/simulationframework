@@ -42,7 +42,7 @@ public interface IGraphicsProvider : IApplicationComponent
 
     void InvalidateShader(Type shaderType);
 
-    IRenderingContext CreateRenderer(IGraphicsQueue? queue);
+    IRenderingContext CreateRenderingContext(IGraphicsQueue? queue);
 
     void DispatchComputeShader(IShader? shader, int groupsX, int groupsY, int groupsZ, IGraphicsQueue? queue = null);
     IGraphicsQueue CreateDeferredQueue();

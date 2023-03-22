@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler;
-public class CompiledVariable
+public class ShaderVariable
 {
     public FieldInfo BackingField;
     public Type VariableType;
@@ -25,7 +25,7 @@ public class CompiledVariable
 
     public Type? SourceType;
 
-    public CompiledVariable(FieldInfo field)
+    public ShaderVariable(FieldInfo field)
     {
         this.BackingField = field;
         this.VariableType = field.FieldType;

@@ -62,7 +62,7 @@ public class OpenGLGraphicsProvider : IGraphicsProvider
         throw new NotImplementedException();
     }
 
-    public IRenderingContext CreateRenderer(IGraphicsQueue? queue)
+    public IRenderingContext CreateRenderingContext(IGraphicsQueue? queue)
     {
         throw new NotImplementedException();
     }

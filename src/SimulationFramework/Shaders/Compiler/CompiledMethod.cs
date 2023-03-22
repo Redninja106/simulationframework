@@ -30,7 +30,7 @@ public class CompiledMethod
         {
             Console.WriteLine(i);
         }
-
+        
         Console.WriteLine(new string('=', 100));
 
         var graph = new ControlFlowGraph(Disassembly);

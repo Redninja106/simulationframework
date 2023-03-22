@@ -76,7 +76,7 @@ internal class Basic3DSimulation : Simulation
 
         concrete = Graphics.LoadTexture("texture.png");
         
-        renderer = Graphics.CreateRenderer();
+        renderer = Graphics.CreateRenderingContext();
     }
 
     public override void OnRender(ICanvas canvas)
@@ -213,7 +213,7 @@ internal class Basic3DSimulation : Simulation
         [Uniform]
         public CameraTransforms camera;
 
-        [Input(InputSemantic.Vertex)]
+        [Input(InputSemantic.VertexElement)]
         Vertex vertex;
 
         [Output]
@@ -280,7 +280,7 @@ internal class Basic3DSimulation : Simulation
         [Uniform]
         public CameraTransforms camera;
 
-        [Input(InputSemantic.Vertex)]
+        [Input(InputSemantic.VertexElement)]
         Vertex vertex;
 
         [Output(OutputSemantic.Position)]

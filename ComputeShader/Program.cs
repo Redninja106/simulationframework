@@ -21,7 +21,12 @@ void Init(AppConfig config)
 
     Graphics.DispatchComputeShader(shader, THREADS);
 
-    var data = buffer.GetSpan();
+    var data = buffer.GetData();
+    var data2 = buffer.GetData();
+
+    Graphics.DispatchComputeShader(shader, THREADS);
+
+    var data3 = buffer.GetData();
 
     foreach (var value in data)
     {
@@ -41,6 +46,7 @@ struct ComputeShader : IShader
     [Input(InputSemantic.ThreadIndex)]
     readonly int threadID;
 
+    [ShaderMethod]
     public void Main()
     {
         buffer[threadID] *= 2;

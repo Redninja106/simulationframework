@@ -14,5 +14,5 @@ internal abstract class CompilerPass : ExtendedExpressionVisitor
 
     public virtual void CheckMethod(CompilationContext context, CompiledMethod compiledMethod) { }
     public virtual void CheckStruct(CompilationContext context, CompiledStruct compiledStruct) { }
-    public virtual void CheckVariable(CompilationContext context, CompiledVariable compiledVariable) { }
+    public virtual void CheckVariable(CompilationContext context, ShaderVariable compiledVariable) { }
 }

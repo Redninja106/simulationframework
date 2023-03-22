@@ -43,6 +43,7 @@ internal abstract class D3D11Shader : D3D11Object
         var sourceWriter = new StringWriter();
         generator.Emit(sourceWriter);
         var source = sourceWriter.GetStringBuilder().ToString();
+        
         Console.WriteLine(source);
         Console.WriteLine(new string('=', 100));
 

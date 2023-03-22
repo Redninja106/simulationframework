@@ -22,7 +22,7 @@ internal class ExpressionBuilder
     private LabelTarget ReturnTarget { get; set; }
     private Type ReturnType { get; set; }
     private bool IsConstructor { get; set; }
-    private Stack<Expression> Expressions { get; set; }
+    private ExpressionStack Expressions { get; set; }
 
     private ExpressionBuilder(MethodDisassembly disassembly)
     {
@@ -508,7 +508,7 @@ internal class ExpressionBuilder
         {
             var expr = Expressions.Pop();
             var local = Locals[(int)storeIndex];
-            Expressions.Push(Expression.Assign(local, ConvertExpressionType(expr, local.Type)));
+            Expressions.Push(Expression.Assign(local, ConvertExpressionType(expr, local.Type)), false);
 
             return true;
         }
@@ -614,7 +614,7 @@ internal class ExpressionBuilder
 
         if (IsStoreArgumentExpression(instruction, out uint? storeIndex))
         {
-            Expressions.Push(Expression.Assign(Arguments[(int)storeIndex].expr, Expressions.Pop()));
+            Expressions.Push(Expression.Assign(Arguments[(int)storeIndex].expr, Expressions.Pop()), false);
             return true;
         }
 
@@ -680,7 +680,7 @@ internal class ExpressionBuilder
 
         if (method is MethodInfo methodInfo)
         {
-            Expressions.Push(Expression.Call(instance, methodInfo, args));
+            Expressions.Push(Expression.Call(instance, methodInfo, args), methodInfo.ReturnType != typeof(void));
         }
         else if (method is ConstructorInfo constructor)
         {
@@ -737,7 +737,7 @@ internal class ExpressionBuilder
                 var value = Expressions.Pop();
                 var reference = Expressions.Pop();
 
-                Expressions.Push(new ReferenceAssignmentExpression(reference, value));
+                Expressions.Push(new ReferenceAssignmentExpression(reference, value), false);
                 return true;
             default:
                 return false;

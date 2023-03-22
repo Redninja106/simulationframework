@@ -15,12 +15,10 @@ struct GrassFragmentShader : IShader
     public ColorF BottomColor;
 
     [Input]
-    Vector3 fragPos;
-    [Input]
     float scaledHeight;
 
     public void Main()
     {
-        outputColor = ColorF.Lerp(BottomColor, TopColor, scaledHeight * scaledHeight);
+        outputColor = ColorF.Lerp(BottomColor, TopColor, scaledHeight);
     }
 }

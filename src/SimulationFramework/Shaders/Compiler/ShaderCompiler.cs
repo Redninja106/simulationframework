@@ -22,6 +22,7 @@ public partial class ShaderCompiler
         new ShaderTypeParameterPass(),
         new ShaderTypeRestrictions(),
         new ShaderIntrinsicSubstitutions(),
+        new IntrinsicTypeVariableInlines(),
         new DependencyResolver(),
         new CallSubstitutions(),
         new GlobalMethodCall(),
@@ -183,7 +184,7 @@ public partial class ShaderCompiler
     {
         foreach (var field in shaderType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
         {
-            var variable = new CompiledVariable(field);
+            var variable = new ShaderVariable(field);
             if (variable.IsInput)
             {
                 context.inputs.Add(variable);
@@ -222,7 +223,7 @@ public partial class ShaderCompiler
 
     void ArrangeInputs(CompilationContext context, ShaderSignature signature)
     {
-        List<CompiledVariable> inputsSorted = new();
+        List<ShaderVariable> inputsSorted = new();
 
         foreach (var (type, name) in signature.Fields)
         {

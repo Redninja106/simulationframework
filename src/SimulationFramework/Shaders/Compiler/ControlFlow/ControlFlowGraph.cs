@@ -3,6 +3,7 @@ using SimulationFramework.Shaders.Compiler.ILDisassembler;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection.PortableExecutable;
@@ -516,13 +517,17 @@ class ConditionalNode : ControlFlowNode, ISubgraphContainer
     {
         // look for idom & two preds
         graph.RecomputeDominators();
-        var endNode = graph.DepthFirstSearch(node =>
-        {
-            return node.immediateDominator == startNode && node.Predecessors.Count >= 2;
-        }, startNode, true);
+        // var endNode = graph.DepthFirstSearch(node =>
+        // {
+        //     return node.immediateDominator == startNode && node.Predecessors.Count >= 2;
+        // }, startNode, true);
+
+        DgmlBuilder.WriteDGML("./TEST.dgml", graph.GetRootGraph());
+
+        var endNode = FindConditionalConvergence(graph, startNode);
 
         Debug.Assert(endNode is not null);
-        
+
         var firstSuccessor = startNode.Successors[0];
         var secondSuccessor = startNode.Successors[1];
 
@@ -548,6 +553,20 @@ class ConditionalNode : ControlFlowNode, ISubgraphContainer
             falseBranch = secondSuccessor,
             subgraph = ControlFlowGraph.CreateConditionalSubgraph(this, startNode, endNode)
         };
+    }
+
+    ControlFlowNode FindConditionalConvergence(ControlFlowGraph graph, ControlFlowNode startNode)
+    {
+        var firstSuccessor = startNode.Successors[0];
+        var secondSuccessor = startNode.Successors[1];
+
+        // this could be better.
+        var endnode = graph.BreadthFirstSearch(node =>
+        {
+            return graph.BreadthFirstSearch(otherNode => otherNode == node, secondSuccessor) is not null;
+        }, firstSuccessor);
+
+        return endnode;
     }
 
     // connections may not be to the correct subgraph after being

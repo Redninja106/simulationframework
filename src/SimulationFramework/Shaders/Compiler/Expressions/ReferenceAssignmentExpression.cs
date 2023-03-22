@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders.Compiler.Expressions;
 
-// supports assigning ref type values (ie ref float/float&
+// supports assigning ref type values (ie ref float/float&)
 public class ReferenceAssignmentExpression : Expression
 {
     public Expression Left { get; internal set; }
     public Expression Right { get; internal set; }
 
     public override ExpressionType NodeType => ExpressionType.Extension;
+    public override Type Type => Left.Type;
 
     public ReferenceAssignmentExpression(Expression left, Expression right)
     {

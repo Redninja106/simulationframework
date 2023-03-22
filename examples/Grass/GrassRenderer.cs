@@ -16,6 +16,7 @@ internal class GrassRenderer : IDisposable
     public ref ColorF GrassTopColor => ref fragmentShader.TopColor;
     public ref ColorF GrassBottomColor => ref fragmentShader.BottomColor;
     public ref Matrix4x4 TransformMatrix => ref vertexShader.TransformMatrix;
+    public ref Vector3 CameraPosition => ref vertexShader.CameraPosition;
 
     private GrassVertexShader vertexShader;
     private GrassFragmentShader fragmentShader;
@@ -23,7 +24,7 @@ internal class GrassRenderer : IDisposable
     public GrassRenderer(GrassOptions options)
     {
         Regenerate(options);
-        renderer = Graphics.CreateRenderer();
+        renderer = Graphics.CreateRenderingContext();
 
         renderer.RenderTarget = Graphics.DefaultRenderTarget;
         renderer.DepthTarget = Graphics.DefaultDepthTarget;
@@ -31,7 +32,7 @@ internal class GrassRenderer : IDisposable
 
     public void Render()
     {
-        vertexShader.time = Time.TotalTime;
+        vertexShader.Time = Time.TotalTime;
 
         renderer.SetVertexShader(vertexShader);
         renderer.SetFragmentShader(fragmentShader);

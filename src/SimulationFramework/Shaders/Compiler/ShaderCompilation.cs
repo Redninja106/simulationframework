@@ -13,11 +13,11 @@ public class ShaderCompilation
 
     private List<CompiledMethod> methods;
     private List<CompiledStruct> structs;
-    private List<CompiledVariable> inputs;
-    private List<CompiledVariable> outputs;
-    private List<CompiledVariable> uniforms;
-    private List<CompiledVariable> intrinsicUniforms;
-    private List<CompiledVariable> globals;
+    private List<ShaderVariable> inputs;
+    private List<ShaderVariable> outputs;
+    private List<ShaderVariable> uniforms;
+    private List<ShaderVariable> intrinsicUniforms;
+    private List<ShaderVariable> globals;
 
     public CompiledMethod EntryPoint;
 
@@ -26,15 +26,15 @@ public class ShaderCompilation
 
     public IEnumerable<CompiledMethod> Methods => methods;
     public IEnumerable<CompiledStruct> Structs => structs;
-    public IEnumerable<CompiledVariable> Inputs => inputs;
-    public IEnumerable<CompiledVariable> Outputs => outputs;
-    public IEnumerable<CompiledVariable> Globals => globals;
-    public IEnumerable<CompiledVariable> IntrinsicUniforms => intrinsicUniforms;
-    public IEnumerable<CompiledVariable> Uniforms => uniforms;
-    public IEnumerable<CompiledVariable> AllUniforms => uniforms.Concat(intrinsicUniforms);
-    public IEnumerable<CompiledVariable> Variables => Inputs.Concat(outputs).Concat(globals).Concat(AllUniforms);
+    public IEnumerable<ShaderVariable> Inputs => inputs;
+    public IEnumerable<ShaderVariable> Outputs => outputs;
+    public IEnumerable<ShaderVariable> Globals => globals;
+    public IEnumerable<ShaderVariable> IntrinsicUniforms => intrinsicUniforms;
+    public IEnumerable<ShaderVariable> Uniforms => uniforms;
+    public IEnumerable<ShaderVariable> AllUniforms => uniforms.Concat(intrinsicUniforms);
+    public IEnumerable<ShaderVariable> Variables => Inputs.Concat(outputs).Concat(globals).Concat(AllUniforms);
 
-    public ShaderCompilation(ShaderKind shaderKind, IEnumerable<CompiledMethod> methods, IEnumerable<CompiledStruct> structs, IEnumerable<CompiledVariable> inputs, IEnumerable<CompiledVariable> outputs, IEnumerable<CompiledVariable> uniforms, IEnumerable<CompiledVariable> intrinsicUniforms, IEnumerable<CompiledVariable> globals)
+    public ShaderCompilation(ShaderKind shaderKind, IEnumerable<CompiledMethod> methods, IEnumerable<CompiledStruct> structs, IEnumerable<ShaderVariable> inputs, IEnumerable<ShaderVariable> outputs, IEnumerable<ShaderVariable> uniforms, IEnumerable<ShaderVariable> intrinsicUniforms, IEnumerable<ShaderVariable> globals)
     {
         this.ShaderKind = shaderKind;
         this.methods = new(methods);
@@ -46,7 +46,7 @@ public class ShaderCompilation
         this.globals = new(globals);
     }
 
-    public IEnumerable<CompiledVariable> GetInputs(InputSemantic semantic)
+    public IEnumerable<ShaderVariable> GetInputs(InputSemantic semantic)
     {
         return inputs.Where(i => i.InputSemantic == semantic);
     }

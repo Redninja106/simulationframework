@@ -23,7 +23,7 @@ public interface IBuffer<T> : IResource where T : unmanaged
     [ShaderIntrinsic]
     T this[uint index] { get; set; }
 
-    ReadOnlySpan<T> GetSpan();
+    ReadOnlySpan<T> GetData();
 
     void Update(nint data, nint length, IGraphicsQueue? queue = null);
     void Update(ReadOnlySpan<T> data, int offset = 0, IGraphicsQueue? queue = null);

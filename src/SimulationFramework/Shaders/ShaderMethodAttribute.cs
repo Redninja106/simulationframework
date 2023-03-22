@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Shaders;
 
 [AttributeUsage(AttributeTargets.Method)]
-internal class ShaderMethodAttribute : Attribute
+public class ShaderMethodAttribute : Attribute
 {
-    public ShaderMethodAttribute(bool isShaderMethod = true)
+    public ShaderMethodAttribute()
     {
 
     }

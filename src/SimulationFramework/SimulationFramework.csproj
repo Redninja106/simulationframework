@@ -37,4 +37,7 @@
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<PackageLicenseExpression>MIT</PackageLicenseExpression>	
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
 </Project>

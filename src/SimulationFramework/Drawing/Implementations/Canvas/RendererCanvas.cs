@@ -19,7 +19,7 @@ public class RendererCanvas : ICanvas
 
     public RendererCanvas()
     {
-        renderer = Graphics.CreateRenderer();
+        renderer = Graphics.CreateRenderingContext();
         renderer.RenderTarget = Graphics.DefaultRenderTarget;
 
         float aspectRatio = Target.Width / (float)Target.Height;

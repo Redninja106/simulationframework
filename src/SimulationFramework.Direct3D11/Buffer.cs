@@ -138,7 +138,7 @@ internal sealed class Buffer<T> : D3D11Object,
         base.Dispose();
     }
 
-    public ReadOnlySpan<T> GetSpan()
+    public ReadOnlySpan<T> GetData()
     {
         RequireCPUData();
         Synchronize();
@@ -158,17 +158,13 @@ internal sealed class Buffer<T> : D3D11Object,
 
     public unsafe void Update(ReadOnlySpan<T> data, int offset = 0, IGraphicsQueue? queue = null)
     {
-        if (offset is not 0)
-            throw new NotSupportedException();
+        Synchronize();
 
         if (this.internalBuffer is null)
         {
-            if (this.data is null)
-            {
-                this.data = ArrayPool<T>.Shared.Rent(data.Length);
+            this.data ??= ArrayPool<T>.Shared.Rent(this.Length);
 
-                data.CopyTo(this.data);
-            }
+            data.CopyTo(this.data.AsSpan(offset));
 
             return;
         }
@@ -177,7 +173,7 @@ internal sealed class Buffer<T> : D3D11Object,
 
         fixed (T* dataPtr = data) 
         {
-            deviceContext.UpdateSubresource(new Span<T>(dataPtr, data.Length), this.internalBuffer);
+            deviceContext.UpdateSubresource(new Span<T>(dataPtr, data.Length), this.internalBuffer, 0, 0, 0, new Vortice.Mathematics.Box(offset * Stride, 0, 0, (offset + data.Length) * Stride, 1, 1));
         }
     }
 
@@ -210,6 +206,8 @@ internal sealed class Buffer<T> : D3D11Object,
             span.CopyTo(this.data);
 
             deviceContext.Unmap(internalStructuredBuffer);
+
+            cpuVersion = gpuVersion;
         }
     }
 

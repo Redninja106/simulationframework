@@ -127,7 +127,7 @@ public class HLSLCodeGenerator : CodeGenerator
         keywords = reader.ReadToEnd().Split("\r\n");
     }
 
-    protected override void VisitVariables(IEnumerable<CompiledVariable> variables)
+    protected override void VisitVariables(IEnumerable<ShaderVariable> variables)
     {
         Writer.WriteLine();
 
@@ -315,7 +315,8 @@ public class HLSLCodeGenerator : CodeGenerator
     {
         VisitType(field.FieldType);
         Writer.Write(' ');
-        VisitIdentifier(field.Name);
+
+        VisitIdentifier(char.IsNumber(field.Name.Last()) ? field.Name + "_" : field.Name );
 
         string semantic;
         var inputAttribute = field.GetCustomAttribute<InputAttribute>();
@@ -565,6 +566,12 @@ public class HLSLCodeGenerator : CodeGenerator
             Writer.Write(".");
             Writer.Write(memberAliases[node.Member]);
             return node;
+        }
+        else if (char.IsNumber(node.Member.Name.Last()))
+        {
+            var b = base.VisitMember(node);
+            Writer.Write("_");
+            return b;
         }
         else
         {

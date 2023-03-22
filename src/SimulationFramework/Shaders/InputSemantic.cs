@@ -15,6 +15,6 @@ public enum InputSemantic
     GroupIndex,
     LocalThreadIndex,
 
-    Vertex,
-    Instance
+    VertexElement,
+    InstanceElement
 }

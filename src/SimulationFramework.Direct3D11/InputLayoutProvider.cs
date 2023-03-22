@@ -31,24 +31,24 @@ internal class InputLayoutProvider : D3D11Object
     private ID3D11InputLayout CreateInputLayout(VertexShader vertexShader, bool instanced)
     {
         var inputElementDescs = Enumerable.Empty<InputElementDescription>();
-        var vertexVars = vertexShader.Compilation.GetInputs(InputSemantic.Vertex);
+        var vertexVars = vertexShader.Compilation.GetInputs(InputSemantic.VertexElement);
 
         inputElementDescs = inputElementDescs.Concat(CreateInputElementDescriptions(vertexVars, 0, InputClassification.PerVertexData));
 
-        var instanceVars = vertexShader.Compilation.GetInputs(InputSemantic.Instance);
+        var instanceVars = vertexShader.Compilation.GetInputs(InputSemantic.InstanceElement);
         if (instanced)
         {
             inputElementDescs = inputElementDescs.Concat(CreateInputElementDescriptions(instanceVars, 1, InputClassification.PerInstanceData));
         }
 
-        return Resources.Device.CreateInputLayout(inputElementDescs.Reverse().ToArray(), vertexShader.bytecode);
+        return Resources.Device.CreateInputLayout(inputElementDescs.ToArray(), vertexShader.bytecode);
     }
 
-    private static IEnumerable<InputElementDescription> CreateInputElementDescriptions(IEnumerable<CompiledVariable> variables, int slot, InputClassification classification)
+    private static IEnumerable<InputElementDescription> CreateInputElementDescriptions(IEnumerable<ShaderVariable> variables, int slot, InputClassification classification)
     {
         Stack<(Type, string)> typeStack = new();
 
-        foreach (var variable in variables)
+        foreach (var variable in variables.Reverse())
         {
             typeStack.Push((variable.SourceType ?? variable.VariableType, variable.Name));
         }

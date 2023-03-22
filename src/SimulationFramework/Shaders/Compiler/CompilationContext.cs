@@ -16,12 +16,12 @@ public class CompilationContext
 
     public List<CompiledStruct> structs = new();
     public List<CompiledMethod> methods = new();
-    public List<CompiledVariable> uniforms = new();
-    public List<CompiledVariable> intrinsicUniforms = new();
-    public List<CompiledVariable> globals = new();
-    public List<CompiledVariable> inputs = new();
-    public List<CompiledVariable> outputs = new();
-    public IEnumerable<CompiledVariable> AllVariables => uniforms.Concat(intrinsicUniforms).Concat(globals).Concat(inputs).Concat(outputs);
+    public List<ShaderVariable> uniforms = new();
+    public List<ShaderVariable> intrinsicUniforms = new();
+    public List<ShaderVariable> globals = new();
+    public List<ShaderVariable> inputs = new();
+    public List<ShaderVariable> outputs = new();
+    public IEnumerable<ShaderVariable> AllVariables => uniforms.Concat(intrinsicUniforms).Concat(globals).Concat(inputs).Concat(outputs);
 
     public Type ShaderType;
     public CompiledMethod EntryPoint;

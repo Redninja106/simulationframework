@@ -67,11 +67,6 @@ internal class OpenGLBuffer<T> : IBuffer<T> where T : unmanaged
         return value;
     }
 
-    public T[] GetData()
-    {
-        throw new NotImplementedException();
-    }
-
     public void Update(nint data, nint length)
     {
         throw new NotImplementedException();
@@ -87,7 +82,7 @@ internal class OpenGLBuffer<T> : IBuffer<T> where T : unmanaged
         throw new NotImplementedException();
     }
 
-    public ReadOnlySpan<T> GetSpan()
+    public ReadOnlySpan<T> GetData()
     {
         throw new NotImplementedException();
     }

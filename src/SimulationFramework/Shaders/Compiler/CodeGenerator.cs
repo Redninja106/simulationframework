@@ -42,7 +42,7 @@ public class CodeGenerator : ExtendedExpressionVisitor
         }
     }
 
-    protected virtual void VisitVariables(IEnumerable<CompiledVariable> variables)
+    protected virtual void VisitVariables(IEnumerable<ShaderVariable> variables)
     {
         foreach (var variable in variables)
         {
@@ -249,7 +249,7 @@ public class CodeGenerator : ExtendedExpressionVisitor
         Writer.Write(identifier);
     }
 
-    protected virtual void VisitVariable(CompiledVariable variable)
+    protected virtual void VisitVariable(ShaderVariable variable)
     {
         Writer.WriteLine();
 

@@ -27,17 +27,17 @@ public class D3D11Graphics : IGraphicsProvider
     public D3D11Graphics(IntPtr hwnd)
     {
         resources = new DeviceResources(hwnd);
-        defaultRenderTarget = new BackBufferTexture(resources, resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
+        defaultRenderTarget = new BackBufferTexture(resources, resources.SwapChainProvider.SwapChain.GetBuffer<ID3D11Texture2D>(0));
 
-        var swapchainDesc = resources.SwapChain.Description1;
+        var swapchainDesc = resources.SwapChainProvider.SwapChain.Description1;
         defaultDepthTarget = new D3D11Texture<float>(resources, swapchainDesc.Width, swapchainDesc.Height, Span<float>.Empty, ResourceOptions.None);
 
         immediateQueue = new D3D11ImmediateQueue(resources);
     }
 
-    private void AfterRender(RenderMessage message)
+    private void AfterRender([Uniform] RenderMessage message)
     {
-        resources.SwapChain.Present(0);
+        resources.SwapChainProvider.SwapChain.Present(0);
     }
 
     public IBuffer<T> CreateBuffer<T>(int size, ResourceOptions flags) where T : unmanaged
@@ -102,9 +102,9 @@ public class D3D11Graphics : IGraphicsProvider
 
         defaultRenderTarget.FreeBackBufferReferences();
         
-        resources.Resize(message.Width, message.Height);
+        resources.SwapChainProvider.Resize(message.Width, message.Height);
 
-        defaultRenderTarget.RestoreBackBuffer(resources.SwapChain.GetBuffer<ID3D11Texture2D>(0));
+        defaultRenderTarget.RestoreBackBuffer(resources.SwapChainProvider.SwapChain.GetBuffer<ID3D11Texture2D>(0));
         defaultDepthTarget.ResizeInternal(message.Width, message.Height);
     }
 
@@ -113,7 +113,7 @@ public class D3D11Graphics : IGraphicsProvider
         resources.ShaderProvider.Invalidate(shaderType);
     }
 
-    public IRenderingContext CreateRenderer(IGraphicsQueue queue)
+    public IRenderingContext CreateRenderingContext(IGraphicsQueue queue)
     {
         queue ??= this.immediateQueue;
 

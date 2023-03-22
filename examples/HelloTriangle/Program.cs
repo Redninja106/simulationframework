@@ -13,7 +13,7 @@ simulation.Run();
 
 void Initialize(AppConfig config)
 {
-    renderer = Graphics.CreateRenderer();
+    renderer = Graphics.CreateRenderingContext();
     verts = Graphics.CreateBuffer(new (Vector3, ColorF)[]
     {
         (new(-0.5f, -0.5f, 1), ColorF.Red),
@@ -27,16 +27,15 @@ void Render(ICanvas canvas)
     renderer.CullMode = CullMode.None;
 
     renderer.SetVertexBuffer(verts);
-
+    
     renderer.SetVertexShader(vs);
     renderer.SetFragmentShader(fs);
 
     renderer.DrawPrimitives(PrimitiveKind.Triangles, 3);
 }
-
 struct VertexShader : IShader
 {
-    [Input(InputSemantic.Vertex)]
+    [Input(InputSemantic.VertexElement)]
     (Vector3 position, ColorF color) vertex;
 
     [Output]

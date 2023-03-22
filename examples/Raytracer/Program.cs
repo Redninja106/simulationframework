@@ -29,7 +29,7 @@ s.Run(new DesktopPlatform().WithExtension(new ImGuiComponent()));
 
 void Initialize(AppConfig config)
 {
-    renderer = Graphics.CreateRenderer();
+    renderer = Graphics.CreateRenderingContext();
     quadBuffer = Graphics.CreateBuffer(quad.AsSpan());
 }
 
@@ -97,7 +97,7 @@ void LayoutImGui()
 
 struct VertexShader : IShader
 {
-    [Input(InputSemantic.Vertex)]
+    [Input(InputSemantic.VertexElement)]
     Vector2 vertexPosition;
 
     [Output(OutputSemantic.Position)]
@@ -208,7 +208,16 @@ struct Sphere
         var sqrtd = MathF.Sqrt(discriminant);
 
         t = (-halfB - sqrtd) / a;
-        
-        return (t > ray.minT && t < ray.maxT);
+
+        if (ray.maxT < t)
+        {
+            t = (-halfB + sqrtd) / a;
+            if (ray.maxT < t)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

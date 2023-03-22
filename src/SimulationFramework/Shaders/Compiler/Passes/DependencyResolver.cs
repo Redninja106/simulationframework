@@ -59,7 +59,7 @@ internal class DependencyResolver : CompilerPass
         base.CheckMethod(context, compiledMethod);
     }
 
-    public override void CheckVariable(CompilationContext context, CompiledVariable compiledVariable)
+    public override void CheckVariable(CompilationContext context, ShaderVariable compiledVariable)
     {
         RequireType(context, compiledVariable.VariableType);
 

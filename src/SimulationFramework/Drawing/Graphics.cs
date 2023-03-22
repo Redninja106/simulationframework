@@ -36,11 +36,11 @@ public static class Graphics
 
     public static GraphicsCapabilities Capabilities => Provider.Capabilities;
 
-    public static IRenderingContext CreateRenderer(IGraphicsQueue? queue = null)
+    public static IRenderingContext CreateRenderingContext(IGraphicsQueue? queue = null)
     {
         queue ??= ImmediateQueue;
 
-        return Provider.CreateRenderer(queue);
+        return Provider.CreateRenderingContext(queue);
     }
 
     public static IGraphicsQueue CreateDeferredQueue()

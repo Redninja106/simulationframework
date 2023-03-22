@@ -396,14 +396,14 @@ internal sealed class D3D11RenderingContext : D3D11Object, IRenderingContext
     public void SetBlendMode(BlendMode sourceBlend, BlendMode destinationBlend, BlendOperation operation = BlendOperation.Add)
     {
         blendInfo.SourceBlend = sourceBlend;
-        blendInfo.DestinationBlend = sourceBlend;
+        blendInfo.DestinationBlend = destinationBlend;
         blendInfo.BlendOperation = operation;
     }
 
     public void SetAlphaBlendMode(BlendMode sourceBlend, BlendMode destinationBlend, BlendOperation operation = BlendOperation.Add)
     {
         blendInfo.SourceBlendAlpha = sourceBlend;
-        blendInfo.DestinationBlendAlpha = sourceBlend;
+        blendInfo.DestinationBlendAlpha = destinationBlend;
         blendInfo.BlendOperationAlpha = operation;
     }
 

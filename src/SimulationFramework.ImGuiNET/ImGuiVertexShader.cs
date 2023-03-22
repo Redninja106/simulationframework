@@ -16,13 +16,13 @@ internal struct ImGuiVertexShader : IShader
     [Uniform]
     public Matrix4x4 ProjectionMatrix;
 
-    [Input(InputSemantic.Vertex)]
+    [Input(InputSemantic.VertexElement)]
     Vector2 position;
 
-    [Input(InputSemantic.Vertex)]
+    [Input(InputSemantic.VertexElement)]
     Vector2 uv;
 
-    [Input(InputSemantic.Vertex, SourceType = typeof(Color))]
+    [Input(InputSemantic.VertexElement, SourceType = typeof(Color))]
     ColorF color;
 
     [Output]
