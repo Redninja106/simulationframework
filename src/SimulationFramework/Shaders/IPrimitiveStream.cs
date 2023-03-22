@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Shaders;
 
-public interface IPrimitiveStream<T>
-    where T : unmanaged
+public interface IPrimitiveStream<TVertex>
+    where TVertex : unmanaged
 {
-    void EmitVertex(T vertex);
+    void EmitVertex(TVertex vertex);
     void EndPrimitive();
 }

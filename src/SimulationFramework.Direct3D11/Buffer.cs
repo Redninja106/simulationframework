@@ -153,7 +153,7 @@ internal sealed class Buffer<T> : D3D11Object,
 
     public void Update(T[] data, int offset = 0, IGraphicsQueue? queue = null)
     {
-        Update(data, offset, queue);
+        Update(data.AsSpan(), offset, queue);
     }
 
     public unsafe void Update(ReadOnlySpan<T> data, int offset = 0, IGraphicsQueue? queue = null)

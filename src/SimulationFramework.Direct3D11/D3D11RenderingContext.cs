@@ -375,7 +375,7 @@ internal sealed class D3D11RenderingContext : D3D11Object, IRenderingContext
 
         var d3dBuffer = indexBuffer as IResourceProvider<ID3D11Buffer> ?? throw D3DExceptions.InvalidBuffer(nameof(indexBuffer));
 
-        if (Unsafe.SizeOf<T>() is not 2 or 4)
+        if (Unsafe.SizeOf<T>() is not (2 or 4))
         {
             throw new InvalidOperationException("Index buffers must be either 16-bit or 32 bit");
         }
