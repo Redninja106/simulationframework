@@ -77,6 +77,8 @@ internal class ControlFlowGraph
 
     public static ControlFlowGraph CreateConditionalSubgraph(ControlFlowNode parent, ControlFlowNode entryNode, ControlFlowNode exitNode)
     {
+        exitNode.Graph.RecomputeDominators();
+
         Debug.Assert(exitNode.immediateDominator == entryNode);
         Debug.Assert(entryNode.Graph == exitNode.Graph);
 
@@ -437,6 +439,7 @@ class Loop
 class LoopNode : ControlFlowNode, ISubgraphContainer
 {
     public ControlFlowNode Header { get; set; }
+    public ControlFlowNode Tail { get; set; }
 
     private Loop loop;
 
@@ -453,6 +456,8 @@ class LoopNode : ControlFlowNode, ISubgraphContainer
         this.loop = loop;
 
         Header = loop.header;
+        Tail = loop.tail;
+
         ContinueTarget = Header;
         BreakTarget = loop.header.Successors.Single(n => !loop.subgraph.Nodes.Contains(n)); // Should be postdominator
 

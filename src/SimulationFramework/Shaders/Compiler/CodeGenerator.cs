@@ -123,7 +123,7 @@ public class CodeGenerator : ExtendedExpressionVisitor
 
     protected override Expression VisitConditional(ConditionalExpression expression)
     {
-        if (expression.IfFalse is not BlockExpression && expression.IfTrue is not BlockExpression)
+        if (expression.IfFalse is not (BlockExpression or GotoExpression) && expression.IfTrue is not (BlockExpression or GotoExpression))
         {
             // ternary
             Visit(expression.Test);
@@ -135,14 +135,25 @@ public class CodeGenerator : ExtendedExpressionVisitor
             return expression;
         }
 
+        bool invert = expression.IfTrue.NodeType is ExpressionType.Default && expression.IfTrue.Type == typeof(void);
+
         Writer.Write("if (");
-        Visit(expression.Test);
+        Visit(invert ? Expression.Not(expression.Test) : expression.Test);
         Writer.WriteLine(")");
-        Visit(expression.IfTrue);
-        if (!IsEmptyElseExpr(expression.IfFalse))
+
+        if (invert)
         {
-            Writer.WriteLine("else");
             Visit(expression.IfFalse);
+        }
+        else
+        {
+            Visit(expression.IfTrue);
+
+            if (!IsEmptyElseExpr(expression.IfFalse))
+            {
+                Writer.WriteLine("else");
+                Visit(expression.IfFalse);
+            }
         }
 
         return expression;
@@ -415,6 +426,13 @@ public class CodeGenerator : ExtendedExpressionVisitor
         return node;
     }
 
+    protected override Expression VisitGoto(GotoExpression node)
+    {
+        Writer.Write(node.Target.Name);
+
+        return base.VisitGoto(node);
+    }
+
     protected override Expression VisitLabel(LabelExpression node)
     {
         Writer.Write(node.Target.Name);
@@ -426,6 +444,15 @@ public class CodeGenerator : ExtendedExpressionVisitor
         }
 
         return node;
+    }
+
+    protected override Expression VisitLoop(LoopExpression node)
+    {
+        Writer.WriteLine("while (true)");
+
+        var r = base.VisitLoop(node);
+
+        return r;
     }
 
     //protected override Expression VisitExtension(Expression node)

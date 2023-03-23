@@ -49,6 +49,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloTriangle", "examples\H
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.Drawing.Direct3D11.Tests", "SimulationFramework.Drawing.Direct3D11.Tests\SimulationFramework.Drawing.Direct3D11.Tests.csproj", "{0180FC44-21C1-4306-B709-F2705F85B2C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RayMarcher", "RayMarcher\RayMarcher.csproj", "{557BF99E-CC5C-463C-AA00-B1C0792B1896}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +129,10 @@ Global
 		{0180FC44-21C1-4306-B709-F2705F85B2C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0180FC44-21C1-4306-B709-F2705F85B2C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0180FC44-21C1-4306-B709-F2705F85B2C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{557BF99E-CC5C-463C-AA00-B1C0792B1896}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{557BF99E-CC5C-463C-AA00-B1C0792B1896}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{557BF99E-CC5C-463C-AA00-B1C0792B1896}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{557BF99E-CC5C-463C-AA00-B1C0792B1896}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -149,6 +155,7 @@ Global
 		{632B3FEB-5D11-4AE4-9470-53ABDA5F8E72} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 		{03051CED-216E-4851-B24A-B1DAA99E1B59} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 		{0180FC44-21C1-4306-B709-F2705F85B2C3} = {813D5E58-CE77-4969-B74A-A724228D8F73}
+		{557BF99E-CC5C-463C-AA00-B1C0792B1896} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09D3B2BE-AC85-48C2-835F-6B781E265873}

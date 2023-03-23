@@ -184,7 +184,7 @@ internal class ExpressionBuilder
 
             Debug.Assert(beginExpr is not null);
 
-            beginExpr = GetConditionExpression(SimplifyExpression(beginExpr), out var condition);
+            beginExpr = ExtractConditionExpression(SimplifyExpression(beginExpr), out var condition);
 
             Debug.Assert(condition is not null);
 
@@ -213,7 +213,18 @@ internal class ExpressionBuilder
         }
         else if (node is LoopNode loop)
         {
-            throw new Exception();
+            LabelTarget breakTarget = Expression.Label("break");
+            LabelTarget continueTarget = Expression.Label("continue");
+
+            var header = BuildNode(loop.Header);
+
+            header = ExtractConditionExpression(header, out var cond);
+
+            var condition = Expression.Condition(cond, Expression.Default(typeof(void)), Expression.Goto(breakTarget));
+
+            var body = BuildNodeChain(loop.Tail, loop.Header);
+
+            return Expression.Loop(CreateBlockExpressionIfNeeded(new Expression[] { header, condition, body }), breakTarget, continueTarget);
         }
         else if (node is BasicBlockNode basicBlock)
         {
@@ -237,7 +248,7 @@ internal class ExpressionBuilder
     }
 
     // trims the last expr from a block used for grabbing head statements for ifs and loops
-    private Expression? GetConditionExpression(Expression expr, out Expression lastExpr)
+    private Expression? ExtractConditionExpression(Expression expr, out Expression lastExpr)
     {
         if (expr is not BlockExpression blockExpr)
         {

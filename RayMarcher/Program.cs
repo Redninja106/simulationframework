@@ -127,25 +127,35 @@ struct FragmentShader : IShader
 
     public void Main()
     {
+        Sphere s = sphere;
+
         Vector2 uv = new(screenPosition.X / width, screenPosition.Y / height);
 
         Vector2 vp = uv - new Vector2(.5f);
         vp.X *= width / (float)height;
         vp.Y *= -1;
 
-        var ray = GetRay(vp);
-        ray.Position = Vector3.Transform(ray.Position, cameraMatrix);
-        ray.Direction = Vector3.TransformNormal(ray.Direction, cameraMatrix);
+        Vector3 position = Vector3.Zero;
+        Vector3 direction = new(vp, 1);
 
-        Sphere s = sphere;
-        if (!s.Hit(ray, out var t)) 
+        position = Vector3.Transform(position, cameraMatrix);
+        direction = Vector3.TransformNormal(direction, cameraMatrix);
+
+        direction = Vector3.Normalize(direction);
+
+        float d = float.PositiveInfinity;
+        int steps = 0;
+        while (steps++ < 50)
         {
-            outputColor = new(0, 0, 0, 1);
-            return;
+            d = s.SignedDistance(position);
+
+            if (d < 0.01f)
+                break;
+
+            position += direction * d;
         }
 
-        var hitPosition = ray.At(t);
-        var normal = Vector3.Normalize(hitPosition - s.Position);
+        var normal = Vector3.Normalize(position - sphere.Position);
 
         var diffuse = MathF.Max(0, Vector3.Dot(normal, lightDirection));
         var ambient = .1f;
@@ -190,6 +200,11 @@ struct Sphere
     {
         this.Position = position;
         this.Radius = radius;
+    }
+
+    public float SignedDistance(Vector3 point)
+    {
+        return Vector3.Distance(Position, point) - Radius;
     }
 
     public bool Hit(Ray ray, out float t)
