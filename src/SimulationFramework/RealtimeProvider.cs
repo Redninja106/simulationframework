@@ -11,6 +11,7 @@ namespace SimulationFramework;
 /// <summary>
 /// Feeds real time values into a simulation.
 /// </summary>
+[DefaultComponent<ITimeProvider>]
 public sealed class RealtimeProvider : ITimeProvider
 {
     /// <summary>
