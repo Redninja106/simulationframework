@@ -9,9 +9,12 @@
 
 </div>
 
+
 SimulationFramework is a cross-platform library for creative coding, game development, and graphical apps built on .NET 6. Designed with simplicity and ease of use in mind, it cuts down on development time for quick and easy prototyping. 
 
-[Join the discord server!](https://discord.gg/V4X2vTvV2G)
+> [Join the discord server!](https://discord.gg/V4X2vTvV2G)
+>
+> And check out the [3d branch](https://github.com/Redninja106/simulationframework/tree/3d)!
 
 ### SimulationFramework is:
 
@@ -19,7 +22,7 @@ SimulationFramework is a cross-platform library for creative coding, game develo
 
 - **Portable**: The core package is dependency free, meaning SimulationFramework can run anywhere .NET can.
 
-- **Documented**: [The wiki](https://github.com/Redninja106/simulationframework/wiki) contains everything you need to know about SimulationFramework, it's features, and how to use them.
+- **Documented**: [The wiki](https://github.com/Redninja106/simulationframework/wiki) contains everything you need to know about SimulationFramework, its features, and how to use them.
 
 
 ### Features:
