@@ -10,6 +10,7 @@ using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 using SimulationFramework.Desktop;
 using SimulationFramework;
+using Silk.NET.Windowing.Glfw;
 
 [assembly: ApplicationPlatform(typeof(DesktopPlatform))]
 
@@ -46,6 +47,7 @@ public sealed class DesktopPlatform : IApplicationPlatform
 
     public DesktopPlatform()
     {
+        GlfwWindowing.Use();
         Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default with { IsVisible = false });
         Window.Initialize();
     }

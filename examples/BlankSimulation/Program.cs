@@ -1,7 +1,8 @@
 ﻿using SimulationFramework;
+using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
 
-Simulation.CreateAndRun(Initialize, Render);
+Simulation.Create(Initialize, Render).RunDesktop();
 
 void Initialize(AppConfig config)
 {
