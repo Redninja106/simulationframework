@@ -11,8 +11,5 @@ namespace SimulationFramework.Messaging;
 /// </summary>
 public abstract class Message
 {
-    /// <summary>
-    /// The value of Time.TotalTime when the event was dispatched.
-    /// </summary>
     public float DispatchTime { get; internal set; }
 }

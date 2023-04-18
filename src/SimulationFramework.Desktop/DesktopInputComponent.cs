@@ -8,12 +8,12 @@ using ImGuiNET;
 
 namespace SimulationFramework.Desktop;
 
-internal class DesktopInputComponent : IApplicationComponent
+internal class DesktopInputComponent : ISimulationComponent
 {
     private readonly IWindow window;
     public readonly IInputContext silkInputContext;
 
-    public InputContext Context => Application.Current.GetComponent<InputContext>();
+    public InputContext Context => Application.GetComponent<InputContext>();
 
     public DesktopInputComponent(IWindow window)
     {
@@ -21,9 +21,9 @@ internal class DesktopInputComponent : IApplicationComponent
         silkInputContext = window.CreateInput();
     }
 
-    public void Initialize(Application application)
+    public void Initialize(MessageDispatcher dispatcher)
     {
-        application.Dispatcher.Subscribe<RenderMessage>(BeforeRender, ListenerPriority.High);
+        dispatcher.Subscribe<RenderMessage>(BeforeRender, ListenerPriority.High);
 
         if (silkInputContext.Mice.Count > 0)
         {

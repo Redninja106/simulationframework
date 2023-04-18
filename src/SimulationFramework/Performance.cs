@@ -15,5 +15,5 @@ public static class Performance
     /// <summary>
     /// The simulations current framerate.
     /// </summary>
-    public static float Framerate => 1f / (Application.Current?.GetComponent<ITimeProvider>() ?? throw Exceptions.CoreComponentNotFound()).GetDeltaTime();
+    public static float Framerate => 1f / Application.GetComponent<ITimeProvider>().GetDeltaTime();
 }     

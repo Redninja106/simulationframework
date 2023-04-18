@@ -9,9 +9,4 @@ namespace SimulationFramework.Desktop;
 
 public static class SimulationExtensions
 {
-    public static void RunDesktop(this Simulation simulation)
-    {
-        using var platform = new DesktopPlatform();
-        simulation.Run(platform);
-    }
 }

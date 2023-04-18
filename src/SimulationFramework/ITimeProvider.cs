@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimulationFramework.Messaging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ namespace SimulationFramework;
 /// <summary>
 /// Provider time measurements to an environment.
 /// </summary>
-public interface ITimeProvider : IApplicationComponent
+public interface ITimeProvider : ISimulationComponent
 {
     /// <summary>
     /// The largest value deltaTime before it's clamped.

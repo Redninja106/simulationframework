@@ -83,9 +83,9 @@ public sealed class RealtimeProvider : ITimeProvider
     }
 
     /// <inheritdoc/>
-    public void Initialize(Application application)
+    public void Initialize(MessageDispatcher dispatcher)
     {
-        application.Dispatcher.Subscribe<RenderMessage>(m =>
+        dispatcher.Subscribe<FrameBeginMessage>(m =>
         {
             this.Tick();
         }, ListenerPriority.High);

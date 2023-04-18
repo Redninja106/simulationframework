@@ -10,14 +10,6 @@ namespace SimulationFramework;
 /// <summary>
 /// Provides an environment for a simulation to run in.
 /// </summary>
-public interface IApplicationPlatform : IApplicationComponent
+public interface ISimulationPlatform : ISimulationComponent
 {
-    /// <summary>
-    /// Provides the application with an IApplicationController.
-    /// </summary>
-    /// <returns></returns>
-    IApplicationController CreateController();
-    IGraphicsProvider CreateGraphicsProvider();
-    ITimeProvider CreateTimeProvider();
-    IEnumerable<IApplicationComponent> CreateAdditionalComponents();
 }

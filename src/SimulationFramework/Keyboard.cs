@@ -16,7 +16,7 @@ public delegate void KeyEvent(Key key);
 /// </summary>
 public static class Keyboard
 {
-    internal static InputContext Context => Application.Current?.GetComponent<InputContext>() ?? throw Exceptions.CoreComponentNotFound();
+    internal static InputContext Context => Application.GetComponent<InputContext>();
 
     /// <summary>
     /// Returns true if the provided key is pressed.

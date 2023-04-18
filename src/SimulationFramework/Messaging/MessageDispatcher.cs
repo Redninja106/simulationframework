@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SimulationFramework.Messaging;
@@ -17,8 +18,6 @@ public sealed class MessageDispatcher
     /// </summary>
     public void Flush()
     {
-        Debug.Trace(Debug.TraceFlags.EventDispatcher, $"MessageDispatcher.Flush() called with {messageQueue.Count} messages in queue.");
-
         // process entire queue
         while (messageQueue.TryDequeue(out Message? nextMessage))
         {
@@ -40,8 +39,6 @@ public sealed class MessageDispatcher
     {
         ArgumentNullException.ThrowIfNull(message);
 
-        Debug.Trace(Debug.TraceFlags.EventDispatcher, $"Message of type {typeof(T).Name} queued.");
-
         messageQueue.Enqueue(message);
     }
 
@@ -54,8 +51,6 @@ public sealed class MessageDispatcher
     {
         ArgumentNullException.ThrowIfNull(message);
         
-        Debug.Trace(Debug.TraceFlags.EventDispatcher, $"DispatchImmediate(): Message of type {typeof(T).Name} dispatched.");
-
         // call non-generic version
         DispatchCore(message);
     }
@@ -63,7 +58,7 @@ public sealed class MessageDispatcher
     private void DispatchCore(Message message)
     {
         // mark message with timestamp if provider is available
-        if (Application.Current?.GetComponent<ITimeProvider>() is not null)
+        if (Application.GetComponentOrDefault<ITimeProvider>() is not null)
         {
             message.DispatchTime = Time.TotalTime;
         }
@@ -206,11 +201,9 @@ public sealed class MessageDispatcher
         // adds an action to a notification queue, checking for duplicates
         private static void AddNotify(Action<T> action, Queue<Action<T>> queue)
         {
-            // issue warning and return on duplicate
             if (queue.Any(n => n == action))
             {
-                Debug.Warn(Warnings.DuplicateMessageSubscription(action, typeof(T)));
-                return;
+                throw Exceptions.DuplicateMessageListener();
             }
 
             queue.Enqueue(action);
@@ -219,11 +212,9 @@ public sealed class MessageDispatcher
         // adds a listener to this event with the provided priority
         public void AddListener(Action<T> action, ListenerPriority priority)
         {
-            // issue a warning if this delegate is already registered to this message type
             if (eventListeners.Any(listener => listener.Action == action))
             {
-                Debug.Warn(Warnings.DuplicateMessageSubscription(action, typeof(T)));
-                return;
+                throw Exceptions.DuplicateMessageListener();
             }
 
             // add event listener and sort by priority using default comparer

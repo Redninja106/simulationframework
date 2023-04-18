@@ -9,22 +9,22 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Desktop;
-internal class DesktopImGuiComponent : IApplicationComponent
+internal class DesktopImGuiComponent : ISimulationComponent
 {
     GL gl;
     ImGuiController imGuiController;
 
     public DesktopImGuiComponent(IWindow window)
     {
-        var inputComponent = Application.Current.GetComponent<DesktopInputComponent>();
+        var inputComponent = Application.GetComponent<DesktopInputComponent>();
         gl = window.CreateOpenGL();
         imGuiController = new(gl, window, inputComponent.silkInputContext);
     }
 
-    public void Initialize(Application application)
+    public void Initialize(MessageDispatcher dispatcher)
     {
-        application.Dispatcher.Subscribe<RenderMessage>(PreRender, ListenerPriority.High);
-        application.Dispatcher.Subscribe<RenderMessage>(PostRender, ListenerPriority.Low);
+        dispatcher.Subscribe<RenderMessage>(PreRender, ListenerPriority.High);
+        dispatcher.Subscribe<RenderMessage>(PostRender, ListenerPriority.Low);
     }
 
     void PreRender(RenderMessage renderMessage)

@@ -1,4 +1,6 @@
-﻿using SimulationFramework.SkiaSharp;
+﻿using Silk.NET.GLFW;
+using Silk.NET.Windowing;
+using SimulationFramework.SkiaSharp;
 using SkiaSharp;
 
 namespace SimulationFramework.Desktop;

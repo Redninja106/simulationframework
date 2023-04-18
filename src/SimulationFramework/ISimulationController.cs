@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework;
-public interface IApplicationHost
-{
-    void Start(Application application);
 
-    IApplicationComponent CreateComponent<T>();
+/// <summary>
+/// Handles the simulation's event loop.
+/// </summary>
+public interface ISimulationController : ISimulationComponent
+{
+    void Start(Action runFrame);
 }

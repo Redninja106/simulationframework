@@ -1,14 +1,17 @@
 ﻿using SimulationFramework;
+using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
 
-Simulation.CreateAndRun(Initialize, Render);
+Simulation.Start<MySimulation>(new DesktopPlatform());
 
-void Initialize(AppConfig config)
+class MySimulation : Simulation
 {
-}
+    public override void OnInitialize()
+    {
+    }
 
-
-void Render(ICanvas canvas)
-{
-    
+    public override void OnRender(ICanvas canvas)
+    {
+        canvas.Clear(Color.Red);
+    }
 }

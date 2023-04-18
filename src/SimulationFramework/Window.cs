@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework;
-internal interface IApplicationComponentProvider<out T>
+
+public static class Window
 {
-    static abstract T CreateComponent(Application application);
+    private static IWindowProvider Provider => Application.GetComponent<IWindowProvider>();
 }

@@ -11,7 +11,7 @@ namespace SimulationFramework;
 /// <summary>
 /// Controls the input sent to a simulation.
 /// </summary>
-public sealed class InputContext : IApplicationComponent
+public sealed class InputContext : ISimulationComponent
 {
     internal event KeyEvent? KeyDown;
     internal event KeyEvent? KeyUp;
@@ -122,9 +122,9 @@ public sealed class InputContext : IApplicationComponent
     {
     }
     
-    public void Initialize(Application application)
+    public void Initialize(MessageDispatcher dispatcher)
     {
-        application.Dispatcher.Subscribe<FrameBeginMessage>(m =>
+        dispatcher.Subscribe<FrameBeginMessage>(m =>
         {
             NewFrame();
         }, ListenerPriority.High);

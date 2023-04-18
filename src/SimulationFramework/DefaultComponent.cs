@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
-internal class DefaultComponentAttribute<T> : Attribute where T : IApplicationComponent
+internal class DefaultComponentAttribute<T> : Attribute where T : ISimulationComponent
 {
 }
