@@ -18,9 +18,8 @@ internal class BasicInputSimulation : Simulation
     private Vector2 boxPosition;
     private Vector2 boxSize;
 
-    public override void OnInitialize(AppConfig config)
+    public override void OnInitialize()
     {
-        config.Title = "Basic Input Example";
     }
 
     public override void OnRender(ICanvas canvas)

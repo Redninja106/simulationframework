@@ -9,7 +9,7 @@ class DrawingShapesSimulation : Simulation
 {
     ITexture logo;
     
-    public override void OnInitialize(AppConfig config)
+    public override void OnInitialize()
     {
         logo = Graphics.LoadTexture("./logo-512x512.png");
     }

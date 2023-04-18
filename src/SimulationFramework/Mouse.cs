@@ -4,6 +4,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using SimulationFramework.Components;
 
 namespace SimulationFramework;
 
@@ -12,7 +13,7 @@ namespace SimulationFramework;
 /// </summary>
 public static class Mouse
 {
-    internal static InputContext Context => Application.Current?.GetComponent<InputContext>() ?? throw Exceptions.CoreComponentNotFound();
+    internal static InputContext Context => Application.GetComponent<InputContext>();
 
     /// <summary>
     /// The position of the mouse.

@@ -1,6 +1,8 @@
 ﻿using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
+using SimulationFramework.Components;
+using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 using System;
 using System.Collections.Generic;
@@ -9,31 +11,32 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Desktop;
-internal class DesktopImGuiComponent : IApplicationComponent
+internal class DesktopImGuiComponent : ISimulationComponent
 {
     GL gl;
     ImGuiController imGuiController;
 
     public DesktopImGuiComponent(IWindow window)
     {
-        var inputComponent = Application.Current.GetComponent<DesktopInputComponent>();
+        var inputComponent = Application.GetComponent<DesktopInputComponent>();
         gl = window.CreateOpenGL();
         imGuiController = new(gl, window, inputComponent.silkInputContext);
     }
 
-    public void Initialize(Application application)
+    public void Initialize(MessageDispatcher dispatcher)
     {
-        application.Dispatcher.Subscribe<RenderMessage>(PreRender, ListenerPriority.High);
-        application.Dispatcher.Subscribe<RenderMessage>(PostRender, ListenerPriority.Low);
+        dispatcher.Subscribe<BeforeRenderMessage>(PreRender);
+        dispatcher.Subscribe<AfterRenderMessage>(PostRender);
     }
 
-    void PreRender(RenderMessage renderMessage)
+    void PreRender(BeforeRenderMessage renderMessage)
     {
-        gl.Viewport(0, 0, (uint)renderMessage.Canvas.Width, (uint)renderMessage.Canvas.Height);
+        var canvas = Graphics.GetOutputCanvas();
+        gl.Viewport(0, 0, (uint)canvas.Width, (uint)canvas.Height);
         imGuiController.Update(Time.DeltaTime);
     }
 
-    void PostRender(RenderMessage renderMessage)
+    void PostRender(AfterRenderMessage renderMessage)
     {
         imGuiController.Render();
     }

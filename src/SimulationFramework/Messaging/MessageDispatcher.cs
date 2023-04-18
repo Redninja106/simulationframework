@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using SimulationFramework.Components;
 
 namespace SimulationFramework.Messaging;
 
@@ -17,8 +19,6 @@ public sealed class MessageDispatcher
     /// </summary>
     public void Flush()
     {
-        Debug.Trace(Debug.TraceFlags.EventDispatcher, $"MessageDispatcher.Flush() called with {messageQueue.Count} messages in queue.");
-
         // process entire queue
         while (messageQueue.TryDequeue(out Message? nextMessage))
         {
@@ -40,8 +40,6 @@ public sealed class MessageDispatcher
     {
         ArgumentNullException.ThrowIfNull(message);
 
-        Debug.Trace(Debug.TraceFlags.EventDispatcher, $"Message of type {typeof(T).Name} queued.");
-
         messageQueue.Enqueue(message);
     }
 
@@ -54,8 +52,6 @@ public sealed class MessageDispatcher
     {
         ArgumentNullException.ThrowIfNull(message);
         
-        Debug.Trace(Debug.TraceFlags.EventDispatcher, $"DispatchImmediate(): Message of type {typeof(T).Name} dispatched.");
-
         // call non-generic version
         DispatchCore(message);
     }
@@ -63,7 +59,7 @@ public sealed class MessageDispatcher
     private void DispatchCore(Message message)
     {
         // mark message with timestamp if provider is available
-        if (Application.Current?.GetComponent<ITimeProvider>() is not null)
+        if (Application.GetComponentOrDefault<ITimeProvider>() is not null)
         {
             message.DispatchTime = Time.TotalTime;
         }
@@ -85,7 +81,7 @@ public sealed class MessageDispatcher
     /// <typeparam name="T">The type of message to listen for.</typeparam>
     /// <param name="listener">The listener delegate.</param>
     /// <param name="priority">The priority of the listener</param>
-    public void Subscribe<T>(Action<T> listener, ListenerPriority priority = ListenerPriority.Normal) where T : Message
+    public void Subscribe<T>(Action<T> listener) where T : Message
     {
         ArgumentNullException.ThrowIfNull(listener);
 
@@ -97,7 +93,7 @@ public sealed class MessageDispatcher
         Event<T>? ev = GetOrCreateEvent<T>();
 
         // subscribe the listener to the event
-        ev.AddListener(listener, priority);
+        ev.AddListener(listener);
     }
 
     /// <summary>
@@ -183,7 +179,7 @@ public sealed class MessageDispatcher
         private readonly Queue<Action<T>> afterNotifications = new();
 
         // EventListener list, should always be kept sorted by priority
-        private readonly List<EventListener> eventListeners = new();
+        private readonly List<Action<T>> eventListeners = new();
 
         // does the listener want to be notified for mesasges of this type?
         public bool IsListeningFor(Type type)
@@ -206,36 +202,31 @@ public sealed class MessageDispatcher
         // adds an action to a notification queue, checking for duplicates
         private static void AddNotify(Action<T> action, Queue<Action<T>> queue)
         {
-            // issue warning and return on duplicate
             if (queue.Any(n => n == action))
             {
-                Debug.Warn(Warnings.DuplicateMessageSubscription(action, typeof(T)));
-                return;
+                throw Exceptions.DuplicateMessageListener();
             }
 
             queue.Enqueue(action);
         }
 
         // adds a listener to this event with the provided priority
-        public void AddListener(Action<T> action, ListenerPriority priority)
+        public void AddListener(Action<T> action)
         {
-            // issue a warning if this delegate is already registered to this message type
-            if (eventListeners.Any(listener => listener.Action == action))
+            if (eventListeners.Any(listener => listener == action))
             {
-                Debug.Warn(Warnings.DuplicateMessageSubscription(action, typeof(T)));
-                return;
+                throw Exceptions.DuplicateMessageListener();
             }
 
             // add event listener and sort by priority using default comparer
-            eventListeners.Add(new(action, priority));
-            eventListeners.Sort((a, b) => Comparer<ListenerPriority>.Default.Compare(b.Priority, a.Priority));
+            eventListeners.Add(new(action));
         }
 
         // removes a listener by its MethodInfo
         public void RemoveListener(Action<T> action)
         {
             // find our target method it in listeners
-            var listener = eventListeners.FirstOrDefault(a => a.Action == action);
+            var listener = eventListeners.FirstOrDefault(a => a == action);
 
             // if we have a match, remove it
             if (listener is not null)
@@ -258,7 +249,7 @@ public sealed class MessageDispatcher
             // dispatch to each listener (ToArray() in case of subscription modification during events)
             foreach (var listener in eventListeners.ToArray())
             {
-                listener.Action(msg);
+                listener(msg);
             }
 
             // notify after-dispatch listeners
@@ -279,8 +270,5 @@ public sealed class MessageDispatcher
                 notification(message);
             }
         }
-
-        // action-priority pair used to store normal event subscriptions
-        private record EventListener(Action<T> Action, ListenerPriority Priority);
     }
 }

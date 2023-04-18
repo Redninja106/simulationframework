@@ -5,15 +5,17 @@ using SilkButton = Silk.NET.Input.MouseButton;
 using System.Numerics;
 using SimulationFramework.Messaging;
 using ImGuiNET;
+using SimulationFramework.Components;
 
 namespace SimulationFramework.Desktop;
 
-internal class DesktopInputComponent : IApplicationComponent
+[DependsOn<InputContext>]
+internal class DesktopInputComponent : ISimulationComponent
 {
     private readonly IWindow window;
     public readonly IInputContext silkInputContext;
 
-    public InputContext Context => Application.Current.GetComponent<InputContext>();
+    public InputContext Context => Application.GetComponent<InputContext>();
 
     public DesktopInputComponent(IWindow window)
     {
@@ -21,9 +23,9 @@ internal class DesktopInputComponent : IApplicationComponent
         silkInputContext = window.CreateInput();
     }
 
-    public void Initialize(Application application)
+    public void Initialize(MessageDispatcher dispatcher)
     {
-        application.Dispatcher.Subscribe<RenderMessage>(BeforeRender, ListenerPriority.High);
+        dispatcher.Subscribe<BeforeRenderMessage>(BeforeRender);
 
         if (silkInputContext.Mice.Count > 0)
         {
@@ -83,7 +85,7 @@ internal class DesktopInputComponent : IApplicationComponent
         Context.UpdateMouseButton(ConvertButton(arg2), false);
     }
 
-    private void BeforeRender(RenderMessage message)
+    private void BeforeRender(BeforeRenderMessage message)
     {
         if (silkInputContext.Gamepads.Count > 0)
         {

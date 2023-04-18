@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using SimulationFramework.Drawing;
+using SimulationFramework.Messaging;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
@@ -23,10 +24,9 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
     {
         this.frameProvider = frameProvider;
         this.getProcAddress = getProcAddress;
-
     }
 
-    public void Initialize(Application application)
+    public void Initialize(MessageDispatcher application)
     {
         glInterface = GRGlInterface.CreateOpenGl(getProcAddress);
         backendContext = GRContext.CreateGl(glInterface);

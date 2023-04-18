@@ -1,11 +1,12 @@
 ﻿using Silk.NET.Maths;
 using Silk.NET.Windowing;
+using SimulationFramework.Components;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 
 namespace SimulationFramework.Desktop;
 
-internal class DesktopAppController : IApplicationController
+internal class DesktopAppController : ISimulationController
 {
     private readonly IWindow window;
     
@@ -19,104 +20,37 @@ internal class DesktopAppController : IApplicationController
         this.window = window;
     }
 
-    public bool ApplyConfig(AppConfig config)
-    {
-        try
-        {
-            window.IsVisible = true;
-            window.Title = config.Title;
-            if (config.Fullscreen)
-            {
-                window.Size = window.Monitor.Bounds.Size;
-                lastWindowPosition = window.Position;
-                window.Position = new(0, 0);
-                window.WindowBorder = WindowBorder.Hidden;
-            }
-            else
-            {
-                window.Size = new(config.Width, config.Height);
-
-                // set old position if we're coming out of fullscreen
-                if (lastWindowPosition is not null)
-                {
-                    window.Position = lastWindowPosition.Value;
-                    lastWindowPosition = null;
-                }
-                
-                if (config.TitlebarHidden)
-                {
-                    window.WindowBorder = WindowBorder.Hidden;
-                }
-                else
-                {
-                    if (config.Resizable)
-                    {
-                        window.WindowBorder = WindowBorder.Resizable;
-                    }
-                    else
-                    {
-                        window.WindowBorder = WindowBorder.Fixed;
-                    }
-                }
-            }
-        }
-        catch
-        {
-            return false;
-        }
-        
-        return true;
-    }
-
-    public void InitializeConfig(AppConfig config)
-    {
-        config.Width = window.Size.X;
-        config.Height = window.Size.Y;
-        config.Title = window.Title;
-        config.Fullscreen = window.WindowBorder == WindowBorder.Fixed && window.Size == window.Monitor.Bounds.Size && window.Position == Vector2D<int>.Zero;
-        config.TitlebarHidden = window.WindowBorder == WindowBorder.Hidden && !config.Fullscreen;
-        config.Resizable = window.WindowBorder == WindowBorder.Resizable && !config.Fullscreen;
-    }
-
     public void Dispose()
     {
     }
 
-    public void Initialize(Application application)
+    public void Initialize(MessageDispatcher dispatcher)
     {
-        window.Resize += size => application.Dispatcher.ImmediateDispatch(new ResizeMessage(size.X, size.Y));
+        window.Resize += size => dispatcher.ImmediateDispatch(new ResizeMessage(size.X, size.Y));
 
         window.Closing += () =>
         {
-            application.Dispatcher.ImmediateDispatch<ExitMessage>(new());
+            dispatcher.ImmediateDispatch<ExitMessage>(new());
         };
 
-        application.Dispatcher.Subscribe<ExitMessage>(m => 
+        dispatcher.Subscribe<ExitMessage>(m => 
         {
             isRunning = false;
         });
     }
     
-    public void Start(MessageDispatcher dispatcher)
+    public void Start(Action runFrame)
     {
+        var dispatcher = SimulationHost.Current.Dispatcher;
+
+        window.IsVisible = true;
         isRunning = true;
 
-        dispatcher.ImmediateDispatch(new InitializeMessage());
-    
         while (isRunning)
         {
-            dispatcher.ImmediateDispatch(new FrameBeginMessage());
             window.DoEvents();
-            dispatcher.Flush();
-
-            dispatcher.ImmediateDispatch(new RenderMessage(Graphics.GetOutputCanvas()));
-
+            runFrame();
             window.GLContext.SwapBuffers();
-
-            dispatcher.ImmediateDispatch(new FrameEndMessage());
-            dispatcher.Flush();
         }
-
-        dispatcher.ImmediateDispatch(new UninitializeMessage());
     }    
 }

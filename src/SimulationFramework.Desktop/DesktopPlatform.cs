@@ -9,41 +9,19 @@ using ImGuiNET;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 using SimulationFramework.Desktop;
-using SimulationFramework;
-
-[assembly: ApplicationPlatform(typeof(DesktopPlatform))]
+using SimulationFramework.Components;
 
 namespace SimulationFramework.Desktop;
 
 /// <summary>
 /// Implements a simulation environment which runs the simulation in a window.
 /// </summary>
-public sealed class DesktopPlatform : IApplicationPlatform
+public sealed class DesktopPlatform : ISimulationPlatform
 {
     public IWindow Window { get; }
 
     private DesktopSkiaFrameProvider frameProvider;
     
-    public IApplicationController CreateController()
-    {
-        return new DesktopAppController(this.Window);
-    }
-
-    public IGraphicsProvider CreateGraphicsProvider()
-    {
-        frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
-        return new SkiaGraphicsProvider(frameProvider, name =>
-        {
-            Window.GLContext.TryGetProcAddress(name, out nint addr);
-            return addr;
-        });
-    }
-
-    public ITimeProvider CreateTimeProvider()
-    {
-        return new RealtimeProvider();
-    }
-
     public DesktopPlatform()
     {
         Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default with { IsVisible = false });
@@ -54,22 +32,19 @@ public sealed class DesktopPlatform : IApplicationPlatform
     {
     }
 
-    public IEnumerable<IApplicationComponent> CreateAdditionalComponents()
+    public void Initialize(MessageDispatcher dispatcher)
     {
-        yield return new DesktopInputComponent(this.Window);
-        yield return new DesktopImGuiComponent(this.Window);
-    }
-
-    public void Initialize(Application application)
-    {
-        application.Dispatcher.Subscribe<ResizeMessage>(m =>
+        dispatcher.Subscribe<ResizeMessage>(m =>
         {
             frameProvider?.Resize(m.Width, m.Height);
         });
-    }
 
-    public static bool IsSupported()
-    {
-        return OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() || OperatingSystem.IsLinux();
+        frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
+        Application.RegisterComponent(new SkiaGraphicsProvider(frameProvider, name => Window.GLContext.TryGetProcAddress(name, out nint addr) ? addr : 0));
+        Application.RegisterComponent(new RealtimeProvider());
+        Application.RegisterComponent(new DesktopAppController(this.Window));
+        Application.RegisterComponent(new InputContext());
+        Application.RegisterComponent(new DesktopInputComponent(this.Window));
+        Application.RegisterComponent(new DesktopImGuiComponent(this.Window));
     }
 }
