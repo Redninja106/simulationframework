@@ -27,6 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicInput", "examples\Basi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Tests", "tests\SimulationFramework.Tests\SimulationFramework.Tests.csproj", "{C742E8CA-9EE6-4E72-B67A-6605B35CF17A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{D5B828BE-2763-492C-B062-BD3C0D50EB97}"
+	ProjectSection(SolutionItems) = preProject
+		src\SimulationFramework\logo-128x128.png = src\SimulationFramework\logo-128x128.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

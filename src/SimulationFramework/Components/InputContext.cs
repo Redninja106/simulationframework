@@ -124,7 +124,7 @@ public sealed class InputContext : ISimulationComponent
 
     public void Initialize(MessageDispatcher dispatcher)
     {
-        dispatcher.Subscribe<BeforeRenderMessage>(m =>
+        dispatcher.Subscribe<AfterRenderMessage>(m =>
         {
             NewFrame();
         });

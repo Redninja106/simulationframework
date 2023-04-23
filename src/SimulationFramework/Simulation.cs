@@ -52,4 +52,43 @@ public abstract class Simulation
         host.Initialize(platform);
         host.Start(new T());
     }
+
+    public static void Start(Simulation simulation, ISimulationPlatform? platform)
+    {
+        SimulationHost host = new();
+        host.Initialize(platform);
+        host.Start(simulation);
+    }
+
+    public static void Start(Action initialize, Action<ICanvas> render)
+    {
+        Start(initialize, render, null);
+    }
+
+    public static void Start(Action initialize, Action<ICanvas> render, ISimulationPlatform? platform)
+    {
+        Start(new ActionSimulation(initialize, render), platform);
+    }
+
+    private class ActionSimulation : Simulation
+    {
+        public readonly Action initialize;
+        public readonly Action<ICanvas> render;
+
+        public ActionSimulation(Action initialize, Action<ICanvas> render)
+        {
+            this.initialize = initialize;
+            this.render = render;
+        }
+
+        public override void OnInitialize()
+        {
+            this.initialize();
+        }
+
+        public override void OnRender(ICanvas canvas)
+        {
+            this.render(canvas);
+        }
+    }
 }

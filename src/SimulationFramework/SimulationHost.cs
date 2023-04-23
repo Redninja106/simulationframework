@@ -43,7 +43,7 @@ public class SimulationHost
         initialized = true;
         Current = this;
 
-        platform.Initialize(Dispatcher);
+        RegisterComponent(platform);
     }
 
     private static bool TryCreatePlatform([NotNullWhen(true)] out ISimulationPlatform? platform)

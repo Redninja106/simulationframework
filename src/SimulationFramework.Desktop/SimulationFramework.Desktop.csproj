@@ -9,14 +9,15 @@
     <Description>The desktop environment for SimulationFramework.</Description>
     <PackageIcon>logo-128x128.png</PackageIcon>
     <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
-    <Version>0.1.7</Version>
+    <Version>0.2.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Ryan Andersen</Authors>
     <Company />
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\SimulationFramework.SkiaSharp\logo-128x128.png">
+    <None Include="..\..\assets\logo-128x128.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
@@ -31,13 +32,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SimulationFramework.SkiaSharp\SimulationFramework.SkiaSharp.csproj" />
     <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="logo-128x128.png">
-      <PackagePath>\</PackagePath>
-      <Pack>True</Pack>
-    </None>
   </ItemGroup>
 
 </Project>

@@ -12,4 +12,5 @@ namespace SimulationFramework.Components;
 /// </summary>
 public interface ISimulationPlatform : ISimulationComponent
 {
+    IEnumerable<IDisplay> GetDisplays();
 }

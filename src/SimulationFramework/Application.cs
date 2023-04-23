@@ -34,4 +34,9 @@ public static class Application
     {
         SimulationHost.Current?.RegisterComponent(component);
     }
+
+    public static IEnumerable<IDisplay> GetDisplays()
+    {
+        return GetComponent<ISimulationPlatform>().GetDisplays();
+    }
 }

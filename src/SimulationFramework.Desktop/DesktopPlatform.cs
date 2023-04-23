@@ -10,6 +10,7 @@ using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 using SimulationFramework.Desktop;
 using SimulationFramework.Components;
+using Silk.NET.Windowing.Glfw;
 
 namespace SimulationFramework.Desktop;
 
@@ -21,9 +22,10 @@ public sealed class DesktopPlatform : ISimulationPlatform
     public IWindow Window { get; }
 
     private DesktopSkiaFrameProvider frameProvider;
-    
+
     public DesktopPlatform()
     {
+        GlfwWindowing.Use();
         Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default with { IsVisible = false });
         Window.Initialize();
     }
@@ -43,8 +45,14 @@ public sealed class DesktopPlatform : ISimulationPlatform
         Application.RegisterComponent(new SkiaGraphicsProvider(frameProvider, name => Window.GLContext.TryGetProcAddress(name, out nint addr) ? addr : 0));
         Application.RegisterComponent(new RealtimeProvider());
         Application.RegisterComponent(new DesktopAppController(this.Window));
+        Application.RegisterComponent(new DesktopWindowProvider(this.Window));
         Application.RegisterComponent(new InputContext());
         Application.RegisterComponent(new DesktopInputComponent(this.Window));
         Application.RegisterComponent(new DesktopImGuiComponent(this.Window));
+    }
+
+    public IEnumerable<IDisplay> GetDisplays()
+    {
+        return DesktopDisplay.GetDisplayList();
     }
 }
