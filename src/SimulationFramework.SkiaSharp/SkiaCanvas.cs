@@ -97,9 +97,32 @@ internal sealed class SkiaCanvas : ICanvas
 
     public void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft)
     {
+        // ok wow, this is bad:
+        // SKPaint.MeasureText seems to return a (0,0,0,0) rectangle for really small text sizes,
+        // even when the matrix transform may still scale it back up. 
+        // As a workaround, we temporarily set the TextSize to 100, then manually rescale the bounds from there.
+
+        // save old text size
+        var prevTextSize = currentState.Paint.TextSize;
+        currentState.Paint.TextSize = 100;
+
+        // measure text
         SKRect skbounds = default;
         currentState.Paint.MeasureText(text, ref skbounds);
+        
+        // restore old text size
+        currentState.Paint.TextSize = prevTextSize;
+
+        // rescale rectangle
+        skbounds.Left *= (1 / 100f) * prevTextSize;
+        skbounds.Right *= (1 / 100f) * prevTextSize;
+        skbounds.Top *= (1 / 100f) * prevTextSize;
+        skbounds.Bottom *= (1 / 100f) * prevTextSize;
+
+        // make an sf rectangle to take Alignment into account
         Rectangle bounds = new(position, new(skbounds.Width, skbounds.Height), alignment);
+        
+        // subtract top left corner so that text is aligned (ie ignore any margins from skiasharp)
         canvas.DrawText(text, bounds.X - skbounds.Left, bounds.Y - skbounds.Top, currentState.Paint);
 
         if (currentState.FontStyle.HasFlag(FontStyle.Underline))
