@@ -20,7 +20,7 @@ public sealed class RealtimeProvider : ITimeProvider
 
     /// <summary>
     /// </summary>
-    public float TimeScale { get; set; } = 1.0f;
+    public float Scale { get; set; } = 1.0f;
 
     private readonly Stopwatch stopwatch;
 
@@ -37,7 +37,7 @@ public sealed class RealtimeProvider : ITimeProvider
 
     private void Tick()
     {
-        deltaTime = TimeScale * (stopwatch.ElapsedTicks / (float)Stopwatch.Frequency);
+        deltaTime = Scale * (stopwatch.ElapsedTicks / (float)Stopwatch.Frequency);
         stopwatch.Restart();
 
         if (deltaTime > MaxDeltaTime)

@@ -18,6 +18,10 @@ public interface ITimeProvider : ISimulationComponent
     float MaxDeltaTime { get; set; }
 
     /// <summary>
+    /// </summary>
+    float Scale { get; set; }
+
+    /// <summary>
     /// Gets the amount time that has passed since the simulation has started, in seconds.
     /// </summary>
     float GetTotalTime();
