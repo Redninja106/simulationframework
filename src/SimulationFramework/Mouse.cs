@@ -41,4 +41,47 @@ public static class Mouse
     /// Returns <see langword="true"/> if the provided button was just released this frame, otherwise <see langword="false"/>.
     /// </summary>
     public static bool IsButtonReleased(MouseButton button) => !Context.pressedMouseButtons.Contains(button) && Context.lastPressedMouseButtons.Contains(button);
+
+    public static bool IsAnyButtonDown() => Context.pressedMouseButtons.Any();
+    public static bool IsAnyButtonDown(params MouseButton[] mouseButtons) => IsAnyButtonDown(mouseButtons.AsSpan());
+
+    public static bool IsAnyButtonDown(ReadOnlySpan<MouseButton> buttons)
+    {
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            if (IsButtonDown(buttons[i]))
+                return true;
+        }
+
+        return false;
+    }
+
+    public static bool IsAnyButtonReleased() => Context.isAnyButtonReleased;
+    public static bool IsAnyButtonReleased(params MouseButton[] mouseButtons) => IsAnyButtonReleased(mouseButtons.AsSpan());
+
+    public static bool IsAnyButtonReleased(ReadOnlySpan<MouseButton> buttons)
+    {
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            if (IsButtonReleased(buttons[i]))
+                return true;
+        }
+
+        return false;
+    }
+
+    public static bool IsAnyButtonPressed() => Context.isAnyButtonPressed;
+
+    public static bool IsAnyButtonPressed(params MouseButton[] mouseButtons) => IsAnyButtonPressed(mouseButtons.AsSpan());
+
+    public static bool IsAnyButtonPressed(ReadOnlySpan<MouseButton> buttons)
+    {
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            if (IsButtonPressed(buttons[i]))
+                return true;
+        }
+
+        return false;
+    }
 }

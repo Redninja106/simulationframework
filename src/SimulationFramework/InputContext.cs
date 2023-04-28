@@ -34,6 +34,12 @@ public sealed class InputContext : IApplicationComponent
     internal float rightTrigger, leftTrigger;
     internal Vector2 rightJoystick, leftJoystick;
 
+    internal bool isAnyButtonPressed;
+    internal bool isAnyButtonReleased;
+
+    internal bool isAnyKeyPressed;
+    internal bool isAnyKeyReleased;
+
     public void UpdateKey(Key key, bool isDown)
     {
         if (key == Key.Unknown)
@@ -46,11 +52,13 @@ public sealed class InputContext : IApplicationComponent
         {
             pressedKeys.Add(key);
             KeyDown?.Invoke(key);
+            isAnyKeyPressed = true;
         }
         else
         {
             pressedKeys.Remove(key);
             KeyUp?.Invoke(key);
+            isAnyKeyReleased = true;
         }
     }
 
@@ -60,9 +68,15 @@ public sealed class InputContext : IApplicationComponent
             return;
 
         if (isDown)
+        {
             pressedMouseButtons.Add(button);
+            isAnyButtonPressed = true;
+        }
         else
+        {
             pressedMouseButtons.Remove(button);
+            isAnyButtonReleased = true;
+        }
     }
 
     public void UpdateMousePosition(Vector2 position)
@@ -105,6 +119,9 @@ public sealed class InputContext : IApplicationComponent
 
     internal void NewFrame()
     {
+        isAnyButtonPressed = isAnyButtonReleased = false;
+        isAnyKeyPressed = isAnyKeyReleased = false;
+
         lastPressedKeys.Clear();
         lastPressedKeys.AddRange(this.pressedKeys);
 
