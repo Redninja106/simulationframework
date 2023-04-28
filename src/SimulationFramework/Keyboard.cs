@@ -55,4 +55,67 @@ public static class Keyboard
         add => Context.KeyDown += value;
         remove => Context.KeyUp -= value;
     }
+
+    public static bool IsAnyKeyDown()
+    {
+        return Context.pressedKeys.Any();
+    }
+    
+    public static bool IsAnyKeyDown(params Key[] keys)
+    {
+        return IsAnyKeyDown(keys.AsSpan());
+    }
+
+    public static bool IsAnyKeyDown(ReadOnlySpan<Key> keys)
+    {
+        for (int i = 0; i < keys.Length; i++)
+        {
+            if (IsKeyDown(keys[i]))
+                return true;
+        }
+
+        return false;
+    }
+
+    public static bool IsAnyKeyPressed()
+    {
+        return Context.isAnyKeyPressed;
+    }
+
+    public static bool IsAnyKeyPressed(params Key[] keys)
+    {
+        return IsAnyKeyPressed(keys.AsSpan());
+    }
+
+    public static bool IsAnyKeyPressed(ReadOnlySpan<Key> keys)
+    {
+        for (int i = 0; i < keys.Length; i++)
+        {
+            if (IsKeyPressed(keys[i]))
+                return true;
+        }
+
+        return false;
+    }
+
+    public static bool IsAnyKeyReleased()
+    {
+        return Context.isAnyKeyReleased;
+    }
+
+    public static bool IsAnyKeyReleased(params Key[] keys)
+    {
+        return IsAnyKeyReleased(keys.AsSpan());
+    }
+
+    public static bool IsAnyKeyReleased(ReadOnlySpan<Key> keys)
+    {
+        for (int i = 0; i < keys.Length; i++)
+        {
+            if (IsKeyReleased(keys[i]))
+                return true;
+        }
+
+        return false;
+    }
 }
