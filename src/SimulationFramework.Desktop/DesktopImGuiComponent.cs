@@ -1,4 +1,5 @@
-﻿using Silk.NET.OpenGL;
+﻿using Silk.NET.Input;
+using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
 using SimulationFramework.Components;
@@ -16,11 +17,10 @@ internal class DesktopImGuiComponent : ISimulationComponent
     GL gl;
     ImGuiController imGuiController;
 
-    public DesktopImGuiComponent(IWindow window)
+    public DesktopImGuiComponent(IWindow window, IInputContext input)
     {
-        var inputComponent = Application.GetComponent<DesktopInputComponent>();
         gl = window.CreateOpenGL();
-        imGuiController = new(gl, window, inputComponent.silkInputContext);
+        imGuiController = new(gl, window, input);
     }
 
     public void Initialize(MessageDispatcher dispatcher)

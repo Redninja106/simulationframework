@@ -3,4 +3,4 @@ using SimulationFramework;
 using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
 
-Simulation.Start<BasicInputSimulation>();
+Simulation.Start<BasicInputSimulation>(new DesktopPlatform());

@@ -1,4 +1,5 @@
 ﻿using Silk.NET.GLFW;
+using Silk.NET.Input.Extensions;
 using Silk.NET.Windowing;
 using SimulationFramework.SkiaSharp;
 using SkiaSharp;

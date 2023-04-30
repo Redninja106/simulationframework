@@ -1,0 +1,94 @@
+﻿using Silk.NET.Core.Native;
+using Silk.NET.Input;
+using Silk.NET.Input.Extensions;
+using SimulationFramework.Input;
+using SimulationFramework.Messaging;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SimulationFramework.Desktop;
+internal class DesktopGamepadProvider : IGamepadProvider
+{
+    private readonly IGamepad gamepad;
+
+    private GamepadState state;
+
+    public Vector2 LeftJoystick => new(state.GetThumbsticks()[0].X, state.GetThumbsticks()[0].X);
+    public Vector2 RightJoystick => new(state.GetThumbsticks()[1].X, state.GetThumbsticks()[1].X);
+    public float LeftTrigger => state.GetTriggers()[0].Position;
+    public float RightTrigger => state.GetTriggers()[1].Position;
+    public IEnumerable<GamepadButton> HeldButtons => heldButtons;
+    public IEnumerable<GamepadButton> PressedButtons => pressedButtons;
+    public IEnumerable<GamepadButton> ReleasedButtons => releasedButtons;
+    public float VibrationStrength { get; set; }
+
+    public event GamepadButtonEvent ButtonPressed;
+    public event GamepadButtonEvent ButtonReleased;
+
+    private readonly List<GamepadButton> heldButtons = new();
+    private readonly List<GamepadButton> pressedButtons = new();
+    private readonly List<GamepadButton> releasedButtons = new();
+
+    public DesktopGamepadProvider(IGamepad gamepad)
+    {
+        this.gamepad = gamepad;
+
+        gamepad.ButtonDown += Gamepad_ButtonDown;
+        gamepad.ButtonUp += Gamepad_ButtonUp;
+    }
+
+    private void Gamepad_ButtonUp(IGamepad arg1, Button arg2)
+    {
+        var button = ConvertButton(arg2.Name);
+
+        heldButtons.Remove(button);
+        releasedButtons.Add(button);
+    }
+
+    private void Gamepad_ButtonDown(IGamepad arg1, Button arg2)
+    {
+        var button = ConvertButton(arg2.Name);
+
+        if (!heldButtons.Contains(button))
+            heldButtons.Add(button);
+        
+        pressedButtons.Add(button);
+    }
+
+    public void Initialize(MessageDispatcher dispatcher)
+    {
+        dispatcher.Subscribe<BeforeEventsMessage>(m =>
+        {
+            pressedButtons.Clear();
+            releasedButtons.Clear();
+        });
+    }
+
+    public void Dispose()
+    {
+    }
+
+    private GamepadButton ConvertButton(ButtonName button) => button switch
+    {
+        ButtonName.A => GamepadButton.A,
+        ButtonName.B => GamepadButton.B,
+        ButtonName.X => GamepadButton.X,
+        ButtonName.Y => GamepadButton.Y,
+        ButtonName.LeftBumper => GamepadButton.LeftBumper,
+        ButtonName.RightBumper => GamepadButton.RightBumper,
+        ButtonName.Back => GamepadButton.Back,
+        ButtonName.Start => GamepadButton.Start,
+        ButtonName.Home => GamepadButton.Home,
+        ButtonName.LeftStick => GamepadButton.LeftStick,
+        ButtonName.RightStick => GamepadButton.RightStick,
+        ButtonName.DPadUp => GamepadButton.Up,
+        ButtonName.DPadRight => GamepadButton.Right,
+        ButtonName.DPadDown => GamepadButton.Down,
+        ButtonName.DPadLeft => GamepadButton.Left,
+    };
+}

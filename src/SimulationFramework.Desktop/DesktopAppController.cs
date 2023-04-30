@@ -48,6 +48,7 @@ internal class DesktopAppController : ISimulationController
 
         while (isRunning)
         {
+            dispatcher.ImmediateDispatch<BeforeEventsMessage>(new());
             window.DoEvents();
             runFrame();
             window.GLContext.SwapBuffers();

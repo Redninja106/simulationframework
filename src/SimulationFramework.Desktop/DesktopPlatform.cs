@@ -11,6 +11,9 @@ using SimulationFramework.Messaging;
 using SimulationFramework.Desktop;
 using SimulationFramework.Components;
 using Silk.NET.Windowing.Glfw;
+using SimulationFramework.Input;
+using Silk.NET.Input;
+using Silk.NET.Input.Glfw;
 
 namespace SimulationFramework.Desktop;
 
@@ -21,13 +24,21 @@ public sealed class DesktopPlatform : ISimulationPlatform
 {
     public IWindow Window { get; }
 
+    private IInputContext inputContext;
+
     private DesktopSkiaFrameProvider frameProvider;
 
     public DesktopPlatform()
     {
+        GlfwWindowing.RegisterPlatform();
+        GlfwInput.RegisterPlatform();
+
         GlfwWindowing.Use();
+
         Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default with { IsVisible = false });
         Window.Initialize();
+
+        inputContext = Window.CreateInput();
     }
 
     public void Dispose()
@@ -46,9 +57,27 @@ public sealed class DesktopPlatform : ISimulationPlatform
         Application.RegisterComponent(new RealtimeProvider());
         Application.RegisterComponent(new DesktopAppController(this.Window));
         Application.RegisterComponent(new DesktopWindowProvider(this.Window));
-        Application.RegisterComponent(new InputContext());
-        Application.RegisterComponent(new DesktopInputComponent(this.Window));
-        Application.RegisterComponent(new DesktopImGuiComponent(this.Window));
+        Application.RegisterComponent(new DesktopImGuiComponent(this.Window, inputContext));
+
+        var mouse = inputContext.Mice.FirstOrDefault();
+        if (mouse is not null)
+        {
+            Application.RegisterComponent(new DesktopMouseProvider(mouse));
+        }
+
+        var keyboard = inputContext.Keyboards.FirstOrDefault();
+        if (keyboard is not null)
+        {
+            Application.RegisterComponent(new DesktopKeyboardProvider(keyboard));
+        }
+
+        var gamepad = inputContext.Gamepads.FirstOrDefault();
+        if (gamepad is not null)
+        {
+            Application.RegisterComponent(new DesktopGamepadProvider(gamepad));
+        }
+
+
     }
 
     public IEnumerable<IDisplay> GetDisplays()

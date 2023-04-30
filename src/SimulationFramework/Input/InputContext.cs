@@ -1,4 +1,5 @@
-﻿using SimulationFramework.Messaging;
+﻿using SimulationFramework.Components;
+using SimulationFramework.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Components;
+namespace SimulationFramework.Input;
 
 /// <summary>
 /// Controls the input sent to a simulation.
