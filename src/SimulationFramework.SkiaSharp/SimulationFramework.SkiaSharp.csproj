@@ -10,7 +10,7 @@
     <PackageIcon>logo-128x128.png</PackageIcon>
     <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
     <AssemblyVersion></AssemblyVersion>
-    <Version>0.1.9</Version>
+    <Version>0.1.10</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Ryan Andersen</Authors>
