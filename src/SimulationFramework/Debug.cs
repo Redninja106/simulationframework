@@ -33,7 +33,7 @@ internal static class Debug
 
         var caller = stackFrame.GetMethod();
 
-        WriteOut($"{caller!.DeclaringType!.Name}: {message}\n", ConsoleColor.Gray);
+        WriteOut($"{caller?.DeclaringType!.Name}: {message}\n", ConsoleColor.Gray);
     }
 
     public static void Warn(string message)
