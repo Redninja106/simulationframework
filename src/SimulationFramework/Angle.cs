@@ -62,12 +62,12 @@ public static class Angle
 
     public static float Step(float a, float b, float s)
     {
-        float distance = SignedDistance(a, b);
+        float distance = Distance(a, b);
 
         if (distance <= s)
             return b;
 
-        return a + s * MathF.Sign(distance);
+        return Lerp(a, b, s / distance);
     }
 
     /// <summary>
