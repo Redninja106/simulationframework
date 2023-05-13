@@ -4,7 +4,7 @@ using SimulationFramework.Drawing;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
 
-Simulation.Start<MySimulation>(new DesktopPlatform());
+Simulation.Start<MySimulation>();
 
 class MySimulation : Simulation
 {
@@ -31,8 +31,6 @@ class MySimulation : Simulation
     public override void OnRender(ICanvas canvas)
     {
         canvas.Clear(Color.Red);
-
-        ImGuiNET.ImGui.ShowDemoWindow();
 
         if (Keyboard.IsKeyPressed(Key.Space))
         {

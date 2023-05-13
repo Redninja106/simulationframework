@@ -10,9 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework;
-/// <summary>
-/// Hosts all of the components in a simulation.
-/// </summary>
+
 public static class Application
 {
     public static T GetComponent<T>() where T : class, ISimulationComponent

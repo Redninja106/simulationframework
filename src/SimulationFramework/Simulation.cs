@@ -1,5 +1,6 @@
 ﻿using SimulationFramework.Components;
 using SimulationFramework.Drawing;
+using SimulationFramework.Input;
 using SimulationFramework.Messaging;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,6 @@ public abstract class Simulation
     /// <summary>
     /// Called when the simulation should initialize.
     /// </summary>
-    /// <param name="application"></param>
     public abstract void OnInitialize();
 
     /// <summary>
@@ -41,6 +41,42 @@ public abstract class Simulation
     /// <param name="height">The new height of the simulation's video output.</param>
     public virtual void OnResize(int width, int height) { }
 
+    /// <summary>
+    /// Called when a key is pressed on the keyboard.
+    /// </summary>
+    /// <param name="key">The key that was pressed.</param>
+    public virtual void OnKeyPressed(Key key) { }
+
+    /// <summary>
+    /// Called when a key is released on the keyboard.
+    /// </summary>
+    /// <param name="key">The key that was released.</param>
+    public virtual void OnKeyReleased(Key key) { }
+
+    /// <summary>
+    /// Called when a button is pressed on the mouse.
+    /// </summary>
+    /// <param name="button">The button that was pressed.</param>
+    public virtual void OnButtonPressed(MouseButton button) { }
+
+    /// <summary>
+    /// Called when a button is released on the mouse.
+    /// </summary>
+    /// <param name="button">The button that was released.</param>
+    public virtual void OnButtonReleased(MouseButton button) { }
+
+    public void Run()
+    {
+        Run(null);
+    }
+
+    public void Run(ISimulationPlatform? platform)
+    {
+        SimulationHost host = new();
+        host.Initialize(platform);
+        host.Start(this);
+    }
+
     public static void Start<T>() where T : Simulation, new()
     {
         Start<T>(null);
@@ -53,29 +89,27 @@ public abstract class Simulation
         host.Start(new T());
     }
 
-    public static void Start(Simulation simulation, ISimulationPlatform? platform)
+    public static Simulation Create(Action? initialize, Action<ICanvas>? render)
     {
-        SimulationHost host = new();
-        host.Initialize(platform);
-        host.Start(simulation);
+        return new ActionSimulation(initialize, render);
     }
 
-    public static void Start(Action initialize, Action<ICanvas> render)
+    public static void CreateAndRun(Action? initialize, Action<ICanvas>? render)
     {
-        Start(initialize, render, null);
+        CreateAndRun(initialize, render, null);
     }
 
-    public static void Start(Action initialize, Action<ICanvas> render, ISimulationPlatform? platform)
+    public static void CreateAndRun(Action? initialize, Action<ICanvas>? render, ISimulationPlatform? platform)
     {
-        Start(new ActionSimulation(initialize, render), platform);
+        Create(initialize, render).Run(platform);
     }
 
     private class ActionSimulation : Simulation
     {
-        public readonly Action initialize;
-        public readonly Action<ICanvas> render;
+        public readonly Action? initialize;
+        public readonly Action<ICanvas>? render;
 
-        public ActionSimulation(Action initialize, Action<ICanvas> render)
+        public ActionSimulation(Action? initialize, Action<ICanvas>? render)
         {
             this.initialize = initialize;
             this.render = render;
@@ -83,12 +117,12 @@ public abstract class Simulation
 
         public override void OnInitialize()
         {
-            this.initialize();
+            this.initialize?.Invoke();
         }
 
         public override void OnRender(ICanvas canvas)
         {
-            this.render(canvas);
+            this.render?.Invoke(canvas);
         }
     }
 }

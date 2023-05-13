@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Silk.NET.Windowing;
+﻿using Silk.NET.Windowing;
 using SimulationFramework.SkiaSharp;
-using ImGuiNET;
-using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
-using SimulationFramework.Desktop;
 using SimulationFramework.Components;
 using Silk.NET.Windowing.Glfw;
-using SimulationFramework.Input;
 using Silk.NET.Input;
 using Silk.NET.Input.Glfw;
 
@@ -83,5 +74,10 @@ public sealed class DesktopPlatform : ISimulationPlatform
     public IEnumerable<IDisplay> GetDisplays()
     {
         return DesktopDisplay.GetDisplayList();
+    }
+
+    public static void Register()
+    {
+        SimulationHost.RegisterPlatform(() => new DesktopPlatform());
     }
 }

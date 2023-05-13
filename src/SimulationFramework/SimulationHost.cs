@@ -22,18 +22,88 @@ public class SimulationHost
     private readonly List<ISimulationComponent> components = new();
     private readonly HashSet<Type> requiredComponents = new();
 
+    private static List<Func<ISimulationPlatform?>> platformFactories = new();
+
     public SimulationHost()
     {
         Dispatcher = new();
     }
 
+    static SimulationHost()
+    {
+        // we try to register some known platforms so that the user doesn't have to call Register()
+
+        (string assembly, string name)[] knownPlatforms = new[]
+        {
+            ("SimulationFramework.Desktop", "DesktopPlatform"),
+        };
+
+
+        foreach (var (platformAssembly, platformName) in knownPlatforms)
+        {
+            try
+            {
+                Assembly assembly = Assembly.Load(platformAssembly);
+                Type? type = assembly.GetType($"{platformAssembly}.{platformName}");
+                MethodInfo? register = type?.GetMethod("Register", BindingFlags.Static | BindingFlags.Public);
+                register?.Invoke(null, Array.Empty<Type>());
+            }
+            catch
+            {
+
+            }
+        }
+    }
+
+    public static SimulationHost GetCurrent()
+    {
+        return Current ?? throw new Exception("No Simulation Host is Currently Active!");
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <param name="factory"></param>
+    public static void RegisterPlatform(Func<ISimulationPlatform?> factory)
+    {
+        platformFactories.Add(factory);
+    }
+
+    private static bool TryCreatePlatform([NotNullWhen(true)] out ISimulationPlatform? platform)
+    {
+        platform = null;
+
+        // we take the first one that doesn't throw or return null.
+        foreach (var factory in platformFactories)
+        {
+            try
+            {
+                platform = factory();
+            }
+            catch 
+            {
+                continue;
+            }
+
+            if (platform is not null)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public void Initialize(ISimulationPlatform? platform)
     {
         if (initialized)
-            throw new("Already initialized");
+        {
+            throw Exceptions.HostAlreadyInitialized();
+        }
 
         if (Current is not null)
-            throw new InvalidOperationException("A simulation is already running.");
+        {
+            throw Exceptions.SimulationRunning();
+        }
 
         if (platform is null && !TryCreatePlatform(out platform))
         {
@@ -44,12 +114,6 @@ public class SimulationHost
         Current = this;
 
         RegisterComponent(platform);
-    }
-
-    private static bool TryCreatePlatform([NotNullWhen(true)] out ISimulationPlatform? platform)
-    {
-        platform = null;
-        return false;
     }
 
     public void Start<T>() where T : Simulation, new()
