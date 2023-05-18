@@ -21,7 +21,7 @@ class MySimulation : Simulation
                 }
                 else
                 {
-                    Window.EnterFullscreen(false);
+                    Window.EnterFullscreen(null);
                 }
                 wantToggleResize = false;
             }

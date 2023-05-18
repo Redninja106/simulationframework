@@ -7,17 +7,19 @@ using System.Text;
 using System.Threading.Tasks;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;
+using SimulationFramework.Messaging;
 
 namespace SimulationFramework;
 
 public static class Window
 {
     private static IWindowProvider Provider => Application.GetComponent<IWindowProvider>();
+    private static IFullscreenProvider FullscreenProvider => Application.GetComponent<IFullscreenProvider>();
 
     /// <summary>
     /// The display the window is on.
     /// </summary>
-    public static IDisplay? Display => Provider.Display;
+    public static IDisplay Display => Provider.Display;
 
     /// <summary>
     /// The title of the window.
@@ -69,47 +71,49 @@ public static class Window
     /// On platforms that don't have window systems (like mobile), this value will always be true. 
     /// </para>
     /// </summary>
-    public static bool IsFullscreen => Provider.IsFullscreen;
+    public static bool IsFullscreen => FullscreenProvider.IsFullscreen;
 
     /// <summary>
-    /// Attempts to enter fullscreen mode.
+    /// Attempts to enter fullscreen mode. This method does not have any immediate effects, as the fullscreen transition is made
+    /// directly after the current frame. To check if the transition succeeded, use <see cref="IsFullscreen"/> during the next frame.
+    /// <para>
+    /// If the window is already in requested fullscreen state, this method has no effect.
+    /// </para>
     /// </summary>
-    /// <param name="exclusive">
-    /// Whether the window should try to enter exclusive fullscreen mode. 
-    /// Exclusive fullscreen may provide better performance but prevents other windows from being focused.
-    /// </param>
     /// <param name="display">The monitor to enter fullscreen on. <see cref="Display"/> is used if this value is <see langword="null"/>.</param>
     /// <returns><see langword="true"/> if the window successfully transitioned to fullscreen; otherwise <see langword="false"/>.</returns>
-    public static bool EnterFullscreen(bool exclusive, IDisplay? display = null)
+    public static void EnterFullscreen(IDisplay? display = null)
     {
         display ??= Display;
 
         if (!Application.GetDisplays().Contains(display))
             throw new ArgumentException("Invalid Display!", nameof(display));
-        
-        bool success = Provider.EnterFullscreen(exclusive, display);
 
-        if (!success && exclusive)
+        // make sure we throw from this method when there is no fullscreen provider
+        _ = FullscreenProvider;
+
+        SimulationHost.GetCurrent().Dispatcher.NotifyAfter<AfterRenderMessage>(m =>
         {
-            IGraphicsProvider? graphics = Application.GetComponentOrDefault<IGraphicsProvider>();
-
-            if (graphics is null)
-                return false;
-
-            return graphics.TryEnterFullscreenExclusive(display);
-        }
-
-        return success;
+            FullscreenProvider.EnterFullscreen(display);
+        });
     }
 
     /// <summary>
-    /// Attempts to exit fullscreen mode.
-    /// <para>On some platforms, the window is always in fullscreen. In those cases this method always returns <see langword="false"/>.</para>
+    /// Attempts to exit fullscreen mode. This method does not have any immediate effects, as the fullscreen transition is made
+    /// directly after the current frame. To check if the transition succeeded, use <see cref="IsFullscreen"/> during the next frame.
+    /// <para>
+    /// If the window is not in fullscreen, or the platform requires the window to always be fullscreen (like mobile), this method has no effect.
+    /// </para>
     /// </summary>
     /// <returns><see langword="true"/> if the window successfully transitioned out of fullscreen; otherwise <see langword="false"/>.</returns>
-    public static bool ExitFullscreen()
+    public static void ExitFullscreen()
     {
-        return Provider.ExitFullscreen();
+        _ = FullscreenProvider;
+
+        SimulationHost.GetCurrent().Dispatcher.NotifyAfter<AfterRenderMessage>(m =>
+        {
+            FullscreenProvider.ExitFullscreen();
+        });
     }
 
     /// <summary>
@@ -141,8 +145,9 @@ public static class Window
     { 
         if (width < 0)
             throw new ArgumentOutOfRangeException(nameof(width), "width must not be negative!");
+
         if (height < 0)
-            throw new ArgumentOutOfRangeException(nameof(width), "height must not be negative!");
+            throw new ArgumentOutOfRangeException(nameof(height), "height must not be negative!");
 
         // 0 means leave as is
         if (width is 0) width = Window.Width;

@@ -24,5 +24,4 @@ public delegate void GamepadButtonEvent(GamepadButton button);
 /// <summary>
 /// A delegate for text input events.
 /// </summary>
-
-public delegate void CharTypedEvent(char character);
+public delegate void KeyTypedEvent(char character);

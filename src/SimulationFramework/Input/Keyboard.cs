@@ -33,18 +33,18 @@ public static class Keyboard
     }
 
     /// <summary>
-    /// Invoked when a char is typed. This is usually used for text input.
+    /// Invoked when a key is typed. This is usually used for text input.
     /// </summary>
-    public static event CharTypedEvent CharTyped
+    public static event KeyTypedEvent KeyTyped
     {
-        add => Provider.CharTyped += value;
-        remove => Provider.CharTyped -= value;
+        add => Provider.KeyTyped += value;
+        remove => Provider.KeyTyped -= value;
     }
 
     /// <summary>
-    /// All of the characters typed this frame. This is usually used for text input.
+    /// All of the characters typed this frame. This is usually used for text input. To check for modifiers, use <see cref="IsKeyDown(Key)"/>.
     /// </summary>
-    public static IEnumerable<char> TypedChars => Provider.TypedChars;
+    public static IEnumerable<char> TypedKeys => Provider.TypedKeys;
 
     /// <summary>
     /// Gets a collection of all keys which are held this frame.

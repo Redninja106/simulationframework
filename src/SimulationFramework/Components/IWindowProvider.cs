@@ -16,10 +16,6 @@ public interface IWindowProvider : ISimulationComponent
 
     bool IsMinimized { get; }
     bool IsMaximized { get; }
-    bool IsFullscreen { get; }
-
-    bool EnterFullscreen(bool exclusive, IDisplay display);
-    bool ExitFullscreen();
 
     ITexture GetBackBuffer();
 

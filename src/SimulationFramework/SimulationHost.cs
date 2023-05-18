@@ -1,5 +1,6 @@
 ﻿using SimulationFramework.Components;
 using SimulationFramework.Drawing;
+using SimulationFramework.Input;
 using SimulationFramework.Messaging;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,9 @@ public class SimulationHost
 
     private static List<Func<ISimulationPlatform?>> platformFactories = new();
 
+    /// <summary>
+    /// Creates a new <see cref="SimulationHost"/> instance.
+    /// </summary>
     public SimulationHost()
     {
         Dispatcher = new();
@@ -43,6 +47,8 @@ public class SimulationHost
         {
             try
             {
+                // try to load and call the Register() method
+
                 Assembly assembly = Assembly.Load(platformAssembly);
                 Type? type = assembly.GetType($"{platformAssembly}.{platformName}");
                 MethodInfo? register = type?.GetMethod("Register", BindingFlags.Static | BindingFlags.Public);
@@ -50,14 +56,17 @@ public class SimulationHost
             }
             catch
             {
-
+                // do nothing
             }
         }
     }
 
+    /// <summary>
+    /// Returns <see cref="Current"/> if it is not null; throw an exception otherwise.
+    /// </summary>
     public static SimulationHost GetCurrent()
     {
-        return Current ?? throw new Exception("No Simulation Host is Currently Active!");
+        return Current ?? throw Exceptions.NoActiveHost();
     }
 
     /// <summary>
@@ -93,6 +102,10 @@ public class SimulationHost
         return false;
     }
 
+    /// <summary>
+    /// Initializes this <see cref="SimulationHost"/> using the provided platform.
+    /// </summary>
+    /// <param name="platform"></param>
     public void Initialize(ISimulationPlatform? platform)
     {
         if (initialized)
@@ -114,27 +127,56 @@ public class SimulationHost
         Current = this;
 
         RegisterComponent(platform);
+
+        if (simulation is not null && Application.HasComponent<IMouseProvider>())
+        {
+            Mouse.ButtonDown += simulation.OnButtonPressed;
+            Mouse.ButtonUp += simulation.OnButtonReleased;
+        }
+
+        if (simulation is not null && Application.HasComponent<IKeyboardProvider>())
+        {
+            Keyboard.KeyPressed += simulation.OnKeyPressed;
+            Keyboard.KeyReleased += simulation.OnKeyReleased;
+            Keyboard.KeyTyped += simulation.OnKeyTyped;
+        }
     }
 
-    public void Start<T>() where T : Simulation, new()
+    /// <summary>
+    /// Starts a new instance of <typeparamref name="TSimulation"/> and makes this host current.
+    /// <para>
+    /// If this host is not initialized, then this method initializes it.
+    /// </para>
+    /// <para>
+    /// This method throws if a <see cref="SimulationHost"/> is already running (<see cref="Current"/> is non-null).
+    /// </para>
+    /// </summary>
+    /// <typeparam name="TSimulation">The type of simulation to start. Must have a parameterless constructor.</typeparam>
+    public void Start<TSimulation>() where TSimulation : Simulation, new()
     {
         if (!initialized)
             Initialize(null);
 
-        Start(new T());
+        Start(new TSimulation());
     }
 
     /// <summary>
-    /// Starts a simulation.
+    /// Starts a simulation and makes this host current.
+    /// <para>
+    /// If this host is not initialized, then this method initializes it.
+    /// </para>
+    /// <para>
+    /// This method throws if a <see cref="SimulationHost"/> is already running (<see cref="Current"/> is non-null).
+    /// </para>
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown if a simulation is already running (<see cref="Current"/> is non-null).</exception>
-    public void Start(Simulation simulation)
+    /// <param name="simulation">The simulation to start. If this value is <see langword="null"/>, the host starts without a simulation.</param>
+    public void Start(Simulation? simulation)
     {
         if (!initialized)
             Initialize(null);
         
         this.simulation = simulation;
-        simulation.OnInitialize();
+        simulation?.OnInitialize();
 
         var appController = Application.GetComponent<ISimulationController>();
         
@@ -155,8 +197,12 @@ public class SimulationHost
         Dispatcher.ImmediateDispatch<AfterRenderMessage>(new());
     }
 
+    /// <summary>
+    /// Stops the simulation this host is currently hosting and makes this host non-current.
+    /// </summary>
     public void Stop()
     {
+        this.simulation?.OnUninitialize();
         this.simulation = null;
         Current = null;
     }

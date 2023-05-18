@@ -14,4 +14,5 @@ internal static class Exceptions
     public static Exception DuplicateMessageListener() => new("Duplicate Message Listener");
     public static Exception SimulationRunning() => new InvalidOperationException("A simulation is already running.");
     public static Exception HostAlreadyInitialized() => new("Host is already initialized!");
+    public static Exception NoActiveHost() => new("No Simulation Host is Currently Active!");
 }

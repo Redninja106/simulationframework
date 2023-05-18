@@ -12,14 +12,14 @@ internal class DesktopKeyboardProvider : IKeyboardProvider
 {
     private readonly IKeyboard keyboard;
 
-    public IEnumerable<char> TypedChars => typedChars;
+    public IEnumerable<char> TypedKeys => typedChars;
     public IEnumerable<Key> HeldKeys => heldKeys;
     public IEnumerable<Key> PressedKeys => pressedKeys;
     public IEnumerable<Key> ReleasedKeys => releasedKeys;
 
     public event KeyEvent KeyPressed;
     public event KeyEvent KeyReleased;
-    public event CharTypedEvent CharTyped;
+    public event KeyTypedEvent KeyTyped;
 
     private readonly List<char> typedChars = new();
     private readonly List<Key> heldKeys = new();
@@ -38,7 +38,7 @@ internal class DesktopKeyboardProvider : IKeyboardProvider
     private void Keyboard_KeyChar(IKeyboard arg1, char arg2)
     {
         typedChars.Add(arg2);
-        CharTyped?.Invoke(arg2);
+        KeyTyped?.Invoke(arg2);
     }
 
     private void Keyboard_KeyUp(IKeyboard arg1, SilkKey arg2, int arg3)

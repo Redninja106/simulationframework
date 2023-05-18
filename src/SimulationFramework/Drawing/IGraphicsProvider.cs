@@ -38,6 +38,4 @@ public interface IGraphicsProvider : ISimulationComponent
     /// Clears all cached fonts.
     /// </summary>
     void ClearFontCache();
-
-    bool TryEnterFullscreenExclusive(IDisplay display);
 }

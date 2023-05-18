@@ -25,12 +25,12 @@ public interface IKeyboardProvider : ISimulationComponent
     /// <summary>
     /// Invoked when a char is typed. This is usually used for text input.
     /// </summary>
-    event CharTypedEvent CharTyped;
+    event KeyTypedEvent KeyTyped;
 
     /// <summary>
     /// All of the characters typed this frame. This is usually used for text input.
     /// </summary>
-    IEnumerable<char> TypedChars { get; }
+    IEnumerable<char> TypedKeys { get; }
 
     /// <summary>
     /// A collection of all keys which are held this frame.

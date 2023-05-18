@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Desktop;
-internal class DesktopWindowProvider : IWindowProvider
+internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
 {
     public string Title { get; set; }
     public IDisplay Display => GetDisplay();
@@ -40,6 +40,8 @@ internal class DesktopWindowProvider : IWindowProvider
 
     private unsafe WindowHandle* WindowHandle => (WindowHandle*)window.Native.Glfw!.Value;
 
+    public bool PreferExclusive { get; set; }
+
     public DesktopWindowProvider(IWindow window)
     {
         this.window = window;
@@ -68,60 +70,29 @@ internal class DesktopWindowProvider : IWindowProvider
         throw new Exception("Error Finding Display");
     }
 
-    public unsafe bool EnterFullscreen(bool exclusive, IDisplay display)
+    public unsafe void EnterFullscreen(IDisplay display)
     {
         if (display is not DesktopDisplay desktopDisplay)
             throw new ArgumentException("display must be a desktop display.");
 
-        if (exclusive)
+        GetPosition(out int x, out int y);
+        windowedBounds.Position = new(x, y);
+        windowedBounds.Size = new(this.Width, this.Height);
+
+        glfw.SetWindowMonitor(WindowHandle, desktopDisplay.monitor, 0, 0, (int)display.Bounds.Width, (int)display.Bounds.Height, (int)display.RefreshRate);
+        if (glfw.GetError(out _) == ErrorCode.NoError)
         {
-            GetPosition(out int x, out int y);
-            windowedBounds.Position = new(x, y);
-            windowedBounds.Size = new(this.Width, this.Height);
-
-            glfw.SetWindowMonitor(WindowHandle, desktopDisplay.monitor, 0, 0, (int)display.Bounds.Width, (int)display.Bounds.Height, (int)display.RefreshRate);
-            if (glfw.GetError(out _) == ErrorCode.NoError)
-            {
-                IsFullscreen = true;
-            }
-
-            return IsFullscreen;
-        }
-        else
-        {
-            GetPosition(out int x, out int y);
-            windowedBounds.Position = new(x, y);
-            windowedBounds.Size = new(this.Width, this.Height);
-
-            //Silk.NET.GLFW.VideoMode* videoMode = glfw.GetVideoMode(desktopDisplay.monitor);
-
-            //glfw.SetWindowMonitor(WindowHandle, desktopDisplay.monitor, 0, 0, videoMode->Width, videoMode->Height, videoMode->RefreshRate);
-
-            glfw.SetWindowMonitor(WindowHandle, null, x, y, Width, Height, 165);
-            glfw.SetWindowAttrib(WindowHandle, WindowAttributeSetter.Decorated, false);
-            glfw.SetWindowPos(WindowHandle, (int)display.Bounds.X, (int)display.Bounds.Y);
-            glfw.SetWindowSize(WindowHandle, (int)display.Bounds.Width, (int)display.Bounds.Height + 1);
-
-            Console.WriteLine(new IntPtr(glfw.GetWindowMonitor(this.WindowHandle)));
-
-            if (glfw.GetError(out _) == ErrorCode.NoError)
-            {
-                IsFullscreen = true;
-            }
-
-            return IsFullscreen;
+            IsFullscreen = true;
         }
     }
 
-    public unsafe bool ExitFullscreen()
+    public unsafe void ExitFullscreen()
     {
         glfw.SetWindowMonitor(WindowHandle, null, (int)windowedBounds.X, (int)windowedBounds.Y, (int)windowedBounds.Width, (int)windowedBounds.Height, Glfw.DontCare);
         if (glfw.GetError(out _) == ErrorCode.NoError)
         {
             IsFullscreen = false;
-            return true;
         }
-        return false;
     }
 
     public ITexture GetBackBuffer()

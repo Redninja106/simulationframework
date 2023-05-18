@@ -13,24 +13,29 @@ namespace SimulationFramework;
 
 public static class Application
 {
-    public static T GetComponent<T>() where T : class, ISimulationComponent
+    public static TComponent GetComponent<TComponent>() where TComponent : class, ISimulationComponent
     {
-        return GetComponentOrDefault<T>() ?? throw Exceptions.ComponentNotFound(typeof(T));
+        return GetComponentOrDefault<TComponent>() ?? throw Exceptions.ComponentNotFound(typeof(TComponent));
     }
 
-    public static T? GetComponentOrDefault<T>() where T : class, ISimulationComponent
+    public static TComponent? GetComponentOrDefault<TComponent>() where TComponent : class, ISimulationComponent
     {
-        return SimulationHost.Current?.GetComponent<T>();
+        return SimulationHost.Current?.GetComponent<TComponent>();
     }
 
-    public static void RegisterComponent<T>() where T : class, ISimulationComponent, new()
+    public static void RegisterComponent<TComponent>() where TComponent : class, ISimulationComponent, new()
     {
-        RegisterComponent(new T());
+        RegisterComponent(new TComponent());
     }
 
-    public static void RegisterComponent<T>(T component) where T : class, ISimulationComponent
+    public static void RegisterComponent<TComponent>(TComponent component) where TComponent : class, ISimulationComponent
     {
         SimulationHost.Current?.RegisterComponent(component);
+    }
+
+    public static bool HasComponent<TComponent>() where TComponent : class, ISimulationComponent
+    {
+        return GetComponent<TComponent>() is not null;
     }
 
     public static IEnumerable<IDisplay> GetDisplays()
