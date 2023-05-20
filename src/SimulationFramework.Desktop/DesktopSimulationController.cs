@@ -6,7 +6,7 @@ using SimulationFramework.Messaging;
 
 namespace SimulationFramework.Desktop;
 
-internal class DesktopAppController : ISimulationController
+internal class DesktopSimulationController : ISimulationController
 {
     private readonly IWindow window;
     
@@ -15,7 +15,7 @@ internal class DesktopAppController : ISimulationController
     // where the window was located before we went into fullscreen
     private Vector2D<int>? lastWindowPosition;
     
-    public DesktopAppController(IWindow window)
+    public DesktopSimulationController(IWindow window)
     {
         this.window = window;
     }

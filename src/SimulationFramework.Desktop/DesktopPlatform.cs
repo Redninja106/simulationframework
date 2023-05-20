@@ -5,13 +5,15 @@ using SimulationFramework.Components;
 using Silk.NET.Windowing.Glfw;
 using Silk.NET.Input;
 using Silk.NET.Input.Glfw;
+using SimulationFramework.Drawing;
+using SimulationFramework.Input;
 
 namespace SimulationFramework.Desktop;
 
 /// <summary>
 /// Implements a simulation environment which runs the simulation in a window.
 /// </summary>
-public sealed class DesktopPlatform : ISimulationPlatform
+public class DesktopPlatform : ISimulationPlatform
 {
     public IWindow Window { get; }
 
@@ -19,14 +21,16 @@ public sealed class DesktopPlatform : ISimulationPlatform
 
     private DesktopSkiaFrameProvider frameProvider;
 
-    public DesktopPlatform()
+    public DesktopPlatform(WindowOptions? windowOptions = null)
     {
+        windowOptions ??= WindowOptions.Default;
+
         GlfwWindowing.RegisterPlatform();
         GlfwInput.RegisterPlatform();
 
         GlfwWindowing.Use();
 
-        Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default with { IsVisible = false });
+        Window = Silk.NET.Windowing.Window.Create(windowOptions.Value with { IsVisible = false });
         Window.Initialize();
 
         inputContext = Window.CreateInput();
@@ -36,7 +40,7 @@ public sealed class DesktopPlatform : ISimulationPlatform
     {
     }
 
-    public void Initialize(MessageDispatcher dispatcher)
+    public virtual void Initialize(MessageDispatcher dispatcher)
     {
         dispatcher.Subscribe<ResizeMessage>(m =>
         {
@@ -44,32 +48,15 @@ public sealed class DesktopPlatform : ISimulationPlatform
         });
 
         frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
-        Application.RegisterComponent(new SkiaGraphicsProvider(frameProvider, name => Window.GLContext.TryGetProcAddress(name, out nint addr) ? addr : 0));
-        Application.RegisterComponent(new RealtimeProvider());
-        Application.RegisterComponent(new DesktopAppController(this.Window));
-        Application.RegisterComponent(new DesktopWindowProvider(this.Window));
-        Application.RegisterComponent(new DesktopImGuiComponent(this.Window, inputContext));
+        Application.RegisterComponent(CreateGraphicsProvider());
+        Application.RegisterComponent(CreateTimeProvider());
+        Application.RegisterComponent(CreateSimulationController());
+        Application.RegisterComponent(CreateWindowProvider());
+        Application.RegisterComponent(CreateImGuiProvider());
 
-        var mouse = inputContext.Mice.FirstOrDefault();
-        if (mouse is not null)
-        {
-            Application.RegisterComponent(new DesktopMouseProvider(mouse));
-        }
-
-        var keyboard = inputContext.Keyboards.FirstOrDefault();
-        if (keyboard is not null)
-        {
-            Application.RegisterComponent(new DesktopKeyboardProvider(keyboard));
-        }
-
-        var gamepad = inputContext.Gamepads.FirstOrDefault();
-        if (gamepad is not null)
-        {
-            Application.RegisterComponent(new DesktopGamepadProvider(gamepad));
-        }
-
-
+        RegisterInputProviders();
     }
+
 
     public IEnumerable<IDisplay> GetDisplays()
     {
@@ -79,5 +66,53 @@ public sealed class DesktopPlatform : ISimulationPlatform
     public static void Register()
     {
         SimulationHost.RegisterPlatform(() => new DesktopPlatform());
+    }
+
+    protected virtual IGraphicsProvider CreateGraphicsProvider()
+    {
+        return new SkiaGraphicsProvider(frameProvider, name => Window.GLContext.TryGetProcAddress(name, out nint addr) ? addr : 0);
+    }
+
+    protected virtual ITimeProvider CreateTimeProvider()
+    {
+        return new RealtimeProvider();
+    }
+
+    protected virtual ISimulationController CreateSimulationController()
+    {
+        return new DesktopSimulationController(this.Window);
+    }
+
+    protected virtual IWindowProvider CreateWindowProvider()
+    {
+        return new DesktopWindowProvider(this.Window);
+    }
+    protected virtual ISimulationComponent CreateImGuiProvider()
+    {
+        return new DesktopImGuiComponent(this.Window, this.inputContext);
+    }
+
+    protected virtual void RegisterInputProviders()
+    {
+        var mouse = inputContext.Mice.FirstOrDefault();
+
+        if (mouse is not null)
+        {
+            Application.RegisterComponent(new DesktopMouseProvider(mouse));
+        }
+
+        var keyboard = inputContext.Keyboards.FirstOrDefault();
+
+        if (keyboard is not null)
+        {
+            Application.RegisterComponent(new DesktopKeyboardProvider(keyboard));
+        }
+
+        var gamepad = inputContext.Gamepads.FirstOrDefault();
+        
+        if (gamepad is not null)
+        {
+            Application.RegisterComponent(new DesktopGamepadProvider(gamepad));
+        }
     }
 }
