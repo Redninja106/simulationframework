@@ -87,6 +87,7 @@ public class DesktopPlatform : ISimulationPlatform
     {
         return new DesktopWindowProvider(this.Window);
     }
+
     protected virtual ISimulationComponent CreateImGuiProvider()
     {
         return new DesktopImGuiComponent(this.Window, this.inputContext);
