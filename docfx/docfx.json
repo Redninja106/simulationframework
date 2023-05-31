@@ -3,9 +3,8 @@
     {
       "src": [
         {
-          "files": [
-            "src/**/*.csproj"
-          ]
+          "src": "../",
+          "files": [ "src/**/**.csproj" ]
         }
       ],
       "dest": "api",
@@ -36,7 +35,8 @@
       {
         "files": [
           "assets/**",
-          "logo.svg"
+          "logo.svg",
+          "favicon.ico"
         ]
       }
     ],
