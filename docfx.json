@@ -23,7 +23,8 @@
       {
         "files": [
           "api/**.yml",
-          "api/index.md"
+          "api/index.md",
+          "logo.svg"
         ]
       },
       {
