@@ -1,3 +1,3 @@
 # SimulationFramework Documentation
 
-[Class Reference](/SimulationFramework/api/)
+[Class Reference](/simulationframework/api/)
