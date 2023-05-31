@@ -3,9 +3,8 @@
     {
       "src": [
         {
-          "files": [
-            "src/**/bin/**/**/*.dll"
-          ]
+          "src": "../",
+          "files": [ "src/**/**.csproj" ]
         }
       ],
       "dest": "api",
@@ -13,7 +12,7 @@
       "disableGitFeatures": false,
       "disableDefaultFilter": false,
       "noRestore": false,
-      "namespaceLayout": "flattened",
+      "namespaceLayout": "nested",
       "memberLayout": "samePage",
       "allowCompilationErrors": false
     }
@@ -28,9 +27,6 @@
       },
       {
         "files": [
-          "articles/**.md",
-          "articles/**/toc.yml",
-          "toc.yml",
           "*.md"
         ]
       }
@@ -38,7 +34,9 @@
     "resource": [
       {
         "files": [
-          "images/**"
+          "assets/**",
+          "logo.svg",
+          "favicon.ico"
         ]
       }
     ],
