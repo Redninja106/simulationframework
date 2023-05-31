@@ -13,11 +13,22 @@ namespace SimulationFramework;
 public interface IApplicationPlatform : IApplicationComponent
 {
     /// <summary>
-    /// Provides the application with an IApplicationController.
+    /// Creates an <see cref="IApplicationController "/> for the simulation.
     /// </summary>
-    /// <returns></returns>
     IApplicationController CreateController();
+
+    /// <summary>
+    /// Creates an <see cref="IGraphicsProvider"/> for the simulation.
+    /// </summary>
     IGraphicsProvider CreateGraphicsProvider();
+
+    /// <summary>
+    /// Creates an <see cref="ITimeProvider"/> for the simulation.
+    /// </summary>
     ITimeProvider CreateTimeProvider();
+
+    /// <summary>
+    /// Creates any additional <see cref="IApplicationComponent"/>s for the simulation.
+    /// </summary>
     IEnumerable<IApplicationComponent> CreateAdditionalComponents();
 }

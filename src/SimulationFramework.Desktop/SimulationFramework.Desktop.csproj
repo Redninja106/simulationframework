@@ -16,13 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\SimulationFramework.SkiaSharp\logo-128x128.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Silk.NET.Input" Version="2.17.1" />
     <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.17.1" />
     <PackageReference Include="Silk.NET.Windowing" Version="2.17.1" />
@@ -31,13 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SimulationFramework.SkiaSharp\SimulationFramework.SkiaSharp.csproj" />
     <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="logo-128x128.png">
-      <PackagePath>\</PackagePath>
-      <Pack>True</Pack>
-    </None>
   </ItemGroup>
 
 </Project>

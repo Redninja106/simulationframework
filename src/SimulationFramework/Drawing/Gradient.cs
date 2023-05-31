@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
 
+// this will be rewritten soon
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 /// <summary>
 /// Represents a gradient.
 /// </summary>
@@ -15,6 +18,8 @@ namespace SimulationFramework.Drawing;
 /// <param name="TileMode"></param>
 public abstract record Gradient(GradientStop[] Stops, Matrix3x2 Transform, TileMode TileMode)
 {
+    /// <summary>
+    /// </summary>
     public abstract void Accept(IGradientVisitor inspector);
 
     public static Gradient CreateLinear(float fromX, float fromY, float toX, float toY, params Color[] colors) => CreateLinear(new Vector2(fromX, fromY), new Vector2(toX, toY), colors);

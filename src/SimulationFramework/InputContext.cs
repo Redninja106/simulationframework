@@ -40,6 +40,9 @@ public sealed class InputContext : IApplicationComponent
     internal bool isAnyKeyPressed;
     internal bool isAnyKeyReleased;
 
+    /// <summary>
+    /// Updates the state of the provided key.
+    /// </summary>
     public void UpdateKey(Key key, bool isDown)
     {
         if (key == Key.Unknown)
@@ -62,6 +65,9 @@ public sealed class InputContext : IApplicationComponent
         }
     }
 
+    /// <summary>
+    /// Updates the state of the provided mouse button.
+    /// </summary>
     public void UpdateMouseButton(MouseButton button, bool isDown)
     {
         if (isDown == pressedMouseButtons.Contains(button))
@@ -79,28 +85,44 @@ public sealed class InputContext : IApplicationComponent
         }
     }
 
+    /// <summary>
+    /// Updates the mouse position.
+    /// </summary>
     public void UpdateMousePosition(Vector2 position)
     {
         this.mousePosition = position;
     }
 
+
+    /// <summary>
+    /// Updates the mouse scroll wheel delta.
+    /// </summary>
     public void UpdateMouseScroll(int scrollDelta)
     {
         this.scrollDelta = scrollDelta;
     }
 
+    /// <summary>
+    /// Updates the state of the gamepad triggers.
+    /// </summary>
     public void UpdateGamepadTriggers(float rightTrigger, float leftTrigger)
     {
         this.rightTrigger = rightTrigger;
         this.leftTrigger = leftTrigger;
     }
 
+    /// <summary>
+    /// Updates the state of the gamepad joysticks.
+    /// </summary>
     public void UpdateGamepadJoysticks(Vector2 rightJoystick, Vector2 leftJoystick)
     {
         this.rightJoystick = rightJoystick;
         this.leftJoystick = leftJoystick;
     }
 
+    /// <summary>
+    /// Updates the state of a gamepad button.
+    /// </summary>
     public void UpdateGamepadButton(GamepadButton button, bool isDown)
     {
         if (isDown == gamepadButtons.Contains(button))
@@ -112,6 +134,10 @@ public sealed class InputContext : IApplicationComponent
             gamepadButtons.Remove(button);
     }
 
+    /// <summary>
+    /// emulates typing a character
+    /// </summary>
+    /// <param name="keycode"></param>
     public void SendChar(char keycode)
     {
         typedKeys.Add(keycode);
@@ -135,10 +161,12 @@ public sealed class InputContext : IApplicationComponent
         scrollDelta = 0;
     }
 
+    ///  <inheritdoc/>
     public void Dispose()
     {
     }
     
+    /// <inheritdoc/>
     public void Initialize(Application application)
     {
         application.Dispatcher.Subscribe<FrameBeginMessage>(m =>

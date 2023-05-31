@@ -113,8 +113,8 @@ public static class Angle
     /// <param name="b">The angle to step towards, in radians.</param>
     /// <param name="s">The amount to step by, in radians.</param>
     /// <returns>
-    /// <c><paramref name="a"/>-<paramref name="s"/></c> or <c><paramref name="a"/>+<paramref name="s"/></c>, whichever is closer to <paramref name="b"/> on the unit circle.
-    /// If the distance between <paramref name="a"/> and <paramref name="b"/> is less than <paramref name="s"/>, than <paramref name="b"/> is returned.
+    /// <c><paramref name="a"/> - <paramref name="s"/></c> or <c><paramref name="a"/> + <paramref name="s"/></c>, whichever is closer to <paramref name="b"/> on the unit circle.
+    /// If the distance between <paramref name="a"/> and <paramref name="b"/> is less than <paramref name="s"/>, then <paramref name="b"/> is returned.
     /// </returns>
     /// <remarks>
     /// </remarks>

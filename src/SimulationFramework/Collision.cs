@@ -45,7 +45,7 @@ public class Collision
     /// Not implemented.
     /// </summary>
     /// <param name="polygon"></param>
-    /// <param name="rectangle"></param>
+    /// <param name="circle"></param>
     /// <returns></returns>
     public static bool CollidePolygonCircle(Span<Vector2> polygon, Circle circle)
     {
@@ -56,7 +56,8 @@ public class Collision
     /// Not implemented.
     /// </summary>
     /// <param name="polygon"></param>
-    /// <param name="rectangle"></param>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
     /// <returns></returns>
     public static bool CollidePolygonLine(Span<Vector2> polygon, Vector2 from, Vector2 to)
     {
@@ -67,7 +68,7 @@ public class Collision
     /// Not implemented.
     /// </summary>
     /// <param name="polygon"></param>
-    /// <param name="rectangle"></param>
+    /// <param name="point"></param>
     /// <returns></returns>
     public static bool CollidePolygonPoint(Span<Vector2> polygon, Vector2 point)
     {
@@ -77,8 +78,8 @@ public class Collision
     /// <summary>
     /// Not implemented.
     /// </summary>
-    /// <param name="polygon"></param>
-    /// <param name="rectangle"></param>
+    /// <param name="rectangleA"></param>
+    /// <param name="rectangleB"></param>
     /// <returns></returns>
     public static bool CollideRectangleRectangle(Rectangle rectangleA, Rectangle rectangleB)
     {
@@ -88,8 +89,8 @@ public class Collision
     /// <summary>
     /// Not implemented.
     /// </summary>
-    /// <param name="polygon"></param>
     /// <param name="rectangle"></param>
+    /// <param name="circle"></param>
     /// <returns></returns>
     public static bool CollideRectangleCircle(Rectangle rectangle, Circle circle)
     {
@@ -99,8 +100,9 @@ public class Collision
     /// <summary>
     /// Not implemented.
     /// </summary>
-    /// <param name="polygon"></param>
     /// <param name="rectangle"></param>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
     /// <returns></returns>
     public static bool CollideRectangleLine(Rectangle rectangle, Vector2 from, Vector2 to)
     {
@@ -110,8 +112,8 @@ public class Collision
     /// <summary>
     /// Not implemented.
     /// </summary>
-    /// <param name="polygon"></param>
     /// <param name="rectangle"></param>
+    /// <param name="point"></param>
     /// <returns></returns>
     public static bool CollideRectanglePoint(Rectangle rectangle, Vector2 point)
     {

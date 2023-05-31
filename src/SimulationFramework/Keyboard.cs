@@ -19,7 +19,7 @@ public static class Keyboard
     internal static InputContext Context => Application.Current?.GetComponent<InputContext>() ?? throw Exceptions.CoreComponentNotFound();
 
     /// <summary>
-    /// Returns true if the provided key is pressed.
+    /// Returns true if the provided key is currently held down.
     /// </summary>
     public static bool IsKeyDown(Key key) => Context.pressedKeys.Contains(key);
     
@@ -55,16 +55,25 @@ public static class Keyboard
         remove => Context.KeyUp -= value;
     }
 
+    /// <summary>
+    /// Returns true if any key is currently held down.
+    /// </summary>
     public static bool IsAnyKeyDown()
     {
         return Context.pressedKeys.Any();
     }
-    
+
+    /// <summary>
+    /// Returns true if any key is currently held down.
+    /// </summary>
     public static bool IsAnyKeyDown(params Key[] keys)
     {
         return IsAnyKeyDown(keys.AsSpan());
     }
 
+    /// <summary>
+    /// Returns true if any key is currently held down.
+    /// </summary>
     public static bool IsAnyKeyDown(ReadOnlySpan<Key> keys)
     {
         for (int i = 0; i < keys.Length; i++)
@@ -76,16 +85,25 @@ public static class Keyboard
         return false;
     }
 
+    /// <summary>
+    /// Returns true if any key was just pressed this frame.
+    /// </summary>
     public static bool IsAnyKeyPressed()
     {
         return Context.isAnyKeyPressed;
     }
 
+    /// <summary>
+    /// Returns true if any key was just pressed this frame.
+    /// </summary>
     public static bool IsAnyKeyPressed(params Key[] keys)
     {
         return IsAnyKeyPressed(keys.AsSpan());
     }
 
+    /// <summary>
+    /// Returns true if any key was just pressed this frame.
+    /// </summary>
     public static bool IsAnyKeyPressed(ReadOnlySpan<Key> keys)
     {
         for (int i = 0; i < keys.Length; i++)
@@ -97,16 +115,25 @@ public static class Keyboard
         return false;
     }
 
+    /// <summary>
+    /// Returns true if any key was just released this frame.
+    /// </summary>
     public static bool IsAnyKeyReleased()
     {
         return Context.isAnyKeyReleased;
     }
 
+    /// <summary>
+    /// Returns true if any key was just released this frame.
+    /// </summary>
     public static bool IsAnyKeyReleased(params Key[] keys)
     {
         return IsAnyKeyReleased(keys.AsSpan());
     }
 
+    /// <summary>
+    /// Returns true if any key was just released this frame.
+    /// </summary>
     public static bool IsAnyKeyReleased(ReadOnlySpan<Key> keys)
     {
         for (int i = 0; i < keys.Length; i++)

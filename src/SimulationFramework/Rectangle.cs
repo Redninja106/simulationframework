@@ -38,7 +38,7 @@ public struct Rectangle : IEquatable<Rectangle>
     /// </summary>
     public Vector2 Size
     {
-        get => new(Width, Height);
+        readonly get => new(Width, Height);
         set => (Width, Height) = (value.X, value.Y);
     }
 
@@ -47,14 +47,14 @@ public struct Rectangle : IEquatable<Rectangle>
     /// </summary>
     public Vector2 Position
     {
-        get => new(X, Y);
+        readonly get => new(X, Y);
         set => (X, Y) = (value.X, value.Y);
     }
 
     /// <summary>
     /// The center of the rectangle.
     /// </summary>
-    public Vector2 Center { get => GetAlignedPoint(Alignment.Center); set => SetAlignedPosition(Center, Alignment.Center); }
+    public Vector2 Center { readonly get => GetAlignedPoint(Alignment.Center); set => SetAlignedPosition(Center, Alignment.Center); }
 
     /// <summary>
     /// Creates a new rectangle from the provided position and size.
@@ -86,7 +86,7 @@ public struct Rectangle : IEquatable<Rectangle>
     /// <summary>
     /// Returns the point which aligned to the rectangle by the specified alignment.
     /// </summary>
-    public Vector2 GetAlignedPoint(Alignment alignment)
+    public readonly Vector2 GetAlignedPoint(Alignment alignment)
     {
         return alignment switch
         {
@@ -132,7 +132,7 @@ public struct Rectangle : IEquatable<Rectangle>
     /// </summary>
     /// <param name="point">The point to check the rectangle for.</param>
     /// <returns>True if the rectangle contains <paramref name="point"/>, otherwise false.</returns>
-    public bool ContainsPoint(Vector2 point)
+    public readonly bool ContainsPoint(Vector2 point)
     {
         return this.X <= point.X && this.X + this.Width >= point.X &&
             this.Y <= point.Y && this.Y + this.Height >= point.Y;
@@ -143,7 +143,7 @@ public struct Rectangle : IEquatable<Rectangle>
     /// </summary>
     /// <param name="other">The rectangle to check for an intersection with.</param>
     /// <returns>True if the rectangles are intersecting, otherwise false.</returns>
-    public bool Intersects(Rectangle other)
+    public readonly bool Intersects(Rectangle other)
     {
         return Intersects(other, out _);
     }
@@ -154,7 +154,7 @@ public struct Rectangle : IEquatable<Rectangle>
     /// <param name="other">The rectangle to check for an intersection with.</param>
     /// <param name="overlap">The overlapping area between the two rectangles.</param>
     /// <returns>True if the rectangles are intersecting, otherwise false.</returns>
-    public bool Intersects(Rectangle other, out Rectangle overlap)
+    public readonly bool Intersects(Rectangle other, out Rectangle overlap)
     {
         float x1 = MathF.Max(this.X, other.X);
         float x2 = MathF.Min(this.X + this.Width, other.X + other.Width);
@@ -177,13 +177,13 @@ public struct Rectangle : IEquatable<Rectangle>
     /// </summary>
     /// <param name="other">The rectangle to compare against this one.</param>
     /// <returns><see langword="true"/> if this rectangle equals <paramref name="other"/>, otherwise <see langword="false"/>.</returns>
-    public bool Equals(Rectangle other)
+    public readonly bool Equals(Rectangle other)
     {
         return X == other.X || Y == other.Y || Width == other.Width || Height == other.Height;
     }
 
     /// <inheritdoc/>
-    public override bool Equals([NotNullWhen(true)] object? obj)
+    public override readonly bool Equals([NotNullWhen(true)] object? obj)
     {
         return obj is Rectangle rect && Equals(rect);
     }
@@ -191,7 +191,7 @@ public struct Rectangle : IEquatable<Rectangle>
     /// <summary>
     /// Returns this rectangle in the format "{x, y, width, height}".
     /// </summary>
-    public override string ToString()
+    public override readonly string ToString()
     {
         return $"{{{X}, {Y}, {Width}, {Height}}}";
     }
@@ -219,7 +219,7 @@ public struct Rectangle : IEquatable<Rectangle>
     }
 
     /// <inheritdoc/>
-    public override int GetHashCode()
+    public override readonly int GetHashCode()
     {
         return HashCode.Combine(X, Y, Width, Height);
     }

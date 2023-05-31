@@ -52,7 +52,7 @@ public class AppConfig
     /// <returns></returns>
     public static AppConfig Create() 
     {
-        var controller = Application.Current.GetComponent<IApplicationController>() ?? throw Exceptions.CoreComponentNotFound();
+        var controller = Application.Current?.GetComponent<IApplicationController>() ?? throw Exceptions.CoreComponentNotFound();
         var result = new AppConfig();
         controller.InitializeConfig(result);
         return result;
@@ -74,7 +74,7 @@ public class AppConfig
     /// <returns><see langword="true"/> if all changes were applied, <see langword="false"/> if one or more changes failed to apply.</returns>
     public bool Apply()
     {
-        var controller = Application.Current.GetComponent<IApplicationController>() ?? throw Exceptions.CoreComponentNotFound();
+        var controller = Application.Current?.GetComponent<IApplicationController>() ?? throw Exceptions.CoreComponentNotFound();
         return controller.ApplyConfig(this);
     }
 
