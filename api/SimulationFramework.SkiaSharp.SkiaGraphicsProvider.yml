@@ -1,0 +1,1078 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider
+  commentId: T:SimulationFramework.SkiaSharp.SkiaGraphicsProvider
+  id: SkiaGraphicsProvider
+  parent: SimulationFramework.SkiaSharp
+  children:
+  - SimulationFramework.SkiaSharp.SkiaGraphicsProvider.#ctor(SimulationFramework.SkiaSharp.ISkiaFrameProvider,SkiaSharp.GRGlGetProcedureAddressDelegate)
+  - SimulationFramework.SkiaSharp.SkiaGraphicsProvider.ClearFontCache
+  - SimulationFramework.SkiaSharp.SkiaGraphicsProvider.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+  - SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Dispose
+  - SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFont(System.String,SimulationFramework.Drawing.FontStyle,System.Int32)
+  - SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFrameCanvas
+  - SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Initialize(SimulationFramework.Application)
+  - SimulationFramework.SkiaSharp.SkiaGraphicsProvider.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+  langs:
+  - csharp
+  - vb
+  name: SkiaGraphicsProvider
+  nameWithType: SkiaGraphicsProvider
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider
+  type: Class
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: SkiaGraphicsProvider
+    path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+    startLine: 11
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  syntax:
+    content: 'public sealed class SkiaGraphicsProvider : IGraphicsProvider, IApplicationComponent, IDisposable'
+    content.vb: Public NotInheritable Class SkiaGraphicsProvider Implements IGraphicsProvider, IApplicationComponent, IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - SimulationFramework.Drawing.IGraphicsProvider
+  - SimulationFramework.IApplicationComponent
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.#ctor(SimulationFramework.SkiaSharp.ISkiaFrameProvider,SkiaSharp.GRGlGetProcedureAddressDelegate)
+  commentId: M:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.#ctor(SimulationFramework.SkiaSharp.ISkiaFrameProvider,SkiaSharp.GRGlGetProcedureAddressDelegate)
+  id: '#ctor(SimulationFramework.SkiaSharp.ISkiaFrameProvider,SkiaSharp.GRGlGetProcedureAddressDelegate)'
+  parent: SimulationFramework.SkiaSharp.SkiaGraphicsProvider
+  langs:
+  - csharp
+  - vb
+  name: SkiaGraphicsProvider(ISkiaFrameProvider, GRGlGetProcedureAddressDelegate)
+  nameWithType: SkiaGraphicsProvider.SkiaGraphicsProvider(ISkiaFrameProvider, GRGlGetProcedureAddressDelegate)
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.SkiaGraphicsProvider(SimulationFramework.SkiaSharp.ISkiaFrameProvider, SkiaSharp.GRGlGetProcedureAddressDelegate)
+  type: Constructor
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: .ctor
+    path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+    startLine: 21
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  syntax:
+    content: public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate getProcAddress)
+    parameters:
+    - id: frameProvider
+      type: SimulationFramework.SkiaSharp.ISkiaFrameProvider
+    - id: getProcAddress
+      type: SkiaSharp.GRGlGetProcedureAddressDelegate
+    content.vb: Public Sub New(frameProvider As ISkiaFrameProvider, getProcAddress As GRGlGetProcedureAddressDelegate)
+  overload: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.#ctor*
+  nameWithType.vb: SkiaGraphicsProvider.New(ISkiaFrameProvider, GRGlGetProcedureAddressDelegate)
+  fullName.vb: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.New(SimulationFramework.SkiaSharp.ISkiaFrameProvider, SkiaSharp.GRGlGetProcedureAddressDelegate)
+  name.vb: New(ISkiaFrameProvider, GRGlGetProcedureAddressDelegate)
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Initialize(SimulationFramework.Application)
+  commentId: M:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Initialize(SimulationFramework.Application)
+  id: Initialize(SimulationFramework.Application)
+  parent: SimulationFramework.SkiaSharp.SkiaGraphicsProvider
+  langs:
+  - csharp
+  - vb
+  name: Initialize(Application)
+  nameWithType: SkiaGraphicsProvider.Initialize(Application)
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Initialize(SimulationFramework.Application)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Initialize
+    path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+    startLine: 28
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  summary: >-
+    Initializes the component.
+
+    This method is only called once on each component.
+  example: []
+  syntax:
+    content: public void Initialize(Application application)
+    parameters:
+    - id: application
+      type: SimulationFramework.Application
+      description: The application to which this <xref href="SimulationFramework.IApplicationComponent" data-throw-if-not-resolved="false"></xref> belongs to.
+    content.vb: Public Sub Initialize(application As Application)
+  overload: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Initialize*
+  implements:
+  - SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFrameCanvas
+  commentId: M:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFrameCanvas
+  id: GetFrameCanvas
+  parent: SimulationFramework.SkiaSharp.SkiaGraphicsProvider
+  langs:
+  - csharp
+  - vb
+  name: GetFrameCanvas()
+  nameWithType: SkiaGraphicsProvider.GetFrameCanvas()
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFrameCanvas()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: GetFrameCanvas
+    path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+    startLine: 36
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  summary: Gets the canvas for the current frame.
+  example: []
+  syntax:
+    content: public ICanvas GetFrameCanvas()
+    return:
+      type: SimulationFramework.Drawing.ICanvas
+      description: The canvas which draws to the current frame. This object should never be saved, as it may be different every frame.
+    content.vb: Public Function GetFrameCanvas() As ICanvas
+  overload: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFrameCanvas*
+  implements:
+  - SimulationFramework.Drawing.IGraphicsProvider.GetFrameCanvas
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+  commentId: M:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+  id: CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+  parent: SimulationFramework.SkiaSharp.SkiaGraphicsProvider
+  langs:
+  - csharp
+  - vb
+  name: CreateTexture(int, int, Span<Color>, TextureOptions)
+  nameWithType: SkiaGraphicsProvider.CreateTexture(int, int, Span<Color>, TextureOptions)
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.CreateTexture(int, int, System.Span<SimulationFramework.Color>, SimulationFramework.Drawing.TextureOptions)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CreateTexture
+    path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+    startLine: 51
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  summary: Creates a new bitmap with the provided data.
+  example: []
+  syntax:
+    content: public ITexture CreateTexture(int width, int height, Span<Color> data, TextureOptions options = TextureOptions.None)
+    parameters:
+    - id: width
+      type: System.Int32
+      description: The width of the bitmap, in pixels.
+    - id: height
+      type: System.Int32
+      description: The height of the bitmap, in pixels.
+    - id: data
+      type: System.Span{SimulationFramework.Color}
+      description: The initial raw bitmap data. Must be of length <code class="paramref">width</code> * <code class="paramref">height</code>.
+    - id: options
+      type: SimulationFramework.Drawing.TextureOptions
+    return:
+      type: SimulationFramework.Drawing.ITexture
+      description: The new <xref href="SimulationFramework.Drawing.ITexture" data-throw-if-not-resolved="false"></xref>.
+    content.vb: Public Function CreateTexture(width As Integer, height As Integer, data As Span(Of Color), options As TextureOptions = TextureOptions.None) As ITexture
+  overload: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.CreateTexture*
+  implements:
+  - SimulationFramework.Drawing.IGraphicsProvider.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+  nameWithType.vb: SkiaGraphicsProvider.CreateTexture(Integer, Integer, Span(Of Color), TextureOptions)
+  fullName.vb: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.CreateTexture(Integer, Integer, System.Span(Of SimulationFramework.Color), SimulationFramework.Drawing.TextureOptions)
+  name.vb: CreateTexture(Integer, Integer, Span(Of Color), TextureOptions)
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+  commentId: M:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+  id: LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+  parent: SimulationFramework.SkiaSharp.SkiaGraphicsProvider
+  langs:
+  - csharp
+  - vb
+  name: LoadTexture(Span<byte>, TextureOptions)
+  nameWithType: SkiaGraphicsProvider.LoadTexture(Span<byte>, TextureOptions)
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.LoadTexture(System.Span<byte>, SimulationFramework.Drawing.TextureOptions)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: LoadTexture
+    path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+    startLine: 67
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  summary: Loads a bitmap from it's raw encoded data.
+  example: []
+  syntax:
+    content: public ITexture LoadTexture(Span<byte> encodedData, TextureOptions options = TextureOptions.None)
+    parameters:
+    - id: encodedData
+      type: System.Span{System.Byte}
+      description: ''
+    - id: options
+      type: SimulationFramework.Drawing.TextureOptions
+    return:
+      type: SimulationFramework.Drawing.ITexture
+      description: ''
+    content.vb: Public Function LoadTexture(encodedData As Span(Of Byte), options As TextureOptions = TextureOptions.None) As ITexture
+  overload: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.LoadTexture*
+  implements:
+  - SimulationFramework.Drawing.IGraphicsProvider.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+  nameWithType.vb: SkiaGraphicsProvider.LoadTexture(Span(Of Byte), TextureOptions)
+  fullName.vb: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.LoadTexture(System.Span(Of Byte), SimulationFramework.Drawing.TextureOptions)
+  name.vb: LoadTexture(Span(Of Byte), TextureOptions)
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Dispose
+  commentId: M:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Dispose
+  id: Dispose
+  parent: SimulationFramework.SkiaSharp.SkiaGraphicsProvider
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: SkiaGraphicsProvider.Dispose()
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Dispose
+    path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+    startLine: 72
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.ClearFontCache
+  commentId: M:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.ClearFontCache
+  id: ClearFontCache
+  parent: SimulationFramework.SkiaSharp.SkiaGraphicsProvider
+  langs:
+  - csharp
+  - vb
+  name: ClearFontCache()
+  nameWithType: SkiaGraphicsProvider.ClearFontCache()
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.ClearFontCache()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: ClearFontCache
+    path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+    startLine: 81
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  summary: Clears all cached fonts.
+  example: []
+  syntax:
+    content: public void ClearFontCache()
+    content.vb: Public Sub ClearFontCache()
+  overload: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.ClearFontCache*
+  implements:
+  - SimulationFramework.Drawing.IGraphicsProvider.ClearFontCache
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFont(System.String,SimulationFramework.Drawing.FontStyle,System.Int32)
+  commentId: M:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFont(System.String,SimulationFramework.Drawing.FontStyle,System.Int32)
+  id: GetFont(System.String,SimulationFramework.Drawing.FontStyle,System.Int32)
+  parent: SimulationFramework.SkiaSharp.SkiaGraphicsProvider
+  langs:
+  - csharp
+  - vb
+  name: GetFont(string, FontStyle, int)
+  nameWithType: SkiaGraphicsProvider.GetFont(string, FontStyle, int)
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFont(string, SimulationFramework.Drawing.FontStyle, int)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: GetFont
+    path: src/SimulationFramework.SkiaSharp/SkiaGraphicsProvider.cs
+    startLine: 92
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  syntax:
+    content: public SKFont GetFont(string fontName, FontStyle styles, int size)
+    parameters:
+    - id: fontName
+      type: System.String
+    - id: styles
+      type: SimulationFramework.Drawing.FontStyle
+    - id: size
+      type: System.Int32
+    return:
+      type: SkiaSharp.SKFont
+    content.vb: Public Function GetFont(fontName As String, styles As FontStyle, size As Integer) As SKFont
+  overload: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFont*
+  nameWithType.vb: SkiaGraphicsProvider.GetFont(String, FontStyle, Integer)
+  fullName.vb: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFont(String, SimulationFramework.Drawing.FontStyle, Integer)
+  name.vb: GetFont(String, FontStyle, Integer)
+references:
+- uid: SimulationFramework.SkiaSharp
+  commentId: N:SimulationFramework.SkiaSharp
+  href: SimulationFramework.html
+  name: SimulationFramework.SkiaSharp
+  nameWithType: SimulationFramework.SkiaSharp
+  fullName: SimulationFramework.SkiaSharp
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.SkiaSharp
+    name: SkiaSharp
+    href: SimulationFramework.SkiaSharp.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.SkiaSharp
+    name: SkiaSharp
+    href: SimulationFramework.SkiaSharp.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: SimulationFramework.Drawing.IGraphicsProvider
+  commentId: T:SimulationFramework.Drawing.IGraphicsProvider
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.IGraphicsProvider.html
+  name: IGraphicsProvider
+  nameWithType: IGraphicsProvider
+  fullName: SimulationFramework.Drawing.IGraphicsProvider
+- uid: SimulationFramework.IApplicationComponent
+  commentId: T:SimulationFramework.IApplicationComponent
+  parent: SimulationFramework
+  href: SimulationFramework.IApplicationComponent.html
+  name: IApplicationComponent
+  nameWithType: IApplicationComponent
+  fullName: SimulationFramework.IApplicationComponent
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: SimulationFramework.Drawing
+  commentId: N:SimulationFramework.Drawing
+  href: SimulationFramework.html
+  name: SimulationFramework.Drawing
+  nameWithType: SimulationFramework.Drawing
+  fullName: SimulationFramework.Drawing
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Drawing
+    name: Drawing
+    href: SimulationFramework.Drawing.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Drawing
+    name: Drawing
+    href: SimulationFramework.Drawing.html
+- uid: SimulationFramework
+  commentId: N:SimulationFramework
+  href: SimulationFramework.html
+  name: SimulationFramework
+  nameWithType: SimulationFramework
+  fullName: SimulationFramework
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.#ctor*
+  commentId: Overload:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.#ctor
+  href: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.html#SimulationFramework.SkiaSharp.SkiaGraphicsProvider.#ctor(SimulationFramework.SkiaSharp.ISkiaFrameProvider,SkiaSharp.GRGlGetProcedureAddressDelegate)
+  name: SkiaGraphicsProvider
+  nameWithType: SkiaGraphicsProvider.SkiaGraphicsProvider
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.SkiaGraphicsProvider
+  nameWithType.vb: SkiaGraphicsProvider.New
+  fullName.vb: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.New
+  name.vb: New
+- uid: SimulationFramework.SkiaSharp.ISkiaFrameProvider
+  commentId: T:SimulationFramework.SkiaSharp.ISkiaFrameProvider
+  parent: SimulationFramework.SkiaSharp
+  href: SimulationFramework.SkiaSharp.ISkiaFrameProvider.html
+  name: ISkiaFrameProvider
+  nameWithType: ISkiaFrameProvider
+  fullName: SimulationFramework.SkiaSharp.ISkiaFrameProvider
+- uid: SkiaSharp.GRGlGetProcedureAddressDelegate
+  commentId: T:SkiaSharp.GRGlGetProcedureAddressDelegate
+  parent: SkiaSharp
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/skiasharp.grglgetprocedureaddressdelegate
+  name: GRGlGetProcedureAddressDelegate
+  nameWithType: GRGlGetProcedureAddressDelegate
+  fullName: SkiaSharp.GRGlGetProcedureAddressDelegate
+- uid: SkiaSharp
+  commentId: N:SkiaSharp
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/skiasharp
+  name: SkiaSharp
+  nameWithType: SkiaSharp
+  fullName: SkiaSharp
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Initialize*
+  commentId: Overload:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Initialize
+  href: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.html#SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Initialize(SimulationFramework.Application)
+  name: Initialize
+  nameWithType: SkiaGraphicsProvider.Initialize
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Initialize
+- uid: SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  commentId: M:SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  parent: SimulationFramework.IApplicationComponent
+  href: SimulationFramework.IApplicationComponent.html#SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  name: Initialize(Application)
+  nameWithType: IApplicationComponent.Initialize(Application)
+  fullName: SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  spec.csharp:
+  - uid: SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+    name: Initialize
+    href: SimulationFramework.IApplicationComponent.html#SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  - name: (
+  - uid: SimulationFramework.Application
+    name: Application
+    href: SimulationFramework.Application.html
+  - name: )
+  spec.vb:
+  - uid: SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+    name: Initialize
+    href: SimulationFramework.IApplicationComponent.html#SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  - name: (
+  - uid: SimulationFramework.Application
+    name: Application
+    href: SimulationFramework.Application.html
+  - name: )
+- uid: SimulationFramework.Application
+  commentId: T:SimulationFramework.Application
+  parent: SimulationFramework
+  href: SimulationFramework.Application.html
+  name: Application
+  nameWithType: Application
+  fullName: SimulationFramework.Application
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFrameCanvas*
+  commentId: Overload:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFrameCanvas
+  href: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.html#SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFrameCanvas
+  name: GetFrameCanvas
+  nameWithType: SkiaGraphicsProvider.GetFrameCanvas
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFrameCanvas
+- uid: SimulationFramework.Drawing.IGraphicsProvider.GetFrameCanvas
+  commentId: M:SimulationFramework.Drawing.IGraphicsProvider.GetFrameCanvas
+  parent: SimulationFramework.Drawing.IGraphicsProvider
+  href: SimulationFramework.Drawing.IGraphicsProvider.html#SimulationFramework.Drawing.IGraphicsProvider.GetFrameCanvas
+  name: GetFrameCanvas()
+  nameWithType: IGraphicsProvider.GetFrameCanvas()
+  fullName: SimulationFramework.Drawing.IGraphicsProvider.GetFrameCanvas()
+  spec.csharp:
+  - uid: SimulationFramework.Drawing.IGraphicsProvider.GetFrameCanvas
+    name: GetFrameCanvas
+    href: SimulationFramework.Drawing.IGraphicsProvider.html#SimulationFramework.Drawing.IGraphicsProvider.GetFrameCanvas
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: SimulationFramework.Drawing.IGraphicsProvider.GetFrameCanvas
+    name: GetFrameCanvas
+    href: SimulationFramework.Drawing.IGraphicsProvider.html#SimulationFramework.Drawing.IGraphicsProvider.GetFrameCanvas
+  - name: (
+  - name: )
+- uid: SimulationFramework.Drawing.ICanvas
+  commentId: T:SimulationFramework.Drawing.ICanvas
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.ICanvas.html
+  name: ICanvas
+  nameWithType: ICanvas
+  fullName: SimulationFramework.Drawing.ICanvas
+- uid: SimulationFramework.Drawing.ITexture
+  commentId: T:SimulationFramework.Drawing.ITexture
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.ITexture.html
+  name: ITexture
+  nameWithType: ITexture
+  fullName: SimulationFramework.Drawing.ITexture
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.CreateTexture*
+  commentId: Overload:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.CreateTexture
+  href: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.html#SimulationFramework.SkiaSharp.SkiaGraphicsProvider.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+  name: CreateTexture
+  nameWithType: SkiaGraphicsProvider.CreateTexture
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.CreateTexture
+- uid: SimulationFramework.Drawing.IGraphicsProvider.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+  commentId: M:SimulationFramework.Drawing.IGraphicsProvider.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+  parent: SimulationFramework.Drawing.IGraphicsProvider
+  isExternal: true
+  href: SimulationFramework.Drawing.IGraphicsProvider.html#SimulationFramework.Drawing.IGraphicsProvider.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+  name: CreateTexture(int, int, Span<Color>, TextureOptions)
+  nameWithType: IGraphicsProvider.CreateTexture(int, int, Span<Color>, TextureOptions)
+  fullName: SimulationFramework.Drawing.IGraphicsProvider.CreateTexture(int, int, System.Span<SimulationFramework.Color>, SimulationFramework.Drawing.TextureOptions)
+  nameWithType.vb: IGraphicsProvider.CreateTexture(Integer, Integer, Span(Of Color), TextureOptions)
+  fullName.vb: SimulationFramework.Drawing.IGraphicsProvider.CreateTexture(Integer, Integer, System.Span(Of SimulationFramework.Color), SimulationFramework.Drawing.TextureOptions)
+  name.vb: CreateTexture(Integer, Integer, Span(Of Color), TextureOptions)
+  spec.csharp:
+  - uid: SimulationFramework.Drawing.IGraphicsProvider.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+    name: CreateTexture
+    href: SimulationFramework.Drawing.IGraphicsProvider.html#SimulationFramework.Drawing.IGraphicsProvider.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - uid: SimulationFramework.Color
+    name: Color
+    href: SimulationFramework.Color.html
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: SimulationFramework.Drawing.TextureOptions
+    name: TextureOptions
+    href: SimulationFramework.Drawing.TextureOptions.html
+  - name: )
+  spec.vb:
+  - uid: SimulationFramework.Drawing.IGraphicsProvider.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+    name: CreateTexture
+    href: SimulationFramework.Drawing.IGraphicsProvider.html#SimulationFramework.Drawing.IGraphicsProvider.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: SimulationFramework.Color
+    name: Color
+    href: SimulationFramework.Color.html
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: SimulationFramework.Drawing.TextureOptions
+    name: TextureOptions
+    href: SimulationFramework.Drawing.TextureOptions.html
+  - name: )
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.Span{SimulationFramework.Color}
+  commentId: T:System.Span{SimulationFramework.Color}
+  parent: System
+  definition: System.Span`1
+  href: https://learn.microsoft.com/dotnet/api/system.span-1
+  name: Span<Color>
+  nameWithType: Span<Color>
+  fullName: System.Span<SimulationFramework.Color>
+  nameWithType.vb: Span(Of Color)
+  fullName.vb: System.Span(Of SimulationFramework.Color)
+  name.vb: Span(Of Color)
+  spec.csharp:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - uid: SimulationFramework.Color
+    name: Color
+    href: SimulationFramework.Color.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: SimulationFramework.Color
+    name: Color
+    href: SimulationFramework.Color.html
+  - name: )
+- uid: SimulationFramework.Drawing.TextureOptions
+  commentId: T:SimulationFramework.Drawing.TextureOptions
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.TextureOptions.html
+  name: TextureOptions
+  nameWithType: TextureOptions
+  fullName: SimulationFramework.Drawing.TextureOptions
+- uid: System.Span`1
+  commentId: T:System.Span`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.span-1
+  name: Span<T>
+  nameWithType: Span<T>
+  fullName: System.Span<T>
+  nameWithType.vb: Span(Of T)
+  fullName.vb: System.Span(Of T)
+  name.vb: Span(Of T)
+  spec.csharp:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.LoadTexture*
+  commentId: Overload:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.LoadTexture
+  href: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.html#SimulationFramework.SkiaSharp.SkiaGraphicsProvider.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+  name: LoadTexture
+  nameWithType: SkiaGraphicsProvider.LoadTexture
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.LoadTexture
+- uid: SimulationFramework.Drawing.IGraphicsProvider.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+  commentId: M:SimulationFramework.Drawing.IGraphicsProvider.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+  parent: SimulationFramework.Drawing.IGraphicsProvider
+  isExternal: true
+  href: SimulationFramework.Drawing.IGraphicsProvider.html#SimulationFramework.Drawing.IGraphicsProvider.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+  name: LoadTexture(Span<byte>, TextureOptions)
+  nameWithType: IGraphicsProvider.LoadTexture(Span<byte>, TextureOptions)
+  fullName: SimulationFramework.Drawing.IGraphicsProvider.LoadTexture(System.Span<byte>, SimulationFramework.Drawing.TextureOptions)
+  nameWithType.vb: IGraphicsProvider.LoadTexture(Span(Of Byte), TextureOptions)
+  fullName.vb: SimulationFramework.Drawing.IGraphicsProvider.LoadTexture(System.Span(Of Byte), SimulationFramework.Drawing.TextureOptions)
+  name.vb: LoadTexture(Span(Of Byte), TextureOptions)
+  spec.csharp:
+  - uid: SimulationFramework.Drawing.IGraphicsProvider.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+    name: LoadTexture
+    href: SimulationFramework.Drawing.IGraphicsProvider.html#SimulationFramework.Drawing.IGraphicsProvider.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+  - name: (
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  - name: ','
+  - name: " "
+  - uid: SimulationFramework.Drawing.TextureOptions
+    name: TextureOptions
+    href: SimulationFramework.Drawing.TextureOptions.html
+  - name: )
+  spec.vb:
+  - uid: SimulationFramework.Drawing.IGraphicsProvider.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+    name: LoadTexture
+    href: SimulationFramework.Drawing.IGraphicsProvider.html#SimulationFramework.Drawing.IGraphicsProvider.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)
+  - name: (
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+  - name: ','
+  - name: " "
+  - uid: SimulationFramework.Drawing.TextureOptions
+    name: TextureOptions
+    href: SimulationFramework.Drawing.TextureOptions.html
+  - name: )
+- uid: System.Span{System.Byte}
+  commentId: T:System.Span{System.Byte}
+  parent: System
+  definition: System.Span`1
+  href: https://learn.microsoft.com/dotnet/api/system.span-1
+  name: Span<byte>
+  nameWithType: Span<byte>
+  fullName: System.Span<byte>
+  nameWithType.vb: Span(Of Byte)
+  fullName.vb: System.Span(Of Byte)
+  name.vb: Span(Of Byte)
+  spec.csharp:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - uid: System.Byte
+    name: byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: '>'
+  spec.vb:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Byte
+    name: Byte
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.byte
+  - name: )
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Dispose*
+  commentId: Overload:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Dispose
+  href: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.html#SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Dispose
+  name: Dispose
+  nameWithType: SkiaGraphicsProvider.Dispose
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.ClearFontCache*
+  commentId: Overload:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.ClearFontCache
+  href: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.html#SimulationFramework.SkiaSharp.SkiaGraphicsProvider.ClearFontCache
+  name: ClearFontCache
+  nameWithType: SkiaGraphicsProvider.ClearFontCache
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.ClearFontCache
+- uid: SimulationFramework.Drawing.IGraphicsProvider.ClearFontCache
+  commentId: M:SimulationFramework.Drawing.IGraphicsProvider.ClearFontCache
+  parent: SimulationFramework.Drawing.IGraphicsProvider
+  href: SimulationFramework.Drawing.IGraphicsProvider.html#SimulationFramework.Drawing.IGraphicsProvider.ClearFontCache
+  name: ClearFontCache()
+  nameWithType: IGraphicsProvider.ClearFontCache()
+  fullName: SimulationFramework.Drawing.IGraphicsProvider.ClearFontCache()
+  spec.csharp:
+  - uid: SimulationFramework.Drawing.IGraphicsProvider.ClearFontCache
+    name: ClearFontCache
+    href: SimulationFramework.Drawing.IGraphicsProvider.html#SimulationFramework.Drawing.IGraphicsProvider.ClearFontCache
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: SimulationFramework.Drawing.IGraphicsProvider.ClearFontCache
+    name: ClearFontCache
+    href: SimulationFramework.Drawing.IGraphicsProvider.html#SimulationFramework.Drawing.IGraphicsProvider.ClearFontCache
+  - name: (
+  - name: )
+- uid: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFont*
+  commentId: Overload:SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFont
+  href: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.html#SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFont(System.String,SimulationFramework.Drawing.FontStyle,System.Int32)
+  name: GetFont
+  nameWithType: SkiaGraphicsProvider.GetFont
+  fullName: SimulationFramework.SkiaSharp.SkiaGraphicsProvider.GetFont
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: SimulationFramework.Drawing.FontStyle
+  commentId: T:SimulationFramework.Drawing.FontStyle
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.FontStyle.html
+  name: FontStyle
+  nameWithType: FontStyle
+  fullName: SimulationFramework.Drawing.FontStyle
+- uid: SkiaSharp.SKFont
+  commentId: T:SkiaSharp.SKFont
+  parent: SkiaSharp
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/skiasharp.skfont
+  name: SKFont
+  nameWithType: SKFont
+  fullName: SkiaSharp.SKFont

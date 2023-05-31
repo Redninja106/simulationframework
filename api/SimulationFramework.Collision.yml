@@ -1,0 +1,1066 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Collision
+  commentId: T:SimulationFramework.Collision
+  id: Collision
+  parent: SimulationFramework
+  children:
+  - SimulationFramework.Collision.CollideCircleCircle(SimulationFramework.Circle,SimulationFramework.Circle)
+  - SimulationFramework.Collision.CollideCircleLine(SimulationFramework.Circle,System.Numerics.Vector2,System.Numerics.Vector2)
+  - SimulationFramework.Collision.CollideCirclePoint(SimulationFramework.Circle,System.Numerics.Vector2)
+  - SimulationFramework.Collision.CollideLineLine(System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2@)
+  - SimulationFramework.Collision.CollideLinePoint(System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2)
+  - SimulationFramework.Collision.CollidePolygonCircle(System.Span{System.Numerics.Vector2},SimulationFramework.Circle)
+  - SimulationFramework.Collision.CollidePolygonLine(System.Span{System.Numerics.Vector2},System.Numerics.Vector2,System.Numerics.Vector2)
+  - SimulationFramework.Collision.CollidePolygonPoint(System.Span{System.Numerics.Vector2},System.Numerics.Vector2)
+  - SimulationFramework.Collision.CollidePolygonPolygon(System.Span{System.Numerics.Vector2},System.Span{System.Numerics.Vector2})
+  - SimulationFramework.Collision.CollidePolygonRectangle(System.Span{System.Numerics.Vector2},SimulationFramework.Rectangle)
+  - SimulationFramework.Collision.CollideRectangleCircle(SimulationFramework.Rectangle,SimulationFramework.Circle)
+  - SimulationFramework.Collision.CollideRectangleLine(SimulationFramework.Rectangle,System.Numerics.Vector2,System.Numerics.Vector2)
+  - SimulationFramework.Collision.CollideRectanglePoint(SimulationFramework.Rectangle,System.Numerics.Vector2)
+  - SimulationFramework.Collision.CollideRectangleRectangle(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  langs:
+  - csharp
+  - vb
+  name: Collision
+  nameWithType: Collision
+  fullName: SimulationFramework.Collision
+  type: Class
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Collision
+    path: src/SimulationFramework/Collision.cs
+    startLine: 12
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Contains various methods for determining collisions between shapes.
+  example: []
+  syntax:
+    content: public class Collision
+    content.vb: Public Class Collision
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: SimulationFramework.Collision.CollidePolygonPolygon(System.Span{System.Numerics.Vector2},System.Span{System.Numerics.Vector2})
+  commentId: M:SimulationFramework.Collision.CollidePolygonPolygon(System.Span{System.Numerics.Vector2},System.Span{System.Numerics.Vector2})
+  id: CollidePolygonPolygon(System.Span{System.Numerics.Vector2},System.Span{System.Numerics.Vector2})
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollidePolygonPolygon(Span<Vector2>, Span<Vector2>)
+  nameWithType: Collision.CollidePolygonPolygon(Span<Vector2>, Span<Vector2>)
+  fullName: SimulationFramework.Collision.CollidePolygonPolygon(System.Span<System.Numerics.Vector2>, System.Span<System.Numerics.Vector2>)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollidePolygonPolygon
+    path: src/SimulationFramework/Collision.cs
+    startLine: 26
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Not implemented.
+  example: []
+  syntax:
+    content: public static bool CollidePolygonPolygon(Span<Vector2> polygonA, Span<Vector2> polygonB)
+    parameters:
+    - id: polygonA
+      type: System.Span{System.Numerics.Vector2}
+      description: ''
+    - id: polygonB
+      type: System.Span{System.Numerics.Vector2}
+      description: ''
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollidePolygonPolygon(polygonA As Span(Of Vector2), polygonB As Span(Of Vector2)) As Boolean
+  overload: SimulationFramework.Collision.CollidePolygonPolygon*
+  nameWithType.vb: Collision.CollidePolygonPolygon(Span(Of Vector2), Span(Of Vector2))
+  fullName.vb: SimulationFramework.Collision.CollidePolygonPolygon(System.Span(Of System.Numerics.Vector2), System.Span(Of System.Numerics.Vector2))
+  name.vb: CollidePolygonPolygon(Span(Of Vector2), Span(Of Vector2))
+- uid: SimulationFramework.Collision.CollidePolygonRectangle(System.Span{System.Numerics.Vector2},SimulationFramework.Rectangle)
+  commentId: M:SimulationFramework.Collision.CollidePolygonRectangle(System.Span{System.Numerics.Vector2},SimulationFramework.Rectangle)
+  id: CollidePolygonRectangle(System.Span{System.Numerics.Vector2},SimulationFramework.Rectangle)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollidePolygonRectangle(Span<Vector2>, Rectangle)
+  nameWithType: Collision.CollidePolygonRectangle(Span<Vector2>, Rectangle)
+  fullName: SimulationFramework.Collision.CollidePolygonRectangle(System.Span<System.Numerics.Vector2>, SimulationFramework.Rectangle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollidePolygonRectangle
+    path: src/SimulationFramework/Collision.cs
+    startLine: 38
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Not implemented.
+  example: []
+  syntax:
+    content: public static bool CollidePolygonRectangle(Span<Vector2> polygon, Rectangle rectangle)
+    parameters:
+    - id: polygon
+      type: System.Span{System.Numerics.Vector2}
+      description: ''
+    - id: rectangle
+      type: SimulationFramework.Rectangle
+      description: ''
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollidePolygonRectangle(polygon As Span(Of Vector2), rectangle As Rectangle) As Boolean
+  overload: SimulationFramework.Collision.CollidePolygonRectangle*
+  nameWithType.vb: Collision.CollidePolygonRectangle(Span(Of Vector2), Rectangle)
+  fullName.vb: SimulationFramework.Collision.CollidePolygonRectangle(System.Span(Of System.Numerics.Vector2), SimulationFramework.Rectangle)
+  name.vb: CollidePolygonRectangle(Span(Of Vector2), Rectangle)
+- uid: SimulationFramework.Collision.CollidePolygonCircle(System.Span{System.Numerics.Vector2},SimulationFramework.Circle)
+  commentId: M:SimulationFramework.Collision.CollidePolygonCircle(System.Span{System.Numerics.Vector2},SimulationFramework.Circle)
+  id: CollidePolygonCircle(System.Span{System.Numerics.Vector2},SimulationFramework.Circle)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollidePolygonCircle(Span<Vector2>, Circle)
+  nameWithType: Collision.CollidePolygonCircle(Span<Vector2>, Circle)
+  fullName: SimulationFramework.Collision.CollidePolygonCircle(System.Span<System.Numerics.Vector2>, SimulationFramework.Circle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollidePolygonCircle
+    path: src/SimulationFramework/Collision.cs
+    startLine: 49
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Not implemented.
+  example: []
+  syntax:
+    content: public static bool CollidePolygonCircle(Span<Vector2> polygon, Circle circle)
+    parameters:
+    - id: polygon
+      type: System.Span{System.Numerics.Vector2}
+      description: ''
+    - id: circle
+      type: SimulationFramework.Circle
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollidePolygonCircle(polygon As Span(Of Vector2), circle As Circle) As Boolean
+  overload: SimulationFramework.Collision.CollidePolygonCircle*
+  nameWithType.vb: Collision.CollidePolygonCircle(Span(Of Vector2), Circle)
+  fullName.vb: SimulationFramework.Collision.CollidePolygonCircle(System.Span(Of System.Numerics.Vector2), SimulationFramework.Circle)
+  name.vb: CollidePolygonCircle(Span(Of Vector2), Circle)
+- uid: SimulationFramework.Collision.CollidePolygonLine(System.Span{System.Numerics.Vector2},System.Numerics.Vector2,System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Collision.CollidePolygonLine(System.Span{System.Numerics.Vector2},System.Numerics.Vector2,System.Numerics.Vector2)
+  id: CollidePolygonLine(System.Span{System.Numerics.Vector2},System.Numerics.Vector2,System.Numerics.Vector2)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollidePolygonLine(Span<Vector2>, Vector2, Vector2)
+  nameWithType: Collision.CollidePolygonLine(Span<Vector2>, Vector2, Vector2)
+  fullName: SimulationFramework.Collision.CollidePolygonLine(System.Span<System.Numerics.Vector2>, System.Numerics.Vector2, System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollidePolygonLine
+    path: src/SimulationFramework/Collision.cs
+    startLine: 60
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Not implemented.
+  example: []
+  syntax:
+    content: public static bool CollidePolygonLine(Span<Vector2> polygon, Vector2 from, Vector2 to)
+    parameters:
+    - id: polygon
+      type: System.Span{System.Numerics.Vector2}
+      description: ''
+    - id: from
+      type: System.Numerics.Vector2
+    - id: to
+      type: System.Numerics.Vector2
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollidePolygonLine(polygon As Span(Of Vector2), from As Vector2, [to] As Vector2) As Boolean
+  overload: SimulationFramework.Collision.CollidePolygonLine*
+  nameWithType.vb: Collision.CollidePolygonLine(Span(Of Vector2), Vector2, Vector2)
+  fullName.vb: SimulationFramework.Collision.CollidePolygonLine(System.Span(Of System.Numerics.Vector2), System.Numerics.Vector2, System.Numerics.Vector2)
+  name.vb: CollidePolygonLine(Span(Of Vector2), Vector2, Vector2)
+- uid: SimulationFramework.Collision.CollidePolygonPoint(System.Span{System.Numerics.Vector2},System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Collision.CollidePolygonPoint(System.Span{System.Numerics.Vector2},System.Numerics.Vector2)
+  id: CollidePolygonPoint(System.Span{System.Numerics.Vector2},System.Numerics.Vector2)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollidePolygonPoint(Span<Vector2>, Vector2)
+  nameWithType: Collision.CollidePolygonPoint(Span<Vector2>, Vector2)
+  fullName: SimulationFramework.Collision.CollidePolygonPoint(System.Span<System.Numerics.Vector2>, System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollidePolygonPoint
+    path: src/SimulationFramework/Collision.cs
+    startLine: 71
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Not implemented.
+  example: []
+  syntax:
+    content: public static bool CollidePolygonPoint(Span<Vector2> polygon, Vector2 point)
+    parameters:
+    - id: polygon
+      type: System.Span{System.Numerics.Vector2}
+      description: ''
+    - id: point
+      type: System.Numerics.Vector2
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollidePolygonPoint(polygon As Span(Of Vector2), point As Vector2) As Boolean
+  overload: SimulationFramework.Collision.CollidePolygonPoint*
+  nameWithType.vb: Collision.CollidePolygonPoint(Span(Of Vector2), Vector2)
+  fullName.vb: SimulationFramework.Collision.CollidePolygonPoint(System.Span(Of System.Numerics.Vector2), System.Numerics.Vector2)
+  name.vb: CollidePolygonPoint(Span(Of Vector2), Vector2)
+- uid: SimulationFramework.Collision.CollideRectangleRectangle(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  commentId: M:SimulationFramework.Collision.CollideRectangleRectangle(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  id: CollideRectangleRectangle(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollideRectangleRectangle(Rectangle, Rectangle)
+  nameWithType: Collision.CollideRectangleRectangle(Rectangle, Rectangle)
+  fullName: SimulationFramework.Collision.CollideRectangleRectangle(SimulationFramework.Rectangle, SimulationFramework.Rectangle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollideRectangleRectangle
+    path: src/SimulationFramework/Collision.cs
+    startLine: 82
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Not implemented.
+  example: []
+  syntax:
+    content: public static bool CollideRectangleRectangle(Rectangle rectangleA, Rectangle rectangleB)
+    parameters:
+    - id: rectangleA
+      type: SimulationFramework.Rectangle
+    - id: rectangleB
+      type: SimulationFramework.Rectangle
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollideRectangleRectangle(rectangleA As Rectangle, rectangleB As Rectangle) As Boolean
+  overload: SimulationFramework.Collision.CollideRectangleRectangle*
+- uid: SimulationFramework.Collision.CollideRectangleCircle(SimulationFramework.Rectangle,SimulationFramework.Circle)
+  commentId: M:SimulationFramework.Collision.CollideRectangleCircle(SimulationFramework.Rectangle,SimulationFramework.Circle)
+  id: CollideRectangleCircle(SimulationFramework.Rectangle,SimulationFramework.Circle)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollideRectangleCircle(Rectangle, Circle)
+  nameWithType: Collision.CollideRectangleCircle(Rectangle, Circle)
+  fullName: SimulationFramework.Collision.CollideRectangleCircle(SimulationFramework.Rectangle, SimulationFramework.Circle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollideRectangleCircle
+    path: src/SimulationFramework/Collision.cs
+    startLine: 93
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Not implemented.
+  example: []
+  syntax:
+    content: public static bool CollideRectangleCircle(Rectangle rectangle, Circle circle)
+    parameters:
+    - id: rectangle
+      type: SimulationFramework.Rectangle
+      description: ''
+    - id: circle
+      type: SimulationFramework.Circle
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollideRectangleCircle(rectangle As Rectangle, circle As Circle) As Boolean
+  overload: SimulationFramework.Collision.CollideRectangleCircle*
+- uid: SimulationFramework.Collision.CollideRectangleLine(SimulationFramework.Rectangle,System.Numerics.Vector2,System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Collision.CollideRectangleLine(SimulationFramework.Rectangle,System.Numerics.Vector2,System.Numerics.Vector2)
+  id: CollideRectangleLine(SimulationFramework.Rectangle,System.Numerics.Vector2,System.Numerics.Vector2)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollideRectangleLine(Rectangle, Vector2, Vector2)
+  nameWithType: Collision.CollideRectangleLine(Rectangle, Vector2, Vector2)
+  fullName: SimulationFramework.Collision.CollideRectangleLine(SimulationFramework.Rectangle, System.Numerics.Vector2, System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollideRectangleLine
+    path: src/SimulationFramework/Collision.cs
+    startLine: 104
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Not implemented.
+  example: []
+  syntax:
+    content: public static bool CollideRectangleLine(Rectangle rectangle, Vector2 from, Vector2 to)
+    parameters:
+    - id: rectangle
+      type: SimulationFramework.Rectangle
+      description: ''
+    - id: from
+      type: System.Numerics.Vector2
+    - id: to
+      type: System.Numerics.Vector2
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollideRectangleLine(rectangle As Rectangle, from As Vector2, [to] As Vector2) As Boolean
+  overload: SimulationFramework.Collision.CollideRectangleLine*
+- uid: SimulationFramework.Collision.CollideRectanglePoint(SimulationFramework.Rectangle,System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Collision.CollideRectanglePoint(SimulationFramework.Rectangle,System.Numerics.Vector2)
+  id: CollideRectanglePoint(SimulationFramework.Rectangle,System.Numerics.Vector2)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollideRectanglePoint(Rectangle, Vector2)
+  nameWithType: Collision.CollideRectanglePoint(Rectangle, Vector2)
+  fullName: SimulationFramework.Collision.CollideRectanglePoint(SimulationFramework.Rectangle, System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollideRectanglePoint
+    path: src/SimulationFramework/Collision.cs
+    startLine: 115
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Not implemented.
+  example: []
+  syntax:
+    content: public static bool CollideRectanglePoint(Rectangle rectangle, Vector2 point)
+    parameters:
+    - id: rectangle
+      type: SimulationFramework.Rectangle
+      description: ''
+    - id: point
+      type: System.Numerics.Vector2
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollideRectanglePoint(rectangle As Rectangle, point As Vector2) As Boolean
+  overload: SimulationFramework.Collision.CollideRectanglePoint*
+- uid: SimulationFramework.Collision.CollideCircleCircle(SimulationFramework.Circle,SimulationFramework.Circle)
+  commentId: M:SimulationFramework.Collision.CollideCircleCircle(SimulationFramework.Circle,SimulationFramework.Circle)
+  id: CollideCircleCircle(SimulationFramework.Circle,SimulationFramework.Circle)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollideCircleCircle(Circle, Circle)
+  nameWithType: Collision.CollideCircleCircle(Circle, Circle)
+  fullName: SimulationFramework.Collision.CollideCircleCircle(SimulationFramework.Circle, SimulationFramework.Circle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollideCircleCircle
+    path: src/SimulationFramework/Collision.cs
+    startLine: 126
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Determines if 2 circles are colliding.
+  example: []
+  syntax:
+    content: public static bool CollideCircleCircle(Circle circleA, Circle circleB)
+    parameters:
+    - id: circleA
+      type: SimulationFramework.Circle
+      description: ''
+    - id: circleB
+      type: SimulationFramework.Circle
+      description: ''
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollideCircleCircle(circleA As Circle, circleB As Circle) As Boolean
+  overload: SimulationFramework.Collision.CollideCircleCircle*
+- uid: SimulationFramework.Collision.CollideCircleLine(SimulationFramework.Circle,System.Numerics.Vector2,System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Collision.CollideCircleLine(SimulationFramework.Circle,System.Numerics.Vector2,System.Numerics.Vector2)
+  id: CollideCircleLine(SimulationFramework.Circle,System.Numerics.Vector2,System.Numerics.Vector2)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollideCircleLine(Circle, Vector2, Vector2)
+  nameWithType: Collision.CollideCircleLine(Circle, Vector2, Vector2)
+  fullName: SimulationFramework.Collision.CollideCircleLine(SimulationFramework.Circle, System.Numerics.Vector2, System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollideCircleLine
+    path: src/SimulationFramework/Collision.cs
+    startLine: 138
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: ''
+  example: []
+  syntax:
+    content: public static bool CollideCircleLine(Circle circle, Vector2 from, Vector2 to)
+    parameters:
+    - id: circle
+      type: SimulationFramework.Circle
+      description: ''
+    - id: from
+      type: System.Numerics.Vector2
+      description: ''
+    - id: to
+      type: System.Numerics.Vector2
+      description: ''
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollideCircleLine(circle As Circle, from As Vector2, [to] As Vector2) As Boolean
+  overload: SimulationFramework.Collision.CollideCircleLine*
+- uid: SimulationFramework.Collision.CollideCirclePoint(SimulationFramework.Circle,System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Collision.CollideCirclePoint(SimulationFramework.Circle,System.Numerics.Vector2)
+  id: CollideCirclePoint(SimulationFramework.Circle,System.Numerics.Vector2)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollideCirclePoint(Circle, Vector2)
+  nameWithType: Collision.CollideCirclePoint(Circle, Vector2)
+  fullName: SimulationFramework.Collision.CollideCirclePoint(SimulationFramework.Circle, System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollideCirclePoint
+    path: src/SimulationFramework/Collision.cs
+    startLine: 171
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: ''
+  example: []
+  syntax:
+    content: public static bool CollideCirclePoint(Circle circle, Vector2 point)
+    parameters:
+    - id: circle
+      type: SimulationFramework.Circle
+      description: ''
+    - id: point
+      type: System.Numerics.Vector2
+      description: ''
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollideCirclePoint(circle As Circle, point As Vector2) As Boolean
+  overload: SimulationFramework.Collision.CollideCirclePoint*
+- uid: SimulationFramework.Collision.CollideLineLine(System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2@)
+  commentId: M:SimulationFramework.Collision.CollideLineLine(System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2@)
+  id: CollideLineLine(System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2@)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollideLineLine(Vector2, Vector2, Vector2, Vector2, out Vector2)
+  nameWithType: Collision.CollideLineLine(Vector2, Vector2, Vector2, Vector2, out Vector2)
+  fullName: SimulationFramework.Collision.CollideLineLine(System.Numerics.Vector2, System.Numerics.Vector2, System.Numerics.Vector2, System.Numerics.Vector2, out System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollideLineLine
+    path: src/SimulationFramework/Collision.cs
+    startLine: 185
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: ''
+  example: []
+  syntax:
+    content: public static bool CollideLineLine(Vector2 fromA, Vector2 toA, Vector2 fromB, Vector2 toB, out Vector2 point)
+    parameters:
+    - id: fromA
+      type: System.Numerics.Vector2
+      description: ''
+    - id: toA
+      type: System.Numerics.Vector2
+      description: ''
+    - id: fromB
+      type: System.Numerics.Vector2
+      description: ''
+    - id: toB
+      type: System.Numerics.Vector2
+      description: ''
+    - id: point
+      type: System.Numerics.Vector2
+      description: ''
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollideLineLine(fromA As Vector2, toA As Vector2, fromB As Vector2, toB As Vector2, point As Vector2) As Boolean
+  overload: SimulationFramework.Collision.CollideLineLine*
+  nameWithType.vb: Collision.CollideLineLine(Vector2, Vector2, Vector2, Vector2, Vector2)
+  fullName.vb: SimulationFramework.Collision.CollideLineLine(System.Numerics.Vector2, System.Numerics.Vector2, System.Numerics.Vector2, System.Numerics.Vector2, System.Numerics.Vector2)
+  name.vb: CollideLineLine(Vector2, Vector2, Vector2, Vector2, Vector2)
+- uid: SimulationFramework.Collision.CollideLinePoint(System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Collision.CollideLinePoint(System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2)
+  id: CollideLinePoint(System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2)
+  parent: SimulationFramework.Collision
+  langs:
+  - csharp
+  - vb
+  name: CollideLinePoint(Vector2, Vector2, Vector2)
+  nameWithType: Collision.CollideLinePoint(Vector2, Vector2, Vector2)
+  fullName: SimulationFramework.Collision.CollideLinePoint(System.Numerics.Vector2, System.Numerics.Vector2, System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Collision.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CollideLinePoint
+    path: src/SimulationFramework/Collision.cs
+    startLine: 216
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: ''
+  example: []
+  syntax:
+    content: public static bool CollideLinePoint(Vector2 from, Vector2 to, Vector2 point)
+    parameters:
+    - id: from
+      type: System.Numerics.Vector2
+      description: ''
+    - id: to
+      type: System.Numerics.Vector2
+      description: ''
+    - id: point
+      type: System.Numerics.Vector2
+      description: ''
+    return:
+      type: System.Boolean
+      description: ''
+    content.vb: Public Shared Function CollideLinePoint(from As Vector2, [to] As Vector2, point As Vector2) As Boolean
+  overload: SimulationFramework.Collision.CollideLinePoint*
+references:
+- uid: SimulationFramework
+  commentId: N:SimulationFramework
+  href: SimulationFramework.html
+  name: SimulationFramework
+  nameWithType: SimulationFramework
+  fullName: SimulationFramework
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: SimulationFramework.Collision.CollidePolygonPolygon*
+  commentId: Overload:SimulationFramework.Collision.CollidePolygonPolygon
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollidePolygonPolygon(System.Span{System.Numerics.Vector2},System.Span{System.Numerics.Vector2})
+  name: CollidePolygonPolygon
+  nameWithType: Collision.CollidePolygonPolygon
+  fullName: SimulationFramework.Collision.CollidePolygonPolygon
+- uid: System.Span{System.Numerics.Vector2}
+  commentId: T:System.Span{System.Numerics.Vector2}
+  parent: System
+  definition: System.Span`1
+  href: https://learn.microsoft.com/dotnet/api/system.span-1
+  name: Span<Vector2>
+  nameWithType: Span<Vector2>
+  fullName: System.Span<System.Numerics.Vector2>
+  nameWithType.vb: Span(Of Vector2)
+  fullName.vb: System.Span(Of System.Numerics.Vector2)
+  name.vb: Span(Of Vector2)
+  spec.csharp:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - uid: System.Numerics.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  - name: '>'
+  spec.vb:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Numerics.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.Span`1
+  commentId: T:System.Span`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.span-1
+  name: Span<T>
+  nameWithType: Span<T>
+  fullName: System.Span<T>
+  nameWithType.vb: Span(Of T)
+  fullName.vb: System.Span(Of T)
+  name.vb: Span(Of T)
+  spec.csharp:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: SimulationFramework.Collision.CollidePolygonRectangle*
+  commentId: Overload:SimulationFramework.Collision.CollidePolygonRectangle
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollidePolygonRectangle(System.Span{System.Numerics.Vector2},SimulationFramework.Rectangle)
+  name: CollidePolygonRectangle
+  nameWithType: Collision.CollidePolygonRectangle
+  fullName: SimulationFramework.Collision.CollidePolygonRectangle
+- uid: SimulationFramework.Rectangle
+  commentId: T:SimulationFramework.Rectangle
+  parent: SimulationFramework
+  href: SimulationFramework.Rectangle.html
+  name: Rectangle
+  nameWithType: Rectangle
+  fullName: SimulationFramework.Rectangle
+- uid: SimulationFramework.Collision.CollidePolygonCircle*
+  commentId: Overload:SimulationFramework.Collision.CollidePolygonCircle
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollidePolygonCircle(System.Span{System.Numerics.Vector2},SimulationFramework.Circle)
+  name: CollidePolygonCircle
+  nameWithType: Collision.CollidePolygonCircle
+  fullName: SimulationFramework.Collision.CollidePolygonCircle
+- uid: SimulationFramework.Circle
+  commentId: T:SimulationFramework.Circle
+  parent: SimulationFramework
+  href: SimulationFramework.Circle.html
+  name: Circle
+  nameWithType: Circle
+  fullName: SimulationFramework.Circle
+- uid: SimulationFramework.Collision.CollidePolygonLine*
+  commentId: Overload:SimulationFramework.Collision.CollidePolygonLine
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollidePolygonLine(System.Span{System.Numerics.Vector2},System.Numerics.Vector2,System.Numerics.Vector2)
+  name: CollidePolygonLine
+  nameWithType: Collision.CollidePolygonLine
+  fullName: SimulationFramework.Collision.CollidePolygonLine
+- uid: System.Numerics.Vector2
+  commentId: T:System.Numerics.Vector2
+  parent: System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  name: Vector2
+  nameWithType: Vector2
+  fullName: System.Numerics.Vector2
+- uid: System.Numerics
+  commentId: N:System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Numerics
+  nameWithType: System.Numerics
+  fullName: System.Numerics
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+- uid: SimulationFramework.Collision.CollidePolygonPoint*
+  commentId: Overload:SimulationFramework.Collision.CollidePolygonPoint
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollidePolygonPoint(System.Span{System.Numerics.Vector2},System.Numerics.Vector2)
+  name: CollidePolygonPoint
+  nameWithType: Collision.CollidePolygonPoint
+  fullName: SimulationFramework.Collision.CollidePolygonPoint
+- uid: SimulationFramework.Collision.CollideRectangleRectangle*
+  commentId: Overload:SimulationFramework.Collision.CollideRectangleRectangle
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollideRectangleRectangle(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  name: CollideRectangleRectangle
+  nameWithType: Collision.CollideRectangleRectangle
+  fullName: SimulationFramework.Collision.CollideRectangleRectangle
+- uid: SimulationFramework.Collision.CollideRectangleCircle*
+  commentId: Overload:SimulationFramework.Collision.CollideRectangleCircle
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollideRectangleCircle(SimulationFramework.Rectangle,SimulationFramework.Circle)
+  name: CollideRectangleCircle
+  nameWithType: Collision.CollideRectangleCircle
+  fullName: SimulationFramework.Collision.CollideRectangleCircle
+- uid: SimulationFramework.Collision.CollideRectangleLine*
+  commentId: Overload:SimulationFramework.Collision.CollideRectangleLine
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollideRectangleLine(SimulationFramework.Rectangle,System.Numerics.Vector2,System.Numerics.Vector2)
+  name: CollideRectangleLine
+  nameWithType: Collision.CollideRectangleLine
+  fullName: SimulationFramework.Collision.CollideRectangleLine
+- uid: SimulationFramework.Collision.CollideRectanglePoint*
+  commentId: Overload:SimulationFramework.Collision.CollideRectanglePoint
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollideRectanglePoint(SimulationFramework.Rectangle,System.Numerics.Vector2)
+  name: CollideRectanglePoint
+  nameWithType: Collision.CollideRectanglePoint
+  fullName: SimulationFramework.Collision.CollideRectanglePoint
+- uid: SimulationFramework.Collision.CollideCircleCircle*
+  commentId: Overload:SimulationFramework.Collision.CollideCircleCircle
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollideCircleCircle(SimulationFramework.Circle,SimulationFramework.Circle)
+  name: CollideCircleCircle
+  nameWithType: Collision.CollideCircleCircle
+  fullName: SimulationFramework.Collision.CollideCircleCircle
+- uid: SimulationFramework.Collision.CollideCircleLine*
+  commentId: Overload:SimulationFramework.Collision.CollideCircleLine
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollideCircleLine(SimulationFramework.Circle,System.Numerics.Vector2,System.Numerics.Vector2)
+  name: CollideCircleLine
+  nameWithType: Collision.CollideCircleLine
+  fullName: SimulationFramework.Collision.CollideCircleLine
+- uid: SimulationFramework.Collision.CollideCirclePoint*
+  commentId: Overload:SimulationFramework.Collision.CollideCirclePoint
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollideCirclePoint(SimulationFramework.Circle,System.Numerics.Vector2)
+  name: CollideCirclePoint
+  nameWithType: Collision.CollideCirclePoint
+  fullName: SimulationFramework.Collision.CollideCirclePoint
+- uid: SimulationFramework.Collision.CollideLineLine*
+  commentId: Overload:SimulationFramework.Collision.CollideLineLine
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollideLineLine(System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2@)
+  name: CollideLineLine
+  nameWithType: Collision.CollideLineLine
+  fullName: SimulationFramework.Collision.CollideLineLine
+- uid: SimulationFramework.Collision.CollideLinePoint*
+  commentId: Overload:SimulationFramework.Collision.CollideLinePoint
+  href: SimulationFramework.Collision.html#SimulationFramework.Collision.CollideLinePoint(System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2)
+  name: CollideLinePoint
+  nameWithType: Collision.CollideLinePoint
+  fullName: SimulationFramework.Collision.CollideLinePoint

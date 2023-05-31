@@ -1,0 +1,132 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.IApplicationComponent
+  commentId: T:SimulationFramework.IApplicationComponent
+  id: IApplicationComponent
+  parent: SimulationFramework
+  children:
+  - SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  langs:
+  - csharp
+  - vb
+  name: IApplicationComponent
+  nameWithType: IApplicationComponent
+  fullName: SimulationFramework.IApplicationComponent
+  type: Interface
+  source:
+    remote:
+      path: src/SimulationFramework/IApplicationComponent.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: IApplicationComponent
+    path: src/SimulationFramework/IApplicationComponent.cs
+    startLine: 11
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The base interface for all application components.
+  example: []
+  syntax:
+    content: 'public interface IApplicationComponent : IDisposable'
+    content.vb: Public Interface IApplicationComponent Inherits IDisposable
+  inheritedMembers:
+  - System.IDisposable.Dispose
+- uid: SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  commentId: M:SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  id: Initialize(SimulationFramework.Application)
+  parent: SimulationFramework.IApplicationComponent
+  langs:
+  - csharp
+  - vb
+  name: Initialize(Application)
+  nameWithType: IApplicationComponent.Initialize(Application)
+  fullName: SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/IApplicationComponent.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Initialize
+    path: src/SimulationFramework/IApplicationComponent.cs
+    startLine: 18
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: >-
+    Initializes the component.
+
+    This method is only called once on each component.
+  example: []
+  syntax:
+    content: void Initialize(Application application)
+    parameters:
+    - id: application
+      type: SimulationFramework.Application
+      description: The application to which this <xref href="SimulationFramework.IApplicationComponent" data-throw-if-not-resolved="false"></xref> belongs to.
+    content.vb: Sub Initialize(application As Application)
+  overload: SimulationFramework.IApplicationComponent.Initialize*
+references:
+- uid: SimulationFramework
+  commentId: N:SimulationFramework
+  href: SimulationFramework.html
+  name: SimulationFramework
+  nameWithType: SimulationFramework
+  fullName: SimulationFramework
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: SimulationFramework.IApplicationComponent
+  commentId: T:SimulationFramework.IApplicationComponent
+  parent: SimulationFramework
+  href: SimulationFramework.IApplicationComponent.html
+  name: IApplicationComponent
+  nameWithType: IApplicationComponent
+  fullName: SimulationFramework.IApplicationComponent
+- uid: SimulationFramework.IApplicationComponent.Initialize*
+  commentId: Overload:SimulationFramework.IApplicationComponent.Initialize
+  href: SimulationFramework.IApplicationComponent.html#SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  name: Initialize
+  nameWithType: IApplicationComponent.Initialize
+  fullName: SimulationFramework.IApplicationComponent.Initialize
+- uid: SimulationFramework.Application
+  commentId: T:SimulationFramework.Application
+  parent: SimulationFramework
+  href: SimulationFramework.Application.html
+  name: Application
+  nameWithType: Application
+  fullName: SimulationFramework.Application

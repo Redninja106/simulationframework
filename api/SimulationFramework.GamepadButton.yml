@@ -1,0 +1,450 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.GamepadButton
+  commentId: T:SimulationFramework.GamepadButton
+  id: GamepadButton
+  parent: SimulationFramework
+  children:
+  - SimulationFramework.GamepadButton.A
+  - SimulationFramework.GamepadButton.B
+  - SimulationFramework.GamepadButton.Back
+  - SimulationFramework.GamepadButton.Down
+  - SimulationFramework.GamepadButton.Left
+  - SimulationFramework.GamepadButton.LeftBumper
+  - SimulationFramework.GamepadButton.LeftStick
+  - SimulationFramework.GamepadButton.Right
+  - SimulationFramework.GamepadButton.RightBumper
+  - SimulationFramework.GamepadButton.RightStick
+  - SimulationFramework.GamepadButton.Start
+  - SimulationFramework.GamepadButton.Up
+  - SimulationFramework.GamepadButton.X
+  - SimulationFramework.GamepadButton.Y
+  langs:
+  - csharp
+  - vb
+  name: GamepadButton
+  nameWithType: GamepadButton
+  fullName: SimulationFramework.GamepadButton
+  type: Enum
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: GamepadButton
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 11
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Specifies the buttons on a gamepad.
+  example: []
+  syntax:
+    content: public enum GamepadButton
+    content.vb: Public Enum GamepadButton
+- uid: SimulationFramework.GamepadButton.A
+  commentId: F:SimulationFramework.GamepadButton.A
+  id: A
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: A
+  nameWithType: GamepadButton.A
+  fullName: SimulationFramework.GamepadButton.A
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: A
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 16
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The A button.
+  example: []
+  syntax:
+    content: A = 0
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.B
+  commentId: F:SimulationFramework.GamepadButton.B
+  id: B
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: B
+  nameWithType: GamepadButton.B
+  fullName: SimulationFramework.GamepadButton.B
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: B
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 20
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The B button.
+  example: []
+  syntax:
+    content: B = 1
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.X
+  commentId: F:SimulationFramework.GamepadButton.X
+  id: X
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: X
+  nameWithType: GamepadButton.X
+  fullName: SimulationFramework.GamepadButton.X
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: X
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 24
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The X button.
+  example: []
+  syntax:
+    content: X = 2
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.Y
+  commentId: F:SimulationFramework.GamepadButton.Y
+  id: Y
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: Y
+  nameWithType: GamepadButton.Y
+  fullName: SimulationFramework.GamepadButton.Y
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Y
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 28
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The Y button.
+  example: []
+  syntax:
+    content: Y = 3
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.LeftStick
+  commentId: F:SimulationFramework.GamepadButton.LeftStick
+  id: LeftStick
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: LeftStick
+  nameWithType: GamepadButton.LeftStick
+  fullName: SimulationFramework.GamepadButton.LeftStick
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: LeftStick
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 32
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The left stick button.
+  example: []
+  syntax:
+    content: LeftStick = 4
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.RightStick
+  commentId: F:SimulationFramework.GamepadButton.RightStick
+  id: RightStick
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: RightStick
+  nameWithType: GamepadButton.RightStick
+  fullName: SimulationFramework.GamepadButton.RightStick
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: RightStick
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 36
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The right stick button.
+  example: []
+  syntax:
+    content: RightStick = 5
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.Back
+  commentId: F:SimulationFramework.GamepadButton.Back
+  id: Back
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: Back
+  nameWithType: GamepadButton.Back
+  fullName: SimulationFramework.GamepadButton.Back
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Back
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 40
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The back Button.
+  example: []
+  syntax:
+    content: Back = 6
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.Start
+  commentId: F:SimulationFramework.GamepadButton.Start
+  id: Start
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: Start
+  nameWithType: GamepadButton.Start
+  fullName: SimulationFramework.GamepadButton.Start
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Start
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 44
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The start button.
+  example: []
+  syntax:
+    content: Start = 7
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.LeftBumper
+  commentId: F:SimulationFramework.GamepadButton.LeftBumper
+  id: LeftBumper
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: LeftBumper
+  nameWithType: GamepadButton.LeftBumper
+  fullName: SimulationFramework.GamepadButton.LeftBumper
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: LeftBumper
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 48
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The left bumper.
+  example: []
+  syntax:
+    content: LeftBumper = 8
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.RightBumper
+  commentId: F:SimulationFramework.GamepadButton.RightBumper
+  id: RightBumper
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: RightBumper
+  nameWithType: GamepadButton.RightBumper
+  fullName: SimulationFramework.GamepadButton.RightBumper
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: RightBumper
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 52
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The right bumper.
+  example: []
+  syntax:
+    content: RightBumper = 9
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.Up
+  commentId: F:SimulationFramework.GamepadButton.Up
+  id: Up
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: Up
+  nameWithType: GamepadButton.Up
+  fullName: SimulationFramework.GamepadButton.Up
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Up
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 56
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The up button.
+  example: []
+  syntax:
+    content: Up = 10
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.Down
+  commentId: F:SimulationFramework.GamepadButton.Down
+  id: Down
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: Down
+  nameWithType: GamepadButton.Down
+  fullName: SimulationFramework.GamepadButton.Down
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Down
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 60
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The down button.
+  example: []
+  syntax:
+    content: Down = 11
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.Left
+  commentId: F:SimulationFramework.GamepadButton.Left
+  id: Left
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: Left
+  nameWithType: GamepadButton.Left
+  fullName: SimulationFramework.GamepadButton.Left
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Left
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 64
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The left button.
+  example: []
+  syntax:
+    content: Left = 12
+    return:
+      type: SimulationFramework.GamepadButton
+- uid: SimulationFramework.GamepadButton.Right
+  commentId: F:SimulationFramework.GamepadButton.Right
+  id: Right
+  parent: SimulationFramework.GamepadButton
+  langs:
+  - csharp
+  - vb
+  name: Right
+  nameWithType: GamepadButton.Right
+  fullName: SimulationFramework.GamepadButton.Right
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/GamepadButton.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Right
+    path: src/SimulationFramework/GamepadButton.cs
+    startLine: 68
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The right button.
+  example: []
+  syntax:
+    content: Right = 13
+    return:
+      type: SimulationFramework.GamepadButton
+references:
+- uid: SimulationFramework
+  commentId: N:SimulationFramework
+  href: SimulationFramework.html
+  name: SimulationFramework
+  nameWithType: SimulationFramework
+  fullName: SimulationFramework
+- uid: SimulationFramework.GamepadButton
+  commentId: T:SimulationFramework.GamepadButton
+  parent: SimulationFramework
+  href: SimulationFramework.GamepadButton.html
+  name: GamepadButton
+  nameWithType: GamepadButton
+  fullName: SimulationFramework.GamepadButton

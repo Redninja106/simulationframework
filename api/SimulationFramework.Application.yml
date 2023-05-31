@@ -1,0 +1,777 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Application
+  commentId: T:SimulationFramework.Application
+  id: Application
+  parent: SimulationFramework
+  children:
+  - SimulationFramework.Application.#ctor(SimulationFramework.IApplicationPlatform)
+  - SimulationFramework.Application.AddComponent(SimulationFramework.IApplicationComponent)
+  - SimulationFramework.Application.AddComponent``1(``0)
+  - SimulationFramework.Application.Current
+  - SimulationFramework.Application.Dispatcher
+  - SimulationFramework.Application.Dispose
+  - SimulationFramework.Application.Exit
+  - SimulationFramework.Application.GetComponent``1
+  - SimulationFramework.Application.RedirectConsoleOutput(System.IO.TextWriter)
+  - SimulationFramework.Application.Start
+  langs:
+  - csharp
+  - vb
+  name: Application
+  nameWithType: Application
+  fullName: SimulationFramework.Application
+  type: Class
+  source:
+    remote:
+      path: src/SimulationFramework/Application.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Application
+    path: src/SimulationFramework/Application.cs
+    startLine: 15
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Hosts all of the components in a simulation.
+  example: []
+  syntax:
+    content: 'public sealed class Application : IDisposable'
+    content.vb: Public NotInheritable Class Application Implements IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: SimulationFramework.Application.Current
+  commentId: P:SimulationFramework.Application.Current
+  id: Current
+  parent: SimulationFramework.Application
+  langs:
+  - csharp
+  - vb
+  name: Current
+  nameWithType: Application.Current
+  fullName: SimulationFramework.Application.Current
+  type: Property
+  source:
+    remote:
+      path: src/SimulationFramework/Application.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Current
+    path: src/SimulationFramework/Application.cs
+    startLine: 20
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The currently running application, or null if there is none.
+  example: []
+  syntax:
+    content: public static Application? Current { get; }
+    parameters: []
+    return:
+      type: SimulationFramework.Application
+    content.vb: Public Shared Property Current As Application
+  overload: SimulationFramework.Application.Current*
+- uid: SimulationFramework.Application.Dispatcher
+  commentId: P:SimulationFramework.Application.Dispatcher
+  id: Dispatcher
+  parent: SimulationFramework.Application
+  langs:
+  - csharp
+  - vb
+  name: Dispatcher
+  nameWithType: Application.Dispatcher
+  fullName: SimulationFramework.Application.Dispatcher
+  type: Property
+  source:
+    remote:
+      path: src/SimulationFramework/Application.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Dispatcher
+    path: src/SimulationFramework/Application.cs
+    startLine: 25
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The application's dispatcher.
+  example: []
+  syntax:
+    content: public MessageDispatcher Dispatcher { get; }
+    parameters: []
+    return:
+      type: SimulationFramework.Messaging.MessageDispatcher
+    content.vb: Public Property Dispatcher As MessageDispatcher
+  overload: SimulationFramework.Application.Dispatcher*
+- uid: SimulationFramework.Application.#ctor(SimulationFramework.IApplicationPlatform)
+  commentId: M:SimulationFramework.Application.#ctor(SimulationFramework.IApplicationPlatform)
+  id: '#ctor(SimulationFramework.IApplicationPlatform)'
+  parent: SimulationFramework.Application
+  langs:
+  - csharp
+  - vb
+  name: Application(IApplicationPlatform)
+  nameWithType: Application.Application(IApplicationPlatform)
+  fullName: SimulationFramework.Application.Application(SimulationFramework.IApplicationPlatform)
+  type: Constructor
+  source:
+    remote:
+      path: src/SimulationFramework/Application.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: .ctor
+    path: src/SimulationFramework/Application.cs
+    startLine: 34
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Creates a new instance of the <xref href="SimulationFramework.Application" data-throw-if-not-resolved="false"></xref> class.
+  example: []
+  syntax:
+    content: public Application(IApplicationPlatform platform)
+    parameters:
+    - id: platform
+      type: SimulationFramework.IApplicationPlatform
+    content.vb: Public Sub New(platform As IApplicationPlatform)
+  overload: SimulationFramework.Application.#ctor*
+  nameWithType.vb: Application.New(IApplicationPlatform)
+  fullName.vb: SimulationFramework.Application.New(SimulationFramework.IApplicationPlatform)
+  name.vb: New(IApplicationPlatform)
+- uid: SimulationFramework.Application.GetComponent``1
+  commentId: M:SimulationFramework.Application.GetComponent``1
+  id: GetComponent``1
+  parent: SimulationFramework.Application
+  langs:
+  - csharp
+  - vb
+  name: GetComponent<T>()
+  nameWithType: Application.GetComponent<T>()
+  fullName: SimulationFramework.Application.GetComponent<T>()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Application.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: GetComponent
+    path: src/SimulationFramework/Application.cs
+    startLine: 59
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Finds the component of the provided type.
+  example: []
+  syntax:
+    content: 'public T? GetComponent<T>() where T : IApplicationComponent'
+    typeParameters:
+    - id: T
+      description: The type of component to find.
+    return:
+      type: '{T}'
+      description: The component if one of the provided type was found, else null.
+    content.vb: Public Function GetComponent(Of T As IApplicationComponent)() As T
+  overload: SimulationFramework.Application.GetComponent*
+  nameWithType.vb: Application.GetComponent(Of T)()
+  fullName.vb: SimulationFramework.Application.GetComponent(Of T)()
+  name.vb: GetComponent(Of T)()
+- uid: SimulationFramework.Application.AddComponent``1(``0)
+  commentId: M:SimulationFramework.Application.AddComponent``1(``0)
+  id: AddComponent``1(``0)
+  parent: SimulationFramework.Application
+  langs:
+  - csharp
+  - vb
+  name: AddComponent<T>(T)
+  nameWithType: Application.AddComponent<T>(T)
+  fullName: SimulationFramework.Application.AddComponent<T>(T)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Application.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: AddComponent
+    path: src/SimulationFramework/Application.cs
+    startLine: 69
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Adds the provided component to the application.
+  example: []
+  syntax:
+    content: 'public void AddComponent<T>(T component) where T : IApplicationComponent'
+    parameters:
+    - id: component
+      type: '{T}'
+      description: ''
+    typeParameters:
+    - id: T
+      description: ''
+    content.vb: Public Sub AddComponent(Of T As IApplicationComponent)(component As T)
+  overload: SimulationFramework.Application.AddComponent*
+  nameWithType.vb: Application.AddComponent(Of T)(T)
+  fullName.vb: SimulationFramework.Application.AddComponent(Of T)(T)
+  name.vb: AddComponent(Of T)(T)
+- uid: SimulationFramework.Application.AddComponent(SimulationFramework.IApplicationComponent)
+  commentId: M:SimulationFramework.Application.AddComponent(SimulationFramework.IApplicationComponent)
+  id: AddComponent(SimulationFramework.IApplicationComponent)
+  parent: SimulationFramework.Application
+  langs:
+  - csharp
+  - vb
+  name: AddComponent(IApplicationComponent)
+  nameWithType: Application.AddComponent(IApplicationComponent)
+  fullName: SimulationFramework.Application.AddComponent(SimulationFramework.IApplicationComponent)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Application.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: AddComponent
+    path: src/SimulationFramework/Application.cs
+    startLine: 78
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Adds the provided component to the application.
+  example: []
+  syntax:
+    content: public void AddComponent(IApplicationComponent component)
+    parameters:
+    - id: component
+      type: SimulationFramework.IApplicationComponent
+      description: ''
+    content.vb: Public Sub AddComponent(component As IApplicationComponent)
+  overload: SimulationFramework.Application.AddComponent*
+- uid: SimulationFramework.Application.Dispose
+  commentId: M:SimulationFramework.Application.Dispose
+  id: Dispose
+  parent: SimulationFramework.Application
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: Application.Dispose()
+  fullName: SimulationFramework.Application.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Application.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Dispose
+    path: src/SimulationFramework/Application.cs
+    startLine: 94
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: SimulationFramework.Application.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+- uid: SimulationFramework.Application.Exit
+  commentId: M:SimulationFramework.Application.Exit
+  id: Exit
+  parent: SimulationFramework.Application
+  langs:
+  - csharp
+  - vb
+  name: Exit()
+  nameWithType: Application.Exit()
+  fullName: SimulationFramework.Application.Exit()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Application.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Exit
+    path: src/SimulationFramework/Application.cs
+    startLine: 117
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Notifies the simulation to exit after the current frame.
+  example: []
+  syntax:
+    content: public void Exit()
+    content.vb: Public Sub [Exit]()
+  overload: SimulationFramework.Application.Exit*
+- uid: SimulationFramework.Application.Start
+  commentId: M:SimulationFramework.Application.Start
+  id: Start
+  parent: SimulationFramework.Application
+  langs:
+  - csharp
+  - vb
+  name: Start()
+  nameWithType: Application.Start()
+  fullName: SimulationFramework.Application.Start()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Application.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Start
+    path: src/SimulationFramework/Application.cs
+    startLine: 125
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Runs the app using the provided platform.
+  example: []
+  syntax:
+    content: public void Start()
+    content.vb: Public Sub Start()
+  overload: SimulationFramework.Application.Start*
+- uid: SimulationFramework.Application.RedirectConsoleOutput(System.IO.TextWriter)
+  commentId: M:SimulationFramework.Application.RedirectConsoleOutput(System.IO.TextWriter)
+  id: RedirectConsoleOutput(System.IO.TextWriter)
+  parent: SimulationFramework.Application
+  langs:
+  - csharp
+  - vb
+  name: RedirectConsoleOutput(TextWriter?)
+  nameWithType: Application.RedirectConsoleOutput(TextWriter?)
+  fullName: SimulationFramework.Application.RedirectConsoleOutput(System.IO.TextWriter?)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Application.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: RedirectConsoleOutput
+    path: src/SimulationFramework/Application.cs
+    startLine: 150
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Redirects all internal console messages to the provided text writer.
+  example: []
+  syntax:
+    content: public static void RedirectConsoleOutput(TextWriter? writer)
+    parameters:
+    - id: writer
+      type: System.IO.TextWriter
+      description: The writer to redirect to, or null to redirect to the console.
+    content.vb: Public Shared Sub RedirectConsoleOutput(writer As TextWriter)
+  overload: SimulationFramework.Application.RedirectConsoleOutput*
+  nameWithType.vb: Application.RedirectConsoleOutput(TextWriter)
+  fullName.vb: SimulationFramework.Application.RedirectConsoleOutput(System.IO.TextWriter)
+  name.vb: RedirectConsoleOutput(TextWriter)
+references:
+- uid: SimulationFramework
+  commentId: N:SimulationFramework
+  href: SimulationFramework.html
+  name: SimulationFramework
+  nameWithType: SimulationFramework
+  fullName: SimulationFramework
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: SimulationFramework.Application.Current*
+  commentId: Overload:SimulationFramework.Application.Current
+  href: SimulationFramework.Application.html#SimulationFramework.Application.Current
+  name: Current
+  nameWithType: Application.Current
+  fullName: SimulationFramework.Application.Current
+- uid: SimulationFramework.Application
+  commentId: T:SimulationFramework.Application
+  parent: SimulationFramework
+  href: SimulationFramework.Application.html
+  name: Application
+  nameWithType: Application
+  fullName: SimulationFramework.Application
+- uid: SimulationFramework.Application.Dispatcher*
+  commentId: Overload:SimulationFramework.Application.Dispatcher
+  href: SimulationFramework.Application.html#SimulationFramework.Application.Dispatcher
+  name: Dispatcher
+  nameWithType: Application.Dispatcher
+  fullName: SimulationFramework.Application.Dispatcher
+- uid: SimulationFramework.Messaging.MessageDispatcher
+  commentId: T:SimulationFramework.Messaging.MessageDispatcher
+  parent: SimulationFramework.Messaging
+  href: SimulationFramework.Messaging.MessageDispatcher.html
+  name: MessageDispatcher
+  nameWithType: MessageDispatcher
+  fullName: SimulationFramework.Messaging.MessageDispatcher
+- uid: SimulationFramework.Messaging
+  commentId: N:SimulationFramework.Messaging
+  href: SimulationFramework.html
+  name: SimulationFramework.Messaging
+  nameWithType: SimulationFramework.Messaging
+  fullName: SimulationFramework.Messaging
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Messaging
+    name: Messaging
+    href: SimulationFramework.Messaging.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Messaging
+    name: Messaging
+    href: SimulationFramework.Messaging.html
+- uid: SimulationFramework.Application.#ctor*
+  commentId: Overload:SimulationFramework.Application.#ctor
+  href: SimulationFramework.Application.html#SimulationFramework.Application.#ctor(SimulationFramework.IApplicationPlatform)
+  name: Application
+  nameWithType: Application.Application
+  fullName: SimulationFramework.Application.Application
+  nameWithType.vb: Application.New
+  fullName.vb: SimulationFramework.Application.New
+  name.vb: New
+- uid: SimulationFramework.IApplicationPlatform
+  commentId: T:SimulationFramework.IApplicationPlatform
+  parent: SimulationFramework
+  href: SimulationFramework.IApplicationPlatform.html
+  name: IApplicationPlatform
+  nameWithType: IApplicationPlatform
+  fullName: SimulationFramework.IApplicationPlatform
+- uid: SimulationFramework.Application.GetComponent*
+  commentId: Overload:SimulationFramework.Application.GetComponent
+  href: SimulationFramework.Application.html#SimulationFramework.Application.GetComponent``1
+  name: GetComponent
+  nameWithType: Application.GetComponent
+  fullName: SimulationFramework.Application.GetComponent
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: SimulationFramework.Application.AddComponent*
+  commentId: Overload:SimulationFramework.Application.AddComponent
+  href: SimulationFramework.Application.html#SimulationFramework.Application.AddComponent``1(``0)
+  name: AddComponent
+  nameWithType: Application.AddComponent
+  fullName: SimulationFramework.Application.AddComponent
+- uid: SimulationFramework.IApplicationComponent
+  commentId: T:SimulationFramework.IApplicationComponent
+  parent: SimulationFramework
+  href: SimulationFramework.IApplicationComponent.html
+  name: IApplicationComponent
+  nameWithType: IApplicationComponent
+  fullName: SimulationFramework.IApplicationComponent
+- uid: SimulationFramework.Application.Dispose*
+  commentId: Overload:SimulationFramework.Application.Dispose
+  href: SimulationFramework.Application.html#SimulationFramework.Application.Dispose
+  name: Dispose
+  nameWithType: Application.Dispose
+  fullName: SimulationFramework.Application.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: SimulationFramework.Application.Exit*
+  commentId: Overload:SimulationFramework.Application.Exit
+  href: SimulationFramework.Application.html#SimulationFramework.Application.Exit
+  name: Exit
+  nameWithType: Application.Exit
+  fullName: SimulationFramework.Application.Exit
+- uid: SimulationFramework.Application.Start*
+  commentId: Overload:SimulationFramework.Application.Start
+  href: SimulationFramework.Application.html#SimulationFramework.Application.Start
+  name: Start
+  nameWithType: Application.Start
+  fullName: SimulationFramework.Application.Start
+- uid: SimulationFramework.Application.RedirectConsoleOutput*
+  commentId: Overload:SimulationFramework.Application.RedirectConsoleOutput
+  href: SimulationFramework.Application.html#SimulationFramework.Application.RedirectConsoleOutput(System.IO.TextWriter)
+  name: RedirectConsoleOutput
+  nameWithType: Application.RedirectConsoleOutput
+  fullName: SimulationFramework.Application.RedirectConsoleOutput
+- uid: System.IO.TextWriter
+  commentId: T:System.IO.TextWriter
+  parent: System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.io.textwriter
+  name: TextWriter
+  nameWithType: TextWriter
+  fullName: System.IO.TextWriter
+- uid: System.IO
+  commentId: N:System.IO
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.IO
+  nameWithType: System.IO
+  fullName: System.IO
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.IO
+    name: IO
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.io

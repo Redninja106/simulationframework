@@ -1,0 +1,726 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class Collision
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class Collision
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/Redninja106/simulationframework/new/master/apiSpec/new?filename=SimulationFramework_Collision.md&amp;value=---%0Auid%3A%20SimulationFramework.Collision%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="SimulationFramework.Collision">
+
+
+
+  <h1 id="SimulationFramework_Collision" data-uid="SimulationFramework.Collision" class="text-break">
+    Class Collision
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L13"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="SimulationFramework.html">SimulationFramework</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>SimulationFramework.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Contains various methods for determining collisions between shapes.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Collision</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">Collision</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="SimulationFramework_Collision_CollideCircleCircle_" data-uid="SimulationFramework.Collision.CollideCircleCircle*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollideCircleCircle_SimulationFramework_Circle_SimulationFramework_Circle_" data-uid="SimulationFramework.Collision.CollideCircleCircle(SimulationFramework.Circle,SimulationFramework.Circle)">
+  CollideCircleCircle(Circle, Circle)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L127"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Determines if 2 circles are colliding.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollideCircleCircle(Circle circleA, Circle circleB)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>circleA</code> <a class="xref" href="SimulationFramework.Circle.html">Circle</a></dt>
+    <dd></dd>
+    <dt><code>circleB</code> <a class="xref" href="SimulationFramework.Circle.html">Circle</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollideCircleLine_" data-uid="SimulationFramework.Collision.CollideCircleLine*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollideCircleLine_SimulationFramework_Circle_System_Numerics_Vector2_System_Numerics_Vector2_" data-uid="SimulationFramework.Collision.CollideCircleLine(SimulationFramework.Circle,System.Numerics.Vector2,System.Numerics.Vector2)">
+  CollideCircleLine(Circle, Vector2, Vector2)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L139"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollideCircleLine(Circle circle, Vector2 from, Vector2 to)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>circle</code> <a class="xref" href="SimulationFramework.Circle.html">Circle</a></dt>
+    <dd></dd>
+    <dt><code>from</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+    <dt><code>to</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollideCirclePoint_" data-uid="SimulationFramework.Collision.CollideCirclePoint*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollideCirclePoint_SimulationFramework_Circle_System_Numerics_Vector2_" data-uid="SimulationFramework.Collision.CollideCirclePoint(SimulationFramework.Circle,System.Numerics.Vector2)">
+  CollideCirclePoint(Circle, Vector2)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L172"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollideCirclePoint(Circle circle, Vector2 point)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>circle</code> <a class="xref" href="SimulationFramework.Circle.html">Circle</a></dt>
+    <dd></dd>
+    <dt><code>point</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollideLineLine_" data-uid="SimulationFramework.Collision.CollideLineLine*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollideLineLine_System_Numerics_Vector2_System_Numerics_Vector2_System_Numerics_Vector2_System_Numerics_Vector2_System_Numerics_Vector2__" data-uid="SimulationFramework.Collision.CollideLineLine(System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2@)">
+  CollideLineLine(Vector2, Vector2, Vector2, Vector2, out Vector2)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L186"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollideLineLine(Vector2 fromA, Vector2 toA, Vector2 fromB, Vector2 toB, out Vector2 point)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>fromA</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+    <dt><code>toA</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+    <dt><code>fromB</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+    <dt><code>toB</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+    <dt><code>point</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollideLinePoint_" data-uid="SimulationFramework.Collision.CollideLinePoint*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollideLinePoint_System_Numerics_Vector2_System_Numerics_Vector2_System_Numerics_Vector2_" data-uid="SimulationFramework.Collision.CollideLinePoint(System.Numerics.Vector2,System.Numerics.Vector2,System.Numerics.Vector2)">
+  CollideLinePoint(Vector2, Vector2, Vector2)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L217"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollideLinePoint(Vector2 from, Vector2 to, Vector2 point)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>from</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+    <dt><code>to</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+    <dt><code>point</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollidePolygonCircle_" data-uid="SimulationFramework.Collision.CollidePolygonCircle*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollidePolygonCircle_System_Span_System_Numerics_Vector2__SimulationFramework_Circle_" data-uid="SimulationFramework.Collision.CollidePolygonCircle(System.Span{System.Numerics.Vector2},SimulationFramework.Circle)">
+  CollidePolygonCircle(Span&lt;Vector2&gt;, Circle)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L50"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Not implemented.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollidePolygonCircle(Span&lt;Vector2&gt; polygon, Circle circle)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>polygon</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a>&gt;</dt>
+    <dd></dd>
+    <dt><code>circle</code> <a class="xref" href="SimulationFramework.Circle.html">Circle</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollidePolygonLine_" data-uid="SimulationFramework.Collision.CollidePolygonLine*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollidePolygonLine_System_Span_System_Numerics_Vector2__System_Numerics_Vector2_System_Numerics_Vector2_" data-uid="SimulationFramework.Collision.CollidePolygonLine(System.Span{System.Numerics.Vector2},System.Numerics.Vector2,System.Numerics.Vector2)">
+  CollidePolygonLine(Span&lt;Vector2&gt;, Vector2, Vector2)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L61"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Not implemented.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollidePolygonLine(Span&lt;Vector2&gt; polygon, Vector2 from, Vector2 to)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>polygon</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a>&gt;</dt>
+    <dd></dd>
+    <dt><code>from</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+    <dt><code>to</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollidePolygonPoint_" data-uid="SimulationFramework.Collision.CollidePolygonPoint*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollidePolygonPoint_System_Span_System_Numerics_Vector2__System_Numerics_Vector2_" data-uid="SimulationFramework.Collision.CollidePolygonPoint(System.Span{System.Numerics.Vector2},System.Numerics.Vector2)">
+  CollidePolygonPoint(Span&lt;Vector2&gt;, Vector2)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L72"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Not implemented.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollidePolygonPoint(Span&lt;Vector2&gt; polygon, Vector2 point)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>polygon</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a>&gt;</dt>
+    <dd></dd>
+    <dt><code>point</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollidePolygonPolygon_" data-uid="SimulationFramework.Collision.CollidePolygonPolygon*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollidePolygonPolygon_System_Span_System_Numerics_Vector2__System_Span_System_Numerics_Vector2__" data-uid="SimulationFramework.Collision.CollidePolygonPolygon(System.Span{System.Numerics.Vector2},System.Span{System.Numerics.Vector2})">
+  CollidePolygonPolygon(Span&lt;Vector2&gt;, Span&lt;Vector2&gt;)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L27"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Not implemented.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollidePolygonPolygon(Span&lt;Vector2&gt; polygonA, Span&lt;Vector2&gt; polygonB)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>polygonA</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a>&gt;</dt>
+    <dd></dd>
+    <dt><code>polygonB</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a>&gt;</dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollidePolygonRectangle_" data-uid="SimulationFramework.Collision.CollidePolygonRectangle*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollidePolygonRectangle_System_Span_System_Numerics_Vector2__SimulationFramework_Rectangle_" data-uid="SimulationFramework.Collision.CollidePolygonRectangle(System.Span{System.Numerics.Vector2},SimulationFramework.Rectangle)">
+  CollidePolygonRectangle(Span&lt;Vector2&gt;, Rectangle)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L39"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Not implemented.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollidePolygonRectangle(Span&lt;Vector2&gt; polygon, Rectangle rectangle)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>polygon</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a>&gt;</dt>
+    <dd></dd>
+    <dt><code>rectangle</code> <a class="xref" href="SimulationFramework.Rectangle.html">Rectangle</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollideRectangleCircle_" data-uid="SimulationFramework.Collision.CollideRectangleCircle*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollideRectangleCircle_SimulationFramework_Rectangle_SimulationFramework_Circle_" data-uid="SimulationFramework.Collision.CollideRectangleCircle(SimulationFramework.Rectangle,SimulationFramework.Circle)">
+  CollideRectangleCircle(Rectangle, Circle)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Not implemented.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollideRectangleCircle(Rectangle rectangle, Circle circle)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>rectangle</code> <a class="xref" href="SimulationFramework.Rectangle.html">Rectangle</a></dt>
+    <dd></dd>
+    <dt><code>circle</code> <a class="xref" href="SimulationFramework.Circle.html">Circle</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollideRectangleLine_" data-uid="SimulationFramework.Collision.CollideRectangleLine*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollideRectangleLine_SimulationFramework_Rectangle_System_Numerics_Vector2_System_Numerics_Vector2_" data-uid="SimulationFramework.Collision.CollideRectangleLine(SimulationFramework.Rectangle,System.Numerics.Vector2,System.Numerics.Vector2)">
+  CollideRectangleLine(Rectangle, Vector2, Vector2)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L105"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Not implemented.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollideRectangleLine(Rectangle rectangle, Vector2 from, Vector2 to)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>rectangle</code> <a class="xref" href="SimulationFramework.Rectangle.html">Rectangle</a></dt>
+    <dd></dd>
+    <dt><code>from</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+    <dt><code>to</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollideRectanglePoint_" data-uid="SimulationFramework.Collision.CollideRectanglePoint*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollideRectanglePoint_SimulationFramework_Rectangle_System_Numerics_Vector2_" data-uid="SimulationFramework.Collision.CollideRectanglePoint(SimulationFramework.Rectangle,System.Numerics.Vector2)">
+  CollideRectanglePoint(Rectangle, Vector2)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L116"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Not implemented.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollideRectanglePoint(Rectangle rectangle, Vector2 point)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>rectangle</code> <a class="xref" href="SimulationFramework.Rectangle.html">Rectangle</a></dt>
+    <dd></dd>
+    <dt><code>point</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector2">Vector2</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Collision_CollideRectangleRectangle_" data-uid="SimulationFramework.Collision.CollideRectangleRectangle*"></a>
+
+  <h3 id="SimulationFramework_Collision_CollideRectangleRectangle_SimulationFramework_Rectangle_SimulationFramework_Rectangle_" data-uid="SimulationFramework.Collision.CollideRectangleRectangle(SimulationFramework.Rectangle,SimulationFramework.Rectangle)">
+  CollideRectangleRectangle(Rectangle, Rectangle)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L83"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Not implemented.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool CollideRectangleRectangle(Rectangle rectangleA, Rectangle rectangleB)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>rectangleA</code> <a class="xref" href="SimulationFramework.Rectangle.html">Rectangle</a></dt>
+    <dd></dd>
+    <dt><code>rectangleB</code> <a class="xref" href="SimulationFramework.Rectangle.html">Rectangle</a></dt>
+    <dd></dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Collision.cs/#L13" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

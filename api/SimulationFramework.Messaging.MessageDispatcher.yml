@@ -1,0 +1,675 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Messaging.MessageDispatcher
+  commentId: T:SimulationFramework.Messaging.MessageDispatcher
+  id: MessageDispatcher
+  parent: SimulationFramework.Messaging
+  children:
+  - SimulationFramework.Messaging.MessageDispatcher.Flush
+  - SimulationFramework.Messaging.MessageDispatcher.ImmediateDispatch``1(``0)
+  - SimulationFramework.Messaging.MessageDispatcher.NotifyAfter``1(System.Action{``0})
+  - SimulationFramework.Messaging.MessageDispatcher.NotifyBefore``1(System.Action{``0})
+  - SimulationFramework.Messaging.MessageDispatcher.QueueDispatch``1(``0)
+  - SimulationFramework.Messaging.MessageDispatcher.Subscribe``1(System.Action{``0},SimulationFramework.Messaging.ListenerPriority)
+  - SimulationFramework.Messaging.MessageDispatcher.Unsubscribe``1(System.Action{``0})
+  langs:
+  - csharp
+  - vb
+  name: MessageDispatcher
+  nameWithType: MessageDispatcher
+  fullName: SimulationFramework.Messaging.MessageDispatcher
+  type: Class
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: MessageDispatcher
+    path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+    startLine: 9
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: Dispatches application messages.
+  example: []
+  syntax:
+    content: public sealed class MessageDispatcher
+    content.vb: Public NotInheritable Class MessageDispatcher
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: SimulationFramework.Messaging.MessageDispatcher.Flush
+  commentId: M:SimulationFramework.Messaging.MessageDispatcher.Flush
+  id: Flush
+  parent: SimulationFramework.Messaging.MessageDispatcher
+  langs:
+  - csharp
+  - vb
+  name: Flush()
+  nameWithType: MessageDispatcher.Flush()
+  fullName: SimulationFramework.Messaging.MessageDispatcher.Flush()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Flush
+    path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+    startLine: 17
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: Dispatches all queued messages. This method is called by the application at the beginning and end of each frame.
+  example: []
+  syntax:
+    content: public void Flush()
+    content.vb: Public Sub Flush()
+  overload: SimulationFramework.Messaging.MessageDispatcher.Flush*
+- uid: SimulationFramework.Messaging.MessageDispatcher.QueueDispatch``1(``0)
+  commentId: M:SimulationFramework.Messaging.MessageDispatcher.QueueDispatch``1(``0)
+  id: QueueDispatch``1(``0)
+  parent: SimulationFramework.Messaging.MessageDispatcher
+  langs:
+  - csharp
+  - vb
+  name: QueueDispatch<T>(T)
+  nameWithType: MessageDispatcher.QueueDispatch<T>(T)
+  fullName: SimulationFramework.Messaging.MessageDispatcher.QueueDispatch<T>(T)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: QueueDispatch
+    path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+    startLine: 38
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: Adds an event to the event queue. The event is dispatched upon the next call to <xref href="SimulationFramework.Messaging.MessageDispatcher.Flush" data-throw-if-not-resolved="false"></xref> (usually done by the application).
+  example: []
+  syntax:
+    content: 'public void QueueDispatch<T>(T message) where T : Message'
+    parameters:
+    - id: message
+      type: '{T}'
+      description: ''
+    typeParameters:
+    - id: T
+      description: ''
+    content.vb: Public Sub QueueDispatch(Of T As Message)(message As T)
+  overload: SimulationFramework.Messaging.MessageDispatcher.QueueDispatch*
+  nameWithType.vb: MessageDispatcher.QueueDispatch(Of T)(T)
+  fullName.vb: SimulationFramework.Messaging.MessageDispatcher.QueueDispatch(Of T)(T)
+  name.vb: QueueDispatch(Of T)(T)
+- uid: SimulationFramework.Messaging.MessageDispatcher.ImmediateDispatch``1(``0)
+  commentId: M:SimulationFramework.Messaging.MessageDispatcher.ImmediateDispatch``1(``0)
+  id: ImmediateDispatch``1(``0)
+  parent: SimulationFramework.Messaging.MessageDispatcher
+  langs:
+  - csharp
+  - vb
+  name: ImmediateDispatch<T>(T)
+  nameWithType: MessageDispatcher.ImmediateDispatch<T>(T)
+  fullName: SimulationFramework.Messaging.MessageDispatcher.ImmediateDispatch<T>(T)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: ImmediateDispatch
+    path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+    startLine: 52
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: Immediately dispatches a message, raising notifications and calling listeners.
+  example: []
+  syntax:
+    content: 'public void ImmediateDispatch<T>(T message) where T : Message'
+    parameters:
+    - id: message
+      type: '{T}'
+      description: The message data.
+    typeParameters:
+    - id: T
+      description: The type of message to dispatch.
+    content.vb: Public Sub ImmediateDispatch(Of T As Message)(message As T)
+  overload: SimulationFramework.Messaging.MessageDispatcher.ImmediateDispatch*
+  nameWithType.vb: MessageDispatcher.ImmediateDispatch(Of T)(T)
+  fullName.vb: SimulationFramework.Messaging.MessageDispatcher.ImmediateDispatch(Of T)(T)
+  name.vb: ImmediateDispatch(Of T)(T)
+- uid: SimulationFramework.Messaging.MessageDispatcher.Subscribe``1(System.Action{``0},SimulationFramework.Messaging.ListenerPriority)
+  commentId: M:SimulationFramework.Messaging.MessageDispatcher.Subscribe``1(System.Action{``0},SimulationFramework.Messaging.ListenerPriority)
+  id: Subscribe``1(System.Action{``0},SimulationFramework.Messaging.ListenerPriority)
+  parent: SimulationFramework.Messaging.MessageDispatcher
+  langs:
+  - csharp
+  - vb
+  name: Subscribe<T>(Action<T>, ListenerPriority)
+  nameWithType: MessageDispatcher.Subscribe<T>(Action<T>, ListenerPriority)
+  fullName: SimulationFramework.Messaging.MessageDispatcher.Subscribe<T>(System.Action<T>, SimulationFramework.Messaging.ListenerPriority)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Subscribe
+    path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+    startLine: 87
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: Subscribes a delegate to listen for messages of a specific type.
+  example: []
+  syntax:
+    content: 'public void Subscribe<T>(Action<T> listener, ListenerPriority priority = ListenerPriority.Normal) where T : Message'
+    parameters:
+    - id: listener
+      type: System.Action{{T}}
+      description: The listener delegate.
+    - id: priority
+      type: SimulationFramework.Messaging.ListenerPriority
+      description: The priority of the listener
+    typeParameters:
+    - id: T
+      description: The type of message to listen for.
+    content.vb: Public Sub Subscribe(Of T As Message)(listener As Action(Of T), priority As ListenerPriority = ListenerPriority.Normal)
+  overload: SimulationFramework.Messaging.MessageDispatcher.Subscribe*
+  nameWithType.vb: MessageDispatcher.Subscribe(Of T)(Action(Of T), ListenerPriority)
+  fullName.vb: SimulationFramework.Messaging.MessageDispatcher.Subscribe(Of T)(System.Action(Of T), SimulationFramework.Messaging.ListenerPriority)
+  name.vb: Subscribe(Of T)(Action(Of T), ListenerPriority)
+- uid: SimulationFramework.Messaging.MessageDispatcher.Unsubscribe``1(System.Action{``0})
+  commentId: M:SimulationFramework.Messaging.MessageDispatcher.Unsubscribe``1(System.Action{``0})
+  id: Unsubscribe``1(System.Action{``0})
+  parent: SimulationFramework.Messaging.MessageDispatcher
+  langs:
+  - csharp
+  - vb
+  name: Unsubscribe<T>(Action<T>)
+  nameWithType: MessageDispatcher.Unsubscribe<T>(Action<T>)
+  fullName: SimulationFramework.Messaging.MessageDispatcher.Unsubscribe<T>(System.Action<T>)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Unsubscribe
+    path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+    startLine: 107
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: Unsubscibes a delegate from listening for messages.
+  example: []
+  syntax:
+    content: 'public void Unsubscribe<T>(Action<T> listener) where T : Message'
+    parameters:
+    - id: listener
+      type: System.Action{{T}}
+      description: The listener to unsubscribe.
+    typeParameters:
+    - id: T
+      description: The type of messages the delegate was listening for.
+    content.vb: Public Sub Unsubscribe(Of T As Message)(listener As Action(Of T))
+  overload: SimulationFramework.Messaging.MessageDispatcher.Unsubscribe*
+  nameWithType.vb: MessageDispatcher.Unsubscribe(Of T)(Action(Of T))
+  fullName.vb: SimulationFramework.Messaging.MessageDispatcher.Unsubscribe(Of T)(System.Action(Of T))
+  name.vb: Unsubscribe(Of T)(Action(Of T))
+- uid: SimulationFramework.Messaging.MessageDispatcher.NotifyBefore``1(System.Action{``0})
+  commentId: M:SimulationFramework.Messaging.MessageDispatcher.NotifyBefore``1(System.Action{``0})
+  id: NotifyBefore``1(System.Action{``0})
+  parent: SimulationFramework.Messaging.MessageDispatcher
+  langs:
+  - csharp
+  - vb
+  name: NotifyBefore<T>(Action<T>)
+  nameWithType: MessageDispatcher.NotifyBefore<T>(Action<T>)
+  fullName: SimulationFramework.Messaging.MessageDispatcher.NotifyBefore<T>(System.Action<T>)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: NotifyBefore
+    path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+    startLine: 126
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: Invokes the provided delegate once before the next dispatch of the specified message type.
+  example: []
+  syntax:
+    content: 'public void NotifyBefore<T>(Action<T> listener) where T : Message'
+    parameters:
+    - id: listener
+      type: System.Action{{T}}
+      description: The notification delegate.
+    typeParameters:
+    - id: T
+      description: The type of message to be notified of.
+    content.vb: Public Sub NotifyBefore(Of T As Message)(listener As Action(Of T))
+  overload: SimulationFramework.Messaging.MessageDispatcher.NotifyBefore*
+  nameWithType.vb: MessageDispatcher.NotifyBefore(Of T)(Action(Of T))
+  fullName.vb: SimulationFramework.Messaging.MessageDispatcher.NotifyBefore(Of T)(System.Action(Of T))
+  name.vb: NotifyBefore(Of T)(Action(Of T))
+- uid: SimulationFramework.Messaging.MessageDispatcher.NotifyAfter``1(System.Action{``0})
+  commentId: M:SimulationFramework.Messaging.MessageDispatcher.NotifyAfter``1(System.Action{``0})
+  id: NotifyAfter``1(System.Action{``0})
+  parent: SimulationFramework.Messaging.MessageDispatcher
+  langs:
+  - csharp
+  - vb
+  name: NotifyAfter<T>(Action<T>)
+  nameWithType: MessageDispatcher.NotifyAfter<T>(Action<T>)
+  fullName: SimulationFramework.Messaging.MessageDispatcher.NotifyAfter<T>(System.Action<T>)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: NotifyAfter
+    path: src/SimulationFramework/Messaging/MessageDispatcher.cs
+    startLine: 140
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: Invokes the provided delegate once after the next dispatch of the specified message type.
+  example: []
+  syntax:
+    content: 'public void NotifyAfter<T>(Action<T> listener) where T : Message'
+    parameters:
+    - id: listener
+      type: System.Action{{T}}
+      description: The notification delegate.
+    typeParameters:
+    - id: T
+      description: The type of message to be notified of.
+    content.vb: Public Sub NotifyAfter(Of T As Message)(listener As Action(Of T))
+  overload: SimulationFramework.Messaging.MessageDispatcher.NotifyAfter*
+  nameWithType.vb: MessageDispatcher.NotifyAfter(Of T)(Action(Of T))
+  fullName.vb: SimulationFramework.Messaging.MessageDispatcher.NotifyAfter(Of T)(System.Action(Of T))
+  name.vb: NotifyAfter(Of T)(Action(Of T))
+references:
+- uid: SimulationFramework.Messaging
+  commentId: N:SimulationFramework.Messaging
+  href: SimulationFramework.html
+  name: SimulationFramework.Messaging
+  nameWithType: SimulationFramework.Messaging
+  fullName: SimulationFramework.Messaging
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Messaging
+    name: Messaging
+    href: SimulationFramework.Messaging.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Messaging
+    name: Messaging
+    href: SimulationFramework.Messaging.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: SimulationFramework.Messaging.MessageDispatcher.Flush*
+  commentId: Overload:SimulationFramework.Messaging.MessageDispatcher.Flush
+  href: SimulationFramework.Messaging.MessageDispatcher.html#SimulationFramework.Messaging.MessageDispatcher.Flush
+  name: Flush
+  nameWithType: MessageDispatcher.Flush
+  fullName: SimulationFramework.Messaging.MessageDispatcher.Flush
+- uid: SimulationFramework.Messaging.MessageDispatcher.Flush
+  commentId: M:SimulationFramework.Messaging.MessageDispatcher.Flush
+  href: SimulationFramework.Messaging.MessageDispatcher.html#SimulationFramework.Messaging.MessageDispatcher.Flush
+  name: Flush()
+  nameWithType: MessageDispatcher.Flush()
+  fullName: SimulationFramework.Messaging.MessageDispatcher.Flush()
+  spec.csharp:
+  - uid: SimulationFramework.Messaging.MessageDispatcher.Flush
+    name: Flush
+    href: SimulationFramework.Messaging.MessageDispatcher.html#SimulationFramework.Messaging.MessageDispatcher.Flush
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: SimulationFramework.Messaging.MessageDispatcher.Flush
+    name: Flush
+    href: SimulationFramework.Messaging.MessageDispatcher.html#SimulationFramework.Messaging.MessageDispatcher.Flush
+  - name: (
+  - name: )
+- uid: SimulationFramework.Messaging.MessageDispatcher.QueueDispatch*
+  commentId: Overload:SimulationFramework.Messaging.MessageDispatcher.QueueDispatch
+  href: SimulationFramework.Messaging.MessageDispatcher.html#SimulationFramework.Messaging.MessageDispatcher.QueueDispatch``1(``0)
+  name: QueueDispatch
+  nameWithType: MessageDispatcher.QueueDispatch
+  fullName: SimulationFramework.Messaging.MessageDispatcher.QueueDispatch
+- uid: '{T}'
+  commentId: '!:T'
+  definition: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: T
+  name: T
+  nameWithType: T
+  fullName: T
+- uid: SimulationFramework.Messaging.MessageDispatcher.ImmediateDispatch*
+  commentId: Overload:SimulationFramework.Messaging.MessageDispatcher.ImmediateDispatch
+  href: SimulationFramework.Messaging.MessageDispatcher.html#SimulationFramework.Messaging.MessageDispatcher.ImmediateDispatch``1(``0)
+  name: ImmediateDispatch
+  nameWithType: MessageDispatcher.ImmediateDispatch
+  fullName: SimulationFramework.Messaging.MessageDispatcher.ImmediateDispatch
+- uid: SimulationFramework.Messaging.MessageDispatcher.Subscribe*
+  commentId: Overload:SimulationFramework.Messaging.MessageDispatcher.Subscribe
+  href: SimulationFramework.Messaging.MessageDispatcher.html#SimulationFramework.Messaging.MessageDispatcher.Subscribe``1(System.Action{``0},SimulationFramework.Messaging.ListenerPriority)
+  name: Subscribe
+  nameWithType: MessageDispatcher.Subscribe
+  fullName: SimulationFramework.Messaging.MessageDispatcher.Subscribe
+- uid: System.Action{{T}}
+  commentId: T:System.Action{``0}
+  parent: System
+  definition: System.Action`1
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: SimulationFramework.Messaging.ListenerPriority
+  commentId: T:SimulationFramework.Messaging.ListenerPriority
+  parent: SimulationFramework.Messaging
+  href: SimulationFramework.Messaging.ListenerPriority.html
+  name: ListenerPriority
+  nameWithType: ListenerPriority
+  fullName: SimulationFramework.Messaging.ListenerPriority
+- uid: System.Action`1
+  commentId: T:System.Action`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.action-1
+  name: Action<T>
+  nameWithType: Action<T>
+  fullName: System.Action<T>
+  nameWithType.vb: Action(Of T)
+  fullName.vb: System.Action(Of T)
+  name.vb: Action(Of T)
+  spec.csharp:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Action`1
+    name: Action
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.action-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: SimulationFramework.Messaging.MessageDispatcher.Unsubscribe*
+  commentId: Overload:SimulationFramework.Messaging.MessageDispatcher.Unsubscribe
+  href: SimulationFramework.Messaging.MessageDispatcher.html#SimulationFramework.Messaging.MessageDispatcher.Unsubscribe``1(System.Action{``0})
+  name: Unsubscribe
+  nameWithType: MessageDispatcher.Unsubscribe
+  fullName: SimulationFramework.Messaging.MessageDispatcher.Unsubscribe
+- uid: SimulationFramework.Messaging.MessageDispatcher.NotifyBefore*
+  commentId: Overload:SimulationFramework.Messaging.MessageDispatcher.NotifyBefore
+  href: SimulationFramework.Messaging.MessageDispatcher.html#SimulationFramework.Messaging.MessageDispatcher.NotifyBefore``1(System.Action{``0})
+  name: NotifyBefore
+  nameWithType: MessageDispatcher.NotifyBefore
+  fullName: SimulationFramework.Messaging.MessageDispatcher.NotifyBefore
+- uid: SimulationFramework.Messaging.MessageDispatcher.NotifyAfter*
+  commentId: Overload:SimulationFramework.Messaging.MessageDispatcher.NotifyAfter
+  href: SimulationFramework.Messaging.MessageDispatcher.html#SimulationFramework.Messaging.MessageDispatcher.NotifyAfter``1(System.Action{``0})
+  name: NotifyAfter
+  nameWithType: MessageDispatcher.NotifyAfter
+  fullName: SimulationFramework.Messaging.MessageDispatcher.NotifyAfter

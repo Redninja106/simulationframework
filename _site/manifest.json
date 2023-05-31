@@ -1,0 +1,716 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/Users/Ryan-/Documents/simulationframework",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Conceptual",
+      "source_relative_path": "README.md",
+      "output": {
+        ".html": {
+          "relative_path": "README.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Alignment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Alignment.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Angle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Angle.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.AppConfig.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.AppConfig.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Application.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Application.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.ApplicationPlatformAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.ApplicationPlatformAttribute.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Circle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Circle.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.CollectionsHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.CollectionsHelper.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Collision.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Collision.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Color.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Color.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.ColorF.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.ColorF.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Desktop.DesktopPlatform.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Desktop.DesktopPlatform.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Desktop.SimulationExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Desktop.SimulationExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Desktop.Window.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Desktop.Window.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Desktop.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Desktop.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.CanvasState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.CanvasState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.DrawMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.DrawMode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.FontStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.FontStyle.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.Gradient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.Gradient.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.GradientStop.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.GradientStop.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.Graphics.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.Graphics.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.ICanvas.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.ICanvas.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.IGradientVisitor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.IGradientVisitor.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.IGraphicsProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.IGraphicsProvider.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.ITexture.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.ITexture.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.TextureOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.TextureOptions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.TileMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.TileMode.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Drawing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Drawing.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Gamepad.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Gamepad.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.GamepadButton.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.GamepadButton.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.IApplicationComponent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.IApplicationComponent.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.IApplicationController.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.IApplicationController.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.IApplicationPlatform.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.IApplicationPlatform.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.ITimeProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.ITimeProvider.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.InputContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.InputContext.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Key.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Key.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.KeyEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.KeyEvent.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Keyboard.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Keyboard.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.MathHelper.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.MathHelper.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Messaging.ExitMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Messaging.ExitMessage.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Messaging.FrameBeginMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Messaging.FrameBeginMessage.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Messaging.FrameEndMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Messaging.FrameEndMessage.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Messaging.InitializeMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Messaging.InitializeMessage.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Messaging.ListenerPriority.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Messaging.ListenerPriority.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Messaging.Message.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Messaging.Message.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Messaging.MessageDispatcher.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Messaging.MessageDispatcher.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Messaging.RenderMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Messaging.RenderMessage.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Messaging.ResizeMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Messaging.ResizeMessage.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Messaging.UninitializeMessage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Messaging.UninitializeMessage.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Messaging.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Messaging.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Mouse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Mouse.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.MouseButton.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.MouseButton.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Performance.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Performance.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.RealtimeProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.RealtimeProvider.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Rectangle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Rectangle.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Simulation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Simulation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.SkiaSharp.ISkiaFrameProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.SkiaSharp.ISkiaFrameProvider.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.SkiaSharp.SkiaExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.SkiaSharp.SkiaExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.SkiaSharp.SkiaGraphicsProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.SkiaSharp.SkiaGraphicsProvider.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.SkiaSharp.SkiaInterop.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.SkiaSharp.SkiaInterop.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.SkiaSharp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.SkiaSharp.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.Time.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.Time.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.VectorExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.VectorExtensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/SimulationFramework.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SimulationFramework.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/logo-1024x1024.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/logo-1024x1024.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/logo-128x128.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/logo-128x128.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/logo-512x512.png",
+      "output": {
+        "resource": {
+          "relative_path": "assets/logo-512x512.png"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "assets/logo.svg",
+      "output": {
+        "resource": {
+          "relative_path": "assets/logo.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

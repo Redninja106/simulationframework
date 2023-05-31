@@ -1,0 +1,1419 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Rectangle
+  commentId: T:SimulationFramework.Rectangle
+  id: Rectangle
+  parent: SimulationFramework
+  children:
+  - SimulationFramework.Rectangle.#ctor(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  - SimulationFramework.Rectangle.#ctor(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  - SimulationFramework.Rectangle.Center
+  - SimulationFramework.Rectangle.ContainsPoint(System.Numerics.Vector2)
+  - SimulationFramework.Rectangle.CreateLTRB(System.Single,System.Single,System.Single,System.Single)
+  - SimulationFramework.Rectangle.Equals(SimulationFramework.Rectangle)
+  - SimulationFramework.Rectangle.Equals(System.Object)
+  - SimulationFramework.Rectangle.GetAlignedPoint(SimulationFramework.Alignment)
+  - SimulationFramework.Rectangle.GetHashCode
+  - SimulationFramework.Rectangle.Height
+  - SimulationFramework.Rectangle.Intersects(SimulationFramework.Rectangle)
+  - SimulationFramework.Rectangle.Intersects(SimulationFramework.Rectangle,SimulationFramework.Rectangle@)
+  - SimulationFramework.Rectangle.Position
+  - SimulationFramework.Rectangle.SetAlignedPosition(System.Numerics.Vector2,SimulationFramework.Alignment)
+  - SimulationFramework.Rectangle.Size
+  - SimulationFramework.Rectangle.ToString
+  - SimulationFramework.Rectangle.Width
+  - SimulationFramework.Rectangle.X
+  - SimulationFramework.Rectangle.Y
+  - SimulationFramework.Rectangle.op_Equality(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  - SimulationFramework.Rectangle.op_Inequality(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  langs:
+  - csharp
+  - vb
+  name: Rectangle
+  nameWithType: Rectangle
+  fullName: SimulationFramework.Rectangle
+  type: Struct
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Rectangle
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 13
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: An axis-aligned floating-point rectangle consisting of a position and size.
+  example: []
+  syntax:
+    content: 'public struct Rectangle : IEquatable<Rectangle>'
+    content.vb: Public Structure Rectangle Implements IEquatable(Of Rectangle)
+  implements:
+  - System.IEquatable{SimulationFramework.Rectangle}
+  inheritedMembers:
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  extensionMethods:
+  - SimulationFramework.Rectangle.SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect
+- uid: SimulationFramework.Rectangle.X
+  commentId: F:SimulationFramework.Rectangle.X
+  id: X
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: X
+  nameWithType: Rectangle.X
+  fullName: SimulationFramework.Rectangle.X
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: X
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 18
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The x-coordinate of the top-left corner of the rectangle.
+  example: []
+  syntax:
+    content: public float X
+    return:
+      type: System.Single
+    content.vb: Public X As Single
+- uid: SimulationFramework.Rectangle.Y
+  commentId: F:SimulationFramework.Rectangle.Y
+  id: Y
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: Y
+  nameWithType: Rectangle.Y
+  fullName: SimulationFramework.Rectangle.Y
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Y
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 23
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The y-coordinate of the top-left corner of the rectangle.
+  example: []
+  syntax:
+    content: public float Y
+    return:
+      type: System.Single
+    content.vb: Public Y As Single
+- uid: SimulationFramework.Rectangle.Width
+  commentId: F:SimulationFramework.Rectangle.Width
+  id: Width
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: Width
+  nameWithType: Rectangle.Width
+  fullName: SimulationFramework.Rectangle.Width
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Width
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 28
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The width of the rectangle.
+  example: []
+  syntax:
+    content: public float Width
+    return:
+      type: System.Single
+    content.vb: Public Width As Single
+- uid: SimulationFramework.Rectangle.Height
+  commentId: F:SimulationFramework.Rectangle.Height
+  id: Height
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: Height
+  nameWithType: Rectangle.Height
+  fullName: SimulationFramework.Rectangle.Height
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Height
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 33
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The height of the rectangle.
+  example: []
+  syntax:
+    content: public float Height
+    return:
+      type: System.Single
+    content.vb: Public Height As Single
+- uid: SimulationFramework.Rectangle.Size
+  commentId: P:SimulationFramework.Rectangle.Size
+  id: Size
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: Size
+  nameWithType: Rectangle.Size
+  fullName: SimulationFramework.Rectangle.Size
+  type: Property
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Size
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 38
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The size of the rectangle.
+  example: []
+  syntax:
+    content: public Vector2 Size { get; set; }
+    parameters: []
+    return:
+      type: System.Numerics.Vector2
+    content.vb: Public Property Size As Vector2
+  overload: SimulationFramework.Rectangle.Size*
+- uid: SimulationFramework.Rectangle.Position
+  commentId: P:SimulationFramework.Rectangle.Position
+  id: Position
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: Position
+  nameWithType: Rectangle.Position
+  fullName: SimulationFramework.Rectangle.Position
+  type: Property
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Position
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 47
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The top-left corner of the rectangle.
+  example: []
+  syntax:
+    content: public Vector2 Position { get; set; }
+    parameters: []
+    return:
+      type: System.Numerics.Vector2
+    content.vb: Public Property Position As Vector2
+  overload: SimulationFramework.Rectangle.Position*
+- uid: SimulationFramework.Rectangle.Center
+  commentId: P:SimulationFramework.Rectangle.Center
+  id: Center
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: Center
+  nameWithType: Rectangle.Center
+  fullName: SimulationFramework.Rectangle.Center
+  type: Property
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Center
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 56
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The center of the rectangle.
+  example: []
+  syntax:
+    content: public Vector2 Center { get; set; }
+    parameters: []
+    return:
+      type: System.Numerics.Vector2
+    content.vb: Public Property Center As Vector2
+  overload: SimulationFramework.Rectangle.Center*
+- uid: SimulationFramework.Rectangle.#ctor(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Rectangle.#ctor(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  id: '#ctor(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)'
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: Rectangle(Vector2, Vector2, Alignment)
+  nameWithType: Rectangle.Rectangle(Vector2, Vector2, Alignment)
+  fullName: SimulationFramework.Rectangle.Rectangle(System.Numerics.Vector2, System.Numerics.Vector2, SimulationFramework.Alignment)
+  type: Constructor
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: .ctor
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 64
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Creates a new rectangle from the provided position and size.
+  example: []
+  syntax:
+    content: public Rectangle(Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+      description: The position of the rectangle.
+    - id: size
+      type: System.Numerics.Vector2
+      description: The size of the rectangle.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The relative location of <code class="paramref">position</code> on the rectangle.
+    content.vb: Public Sub New(position As Vector2, size As Vector2, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Rectangle.#ctor*
+  nameWithType.vb: Rectangle.New(Vector2, Vector2, Alignment)
+  fullName.vb: SimulationFramework.Rectangle.New(System.Numerics.Vector2, System.Numerics.Vector2, SimulationFramework.Alignment)
+  name.vb: New(Vector2, Vector2, Alignment)
+- uid: SimulationFramework.Rectangle.#ctor(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Rectangle.#ctor(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  id: '#ctor(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)'
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: Rectangle(float, float, float, float, Alignment)
+  nameWithType: Rectangle.Rectangle(float, float, float, float, Alignment)
+  fullName: SimulationFramework.Rectangle.Rectangle(float, float, float, float, SimulationFramework.Alignment)
+  type: Constructor
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: .ctor
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 76
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Creates a new rectangle from the provided position and size.
+  example: []
+  syntax:
+    content: public Rectangle(float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The x-coordinate of the position of the rectangle.
+    - id: y
+      type: System.Single
+      description: The y-coordinate of the position of the rectangle.
+    - id: width
+      type: System.Single
+      description: The width of the rectangle.
+    - id: height
+      type: System.Single
+      description: The height of the rectangle.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The relative location of (<code class="paramref">x</code>, <code class="paramref">y</code>) on the rectangle.
+    content.vb: Public Sub New(x As Single, y As Single, width As Single, height As Single, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Rectangle.#ctor*
+  nameWithType.vb: Rectangle.New(Single, Single, Single, Single, Alignment)
+  fullName.vb: SimulationFramework.Rectangle.New(Single, Single, Single, Single, SimulationFramework.Alignment)
+  name.vb: New(Single, Single, Single, Single, Alignment)
+- uid: SimulationFramework.Rectangle.GetAlignedPoint(SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Rectangle.GetAlignedPoint(SimulationFramework.Alignment)
+  id: GetAlignedPoint(SimulationFramework.Alignment)
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: GetAlignedPoint(Alignment)
+  nameWithType: Rectangle.GetAlignedPoint(Alignment)
+  fullName: SimulationFramework.Rectangle.GetAlignedPoint(SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: GetAlignedPoint
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 88
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Returns the point which aligned to the rectangle by the specified alignment.
+  example: []
+  syntax:
+    content: public Vector2 GetAlignedPoint(Alignment alignment)
+    parameters:
+    - id: alignment
+      type: SimulationFramework.Alignment
+    return:
+      type: System.Numerics.Vector2
+    content.vb: Public Function GetAlignedPoint(alignment As Alignment) As Vector2
+  overload: SimulationFramework.Rectangle.GetAlignedPoint*
+- uid: SimulationFramework.Rectangle.SetAlignedPosition(System.Numerics.Vector2,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Rectangle.SetAlignedPosition(System.Numerics.Vector2,SimulationFramework.Alignment)
+  id: SetAlignedPosition(System.Numerics.Vector2,SimulationFramework.Alignment)
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: SetAlignedPosition(Vector2, Alignment)
+  nameWithType: Rectangle.SetAlignedPosition(Vector2, Alignment)
+  fullName: SimulationFramework.Rectangle.SetAlignedPosition(System.Numerics.Vector2, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: SetAlignedPosition
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 110
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Moves the rectangle such that the provided point is at the specified position.
+  example: []
+  syntax:
+    content: public void SetAlignedPosition(Vector2 position, Alignment alignment)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+      description: The position to align to.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the rectangle to align to position.
+    content.vb: Public Sub SetAlignedPosition(position As Vector2, alignment As Alignment)
+  overload: SimulationFramework.Rectangle.SetAlignedPosition*
+- uid: SimulationFramework.Rectangle.ContainsPoint(System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Rectangle.ContainsPoint(System.Numerics.Vector2)
+  id: ContainsPoint(System.Numerics.Vector2)
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: ContainsPoint(Vector2)
+  nameWithType: Rectangle.ContainsPoint(Vector2)
+  fullName: SimulationFramework.Rectangle.ContainsPoint(System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: ContainsPoint
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 134
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Determines if the rectangle contains the provided point.
+  example: []
+  syntax:
+    content: public bool ContainsPoint(Vector2 point)
+    parameters:
+    - id: point
+      type: System.Numerics.Vector2
+      description: The point to check the rectangle for.
+    return:
+      type: System.Boolean
+      description: True if the rectangle contains <code class="paramref">point</code>, otherwise false.
+    content.vb: Public Function ContainsPoint(point As Vector2) As Boolean
+  overload: SimulationFramework.Rectangle.ContainsPoint*
+- uid: SimulationFramework.Rectangle.Intersects(SimulationFramework.Rectangle)
+  commentId: M:SimulationFramework.Rectangle.Intersects(SimulationFramework.Rectangle)
+  id: Intersects(SimulationFramework.Rectangle)
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: Intersects(Rectangle)
+  nameWithType: Rectangle.Intersects(Rectangle)
+  fullName: SimulationFramework.Rectangle.Intersects(SimulationFramework.Rectangle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Intersects
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 145
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Determines if the rectangle has an intersection with another.
+  example: []
+  syntax:
+    content: public bool Intersects(Rectangle other)
+    parameters:
+    - id: other
+      type: SimulationFramework.Rectangle
+      description: The rectangle to check for an intersection with.
+    return:
+      type: System.Boolean
+      description: True if the rectangles are intersecting, otherwise false.
+    content.vb: Public Function Intersects(other As Rectangle) As Boolean
+  overload: SimulationFramework.Rectangle.Intersects*
+- uid: SimulationFramework.Rectangle.Intersects(SimulationFramework.Rectangle,SimulationFramework.Rectangle@)
+  commentId: M:SimulationFramework.Rectangle.Intersects(SimulationFramework.Rectangle,SimulationFramework.Rectangle@)
+  id: Intersects(SimulationFramework.Rectangle,SimulationFramework.Rectangle@)
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: Intersects(Rectangle, out Rectangle)
+  nameWithType: Rectangle.Intersects(Rectangle, out Rectangle)
+  fullName: SimulationFramework.Rectangle.Intersects(SimulationFramework.Rectangle, out SimulationFramework.Rectangle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Intersects
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 156
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Determines if the rectangle has any intersection with another.
+  example: []
+  syntax:
+    content: public bool Intersects(Rectangle other, out Rectangle overlap)
+    parameters:
+    - id: other
+      type: SimulationFramework.Rectangle
+      description: The rectangle to check for an intersection with.
+    - id: overlap
+      type: SimulationFramework.Rectangle
+      description: The overlapping area between the two rectangles.
+    return:
+      type: System.Boolean
+      description: True if the rectangles are intersecting, otherwise false.
+    content.vb: Public Function Intersects(other As Rectangle, overlap As Rectangle) As Boolean
+  overload: SimulationFramework.Rectangle.Intersects*
+  nameWithType.vb: Rectangle.Intersects(Rectangle, Rectangle)
+  fullName.vb: SimulationFramework.Rectangle.Intersects(SimulationFramework.Rectangle, SimulationFramework.Rectangle)
+  name.vb: Intersects(Rectangle, Rectangle)
+- uid: SimulationFramework.Rectangle.Equals(SimulationFramework.Rectangle)
+  commentId: M:SimulationFramework.Rectangle.Equals(SimulationFramework.Rectangle)
+  id: Equals(SimulationFramework.Rectangle)
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: Equals(Rectangle)
+  nameWithType: Rectangle.Equals(Rectangle)
+  fullName: SimulationFramework.Rectangle.Equals(SimulationFramework.Rectangle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Equals
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 179
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Indicates if this rectangle is equal to another.
+  example: []
+  syntax:
+    content: public bool Equals(Rectangle other)
+    parameters:
+    - id: other
+      type: SimulationFramework.Rectangle
+      description: The rectangle to compare against this one.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if this rectangle equals <code class="paramref">other</code>, otherwise <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function Equals(other As Rectangle) As Boolean
+  overload: SimulationFramework.Rectangle.Equals*
+  implements:
+  - System.IEquatable{SimulationFramework.Rectangle}.Equals(SimulationFramework.Rectangle)
+- uid: SimulationFramework.Rectangle.Equals(System.Object)
+  commentId: M:SimulationFramework.Rectangle.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: Equals(object?)
+  nameWithType: Rectangle.Equals(object?)
+  fullName: SimulationFramework.Rectangle.Equals(object?)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Equals
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 185
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Indicates whether this instance and a specified object are equal.
+  example: []
+  syntax:
+    content: public override bool Equals(object? obj)
+    parameters:
+    - id: obj
+      type: System.Object
+      description: The object to compare with the current instance.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">obj</code> and this instance are the same type and represent the same value; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Overrides Function Equals(obj As Object) As Boolean
+  overridden: System.ValueType.Equals(System.Object)
+  overload: SimulationFramework.Rectangle.Equals*
+  nameWithType.vb: Rectangle.Equals(Object)
+  fullName.vb: SimulationFramework.Rectangle.Equals(Object)
+  name.vb: Equals(Object)
+- uid: SimulationFramework.Rectangle.ToString
+  commentId: M:SimulationFramework.Rectangle.ToString
+  id: ToString
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: Rectangle.ToString()
+  fullName: SimulationFramework.Rectangle.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: ToString
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 193
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Returns this rectangle in the format "{x, y, width, height}".
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.ValueType.ToString
+  overload: SimulationFramework.Rectangle.ToString*
+- uid: SimulationFramework.Rectangle.op_Equality(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  commentId: M:SimulationFramework.Rectangle.op_Equality(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  id: op_Equality(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: operator ==(Rectangle, Rectangle)
+  nameWithType: Rectangle.operator ==(Rectangle, Rectangle)
+  fullName: SimulationFramework.Rectangle.operator ==(SimulationFramework.Rectangle, SimulationFramework.Rectangle)
+  type: Operator
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: op_Equality
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 204
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Indicates if two rectangles are equal.
+  example: []
+  syntax:
+    content: public static bool operator ==(Rectangle left, Rectangle right)
+    parameters:
+    - id: left
+      type: SimulationFramework.Rectangle
+      description: The first rectangle.
+    - id: right
+      type: SimulationFramework.Rectangle
+      description: The second rectangle.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the rectangles are equal, otherwise <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Shared Operator =(left As Rectangle, right As Rectangle) As Boolean
+  overload: SimulationFramework.Rectangle.op_Equality*
+  nameWithType.vb: Rectangle.=(Rectangle, Rectangle)
+  fullName.vb: SimulationFramework.Rectangle.=(SimulationFramework.Rectangle, SimulationFramework.Rectangle)
+  name.vb: =(Rectangle, Rectangle)
+- uid: SimulationFramework.Rectangle.op_Inequality(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  commentId: M:SimulationFramework.Rectangle.op_Inequality(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  id: op_Inequality(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: operator !=(Rectangle, Rectangle)
+  nameWithType: Rectangle.operator !=(Rectangle, Rectangle)
+  fullName: SimulationFramework.Rectangle.operator !=(SimulationFramework.Rectangle, SimulationFramework.Rectangle)
+  type: Operator
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: op_Inequality
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 215
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Indicates if two rectangles are not equal.
+  example: []
+  syntax:
+    content: public static bool operator !=(Rectangle left, Rectangle right)
+    parameters:
+    - id: left
+      type: SimulationFramework.Rectangle
+      description: The first rectangle.
+    - id: right
+      type: SimulationFramework.Rectangle
+      description: The second rectangle.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if the rectangles are not equal, otherwise <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Shared Operator <>(left As Rectangle, right As Rectangle) As Boolean
+  overload: SimulationFramework.Rectangle.op_Inequality*
+  nameWithType.vb: Rectangle.<>(Rectangle, Rectangle)
+  fullName.vb: SimulationFramework.Rectangle.<>(SimulationFramework.Rectangle, SimulationFramework.Rectangle)
+  name.vb: <>(Rectangle, Rectangle)
+- uid: SimulationFramework.Rectangle.GetHashCode
+  commentId: M:SimulationFramework.Rectangle.GetHashCode
+  id: GetHashCode
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: Rectangle.GetHashCode()
+  fullName: SimulationFramework.Rectangle.GetHashCode()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: GetHashCode
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 221
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Returns the hash code for this instance.
+  example: []
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+      description: A 32-bit signed integer that is the hash code for this instance.
+    content.vb: Public Overrides Function GetHashCode() As Integer
+  overridden: System.ValueType.GetHashCode
+  overload: SimulationFramework.Rectangle.GetHashCode*
+- uid: SimulationFramework.Rectangle.CreateLTRB(System.Single,System.Single,System.Single,System.Single)
+  commentId: M:SimulationFramework.Rectangle.CreateLTRB(System.Single,System.Single,System.Single,System.Single)
+  id: CreateLTRB(System.Single,System.Single,System.Single,System.Single)
+  parent: SimulationFramework.Rectangle
+  langs:
+  - csharp
+  - vb
+  name: CreateLTRB(float, float, float, float)
+  nameWithType: Rectangle.CreateLTRB(float, float, float, float)
+  fullName: SimulationFramework.Rectangle.CreateLTRB(float, float, float, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Rectangle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CreateLTRB
+    path: src/SimulationFramework/Rectangle.cs
+    startLine: 233
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Creates a rectangle given the absoulte position of each of its sides.
+  example: []
+  syntax:
+    content: public static Rectangle CreateLTRB(float left, float top, float right, float bottom)
+    parameters:
+    - id: left
+      type: System.Single
+      description: The position of the left side of the rectangle on the x-axis.
+    - id: top
+      type: System.Single
+      description: The position of the top of the rectangle on the y-axis.
+    - id: right
+      type: System.Single
+      description: The position of the right side of the rectangle on the x-axis.
+    - id: bottom
+      type: System.Single
+      description: The position of the bottom of the rectangle on the y-axis.
+    return:
+      type: SimulationFramework.Rectangle
+    content.vb: Public Shared Function CreateLTRB(left As Single, top As Single, right As Single, bottom As Single) As Rectangle
+  overload: SimulationFramework.Rectangle.CreateLTRB*
+  nameWithType.vb: Rectangle.CreateLTRB(Single, Single, Single, Single)
+  fullName.vb: SimulationFramework.Rectangle.CreateLTRB(Single, Single, Single, Single)
+  name.vb: CreateLTRB(Single, Single, Single, Single)
+references:
+- uid: SimulationFramework
+  commentId: N:SimulationFramework
+  href: SimulationFramework.html
+  name: SimulationFramework
+  nameWithType: SimulationFramework
+  fullName: SimulationFramework
+- uid: System.IEquatable{SimulationFramework.Rectangle}
+  commentId: T:System.IEquatable{SimulationFramework.Rectangle}
+  parent: System
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<Rectangle>
+  nameWithType: IEquatable<Rectangle>
+  fullName: System.IEquatable<SimulationFramework.Rectangle>
+  nameWithType.vb: IEquatable(Of Rectangle)
+  fullName.vb: System.IEquatable(Of SimulationFramework.Rectangle)
+  name.vb: IEquatable(Of Rectangle)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - uid: SimulationFramework.Rectangle
+    name: Rectangle
+    href: SimulationFramework.Rectangle.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: SimulationFramework.Rectangle
+    name: Rectangle
+    href: SimulationFramework.Rectangle.html
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: SimulationFramework.Rectangle.SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect
+  commentId: M:SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+  parent: SimulationFramework.SkiaSharp.SkiaExtensions
+  definition: SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+  href: SimulationFramework.SkiaSharp.SkiaExtensions.html#SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+  name: AsSKRect(Rectangle)
+  nameWithType: SkiaExtensions.AsSKRect(Rectangle)
+  fullName: SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+  spec.csharp:
+  - uid: SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+    name: AsSKRect
+    href: SimulationFramework.SkiaSharp.SkiaExtensions.html#SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+  - name: (
+  - uid: SimulationFramework.Rectangle
+    name: Rectangle
+    href: SimulationFramework.Rectangle.html
+  - name: )
+  spec.vb:
+  - uid: SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+    name: AsSKRect
+    href: SimulationFramework.SkiaSharp.SkiaExtensions.html#SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+  - name: (
+  - uid: SimulationFramework.Rectangle
+    name: Rectangle
+    href: SimulationFramework.Rectangle.html
+  - name: )
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+  commentId: M:SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+  href: SimulationFramework.SkiaSharp.SkiaExtensions.html#SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+  name: AsSKRect(Rectangle)
+  nameWithType: SkiaExtensions.AsSKRect(Rectangle)
+  fullName: SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+  spec.csharp:
+  - uid: SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+    name: AsSKRect
+    href: SimulationFramework.SkiaSharp.SkiaExtensions.html#SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+  - name: (
+  - uid: SimulationFramework.Rectangle
+    name: Rectangle
+    href: SimulationFramework.Rectangle.html
+  - name: )
+  spec.vb:
+  - uid: SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+    name: AsSKRect
+    href: SimulationFramework.SkiaSharp.SkiaExtensions.html#SimulationFramework.SkiaSharp.SkiaExtensions.AsSKRect(SimulationFramework.Rectangle)
+  - name: (
+  - uid: SimulationFramework.Rectangle
+    name: Rectangle
+    href: SimulationFramework.Rectangle.html
+  - name: )
+- uid: SimulationFramework.SkiaSharp.SkiaExtensions
+  commentId: T:SimulationFramework.SkiaSharp.SkiaExtensions
+  parent: SimulationFramework.SkiaSharp
+  href: SimulationFramework.SkiaSharp.SkiaExtensions.html
+  name: SkiaExtensions
+  nameWithType: SkiaExtensions
+  fullName: SimulationFramework.SkiaSharp.SkiaExtensions
+- uid: SimulationFramework.SkiaSharp
+  commentId: N:SimulationFramework.SkiaSharp
+  href: SimulationFramework.html
+  name: SimulationFramework.SkiaSharp
+  nameWithType: SimulationFramework.SkiaSharp
+  fullName: SimulationFramework.SkiaSharp
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.SkiaSharp
+    name: SkiaSharp
+    href: SimulationFramework.SkiaSharp.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.SkiaSharp
+    name: SkiaSharp
+    href: SimulationFramework.SkiaSharp.html
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: SimulationFramework.Rectangle.Size*
+  commentId: Overload:SimulationFramework.Rectangle.Size
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.Size
+  name: Size
+  nameWithType: Rectangle.Size
+  fullName: SimulationFramework.Rectangle.Size
+- uid: System.Numerics.Vector2
+  commentId: T:System.Numerics.Vector2
+  parent: System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  name: Vector2
+  nameWithType: Vector2
+  fullName: System.Numerics.Vector2
+- uid: System.Numerics
+  commentId: N:System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Numerics
+  nameWithType: System.Numerics
+  fullName: System.Numerics
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+- uid: SimulationFramework.Rectangle.Position*
+  commentId: Overload:SimulationFramework.Rectangle.Position
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.Position
+  name: Position
+  nameWithType: Rectangle.Position
+  fullName: SimulationFramework.Rectangle.Position
+- uid: SimulationFramework.Rectangle.Center*
+  commentId: Overload:SimulationFramework.Rectangle.Center
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.Center
+  name: Center
+  nameWithType: Rectangle.Center
+  fullName: SimulationFramework.Rectangle.Center
+- uid: SimulationFramework.Rectangle.#ctor*
+  commentId: Overload:SimulationFramework.Rectangle.#ctor
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.#ctor(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  name: Rectangle
+  nameWithType: Rectangle.Rectangle
+  fullName: SimulationFramework.Rectangle.Rectangle
+  nameWithType.vb: Rectangle.New
+  fullName.vb: SimulationFramework.Rectangle.New
+  name.vb: New
+- uid: SimulationFramework.Alignment
+  commentId: T:SimulationFramework.Alignment
+  parent: SimulationFramework
+  href: SimulationFramework.Alignment.html
+  name: Alignment
+  nameWithType: Alignment
+  fullName: SimulationFramework.Alignment
+- uid: SimulationFramework.Rectangle.GetAlignedPoint*
+  commentId: Overload:SimulationFramework.Rectangle.GetAlignedPoint
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.GetAlignedPoint(SimulationFramework.Alignment)
+  name: GetAlignedPoint
+  nameWithType: Rectangle.GetAlignedPoint
+  fullName: SimulationFramework.Rectangle.GetAlignedPoint
+- uid: SimulationFramework.Rectangle.SetAlignedPosition*
+  commentId: Overload:SimulationFramework.Rectangle.SetAlignedPosition
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.SetAlignedPosition(System.Numerics.Vector2,SimulationFramework.Alignment)
+  name: SetAlignedPosition
+  nameWithType: Rectangle.SetAlignedPosition
+  fullName: SimulationFramework.Rectangle.SetAlignedPosition
+- uid: SimulationFramework.Rectangle.ContainsPoint*
+  commentId: Overload:SimulationFramework.Rectangle.ContainsPoint
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.ContainsPoint(System.Numerics.Vector2)
+  name: ContainsPoint
+  nameWithType: Rectangle.ContainsPoint
+  fullName: SimulationFramework.Rectangle.ContainsPoint
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: SimulationFramework.Rectangle.Intersects*
+  commentId: Overload:SimulationFramework.Rectangle.Intersects
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.Intersects(SimulationFramework.Rectangle)
+  name: Intersects
+  nameWithType: Rectangle.Intersects
+  fullName: SimulationFramework.Rectangle.Intersects
+- uid: SimulationFramework.Rectangle
+  commentId: T:SimulationFramework.Rectangle
+  parent: SimulationFramework
+  href: SimulationFramework.Rectangle.html
+  name: Rectangle
+  nameWithType: Rectangle
+  fullName: SimulationFramework.Rectangle
+- uid: SimulationFramework.Rectangle.Equals*
+  commentId: Overload:SimulationFramework.Rectangle.Equals
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.Equals(SimulationFramework.Rectangle)
+  name: Equals
+  nameWithType: Rectangle.Equals
+  fullName: SimulationFramework.Rectangle.Equals
+- uid: System.IEquatable{SimulationFramework.Rectangle}.Equals(SimulationFramework.Rectangle)
+  commentId: M:System.IEquatable{SimulationFramework.Rectangle}.Equals(SimulationFramework.Rectangle)
+  parent: System.IEquatable{SimulationFramework.Rectangle}
+  definition: System.IEquatable`1.Equals(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-simulationframework.rectangle-.equals#system-iequatable((simulationframework-rectangle))-equals(simulationframework-rectangle)
+  name: Equals(Rectangle)
+  nameWithType: IEquatable<Rectangle>.Equals(Rectangle)
+  fullName: System.IEquatable<SimulationFramework.Rectangle>.Equals(SimulationFramework.Rectangle)
+  nameWithType.vb: IEquatable(Of Rectangle).Equals(Rectangle)
+  fullName.vb: System.IEquatable(Of SimulationFramework.Rectangle).Equals(SimulationFramework.Rectangle)
+  spec.csharp:
+  - uid: System.IEquatable{SimulationFramework.Rectangle}.Equals(SimulationFramework.Rectangle)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-simulationframework.rectangle-.equals#system-iequatable((simulationframework-rectangle))-equals(simulationframework-rectangle)
+  - name: (
+  - uid: SimulationFramework.Rectangle
+    name: Rectangle
+    href: SimulationFramework.Rectangle.html
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable{SimulationFramework.Rectangle}.Equals(SimulationFramework.Rectangle)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-simulationframework.rectangle-.equals#system-iequatable((simulationframework-rectangle))-equals(simulationframework-rectangle)
+  - name: (
+  - uid: SimulationFramework.Rectangle
+    name: Rectangle
+    href: SimulationFramework.Rectangle.html
+  - name: )
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: SimulationFramework.Rectangle.ToString*
+  commentId: Overload:SimulationFramework.Rectangle.ToString
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.ToString
+  name: ToString
+  nameWithType: Rectangle.ToString
+  fullName: SimulationFramework.Rectangle.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: SimulationFramework.Rectangle.op_Equality*
+  commentId: Overload:SimulationFramework.Rectangle.op_Equality
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.op_Equality(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  name: operator ==
+  nameWithType: Rectangle.operator ==
+  fullName: SimulationFramework.Rectangle.operator ==
+  nameWithType.vb: Rectangle.=
+  fullName.vb: SimulationFramework.Rectangle.=
+  name.vb: =
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: SimulationFramework.Rectangle.op_Equality*
+    name: ==
+    href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.op_Equality(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+- uid: SimulationFramework.Rectangle.op_Inequality*
+  commentId: Overload:SimulationFramework.Rectangle.op_Inequality
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.op_Inequality(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  name: operator !=
+  nameWithType: Rectangle.operator !=
+  fullName: SimulationFramework.Rectangle.operator !=
+  nameWithType.vb: Rectangle.<>
+  fullName.vb: SimulationFramework.Rectangle.<>
+  name.vb: <>
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: SimulationFramework.Rectangle.op_Inequality*
+    name: '!='
+    href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.op_Inequality(SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: SimulationFramework.Rectangle.GetHashCode*
+  commentId: Overload:SimulationFramework.Rectangle.GetHashCode
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.GetHashCode
+  name: GetHashCode
+  nameWithType: Rectangle.GetHashCode
+  fullName: SimulationFramework.Rectangle.GetHashCode
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: SimulationFramework.Rectangle.CreateLTRB*
+  commentId: Overload:SimulationFramework.Rectangle.CreateLTRB
+  href: SimulationFramework.Rectangle.html#SimulationFramework.Rectangle.CreateLTRB(System.Single,System.Single,System.Single,System.Single)
+  name: CreateLTRB
+  nameWithType: Rectangle.CreateLTRB
+  fullName: SimulationFramework.Rectangle.CreateLTRB

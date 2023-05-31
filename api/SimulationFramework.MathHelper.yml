@@ -1,0 +1,694 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.MathHelper
+  commentId: T:SimulationFramework.MathHelper
+  id: MathHelper
+  parent: SimulationFramework
+  children:
+  - SimulationFramework.MathHelper.Lerp(System.Single,System.Single,System.Single)
+  - SimulationFramework.MathHelper.LerpClamped(System.Single,System.Single,System.Single)
+  - SimulationFramework.MathHelper.Normalize(System.Single)
+  - SimulationFramework.MathHelper.PolygonBounds(System.Collections.Generic.IEnumerable{System.Numerics.Vector2})
+  - SimulationFramework.MathHelper.PolygonBounds(System.Span{System.Numerics.Vector2})
+  langs:
+  - csharp
+  - vb
+  name: MathHelper
+  nameWithType: MathHelper
+  fullName: SimulationFramework.MathHelper
+  type: Class
+  source:
+    remote:
+      path: src/SimulationFramework/MathHelper.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: MathHelper
+    path: src/SimulationFramework/MathHelper.cs
+    startLine: 12
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Contains various useful math-related methods.
+  example: []
+  syntax:
+    content: public static class MathHelper
+    content.vb: Public Module MathHelper
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: SimulationFramework.MathHelper.PolygonBounds(System.Span{System.Numerics.Vector2})
+  commentId: M:SimulationFramework.MathHelper.PolygonBounds(System.Span{System.Numerics.Vector2})
+  id: PolygonBounds(System.Span{System.Numerics.Vector2})
+  parent: SimulationFramework.MathHelper
+  langs:
+  - csharp
+  - vb
+  name: PolygonBounds(Span<Vector2>)
+  nameWithType: MathHelper.PolygonBounds(Span<Vector2>)
+  fullName: SimulationFramework.MathHelper.PolygonBounds(System.Span<System.Numerics.Vector2>)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/MathHelper.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: PolygonBounds
+    path: src/SimulationFramework/MathHelper.cs
+    startLine: 18
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Finds the bounding box of a polygon.
+  example: []
+  syntax:
+    content: public static Rectangle PolygonBounds(Span<Vector2> polygon)
+    parameters:
+    - id: polygon
+      type: System.Span{System.Numerics.Vector2}
+      description: The polygon to find the bounds of.
+    return:
+      type: SimulationFramework.Rectangle
+    content.vb: Public Shared Function PolygonBounds(polygon As Span(Of Vector2)) As Rectangle
+  overload: SimulationFramework.MathHelper.PolygonBounds*
+  nameWithType.vb: MathHelper.PolygonBounds(Span(Of Vector2))
+  fullName.vb: SimulationFramework.MathHelper.PolygonBounds(System.Span(Of System.Numerics.Vector2))
+  name.vb: PolygonBounds(Span(Of Vector2))
+- uid: SimulationFramework.MathHelper.PolygonBounds(System.Collections.Generic.IEnumerable{System.Numerics.Vector2})
+  commentId: M:SimulationFramework.MathHelper.PolygonBounds(System.Collections.Generic.IEnumerable{System.Numerics.Vector2})
+  id: PolygonBounds(System.Collections.Generic.IEnumerable{System.Numerics.Vector2})
+  parent: SimulationFramework.MathHelper
+  langs:
+  - csharp
+  - vb
+  name: PolygonBounds(IEnumerable<Vector2>)
+  nameWithType: MathHelper.PolygonBounds(IEnumerable<Vector2>)
+  fullName: SimulationFramework.MathHelper.PolygonBounds(System.Collections.Generic.IEnumerable<System.Numerics.Vector2>)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/MathHelper.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: PolygonBounds
+    path: src/SimulationFramework/MathHelper.cs
+    startLine: 30
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Finds the bounding box of a polygon.
+  example: []
+  syntax:
+    content: public static Rectangle PolygonBounds(IEnumerable<Vector2> polygon)
+    parameters:
+    - id: polygon
+      type: System.Collections.Generic.IEnumerable{System.Numerics.Vector2}
+      description: The polygon to find the bounds of.
+    return:
+      type: SimulationFramework.Rectangle
+    content.vb: Public Shared Function PolygonBounds(polygon As IEnumerable(Of Vector2)) As Rectangle
+  overload: SimulationFramework.MathHelper.PolygonBounds*
+  nameWithType.vb: MathHelper.PolygonBounds(IEnumerable(Of Vector2))
+  fullName.vb: SimulationFramework.MathHelper.PolygonBounds(System.Collections.Generic.IEnumerable(Of System.Numerics.Vector2))
+  name.vb: PolygonBounds(IEnumerable(Of Vector2))
+- uid: SimulationFramework.MathHelper.Lerp(System.Single,System.Single,System.Single)
+  commentId: M:SimulationFramework.MathHelper.Lerp(System.Single,System.Single,System.Single)
+  id: Lerp(System.Single,System.Single,System.Single)
+  parent: SimulationFramework.MathHelper
+  langs:
+  - csharp
+  - vb
+  name: Lerp(float, float, float)
+  nameWithType: MathHelper.Lerp(float, float, float)
+  fullName: SimulationFramework.MathHelper.Lerp(float, float, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/MathHelper.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Lerp
+    path: src/SimulationFramework/MathHelper.cs
+    startLine: 52
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Linearly interpolates between two values.
+  example: []
+  syntax:
+    content: public static float Lerp(float a, float b, float t)
+    parameters:
+    - id: a
+      type: System.Single
+      description: The first value.
+    - id: b
+      type: System.Single
+      description: The second value.
+    - id: t
+      type: System.Single
+      description: The interpolation amount, from 0.0 to 1.0.
+    return:
+      type: System.Single
+      description: The interpolated value.
+    content.vb: Public Shared Function Lerp(a As Single, b As Single, t As Single) As Single
+  overload: SimulationFramework.MathHelper.Lerp*
+  nameWithType.vb: MathHelper.Lerp(Single, Single, Single)
+  fullName.vb: SimulationFramework.MathHelper.Lerp(Single, Single, Single)
+  name.vb: Lerp(Single, Single, Single)
+- uid: SimulationFramework.MathHelper.LerpClamped(System.Single,System.Single,System.Single)
+  commentId: M:SimulationFramework.MathHelper.LerpClamped(System.Single,System.Single,System.Single)
+  id: LerpClamped(System.Single,System.Single,System.Single)
+  parent: SimulationFramework.MathHelper
+  langs:
+  - csharp
+  - vb
+  name: LerpClamped(float, float, float)
+  nameWithType: MathHelper.LerpClamped(float, float, float)
+  fullName: SimulationFramework.MathHelper.LerpClamped(float, float, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/MathHelper.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: LerpClamped
+    path: src/SimulationFramework/MathHelper.cs
+    startLine: 64
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Linearly interpolates between two values, clamping the result between the two values..
+  example: []
+  syntax:
+    content: public static float LerpClamped(float a, float b, float t)
+    parameters:
+    - id: a
+      type: System.Single
+      description: The first value.
+    - id: b
+      type: System.Single
+      description: The second value.
+    - id: t
+      type: System.Single
+      description: The interpolation amount, from 0.0 to 1.0.
+    return:
+      type: System.Single
+      description: The interpolated value.
+    content.vb: Public Shared Function LerpClamped(a As Single, b As Single, t As Single) As Single
+  overload: SimulationFramework.MathHelper.LerpClamped*
+  nameWithType.vb: MathHelper.LerpClamped(Single, Single, Single)
+  fullName.vb: SimulationFramework.MathHelper.LerpClamped(Single, Single, Single)
+  name.vb: LerpClamped(Single, Single, Single)
+- uid: SimulationFramework.MathHelper.Normalize(System.Single)
+  commentId: M:SimulationFramework.MathHelper.Normalize(System.Single)
+  id: Normalize(System.Single)
+  parent: SimulationFramework.MathHelper
+  langs:
+  - csharp
+  - vb
+  name: Normalize(float)
+  nameWithType: MathHelper.Normalize(float)
+  fullName: SimulationFramework.MathHelper.Normalize(float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/MathHelper.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Normalize
+    path: src/SimulationFramework/MathHelper.cs
+    startLine: 74
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Clamps a float to range [0.0, 1.0]
+  example: []
+  syntax:
+    content: public static float Normalize(float value)
+    parameters:
+    - id: value
+      type: System.Single
+      description: The value to normalize.
+    return:
+      type: System.Single
+      description: The normalized value.
+    content.vb: Public Shared Function Normalize(value As Single) As Single
+  overload: SimulationFramework.MathHelper.Normalize*
+  nameWithType.vb: MathHelper.Normalize(Single)
+  fullName.vb: SimulationFramework.MathHelper.Normalize(Single)
+  name.vb: Normalize(Single)
+references:
+- uid: SimulationFramework
+  commentId: N:SimulationFramework
+  href: SimulationFramework.html
+  name: SimulationFramework
+  nameWithType: SimulationFramework
+  fullName: SimulationFramework
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: SimulationFramework.MathHelper.PolygonBounds*
+  commentId: Overload:SimulationFramework.MathHelper.PolygonBounds
+  href: SimulationFramework.MathHelper.html#SimulationFramework.MathHelper.PolygonBounds(System.Span{System.Numerics.Vector2})
+  name: PolygonBounds
+  nameWithType: MathHelper.PolygonBounds
+  fullName: SimulationFramework.MathHelper.PolygonBounds
+- uid: System.Span{System.Numerics.Vector2}
+  commentId: T:System.Span{System.Numerics.Vector2}
+  parent: System
+  definition: System.Span`1
+  href: https://learn.microsoft.com/dotnet/api/system.span-1
+  name: Span<Vector2>
+  nameWithType: Span<Vector2>
+  fullName: System.Span<System.Numerics.Vector2>
+  nameWithType.vb: Span(Of Vector2)
+  fullName.vb: System.Span(Of System.Numerics.Vector2)
+  name.vb: Span(Of Vector2)
+  spec.csharp:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - uid: System.Numerics.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  - name: '>'
+  spec.vb:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Numerics.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  - name: )
+- uid: SimulationFramework.Rectangle
+  commentId: T:SimulationFramework.Rectangle
+  parent: SimulationFramework
+  href: SimulationFramework.Rectangle.html
+  name: Rectangle
+  nameWithType: Rectangle
+  fullName: SimulationFramework.Rectangle
+- uid: System.Span`1
+  commentId: T:System.Span`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.span-1
+  name: Span<T>
+  nameWithType: Span<T>
+  fullName: System.Span<T>
+  nameWithType.vb: Span(Of T)
+  fullName.vb: System.Span(Of T)
+  name.vb: Span(Of T)
+  spec.csharp:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic.IEnumerable{System.Numerics.Vector2}
+  commentId: T:System.Collections.Generic.IEnumerable{System.Numerics.Vector2}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<Vector2>
+  nameWithType: IEnumerable<Vector2>
+  fullName: System.Collections.Generic.IEnumerable<System.Numerics.Vector2>
+  nameWithType.vb: IEnumerable(Of Vector2)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of System.Numerics.Vector2)
+  name.vb: IEnumerable(Of Vector2)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: System.Numerics.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Numerics.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: SimulationFramework.MathHelper.Lerp*
+  commentId: Overload:SimulationFramework.MathHelper.Lerp
+  href: SimulationFramework.MathHelper.html#SimulationFramework.MathHelper.Lerp(System.Single,System.Single,System.Single)
+  name: Lerp
+  nameWithType: MathHelper.Lerp
+  fullName: SimulationFramework.MathHelper.Lerp
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: SimulationFramework.MathHelper.LerpClamped*
+  commentId: Overload:SimulationFramework.MathHelper.LerpClamped
+  href: SimulationFramework.MathHelper.html#SimulationFramework.MathHelper.LerpClamped(System.Single,System.Single,System.Single)
+  name: LerpClamped
+  nameWithType: MathHelper.LerpClamped
+  fullName: SimulationFramework.MathHelper.LerpClamped
+- uid: SimulationFramework.MathHelper.Normalize*
+  commentId: Overload:SimulationFramework.MathHelper.Normalize
+  href: SimulationFramework.MathHelper.html#SimulationFramework.MathHelper.Normalize(System.Single)
+  name: Normalize
+  nameWithType: MathHelper.Normalize
+  fullName: SimulationFramework.MathHelper.Normalize

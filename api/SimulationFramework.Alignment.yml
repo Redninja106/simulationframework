@@ -1,0 +1,305 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Alignment
+  commentId: T:SimulationFramework.Alignment
+  id: Alignment
+  parent: SimulationFramework
+  children:
+  - SimulationFramework.Alignment.BottomCenter
+  - SimulationFramework.Alignment.BottomLeft
+  - SimulationFramework.Alignment.BottomRight
+  - SimulationFramework.Alignment.Center
+  - SimulationFramework.Alignment.CenterLeft
+  - SimulationFramework.Alignment.CenterRight
+  - SimulationFramework.Alignment.TopCenter
+  - SimulationFramework.Alignment.TopLeft
+  - SimulationFramework.Alignment.TopRight
+  langs:
+  - csharp
+  - vb
+  name: Alignment
+  nameWithType: Alignment
+  fullName: SimulationFramework.Alignment
+  type: Enum
+  source:
+    remote:
+      path: src/SimulationFramework/Alignment.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Alignment
+    path: src/SimulationFramework/Alignment.cs
+    startLine: 11
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Specifies how a shape should be aligned to it's position.
+  example: []
+  syntax:
+    content: public enum Alignment
+    content.vb: Public Enum Alignment
+- uid: SimulationFramework.Alignment.TopLeft
+  commentId: F:SimulationFramework.Alignment.TopLeft
+  id: TopLeft
+  parent: SimulationFramework.Alignment
+  langs:
+  - csharp
+  - vb
+  name: TopLeft
+  nameWithType: Alignment.TopLeft
+  fullName: SimulationFramework.Alignment.TopLeft
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Alignment.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: TopLeft
+    path: src/SimulationFramework/Alignment.cs
+    startLine: 16
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The upper-left corner of the shape.
+  example: []
+  syntax:
+    content: TopLeft = 0
+    return:
+      type: SimulationFramework.Alignment
+- uid: SimulationFramework.Alignment.TopCenter
+  commentId: F:SimulationFramework.Alignment.TopCenter
+  id: TopCenter
+  parent: SimulationFramework.Alignment
+  langs:
+  - csharp
+  - vb
+  name: TopCenter
+  nameWithType: Alignment.TopCenter
+  fullName: SimulationFramework.Alignment.TopCenter
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Alignment.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: TopCenter
+    path: src/SimulationFramework/Alignment.cs
+    startLine: 20
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The center of the top edge of the shape.
+  example: []
+  syntax:
+    content: TopCenter = 1
+    return:
+      type: SimulationFramework.Alignment
+- uid: SimulationFramework.Alignment.TopRight
+  commentId: F:SimulationFramework.Alignment.TopRight
+  id: TopRight
+  parent: SimulationFramework.Alignment
+  langs:
+  - csharp
+  - vb
+  name: TopRight
+  nameWithType: Alignment.TopRight
+  fullName: SimulationFramework.Alignment.TopRight
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Alignment.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: TopRight
+    path: src/SimulationFramework/Alignment.cs
+    startLine: 24
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The upper-right corner of the shape.
+  example: []
+  syntax:
+    content: TopRight = 2
+    return:
+      type: SimulationFramework.Alignment
+- uid: SimulationFramework.Alignment.CenterLeft
+  commentId: F:SimulationFramework.Alignment.CenterLeft
+  id: CenterLeft
+  parent: SimulationFramework.Alignment
+  langs:
+  - csharp
+  - vb
+  name: CenterLeft
+  nameWithType: Alignment.CenterLeft
+  fullName: SimulationFramework.Alignment.CenterLeft
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Alignment.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CenterLeft
+    path: src/SimulationFramework/Alignment.cs
+    startLine: 28
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The center of the left edge of the shape.
+  example: []
+  syntax:
+    content: CenterLeft = 3
+    return:
+      type: SimulationFramework.Alignment
+- uid: SimulationFramework.Alignment.Center
+  commentId: F:SimulationFramework.Alignment.Center
+  id: Center
+  parent: SimulationFramework.Alignment
+  langs:
+  - csharp
+  - vb
+  name: Center
+  nameWithType: Alignment.Center
+  fullName: SimulationFramework.Alignment.Center
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Alignment.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Center
+    path: src/SimulationFramework/Alignment.cs
+    startLine: 32
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The middle of the shape.
+  example: []
+  syntax:
+    content: Center = 4
+    return:
+      type: SimulationFramework.Alignment
+- uid: SimulationFramework.Alignment.CenterRight
+  commentId: F:SimulationFramework.Alignment.CenterRight
+  id: CenterRight
+  parent: SimulationFramework.Alignment
+  langs:
+  - csharp
+  - vb
+  name: CenterRight
+  nameWithType: Alignment.CenterRight
+  fullName: SimulationFramework.Alignment.CenterRight
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Alignment.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CenterRight
+    path: src/SimulationFramework/Alignment.cs
+    startLine: 36
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The center of the right edge of the shape.
+  example: []
+  syntax:
+    content: CenterRight = 5
+    return:
+      type: SimulationFramework.Alignment
+- uid: SimulationFramework.Alignment.BottomLeft
+  commentId: F:SimulationFramework.Alignment.BottomLeft
+  id: BottomLeft
+  parent: SimulationFramework.Alignment
+  langs:
+  - csharp
+  - vb
+  name: BottomLeft
+  nameWithType: Alignment.BottomLeft
+  fullName: SimulationFramework.Alignment.BottomLeft
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Alignment.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: BottomLeft
+    path: src/SimulationFramework/Alignment.cs
+    startLine: 40
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The lower-left corner of the shape.
+  example: []
+  syntax:
+    content: BottomLeft = 6
+    return:
+      type: SimulationFramework.Alignment
+- uid: SimulationFramework.Alignment.BottomCenter
+  commentId: F:SimulationFramework.Alignment.BottomCenter
+  id: BottomCenter
+  parent: SimulationFramework.Alignment
+  langs:
+  - csharp
+  - vb
+  name: BottomCenter
+  nameWithType: Alignment.BottomCenter
+  fullName: SimulationFramework.Alignment.BottomCenter
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Alignment.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: BottomCenter
+    path: src/SimulationFramework/Alignment.cs
+    startLine: 44
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The center of the bottom edge of the shape.
+  example: []
+  syntax:
+    content: BottomCenter = 7
+    return:
+      type: SimulationFramework.Alignment
+- uid: SimulationFramework.Alignment.BottomRight
+  commentId: F:SimulationFramework.Alignment.BottomRight
+  id: BottomRight
+  parent: SimulationFramework.Alignment
+  langs:
+  - csharp
+  - vb
+  name: BottomRight
+  nameWithType: Alignment.BottomRight
+  fullName: SimulationFramework.Alignment.BottomRight
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Alignment.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: BottomRight
+    path: src/SimulationFramework/Alignment.cs
+    startLine: 48
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The lower-right corner of the shape.
+  example: []
+  syntax:
+    content: BottomRight = 8
+    return:
+      type: SimulationFramework.Alignment
+references:
+- uid: SimulationFramework
+  commentId: N:SimulationFramework
+  href: SimulationFramework.html
+  name: SimulationFramework
+  nameWithType: SimulationFramework
+  fullName: SimulationFramework
+- uid: SimulationFramework.Alignment
+  commentId: T:SimulationFramework.Alignment
+  parent: SimulationFramework
+  href: SimulationFramework.Alignment.html
+  name: Alignment
+  nameWithType: Alignment
+  fullName: SimulationFramework.Alignment

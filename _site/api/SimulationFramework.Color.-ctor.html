@@ -1,0 +1,420 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Constructor Color
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Constructor Color
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="SimulationFramework.Color.#ctor*">
+
+
+
+
+
+<h1 id="SimulationFramework_Color__ctor_" data-uid="SimulationFramework.Color.#ctor*" class="text-break">
+  Constructor Color
+  
+</h1>
+
+<div class="facts text-secondary">
+  <dl><dt>Namespace</dt><dd><a class="xref" href="SimulationFramework.html">SimulationFramework</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>SimulationFramework.dll</dd></dl>
+</div>
+
+<div class="markdown summary"></div>
+<div class="markdown conceptual"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a id="SimulationFramework_Color__ctor_" data-uid="SimulationFramework.Color.#ctor*"></a>
+
+<h3 id="SimulationFramework_Color__ctor" data-uid="SimulationFramework.Color.#ctor">
+  Color()
+  
+</h3>
+
+<div class="markdown level1 summary"><p>Creates a new color.</p>
+</div>
+<div class="markdown level1 conceptual"></div>
+
+<div class="codewrapper">
+  <pre><code class="lang-csharp hljs">public Color()</code></pre>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<a id="SimulationFramework_Color__ctor_" data-uid="SimulationFramework.Color.#ctor*"></a>
+
+<h3 id="SimulationFramework_Color__ctor_System_UInt32_" data-uid="SimulationFramework.Color.#ctor(System.UInt32)">
+  Color(uint)
+  
+</h3>
+
+<div class="markdown level1 summary"><p>Creates a color from the provided uint RGBA value.</p>
+</div>
+<div class="markdown level1 conceptual"></div>
+
+<div class="codewrapper">
+  <pre><code class="lang-csharp hljs">public Color(uint value)</code></pre>
+</div>
+
+<h4 class="section">Parameters</h4>
+<dl class="parameters">
+  <dt><code>value</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.uint32">uint</a></dt>
+  <dd><p>The RGBA color value, where R is the least significant byte, and A is the most significant byte.</p>
+</dd>
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+<a id="SimulationFramework_Color__ctor_" data-uid="SimulationFramework.Color.#ctor*"></a>
+
+<h3 id="SimulationFramework_Color__ctor_System_Byte_System_Byte_System_Byte_" data-uid="SimulationFramework.Color.#ctor(System.Byte,System.Byte,System.Byte)">
+  Color(byte, byte, byte)
+  
+</h3>
+
+<div class="markdown level1 summary"><p>Creates a new color with the provided RGB values, and an alpha of 255.</p>
+</div>
+<div class="markdown level1 conceptual"></div>
+
+<div class="codewrapper">
+  <pre><code class="lang-csharp hljs">public Color(byte r, byte g, byte b)</code></pre>
+</div>
+
+<h4 class="section">Parameters</h4>
+<dl class="parameters">
+  <dt><code>r</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+  <dd><p>The red component of the color.</p>
+</dd>
+  <dt><code>g</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+  <dd><p>The green component of the color.</p>
+</dd>
+  <dt><code>b</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+  <dd><p>The blue component of the color.</p>
+</dd>
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+<a id="SimulationFramework_Color__ctor_" data-uid="SimulationFramework.Color.#ctor*"></a>
+
+<h3 id="SimulationFramework_Color__ctor_System_Byte_System_Byte_System_Byte_System_Byte_" data-uid="SimulationFramework.Color.#ctor(System.Byte,System.Byte,System.Byte,System.Byte)">
+  Color(byte, byte, byte, byte)
+  
+</h3>
+
+<div class="markdown level1 summary"><p>Creates a new color with the provided values.</p>
+</div>
+<div class="markdown level1 conceptual"></div>
+
+<div class="codewrapper">
+  <pre><code class="lang-csharp hljs">public Color(byte r, byte g, byte b, byte a)</code></pre>
+</div>
+
+<h4 class="section">Parameters</h4>
+<dl class="parameters">
+  <dt><code>r</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+  <dd><p>The red component of the color.</p>
+</dd>
+  <dt><code>g</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+  <dd><p>The green component of the color.</p>
+</dd>
+  <dt><code>b</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+  <dd><p>The blue component of the color.</p>
+</dd>
+  <dt><code>a</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a></dt>
+  <dd><p>The alpha component of the color.</p>
+</dd>
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+<a id="SimulationFramework_Color__ctor_" data-uid="SimulationFramework.Color.#ctor*"></a>
+
+<h3 id="SimulationFramework_Color__ctor_System_Numerics_Vector3_" data-uid="SimulationFramework.Color.#ctor(System.Numerics.Vector3)">
+  Color(Vector3)
+  
+</h3>
+
+<div class="markdown level1 summary"><p>Creates a new color from the provided RGB values.</p>
+</div>
+<div class="markdown level1 conceptual"></div>
+
+<div class="codewrapper">
+  <pre><code class="lang-csharp hljs">public Color(Vector3 values)</code></pre>
+</div>
+
+<h4 class="section">Parameters</h4>
+<dl class="parameters">
+  <dt><code>values</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector3">Vector3</a></dt>
+  <dd><p>The RGB values of the color.</p>
+</dd>
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+<a id="SimulationFramework_Color__ctor_" data-uid="SimulationFramework.Color.#ctor*"></a>
+
+<h3 id="SimulationFramework_Color__ctor_System_Numerics_Vector4_" data-uid="SimulationFramework.Color.#ctor(System.Numerics.Vector4)">
+  Color(Vector4)
+  
+</h3>
+
+<div class="markdown level1 summary"><p>Creates a new color from the provided RGBA values.</p>
+</div>
+<div class="markdown level1 conceptual"></div>
+
+<div class="codewrapper">
+  <pre><code class="lang-csharp hljs">public Color(Vector4 values)</code></pre>
+</div>
+
+<h4 class="section">Parameters</h4>
+<dl class="parameters">
+  <dt><code>values</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.numerics.vector4">Vector4</a></dt>
+  <dd><p>The RGBA values of the color.</p>
+</dd>
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+<a id="SimulationFramework_Color__ctor_" data-uid="SimulationFramework.Color.#ctor*"></a>
+
+<h3 id="SimulationFramework_Color__ctor_System_Single_System_Single_System_Single_" data-uid="SimulationFramework.Color.#ctor(System.Single,System.Single,System.Single)">
+  Color(float, float, float)
+  
+</h3>
+
+<div class="markdown level1 summary"><p>Creates a new color from the provided RGB values, and an alpha component of 255.</p>
+</div>
+<div class="markdown level1 conceptual"></div>
+
+<div class="codewrapper">
+  <pre><code class="lang-csharp hljs">public Color(float r, float g, float b)</code></pre>
+</div>
+
+<h4 class="section">Parameters</h4>
+<dl class="parameters">
+  <dt><code>r</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+  <dd><p>The red component of the color.</p>
+</dd>
+  <dt><code>g</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+  <dd><p>The green component of the color.</p>
+</dd>
+  <dt><code>b</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+  <dd><p>The blue component of the color.</p>
+</dd>
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+<a id="SimulationFramework_Color__ctor_" data-uid="SimulationFramework.Color.#ctor*"></a>
+
+<h3 id="SimulationFramework_Color__ctor_System_Single_System_Single_System_Single_System_Single_" data-uid="SimulationFramework.Color.#ctor(System.Single,System.Single,System.Single,System.Single)">
+  Color(float, float, float, float)
+  
+</h3>
+
+<div class="markdown level1 summary"><p>Creates a new color from the provided RGBA values.</p>
+</div>
+<div class="markdown level1 conceptual"></div>
+
+<div class="codewrapper">
+  <pre><code class="lang-csharp hljs">public Color(float r, float g, float b, float a)</code></pre>
+</div>
+
+<h4 class="section">Parameters</h4>
+<dl class="parameters">
+  <dt><code>r</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+  <dd><p>The red component of the color.</p>
+</dd>
+  <dt><code>g</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+  <dd><p>The green component of the color.</p>
+</dd>
+  <dt><code>b</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+  <dd><p>The blue component of the color.</p>
+</dd>
+  <dt><code>a</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.single">float</a></dt>
+  <dd><p>The alpha component of the color.</p>
+</dd>
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

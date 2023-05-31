@@ -1,0 +1,1090 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Circle
+  commentId: T:SimulationFramework.Circle
+  id: Circle
+  parent: SimulationFramework
+  children:
+  - SimulationFramework.Circle.#ctor(System.Numerics.Vector2,System.Single,SimulationFramework.Alignment)
+  - SimulationFramework.Circle.#ctor(System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  - SimulationFramework.Circle.Distance(SimulationFramework.Circle)
+  - SimulationFramework.Circle.Distance(System.Numerics.Vector2)
+  - SimulationFramework.Circle.Equals(SimulationFramework.Circle)
+  - SimulationFramework.Circle.Equals(System.Object)
+  - SimulationFramework.Circle.GetBounds
+  - SimulationFramework.Circle.GetHashCode
+  - SimulationFramework.Circle.GetPoint(System.Single)
+  - SimulationFramework.Circle.Position
+  - SimulationFramework.Circle.Radius
+  - SimulationFramework.Circle.ToString
+  - SimulationFramework.Circle.Unit
+  - SimulationFramework.Circle.op_Equality(SimulationFramework.Circle,SimulationFramework.Circle)
+  - SimulationFramework.Circle.op_Inequality(SimulationFramework.Circle,SimulationFramework.Circle)
+  langs:
+  - csharp
+  - vb
+  name: Circle
+  nameWithType: Circle
+  fullName: SimulationFramework.Circle
+  type: Struct
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Circle
+    path: src/SimulationFramework/Circle.cs
+    startLine: 13
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: A floating point 2-dimensional circle.
+  example: []
+  syntax:
+    content: 'public struct Circle : IEquatable<Circle>'
+    content.vb: Public Structure Circle Implements IEquatable(Of Circle)
+  implements:
+  - System.IEquatable{SimulationFramework.Circle}
+  inheritedMembers:
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+- uid: SimulationFramework.Circle.Unit
+  commentId: F:SimulationFramework.Circle.Unit
+  id: Unit
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: Unit
+  nameWithType: Circle.Unit
+  fullName: SimulationFramework.Circle.Unit
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Unit
+    path: src/SimulationFramework/Circle.cs
+    startLine: 18
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The unit circle at (0, 0).
+  example: []
+  syntax:
+    content: public static readonly Circle Unit
+    return:
+      type: SimulationFramework.Circle
+    content.vb: Public Shared ReadOnly Unit As Circle
+- uid: SimulationFramework.Circle.Position
+  commentId: F:SimulationFramework.Circle.Position
+  id: Position
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: Position
+  nameWithType: Circle.Position
+  fullName: SimulationFramework.Circle.Position
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Position
+    path: src/SimulationFramework/Circle.cs
+    startLine: 23
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The position of the circle.
+  example: []
+  syntax:
+    content: public Vector2 Position
+    return:
+      type: System.Numerics.Vector2
+    content.vb: Public Position As Vector2
+- uid: SimulationFramework.Circle.Radius
+  commentId: F:SimulationFramework.Circle.Radius
+  id: Radius
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: Radius
+  nameWithType: Circle.Radius
+  fullName: SimulationFramework.Circle.Radius
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Radius
+    path: src/SimulationFramework/Circle.cs
+    startLine: 28
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: The radius of the circle.
+  example: []
+  syntax:
+    content: public float Radius
+    return:
+      type: System.Single
+    content.vb: Public Radius As Single
+- uid: SimulationFramework.Circle.#ctor(System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Circle.#ctor(System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  id: '#ctor(System.Single,System.Single,System.Single,SimulationFramework.Alignment)'
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: Circle(float, float, float, Alignment)
+  nameWithType: Circle.Circle(float, float, float, Alignment)
+  fullName: SimulationFramework.Circle.Circle(float, float, float, SimulationFramework.Alignment)
+  type: Constructor
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: .ctor
+    path: src/SimulationFramework/Circle.cs
+    startLine: 37
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Creates a new circle given its position and radius.
+  example: []
+  syntax:
+    content: public Circle(float x, float y, float radius, Alignment alignment = Alignment.Center)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The x position of the circle.
+    - id: y
+      type: System.Single
+      description: The y position of the circle.
+    - id: radius
+      type: System.Single
+      description: The radius of the circle.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The location of <code class="paramref">x</code> and <code class="paramref">y</code> on the circle's bounding box.
+    content.vb: Public Sub New(x As Single, y As Single, radius As Single, alignment As Alignment = Alignment.Center)
+  overload: SimulationFramework.Circle.#ctor*
+  nameWithType.vb: Circle.New(Single, Single, Single, Alignment)
+  fullName.vb: SimulationFramework.Circle.New(Single, Single, Single, SimulationFramework.Alignment)
+  name.vb: New(Single, Single, Single, Alignment)
+- uid: SimulationFramework.Circle.#ctor(System.Numerics.Vector2,System.Single,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Circle.#ctor(System.Numerics.Vector2,System.Single,SimulationFramework.Alignment)
+  id: '#ctor(System.Numerics.Vector2,System.Single,SimulationFramework.Alignment)'
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: Circle(Vector2, float, Alignment)
+  nameWithType: Circle.Circle(Vector2, float, Alignment)
+  fullName: SimulationFramework.Circle.Circle(System.Numerics.Vector2, float, SimulationFramework.Alignment)
+  type: Constructor
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: .ctor
+    path: src/SimulationFramework/Circle.cs
+    startLine: 47
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Creates a new circle given its position and radius.
+  example: []
+  syntax:
+    content: public Circle(Vector2 position, float radius, Alignment alignment = Alignment.Center)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+      description: The position of the circle.
+    - id: radius
+      type: System.Single
+      description: The radius of the circle.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The location of <code class="paramref">position</code> on the circle's bounding box.
+    content.vb: Public Sub New(position As Vector2, radius As Single, alignment As Alignment = Alignment.Center)
+  overload: SimulationFramework.Circle.#ctor*
+  nameWithType.vb: Circle.New(Vector2, Single, Alignment)
+  fullName.vb: SimulationFramework.Circle.New(System.Numerics.Vector2, Single, SimulationFramework.Alignment)
+  name.vb: New(Vector2, Single, Alignment)
+- uid: SimulationFramework.Circle.GetBounds
+  commentId: M:SimulationFramework.Circle.GetBounds
+  id: GetBounds
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: GetBounds()
+  nameWithType: Circle.GetBounds()
+  fullName: SimulationFramework.Circle.GetBounds()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: GetBounds
+    path: src/SimulationFramework/Circle.cs
+    startLine: 60
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Computes the bounding rectangle of this circle.
+  example: []
+  syntax:
+    content: public Rectangle GetBounds()
+    return:
+      type: SimulationFramework.Rectangle
+      description: The bounds of this circle.
+    content.vb: Public Function GetBounds() As Rectangle
+  overload: SimulationFramework.Circle.GetBounds*
+- uid: SimulationFramework.Circle.GetPoint(System.Single)
+  commentId: M:SimulationFramework.Circle.GetPoint(System.Single)
+  id: GetPoint(System.Single)
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: GetPoint(float)
+  nameWithType: Circle.GetPoint(float)
+  fullName: SimulationFramework.Circle.GetPoint(float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: GetPoint
+    path: src/SimulationFramework/Circle.cs
+    startLine: 69
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Computes a point on this circle given an angle.
+  example: []
+  syntax:
+    content: public Vector2 GetPoint(float angle)
+    parameters:
+    - id: angle
+      type: System.Single
+    return:
+      type: System.Numerics.Vector2
+      description: The computed point.
+    content.vb: Public Function GetPoint(angle As Single) As Vector2
+  overload: SimulationFramework.Circle.GetPoint*
+  nameWithType.vb: Circle.GetPoint(Single)
+  fullName.vb: SimulationFramework.Circle.GetPoint(Single)
+  name.vb: GetPoint(Single)
+- uid: SimulationFramework.Circle.Distance(SimulationFramework.Circle)
+  commentId: M:SimulationFramework.Circle.Distance(SimulationFramework.Circle)
+  id: Distance(SimulationFramework.Circle)
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: Distance(Circle)
+  nameWithType: Circle.Distance(Circle)
+  fullName: SimulationFramework.Circle.Distance(SimulationFramework.Circle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Distance
+    path: src/SimulationFramework/Circle.cs
+    startLine: 79
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Computes the distance from this circle to another.
+  example: []
+  syntax:
+    content: public float Distance(Circle other)
+    parameters:
+    - id: other
+      type: SimulationFramework.Circle
+      description: The circle to compute the distance to.
+    return:
+      type: System.Single
+      description: The computed distance.
+    content.vb: Public Function Distance(other As Circle) As Single
+  overload: SimulationFramework.Circle.Distance*
+- uid: SimulationFramework.Circle.Distance(System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Circle.Distance(System.Numerics.Vector2)
+  id: Distance(System.Numerics.Vector2)
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: Distance(Vector2)
+  nameWithType: Circle.Distance(Vector2)
+  fullName: SimulationFramework.Circle.Distance(System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Distance
+    path: src/SimulationFramework/Circle.cs
+    startLine: 89
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Computes the distance from this circle to a given point.
+  example: []
+  syntax:
+    content: public float Distance(Vector2 point)
+    parameters:
+    - id: point
+      type: System.Numerics.Vector2
+      description: The point to compute the distance to.
+    return:
+      type: System.Single
+      description: The computed distance.
+    content.vb: Public Function Distance(point As Vector2) As Single
+  overload: SimulationFramework.Circle.Distance*
+- uid: SimulationFramework.Circle.Equals(SimulationFramework.Circle)
+  commentId: M:SimulationFramework.Circle.Equals(SimulationFramework.Circle)
+  id: Equals(SimulationFramework.Circle)
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: Equals(Circle)
+  nameWithType: Circle.Equals(Circle)
+  fullName: SimulationFramework.Circle.Equals(SimulationFramework.Circle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Equals
+    path: src/SimulationFramework/Circle.cs
+    startLine: 99
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Indicates if this circle is equal to another.
+  example: []
+  syntax:
+    content: public bool Equals(Circle other)
+    parameters:
+    - id: other
+      type: SimulationFramework.Circle
+      description: The circle to compare with this circle.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if this circle equals <code class="paramref">other</code>, otherwise <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Function Equals(other As Circle) As Boolean
+  overload: SimulationFramework.Circle.Equals*
+  implements:
+  - System.IEquatable{SimulationFramework.Circle}.Equals(SimulationFramework.Circle)
+- uid: SimulationFramework.Circle.Equals(System.Object)
+  commentId: M:SimulationFramework.Circle.Equals(System.Object)
+  id: Equals(System.Object)
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: Equals(object?)
+  nameWithType: Circle.Equals(object?)
+  fullName: SimulationFramework.Circle.Equals(object?)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Equals
+    path: src/SimulationFramework/Circle.cs
+    startLine: 105
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Indicates whether this instance and a specified object are equal.
+  example: []
+  syntax:
+    content: public override bool Equals(object? obj)
+    parameters:
+    - id: obj
+      type: System.Object
+      description: The object to compare with the current instance.
+    return:
+      type: System.Boolean
+      description: <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">true</a> if <code class="paramref">obj</code> and this instance are the same type and represent the same value; otherwise, <a href="https://learn.microsoft.com/dotnet/csharp/language-reference/builtin-types/bool">false</a>.
+    content.vb: Public Overrides Function Equals(obj As Object) As Boolean
+  overridden: System.ValueType.Equals(System.Object)
+  overload: SimulationFramework.Circle.Equals*
+  nameWithType.vb: Circle.Equals(Object)
+  fullName.vb: SimulationFramework.Circle.Equals(Object)
+  name.vb: Equals(Object)
+- uid: SimulationFramework.Circle.GetHashCode
+  commentId: M:SimulationFramework.Circle.GetHashCode
+  id: GetHashCode
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: GetHashCode()
+  nameWithType: Circle.GetHashCode()
+  fullName: SimulationFramework.Circle.GetHashCode()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: GetHashCode
+    path: src/SimulationFramework/Circle.cs
+    startLine: 111
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Returns the hash code for this instance.
+  example: []
+  syntax:
+    content: public override int GetHashCode()
+    return:
+      type: System.Int32
+      description: A 32-bit signed integer that is the hash code for this instance.
+    content.vb: Public Overrides Function GetHashCode() As Integer
+  overridden: System.ValueType.GetHashCode
+  overload: SimulationFramework.Circle.GetHashCode*
+- uid: SimulationFramework.Circle.ToString
+  commentId: M:SimulationFramework.Circle.ToString
+  id: ToString
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: ToString()
+  nameWithType: Circle.ToString()
+  fullName: SimulationFramework.Circle.ToString()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: ToString
+    path: src/SimulationFramework/Circle.cs
+    startLine: 117
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Returns the fully qualified type name of this instance.
+  example: []
+  syntax:
+    content: public override string ToString()
+    return:
+      type: System.String
+      description: The fully qualified type name.
+    content.vb: Public Overrides Function ToString() As String
+  overridden: System.ValueType.ToString
+  overload: SimulationFramework.Circle.ToString*
+- uid: SimulationFramework.Circle.op_Equality(SimulationFramework.Circle,SimulationFramework.Circle)
+  commentId: M:SimulationFramework.Circle.op_Equality(SimulationFramework.Circle,SimulationFramework.Circle)
+  id: op_Equality(SimulationFramework.Circle,SimulationFramework.Circle)
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: operator ==(Circle, Circle)
+  nameWithType: Circle.operator ==(Circle, Circle)
+  fullName: SimulationFramework.Circle.operator ==(SimulationFramework.Circle, SimulationFramework.Circle)
+  type: Operator
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: op_Equality
+    path: src/SimulationFramework/Circle.cs
+    startLine: 123
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  example: []
+  syntax:
+    content: public static bool operator ==(Circle left, Circle right)
+    parameters:
+    - id: left
+      type: SimulationFramework.Circle
+    - id: right
+      type: SimulationFramework.Circle
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Operator =(left As Circle, right As Circle) As Boolean
+  overload: SimulationFramework.Circle.op_Equality*
+  nameWithType.vb: Circle.=(Circle, Circle)
+  fullName.vb: SimulationFramework.Circle.=(SimulationFramework.Circle, SimulationFramework.Circle)
+  name.vb: =(Circle, Circle)
+- uid: SimulationFramework.Circle.op_Inequality(SimulationFramework.Circle,SimulationFramework.Circle)
+  commentId: M:SimulationFramework.Circle.op_Inequality(SimulationFramework.Circle,SimulationFramework.Circle)
+  id: op_Inequality(SimulationFramework.Circle,SimulationFramework.Circle)
+  parent: SimulationFramework.Circle
+  langs:
+  - csharp
+  - vb
+  name: operator !=(Circle, Circle)
+  nameWithType: Circle.operator !=(Circle, Circle)
+  fullName: SimulationFramework.Circle.operator !=(SimulationFramework.Circle, SimulationFramework.Circle)
+  type: Operator
+  source:
+    remote:
+      path: src/SimulationFramework/Circle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: op_Inequality
+    path: src/SimulationFramework/Circle.cs
+    startLine: 129
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  example: []
+  syntax:
+    content: public static bool operator !=(Circle left, Circle right)
+    parameters:
+    - id: left
+      type: SimulationFramework.Circle
+    - id: right
+      type: SimulationFramework.Circle
+    return:
+      type: System.Boolean
+    content.vb: Public Shared Operator <>(left As Circle, right As Circle) As Boolean
+  overload: SimulationFramework.Circle.op_Inequality*
+  nameWithType.vb: Circle.<>(Circle, Circle)
+  fullName.vb: SimulationFramework.Circle.<>(SimulationFramework.Circle, SimulationFramework.Circle)
+  name.vb: <>(Circle, Circle)
+references:
+- uid: SimulationFramework
+  commentId: N:SimulationFramework
+  href: SimulationFramework.html
+  name: SimulationFramework
+  nameWithType: SimulationFramework
+  fullName: SimulationFramework
+- uid: System.IEquatable{SimulationFramework.Circle}
+  commentId: T:System.IEquatable{SimulationFramework.Circle}
+  parent: System
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<Circle>
+  nameWithType: IEquatable<Circle>
+  fullName: System.IEquatable<SimulationFramework.Circle>
+  nameWithType.vb: IEquatable(Of Circle)
+  fullName.vb: System.IEquatable(Of SimulationFramework.Circle)
+  name.vb: IEquatable(Of Circle)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - uid: SimulationFramework.Circle
+    name: Circle
+    href: SimulationFramework.Circle.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: SimulationFramework.Circle
+    name: Circle
+    href: SimulationFramework.Circle.html
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: SimulationFramework.Circle
+  commentId: T:SimulationFramework.Circle
+  parent: SimulationFramework
+  href: SimulationFramework.Circle.html
+  name: Circle
+  nameWithType: Circle
+  fullName: SimulationFramework.Circle
+- uid: System.Numerics.Vector2
+  commentId: T:System.Numerics.Vector2
+  parent: System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  name: Vector2
+  nameWithType: Vector2
+  fullName: System.Numerics.Vector2
+- uid: System.Numerics
+  commentId: N:System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Numerics
+  nameWithType: System.Numerics
+  fullName: System.Numerics
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: SimulationFramework.Circle.#ctor*
+  commentId: Overload:SimulationFramework.Circle.#ctor
+  href: SimulationFramework.Circle.html#SimulationFramework.Circle.#ctor(System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  name: Circle
+  nameWithType: Circle.Circle
+  fullName: SimulationFramework.Circle.Circle
+  nameWithType.vb: Circle.New
+  fullName.vb: SimulationFramework.Circle.New
+  name.vb: New
+- uid: SimulationFramework.Alignment
+  commentId: T:SimulationFramework.Alignment
+  parent: SimulationFramework
+  href: SimulationFramework.Alignment.html
+  name: Alignment
+  nameWithType: Alignment
+  fullName: SimulationFramework.Alignment
+- uid: SimulationFramework.Circle.GetBounds*
+  commentId: Overload:SimulationFramework.Circle.GetBounds
+  href: SimulationFramework.Circle.html#SimulationFramework.Circle.GetBounds
+  name: GetBounds
+  nameWithType: Circle.GetBounds
+  fullName: SimulationFramework.Circle.GetBounds
+- uid: SimulationFramework.Rectangle
+  commentId: T:SimulationFramework.Rectangle
+  parent: SimulationFramework
+  href: SimulationFramework.Rectangle.html
+  name: Rectangle
+  nameWithType: Rectangle
+  fullName: SimulationFramework.Rectangle
+- uid: SimulationFramework.Circle.GetPoint*
+  commentId: Overload:SimulationFramework.Circle.GetPoint
+  href: SimulationFramework.Circle.html#SimulationFramework.Circle.GetPoint(System.Single)
+  name: GetPoint
+  nameWithType: Circle.GetPoint
+  fullName: SimulationFramework.Circle.GetPoint
+- uid: SimulationFramework.Circle.Distance*
+  commentId: Overload:SimulationFramework.Circle.Distance
+  href: SimulationFramework.Circle.html#SimulationFramework.Circle.Distance(SimulationFramework.Circle)
+  name: Distance
+  nameWithType: Circle.Distance
+  fullName: SimulationFramework.Circle.Distance
+- uid: SimulationFramework.Circle.Equals*
+  commentId: Overload:SimulationFramework.Circle.Equals
+  href: SimulationFramework.Circle.html#SimulationFramework.Circle.Equals(SimulationFramework.Circle)
+  name: Equals
+  nameWithType: Circle.Equals
+  fullName: SimulationFramework.Circle.Equals
+- uid: System.IEquatable{SimulationFramework.Circle}.Equals(SimulationFramework.Circle)
+  commentId: M:System.IEquatable{SimulationFramework.Circle}.Equals(SimulationFramework.Circle)
+  parent: System.IEquatable{SimulationFramework.Circle}
+  definition: System.IEquatable`1.Equals(`0)
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-simulationframework.circle-.equals#system-iequatable((simulationframework-circle))-equals(simulationframework-circle)
+  name: Equals(Circle)
+  nameWithType: IEquatable<Circle>.Equals(Circle)
+  fullName: System.IEquatable<SimulationFramework.Circle>.Equals(SimulationFramework.Circle)
+  nameWithType.vb: IEquatable(Of Circle).Equals(Circle)
+  fullName.vb: System.IEquatable(Of SimulationFramework.Circle).Equals(SimulationFramework.Circle)
+  spec.csharp:
+  - uid: System.IEquatable{SimulationFramework.Circle}.Equals(SimulationFramework.Circle)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-simulationframework.circle-.equals#system-iequatable((simulationframework-circle))-equals(simulationframework-circle)
+  - name: (
+  - uid: SimulationFramework.Circle
+    name: Circle
+    href: SimulationFramework.Circle.html
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable{SimulationFramework.Circle}.Equals(SimulationFramework.Circle)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-simulationframework.circle-.equals#system-iequatable((simulationframework-circle))-equals(simulationframework-circle)
+  - name: (
+  - uid: SimulationFramework.Circle
+    name: Circle
+    href: SimulationFramework.Circle.html
+  - name: )
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: System.IEquatable`1.Equals(`0)
+  commentId: M:System.IEquatable`1.Equals(`0)
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  name: Equals(T)
+  nameWithType: IEquatable<T>.Equals(T)
+  fullName: System.IEquatable<T>.Equals(T)
+  nameWithType.vb: IEquatable(Of T).Equals(T)
+  fullName.vb: System.IEquatable(Of T).Equals(T)
+  spec.csharp:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+  spec.vb:
+  - uid: System.IEquatable`1.Equals(`0)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1.equals
+  - name: (
+  - name: T
+  - name: )
+- uid: System.ValueType.Equals(System.Object)
+  commentId: M:System.ValueType.Equals(System.Object)
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  name: Equals(object)
+  nameWithType: ValueType.Equals(object)
+  fullName: System.ValueType.Equals(object)
+  nameWithType.vb: ValueType.Equals(Object)
+  fullName.vb: System.ValueType.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.equals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.ValueType
+  commentId: T:System.ValueType
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype
+  name: ValueType
+  nameWithType: ValueType
+  fullName: System.ValueType
+- uid: System.ValueType.GetHashCode
+  commentId: M:System.ValueType.GetHashCode
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  name: GetHashCode()
+  nameWithType: ValueType.GetHashCode()
+  fullName: System.ValueType.GetHashCode()
+  spec.csharp:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.gethashcode
+  - name: (
+  - name: )
+- uid: SimulationFramework.Circle.GetHashCode*
+  commentId: Overload:SimulationFramework.Circle.GetHashCode
+  href: SimulationFramework.Circle.html#SimulationFramework.Circle.GetHashCode
+  name: GetHashCode
+  nameWithType: Circle.GetHashCode
+  fullName: SimulationFramework.Circle.GetHashCode
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System.ValueType.ToString
+  commentId: M:System.ValueType.ToString
+  parent: System.ValueType
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  name: ToString()
+  nameWithType: ValueType.ToString()
+  fullName: System.ValueType.ToString()
+  spec.csharp:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.ValueType.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.valuetype.tostring
+  - name: (
+  - name: )
+- uid: SimulationFramework.Circle.ToString*
+  commentId: Overload:SimulationFramework.Circle.ToString
+  href: SimulationFramework.Circle.html#SimulationFramework.Circle.ToString
+  name: ToString
+  nameWithType: Circle.ToString
+  fullName: SimulationFramework.Circle.ToString
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: SimulationFramework.Circle.op_Equality*
+  commentId: Overload:SimulationFramework.Circle.op_Equality
+  href: SimulationFramework.Circle.html#SimulationFramework.Circle.op_Equality(SimulationFramework.Circle,SimulationFramework.Circle)
+  name: operator ==
+  nameWithType: Circle.operator ==
+  fullName: SimulationFramework.Circle.operator ==
+  nameWithType.vb: Circle.=
+  fullName.vb: SimulationFramework.Circle.=
+  name.vb: =
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: SimulationFramework.Circle.op_Equality*
+    name: ==
+    href: SimulationFramework.Circle.html#SimulationFramework.Circle.op_Equality(SimulationFramework.Circle,SimulationFramework.Circle)
+- uid: SimulationFramework.Circle.op_Inequality*
+  commentId: Overload:SimulationFramework.Circle.op_Inequality
+  href: SimulationFramework.Circle.html#SimulationFramework.Circle.op_Inequality(SimulationFramework.Circle,SimulationFramework.Circle)
+  name: operator !=
+  nameWithType: Circle.operator !=
+  fullName: SimulationFramework.Circle.operator !=
+  nameWithType.vb: Circle.<>
+  fullName.vb: SimulationFramework.Circle.<>
+  name.vb: <>
+  spec.csharp:
+  - name: operator
+  - name: " "
+  - uid: SimulationFramework.Circle.op_Inequality*
+    name: '!='
+    href: SimulationFramework.Circle.html#SimulationFramework.Circle.op_Inequality(SimulationFramework.Circle,SimulationFramework.Circle)

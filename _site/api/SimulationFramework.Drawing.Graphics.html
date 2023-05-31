@@ -1,0 +1,496 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title>Class Graphics
+ </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content="Class Graphics
+ ">
+      
+      <link rel="icon" href="../favicon.ico">
+      <link rel="stylesheet" href="../public/docfx.min.css">
+      <link rel="stylesheet" href="../public/main.css">
+      <meta name="docfx:navrel" content="">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/Redninja106/simulationframework/new/master/apiSpec/new?filename=SimulationFramework_Drawing_Graphics.md&amp;value=---%0Auid%3A%20SimulationFramework.Drawing.Graphics%0Asummary%3A%20&#39;*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax&#39;%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">
+  </head>
+
+  <script type="module">
+    import options from './../public/main.js'
+    import { init } from './../public/docfx.min.js'
+    init(options)
+  </script>
+
+  <script>
+    const theme = localStorage.getItem('theme') || 'auto'
+    document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+  </script>
+
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="ManagedReference">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../index.html">
+            <img id="logo" class="svg" src="../logo.svg" alt="">
+            
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" style="margin-top: -.65em; margin-left: -.8em" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="SimulationFramework.Drawing.Graphics">
+
+
+
+  <h1 id="SimulationFramework_Drawing_Graphics" data-uid="SimulationFramework.Drawing.Graphics" class="text-break">
+    Class Graphics
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Drawing/Graphics.cs/#L13"><i class="bi bi-code-slash"></i></a>
+  </h1>
+
+  <div class="facts text-secondary">
+    <dl><dt>Namespace</dt><dd><a class="xref" href="SimulationFramework.html">SimulationFramework</a>.<a class="xref" href="SimulationFramework.Drawing.html">Drawing</a></dd></dl>
+  <dl><dt>Assembly</dt><dd>SimulationFramework.dll</dd></dl>
+  </div>
+
+  <div class="markdown summary"><p>Provides graphical functionality to the application.</p>
+</div>
+  <div class="markdown conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class Graphics</code></pre>
+  </div>
+
+
+
+
+  <dl class="typelist inheritance">
+    <dt>Inheritance</dt>
+    <dd>
+      <div><a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object">object</a></div>
+      <div><span class="xref">Graphics</span></div>
+    </dd>
+  </dl>
+
+
+
+  <dl class="typelist derived">
+    <dt>Inherited Members</dt>
+    <dd>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object, object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a>
+    </div>
+  </dd></dl>
+
+
+
+
+
+
+  <h2 class="section" id="methods">Methods
+</h2>
+
+
+  <a id="SimulationFramework_Drawing_Graphics_ClearFontCache_" data-uid="SimulationFramework.Drawing.Graphics.ClearFontCache*"></a>
+
+  <h3 id="SimulationFramework_Drawing_Graphics_ClearFontCache" data-uid="SimulationFramework.Drawing.Graphics.ClearFontCache">
+  ClearFontCache()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Drawing/Graphics.cs/#L102"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Clears all cached fonts.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void ClearFontCache()</code></pre>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Drawing_Graphics_CreateTexture_" data-uid="SimulationFramework.Drawing.Graphics.CreateTexture*"></a>
+
+  <h3 id="SimulationFramework_Drawing_Graphics_CreateTexture_System_Int32_System_Int32_SimulationFramework_Color___SimulationFramework_Drawing_TextureOptions_" data-uid="SimulationFramework.Drawing.Graphics.CreateTexture(System.Int32,System.Int32,SimulationFramework.Color[],SimulationFramework.Drawing.TextureOptions)">
+  CreateTexture(int, int, Color[], TextureOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Drawing/Graphics.cs/#L94"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a texture of the provided size and fills it with the provided colors.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ITexture CreateTexture(int width, int height, Color[] colors, TextureOptions options = TextureOptions.None)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>width</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The width of the texture, in pixels.</p>
+</dd>
+    <dt><code>height</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The height of the texture, in pixels.</p>
+</dd>
+    <dt><code>colors</code> <a class="xref" href="SimulationFramework.Color.html">Color</a>[]</dt>
+    <dd><p>The data of to fill the texture with. Must be of length <code class="paramref">width</code> * <code class="paramref">height</code>.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="SimulationFramework.Drawing.TextureOptions.html">TextureOptions</a></dt>
+    <dd><p>A <a class="xref" href="SimulationFramework.Drawing.TextureOptions.html">TextureOptions</a> value which influences the behavior of the texture.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="SimulationFramework.Drawing.ITexture.html">ITexture</a></dt>
+    <dd><p>The new texture.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Drawing_Graphics_CreateTexture_" data-uid="SimulationFramework.Drawing.Graphics.CreateTexture*"></a>
+
+  <h3 id="SimulationFramework_Drawing_Graphics_CreateTexture_System_Int32_System_Int32_SimulationFramework_Drawing_TextureOptions_" data-uid="SimulationFramework.Drawing.Graphics.CreateTexture(System.Int32,System.Int32,SimulationFramework.Drawing.TextureOptions)">
+  CreateTexture(int, int, TextureOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Drawing/Graphics.cs/#L68"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a blank texture of the provided size.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ITexture CreateTexture(int width, int height, TextureOptions options = TextureOptions.None)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>width</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The width of the texture, in pixels.</p>
+</dd>
+    <dt><code>height</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The height of the texture, in pixels.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="SimulationFramework.Drawing.TextureOptions.html">TextureOptions</a></dt>
+    <dd><p>A <a class="xref" href="SimulationFramework.Drawing.TextureOptions.html">TextureOptions</a> value which influences the behavior of the texture.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="SimulationFramework.Drawing.ITexture.html">ITexture</a></dt>
+    <dd><p>The new texture.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Drawing_Graphics_CreateTexture_" data-uid="SimulationFramework.Drawing.Graphics.CreateTexture*"></a>
+
+  <h3 id="SimulationFramework_Drawing_Graphics_CreateTexture_System_Int32_System_Int32_System_Span_SimulationFramework_Color__SimulationFramework_Drawing_TextureOptions_" data-uid="SimulationFramework.Drawing.Graphics.CreateTexture(System.Int32,System.Int32,System.Span{SimulationFramework.Color},SimulationFramework.Drawing.TextureOptions)">
+  CreateTexture(int, int, Span&lt;Color&gt;, TextureOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Drawing/Graphics.cs/#L81"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Creates a texture of the provided size and fills it with the provided colors.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ITexture CreateTexture(int width, int height, Span&lt;Color&gt; colors, TextureOptions flags = TextureOptions.None)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>width</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The width of the texture, in pixels.</p>
+</dd>
+    <dt><code>height</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></dt>
+    <dd><p>The height of the texture, in pixels.</p>
+</dd>
+    <dt><code>colors</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="SimulationFramework.Color.html">Color</a>&gt;</dt>
+    <dd><p>The data of to fill the texture with. Must be of length <code class="paramref">width</code> * <code class="paramref">height</code>.</p>
+</dd>
+    <dt><code>flags</code> <a class="xref" href="SimulationFramework.Drawing.TextureOptions.html">TextureOptions</a></dt>
+    <dd><p>A <a class="xref" href="SimulationFramework.Drawing.TextureOptions.html">TextureOptions</a> value which influences the behavior of the texture.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="SimulationFramework.Drawing.ITexture.html">ITexture</a></dt>
+    <dd><p>The new texture.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Drawing_Graphics_GetOutputCanvas_" data-uid="SimulationFramework.Drawing.Graphics.GetOutputCanvas*"></a>
+
+  <h3 id="SimulationFramework_Drawing_Graphics_GetOutputCanvas" data-uid="SimulationFramework.Drawing.Graphics.GetOutputCanvas">
+  GetOutputCanvas()
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Drawing/Graphics.cs/#L21"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Gets canvas which draws to the current frame.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ICanvas GetOutputCanvas()</code></pre>
+  </div>
+
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="SimulationFramework.Drawing.ICanvas.html">ICanvas</a></dt>
+    <dd></dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Drawing_Graphics_LoadTexture_" data-uid="SimulationFramework.Drawing.Graphics.LoadTexture*"></a>
+
+  <h3 id="SimulationFramework_Drawing_Graphics_LoadTexture_System_Byte___SimulationFramework_Drawing_TextureOptions_" data-uid="SimulationFramework.Drawing.Graphics.LoadTexture(System.Byte[],SimulationFramework.Drawing.TextureOptions)">
+  LoadTexture(byte[], TextureOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Drawing/Graphics.cs/#L45"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Loads a texture from raw, encoded file data.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ITexture LoadTexture(byte[] encodedBytes, TextureOptions options = TextureOptions.None)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>encodedBytes</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>[]</dt>
+    <dd><p>An array of the bytes of a supported image file.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="SimulationFramework.Drawing.TextureOptions.html">TextureOptions</a></dt>
+    <dd><p>A <a class="xref" href="SimulationFramework.Drawing.TextureOptions.html">TextureOptions</a> value which influences the behavior of the texture.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="SimulationFramework.Drawing.ITexture.html">ITexture</a></dt>
+    <dd><p>The new texture.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Drawing_Graphics_LoadTexture_" data-uid="SimulationFramework.Drawing.Graphics.LoadTexture*"></a>
+
+  <h3 id="SimulationFramework_Drawing_Graphics_LoadTexture_System_Span_System_Byte__SimulationFramework_Drawing_TextureOptions_" data-uid="SimulationFramework.Drawing.Graphics.LoadTexture(System.Span{System.Byte},SimulationFramework.Drawing.TextureOptions)">
+  LoadTexture(Span&lt;byte&gt;, TextureOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Drawing/Graphics.cs/#L56"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Loads a texture from raw, encoded file data.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ITexture LoadTexture(Span&lt;byte&gt; encodedBytes, TextureOptions options = TextureOptions.None)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>encodedBytes</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.span-1">Span</a>&lt;<a class="xref" href="https://learn.microsoft.com/dotnet/api/system.byte">byte</a>&gt;</dt>
+    <dd><p>A span of the bytes of a supported image file.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="SimulationFramework.Drawing.TextureOptions.html">TextureOptions</a></dt>
+    <dd><p>A <a class="xref" href="SimulationFramework.Drawing.TextureOptions.html">TextureOptions</a> value which influences the behavior of the texture.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="SimulationFramework.Drawing.ITexture.html">ITexture</a></dt>
+    <dd><p>The new texture.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+  <a id="SimulationFramework_Drawing_Graphics_LoadTexture_" data-uid="SimulationFramework.Drawing.Graphics.LoadTexture*"></a>
+
+  <h3 id="SimulationFramework_Drawing_Graphics_LoadTexture_System_String_SimulationFramework_Drawing_TextureOptions_" data-uid="SimulationFramework.Drawing.Graphics.LoadTexture(System.String,SimulationFramework.Drawing.TextureOptions)">
+  LoadTexture(string, TextureOptions)
+  <a class="header-action link-secondary" title="View source" href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Drawing/Graphics.cs/#L32"><i class="bi bi-code-slash"></i></a>
+  </h3>
+
+  <div class="markdown level1 summary"><p>Loads a texture from a file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ITexture LoadTexture(string file, TextureOptions options = TextureOptions.None)</code></pre>
+  </div>
+
+  <h4 class="section">Parameters</h4>
+  <dl class="parameters">
+    <dt><code>file</code> <a class="xref" href="https://learn.microsoft.com/dotnet/api/system.string">string</a></dt>
+    <dd><p>The path to a .PNG image file.</p>
+</dd>
+    <dt><code>options</code> <a class="xref" href="SimulationFramework.Drawing.TextureOptions.html">TextureOptions</a></dt>
+    <dd><p>A <a class="xref" href="SimulationFramework.Drawing.TextureOptions.html">TextureOptions</a> value which influences the behavior of the texture.</p>
+</dd>
+  </dl>
+
+  <h4 class="section">Returns</h4>
+  <dl class="parameters">
+    <dt><a class="xref" href="SimulationFramework.Drawing.ITexture.html">ITexture</a></dt>
+    <dd><p>The new texture.</p>
+</dd>
+  </dl>
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/Redninja106/simulationframework/blob/master/src/SimulationFramework/Drawing/Graphics.cs/#L13" class="edit-link">Edit this page</a>
+        </div>
+
+        
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+
+    <footer class="border-top">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

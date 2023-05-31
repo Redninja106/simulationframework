@@ -1,0 +1,180 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Drawing.TextureOptions
+  commentId: T:SimulationFramework.Drawing.TextureOptions
+  id: TextureOptions
+  parent: SimulationFramework.Drawing
+  children:
+  - SimulationFramework.Drawing.TextureOptions.NoAccess
+  - SimulationFramework.Drawing.TextureOptions.None
+  langs:
+  - csharp
+  - vb
+  name: TextureOptions
+  nameWithType: TextureOptions
+  fullName: SimulationFramework.Drawing.TextureOptions
+  type: Enum
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/TextureOptions.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: TextureOptions
+    path: src/SimulationFramework/Drawing/TextureOptions.cs
+    startLine: 7
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Provides of control over the functionality of a texture. Used by <xref href="SimulationFramework.Drawing.Graphics.CreateTexture(System.Int32%2cSystem.Int32%2cSimulationFramework.Drawing.TextureOptions)" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: >-
+      [Flags]
+
+      public enum TextureOptions
+    content.vb: >-
+      <Flags>
+
+      Public Enum TextureOptions
+  attributes:
+  - type: System.FlagsAttribute
+    ctor: System.FlagsAttribute.#ctor
+    arguments: []
+- uid: SimulationFramework.Drawing.TextureOptions.None
+  commentId: F:SimulationFramework.Drawing.TextureOptions.None
+  id: None
+  parent: SimulationFramework.Drawing.TextureOptions
+  langs:
+  - csharp
+  - vb
+  name: None
+  nameWithType: TextureOptions.None
+  fullName: SimulationFramework.Drawing.TextureOptions.None
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/TextureOptions.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: None
+    path: src/SimulationFramework/Drawing/TextureOptions.cs
+    startLine: 13
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Default texture behavior.
+  example: []
+  syntax:
+    content: None = 0
+    return:
+      type: SimulationFramework.Drawing.TextureOptions
+- uid: SimulationFramework.Drawing.TextureOptions.NoAccess
+  commentId: F:SimulationFramework.Drawing.TextureOptions.NoAccess
+  id: NoAccess
+  parent: SimulationFramework.Drawing.TextureOptions
+  langs:
+  - csharp
+  - vb
+  name: NoAccess
+  nameWithType: TextureOptions.NoAccess
+  fullName: SimulationFramework.Drawing.TextureOptions.NoAccess
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/TextureOptions.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: NoAccess
+    path: src/SimulationFramework/Drawing/TextureOptions.cs
+    startLine: 17
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: The texture's data may not be written to or read from after creation.
+  example: []
+  syntax:
+    content: NoAccess = 1
+    return:
+      type: SimulationFramework.Drawing.TextureOptions
+references:
+- uid: SimulationFramework.Drawing.Graphics.CreateTexture(System.Int32,System.Int32,SimulationFramework.Drawing.TextureOptions)
+  commentId: M:SimulationFramework.Drawing.Graphics.CreateTexture(System.Int32,System.Int32,SimulationFramework.Drawing.TextureOptions)
+  isExternal: true
+  href: SimulationFramework.Drawing.Graphics.html#SimulationFramework.Drawing.Graphics.CreateTexture(System.Int32,System.Int32,SimulationFramework.Drawing.TextureOptions)
+  name: CreateTexture(int, int, TextureOptions)
+  nameWithType: Graphics.CreateTexture(int, int, TextureOptions)
+  fullName: SimulationFramework.Drawing.Graphics.CreateTexture(int, int, SimulationFramework.Drawing.TextureOptions)
+  nameWithType.vb: Graphics.CreateTexture(Integer, Integer, TextureOptions)
+  fullName.vb: SimulationFramework.Drawing.Graphics.CreateTexture(Integer, Integer, SimulationFramework.Drawing.TextureOptions)
+  name.vb: CreateTexture(Integer, Integer, TextureOptions)
+  spec.csharp:
+  - uid: SimulationFramework.Drawing.Graphics.CreateTexture(System.Int32,System.Int32,SimulationFramework.Drawing.TextureOptions)
+    name: CreateTexture
+    href: SimulationFramework.Drawing.Graphics.html#SimulationFramework.Drawing.Graphics.CreateTexture(System.Int32,System.Int32,SimulationFramework.Drawing.TextureOptions)
+  - name: (
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: int
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: SimulationFramework.Drawing.TextureOptions
+    name: TextureOptions
+    href: SimulationFramework.Drawing.TextureOptions.html
+  - name: )
+  spec.vb:
+  - uid: SimulationFramework.Drawing.Graphics.CreateTexture(System.Int32,System.Int32,SimulationFramework.Drawing.TextureOptions)
+    name: CreateTexture
+    href: SimulationFramework.Drawing.Graphics.html#SimulationFramework.Drawing.Graphics.CreateTexture(System.Int32,System.Int32,SimulationFramework.Drawing.TextureOptions)
+  - name: (
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: System.Int32
+    name: Integer
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.int32
+  - name: ','
+  - name: " "
+  - uid: SimulationFramework.Drawing.TextureOptions
+    name: TextureOptions
+    href: SimulationFramework.Drawing.TextureOptions.html
+  - name: )
+- uid: SimulationFramework.Drawing
+  commentId: N:SimulationFramework.Drawing
+  href: SimulationFramework.html
+  name: SimulationFramework.Drawing
+  nameWithType: SimulationFramework.Drawing
+  fullName: SimulationFramework.Drawing
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Drawing
+    name: Drawing
+    href: SimulationFramework.Drawing.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Drawing
+    name: Drawing
+    href: SimulationFramework.Drawing.html
+- uid: SimulationFramework.Drawing.TextureOptions
+  commentId: T:SimulationFramework.Drawing.TextureOptions
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.TextureOptions.html
+  name: TextureOptions
+  nameWithType: TextureOptions
+  fullName: SimulationFramework.Drawing.TextureOptions

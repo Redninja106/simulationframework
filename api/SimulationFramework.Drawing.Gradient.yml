@@ -1,0 +1,1105 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Drawing.Gradient
+  commentId: T:SimulationFramework.Drawing.Gradient
+  id: Gradient
+  parent: SimulationFramework.Drawing
+  children:
+  - SimulationFramework.Drawing.Gradient.#ctor(SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  - SimulationFramework.Drawing.Gradient.Accept(SimulationFramework.Drawing.IGradientVisitor)
+  - SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Color[])
+  - SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Color[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  - SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Drawing.GradientStop[])
+  - SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  - SimulationFramework.Drawing.Gradient.CreateLinear(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Color[])
+  - SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Color[])
+  - SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Color[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  - SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Drawing.GradientStop[])
+  - SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  - SimulationFramework.Drawing.Gradient.CreateRadial(System.Single,System.Single,System.Single,SimulationFramework.Color[])
+  - SimulationFramework.Drawing.Gradient.Stops
+  - SimulationFramework.Drawing.Gradient.TileMode
+  - SimulationFramework.Drawing.Gradient.Transform
+  langs:
+  - csharp
+  - vb
+  name: Gradient
+  nameWithType: Gradient
+  fullName: SimulationFramework.Drawing.Gradient
+  type: Class
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Gradient
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 15
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Represents a gradient.
+  example: []
+  syntax:
+    content: 'public abstract record Gradient : IEquatable<Gradient>'
+    content.vb: Public MustInherit Class Gradient Implements IEquatable(Of Gradient)
+  inheritance:
+  - System.Object
+  implements:
+  - System.IEquatable{SimulationFramework.Drawing.Gradient}
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: SimulationFramework.Drawing.Gradient.#ctor(SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  commentId: M:SimulationFramework.Drawing.Gradient.#ctor(SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  id: '#ctor(SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)'
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: Gradient(GradientStop[], Matrix3x2, TileMode)
+  nameWithType: Gradient.Gradient(GradientStop[], Matrix3x2, TileMode)
+  fullName: SimulationFramework.Drawing.Gradient.Gradient(SimulationFramework.Drawing.GradientStop[], System.Numerics.Matrix3x2, SimulationFramework.Drawing.TileMode)
+  type: Constructor
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: .ctor
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 15
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Represents a gradient.
+  example: []
+  syntax:
+    content: protected Gradient(GradientStop[] Stops, Matrix3x2 Transform, TileMode TileMode)
+    parameters:
+    - id: Stops
+      type: SimulationFramework.Drawing.GradientStop[]
+      description: ''
+    - id: Transform
+      type: System.Numerics.Matrix3x2
+      description: ''
+    - id: TileMode
+      type: SimulationFramework.Drawing.TileMode
+      description: ''
+    content.vb: Protected Sub New(Stops As GradientStop(), Transform As Matrix3x2, TileMode As TileMode)
+  overload: SimulationFramework.Drawing.Gradient.#ctor*
+  nameWithType.vb: Gradient.New(GradientStop(), Matrix3x2, TileMode)
+  fullName.vb: SimulationFramework.Drawing.Gradient.New(SimulationFramework.Drawing.GradientStop(), System.Numerics.Matrix3x2, SimulationFramework.Drawing.TileMode)
+  name.vb: New(GradientStop(), Matrix3x2, TileMode)
+- uid: SimulationFramework.Drawing.Gradient.Stops
+  commentId: P:SimulationFramework.Drawing.Gradient.Stops
+  id: Stops
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: Stops
+  nameWithType: Gradient.Stops
+  fullName: SimulationFramework.Drawing.Gradient.Stops
+  type: Property
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Stops
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 15
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: ''
+  example: []
+  syntax:
+    content: public GradientStop[] Stops { get; init; }
+    parameters: []
+    return:
+      type: SimulationFramework.Drawing.GradientStop[]
+    content.vb: Public Property Stops As GradientStop()
+  overload: SimulationFramework.Drawing.Gradient.Stops*
+- uid: SimulationFramework.Drawing.Gradient.Transform
+  commentId: P:SimulationFramework.Drawing.Gradient.Transform
+  id: Transform
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: Transform
+  nameWithType: Gradient.Transform
+  fullName: SimulationFramework.Drawing.Gradient.Transform
+  type: Property
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Transform
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 15
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: ''
+  example: []
+  syntax:
+    content: public Matrix3x2 Transform { get; init; }
+    parameters: []
+    return:
+      type: System.Numerics.Matrix3x2
+    content.vb: Public Property Transform As Matrix3x2
+  overload: SimulationFramework.Drawing.Gradient.Transform*
+- uid: SimulationFramework.Drawing.Gradient.TileMode
+  commentId: P:SimulationFramework.Drawing.Gradient.TileMode
+  id: TileMode
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: TileMode
+  nameWithType: Gradient.TileMode
+  fullName: SimulationFramework.Drawing.Gradient.TileMode
+  type: Property
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: TileMode
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 15
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: ''
+  example: []
+  syntax:
+    content: public TileMode TileMode { get; init; }
+    parameters: []
+    return:
+      type: SimulationFramework.Drawing.TileMode
+    content.vb: Public Property TileMode As TileMode
+  overload: SimulationFramework.Drawing.Gradient.TileMode*
+- uid: SimulationFramework.Drawing.Gradient.Accept(SimulationFramework.Drawing.IGradientVisitor)
+  commentId: M:SimulationFramework.Drawing.Gradient.Accept(SimulationFramework.Drawing.IGradientVisitor)
+  id: Accept(SimulationFramework.Drawing.IGradientVisitor)
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: Accept(IGradientVisitor)
+  nameWithType: Gradient.Accept(IGradientVisitor)
+  fullName: SimulationFramework.Drawing.Gradient.Accept(SimulationFramework.Drawing.IGradientVisitor)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Accept
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 17
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: public abstract void Accept(IGradientVisitor inspector)
+    parameters:
+    - id: inspector
+      type: SimulationFramework.Drawing.IGradientVisitor
+    content.vb: Public MustOverride Sub Accept(inspector As IGradientVisitor)
+  overload: SimulationFramework.Drawing.Gradient.Accept*
+- uid: SimulationFramework.Drawing.Gradient.CreateLinear(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Color[])
+  commentId: M:SimulationFramework.Drawing.Gradient.CreateLinear(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Color[])
+  id: CreateLinear(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Color[])
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: CreateLinear(float, float, float, float, params Color[])
+  nameWithType: Gradient.CreateLinear(float, float, float, float, params Color[])
+  fullName: SimulationFramework.Drawing.Gradient.CreateLinear(float, float, float, float, params SimulationFramework.Color[])
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CreateLinear
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 19
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: public static Gradient CreateLinear(float fromX, float fromY, float toX, float toY, params Color[] colors)
+    parameters:
+    - id: fromX
+      type: System.Single
+    - id: fromY
+      type: System.Single
+    - id: toX
+      type: System.Single
+    - id: toY
+      type: System.Single
+    - id: colors
+      type: SimulationFramework.Color[]
+    return:
+      type: SimulationFramework.Drawing.Gradient
+    content.vb: Public Shared Function CreateLinear(fromX As Single, fromY As Single, toX As Single, toY As Single, ParamArray colors As Color()) As Gradient
+  overload: SimulationFramework.Drawing.Gradient.CreateLinear*
+  nameWithType.vb: Gradient.CreateLinear(Single, Single, Single, Single, ParamArray Color())
+  fullName.vb: SimulationFramework.Drawing.Gradient.CreateLinear(Single, Single, Single, Single, ParamArray SimulationFramework.Color())
+  name.vb: CreateLinear(Single, Single, Single, Single, ParamArray Color())
+- uid: SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Color[])
+  commentId: M:SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Color[])
+  id: CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Color[])
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: CreateLinear(Vector2, Vector2, params Color[])
+  nameWithType: Gradient.CreateLinear(Vector2, Vector2, params Color[])
+  fullName: SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2, System.Numerics.Vector2, params SimulationFramework.Color[])
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CreateLinear
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 20
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: public static Gradient CreateLinear(Vector2 from, Vector2 to, params Color[] colors)
+    parameters:
+    - id: from
+      type: System.Numerics.Vector2
+    - id: to
+      type: System.Numerics.Vector2
+    - id: colors
+      type: SimulationFramework.Color[]
+    return:
+      type: SimulationFramework.Drawing.Gradient
+    content.vb: Public Shared Function CreateLinear(from As Vector2, [to] As Vector2, ParamArray colors As Color()) As Gradient
+  overload: SimulationFramework.Drawing.Gradient.CreateLinear*
+  nameWithType.vb: Gradient.CreateLinear(Vector2, Vector2, ParamArray Color())
+  fullName.vb: SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2, System.Numerics.Vector2, ParamArray SimulationFramework.Color())
+  name.vb: CreateLinear(Vector2, Vector2, ParamArray Color())
+- uid: SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Drawing.GradientStop[])
+  commentId: M:SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Drawing.GradientStop[])
+  id: CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Drawing.GradientStop[])
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: CreateLinear(Vector2, Vector2, params GradientStop[])
+  nameWithType: Gradient.CreateLinear(Vector2, Vector2, params GradientStop[])
+  fullName: SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2, System.Numerics.Vector2, params SimulationFramework.Drawing.GradientStop[])
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CreateLinear
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 21
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: public static Gradient CreateLinear(Vector2 from, Vector2 to, params GradientStop[] colors)
+    parameters:
+    - id: from
+      type: System.Numerics.Vector2
+    - id: to
+      type: System.Numerics.Vector2
+    - id: colors
+      type: SimulationFramework.Drawing.GradientStop[]
+    return:
+      type: SimulationFramework.Drawing.Gradient
+    content.vb: Public Shared Function CreateLinear(from As Vector2, [to] As Vector2, ParamArray colors As GradientStop()) As Gradient
+  overload: SimulationFramework.Drawing.Gradient.CreateLinear*
+  nameWithType.vb: Gradient.CreateLinear(Vector2, Vector2, ParamArray GradientStop())
+  fullName.vb: SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2, System.Numerics.Vector2, ParamArray SimulationFramework.Drawing.GradientStop())
+  name.vb: CreateLinear(Vector2, Vector2, ParamArray GradientStop())
+- uid: SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Color[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  commentId: M:SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Color[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  id: CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Color[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: CreateLinear(Vector2, Vector2, Color[], Matrix3x2, TileMode)
+  nameWithType: Gradient.CreateLinear(Vector2, Vector2, Color[], Matrix3x2, TileMode)
+  fullName: SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2, System.Numerics.Vector2, SimulationFramework.Color[], System.Numerics.Matrix3x2, SimulationFramework.Drawing.TileMode)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CreateLinear
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 22
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: public static Gradient CreateLinear(Vector2 from, Vector2 to, Color[] stops, Matrix3x2 transform, TileMode tileMode = TileMode.Clamp)
+    parameters:
+    - id: from
+      type: System.Numerics.Vector2
+    - id: to
+      type: System.Numerics.Vector2
+    - id: stops
+      type: SimulationFramework.Color[]
+    - id: transform
+      type: System.Numerics.Matrix3x2
+    - id: tileMode
+      type: SimulationFramework.Drawing.TileMode
+    return:
+      type: SimulationFramework.Drawing.Gradient
+    content.vb: Public Shared Function CreateLinear(from As Vector2, [to] As Vector2, stops As Color(), transform As Matrix3x2, tileMode As TileMode = TileMode.Clamp) As Gradient
+  overload: SimulationFramework.Drawing.Gradient.CreateLinear*
+  nameWithType.vb: Gradient.CreateLinear(Vector2, Vector2, Color(), Matrix3x2, TileMode)
+  fullName.vb: SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2, System.Numerics.Vector2, SimulationFramework.Color(), System.Numerics.Matrix3x2, SimulationFramework.Drawing.TileMode)
+  name.vb: CreateLinear(Vector2, Vector2, Color(), Matrix3x2, TileMode)
+- uid: SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  commentId: M:SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  id: CreateLinear(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: CreateLinear(Vector2, Vector2, GradientStop[], Matrix3x2, TileMode)
+  nameWithType: Gradient.CreateLinear(Vector2, Vector2, GradientStop[], Matrix3x2, TileMode)
+  fullName: SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2, System.Numerics.Vector2, SimulationFramework.Drawing.GradientStop[], System.Numerics.Matrix3x2, SimulationFramework.Drawing.TileMode)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CreateLinear
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 23
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: public static Gradient CreateLinear(Vector2 from, Vector2 to, GradientStop[] stops, Matrix3x2 transform, TileMode tileMode = TileMode.Clamp)
+    parameters:
+    - id: from
+      type: System.Numerics.Vector2
+    - id: to
+      type: System.Numerics.Vector2
+    - id: stops
+      type: SimulationFramework.Drawing.GradientStop[]
+    - id: transform
+      type: System.Numerics.Matrix3x2
+    - id: tileMode
+      type: SimulationFramework.Drawing.TileMode
+    return:
+      type: SimulationFramework.Drawing.Gradient
+    content.vb: Public Shared Function CreateLinear(from As Vector2, [to] As Vector2, stops As GradientStop(), transform As Matrix3x2, tileMode As TileMode = TileMode.Clamp) As Gradient
+  overload: SimulationFramework.Drawing.Gradient.CreateLinear*
+  nameWithType.vb: Gradient.CreateLinear(Vector2, Vector2, GradientStop(), Matrix3x2, TileMode)
+  fullName.vb: SimulationFramework.Drawing.Gradient.CreateLinear(System.Numerics.Vector2, System.Numerics.Vector2, SimulationFramework.Drawing.GradientStop(), System.Numerics.Matrix3x2, SimulationFramework.Drawing.TileMode)
+  name.vb: CreateLinear(Vector2, Vector2, GradientStop(), Matrix3x2, TileMode)
+- uid: SimulationFramework.Drawing.Gradient.CreateRadial(System.Single,System.Single,System.Single,SimulationFramework.Color[])
+  commentId: M:SimulationFramework.Drawing.Gradient.CreateRadial(System.Single,System.Single,System.Single,SimulationFramework.Color[])
+  id: CreateRadial(System.Single,System.Single,System.Single,SimulationFramework.Color[])
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: CreateRadial(float, float, float, params Color[])
+  nameWithType: Gradient.CreateRadial(float, float, float, params Color[])
+  fullName: SimulationFramework.Drawing.Gradient.CreateRadial(float, float, float, params SimulationFramework.Color[])
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CreateRadial
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 25
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: public static Gradient CreateRadial(float x, float y, float radius, params Color[] colors)
+    parameters:
+    - id: x
+      type: System.Single
+    - id: y
+      type: System.Single
+    - id: radius
+      type: System.Single
+    - id: colors
+      type: SimulationFramework.Color[]
+    return:
+      type: SimulationFramework.Drawing.Gradient
+    content.vb: Public Shared Function CreateRadial(x As Single, y As Single, radius As Single, ParamArray colors As Color()) As Gradient
+  overload: SimulationFramework.Drawing.Gradient.CreateRadial*
+  nameWithType.vb: Gradient.CreateRadial(Single, Single, Single, ParamArray Color())
+  fullName.vb: SimulationFramework.Drawing.Gradient.CreateRadial(Single, Single, Single, ParamArray SimulationFramework.Color())
+  name.vb: CreateRadial(Single, Single, Single, ParamArray Color())
+- uid: SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Color[])
+  commentId: M:SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Color[])
+  id: CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Color[])
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: CreateRadial(Vector2, float, params Color[])
+  nameWithType: Gradient.CreateRadial(Vector2, float, params Color[])
+  fullName: SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2, float, params SimulationFramework.Color[])
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CreateRadial
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 26
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: public static Gradient CreateRadial(Vector2 position, float radius, params Color[] colors)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+    - id: radius
+      type: System.Single
+    - id: colors
+      type: SimulationFramework.Color[]
+    return:
+      type: SimulationFramework.Drawing.Gradient
+    content.vb: Public Shared Function CreateRadial(position As Vector2, radius As Single, ParamArray colors As Color()) As Gradient
+  overload: SimulationFramework.Drawing.Gradient.CreateRadial*
+  nameWithType.vb: Gradient.CreateRadial(Vector2, Single, ParamArray Color())
+  fullName.vb: SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2, Single, ParamArray SimulationFramework.Color())
+  name.vb: CreateRadial(Vector2, Single, ParamArray Color())
+- uid: SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Drawing.GradientStop[])
+  commentId: M:SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Drawing.GradientStop[])
+  id: CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Drawing.GradientStop[])
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: CreateRadial(Vector2, float, params GradientStop[])
+  nameWithType: Gradient.CreateRadial(Vector2, float, params GradientStop[])
+  fullName: SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2, float, params SimulationFramework.Drawing.GradientStop[])
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CreateRadial
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 27
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: public static Gradient CreateRadial(Vector2 position, float radius, params GradientStop[] colors)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+    - id: radius
+      type: System.Single
+    - id: colors
+      type: SimulationFramework.Drawing.GradientStop[]
+    return:
+      type: SimulationFramework.Drawing.Gradient
+    content.vb: Public Shared Function CreateRadial(position As Vector2, radius As Single, ParamArray colors As GradientStop()) As Gradient
+  overload: SimulationFramework.Drawing.Gradient.CreateRadial*
+  nameWithType.vb: Gradient.CreateRadial(Vector2, Single, ParamArray GradientStop())
+  fullName.vb: SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2, Single, ParamArray SimulationFramework.Drawing.GradientStop())
+  name.vb: CreateRadial(Vector2, Single, ParamArray GradientStop())
+- uid: SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Color[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  commentId: M:SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Color[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  id: CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Color[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: CreateRadial(Vector2, float, Color[], Matrix3x2, TileMode)
+  nameWithType: Gradient.CreateRadial(Vector2, float, Color[], Matrix3x2, TileMode)
+  fullName: SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2, float, SimulationFramework.Color[], System.Numerics.Matrix3x2, SimulationFramework.Drawing.TileMode)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CreateRadial
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 28
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: public static Gradient CreateRadial(Vector2 position, float radius, Color[] stops, Matrix3x2 transform, TileMode tileMode = TileMode.Clamp)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+    - id: radius
+      type: System.Single
+    - id: stops
+      type: SimulationFramework.Color[]
+    - id: transform
+      type: System.Numerics.Matrix3x2
+    - id: tileMode
+      type: SimulationFramework.Drawing.TileMode
+    return:
+      type: SimulationFramework.Drawing.Gradient
+    content.vb: Public Shared Function CreateRadial(position As Vector2, radius As Single, stops As Color(), transform As Matrix3x2, tileMode As TileMode = TileMode.Clamp) As Gradient
+  overload: SimulationFramework.Drawing.Gradient.CreateRadial*
+  nameWithType.vb: Gradient.CreateRadial(Vector2, Single, Color(), Matrix3x2, TileMode)
+  fullName.vb: SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2, Single, SimulationFramework.Color(), System.Numerics.Matrix3x2, SimulationFramework.Drawing.TileMode)
+  name.vb: CreateRadial(Vector2, Single, Color(), Matrix3x2, TileMode)
+- uid: SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  commentId: M:SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  id: CreateRadial(System.Numerics.Vector2,System.Single,SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  parent: SimulationFramework.Drawing.Gradient
+  langs:
+  - csharp
+  - vb
+  name: CreateRadial(Vector2, float, GradientStop[], Matrix3x2, TileMode)
+  nameWithType: Gradient.CreateRadial(Vector2, float, GradientStop[], Matrix3x2, TileMode)
+  fullName: SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2, float, SimulationFramework.Drawing.GradientStop[], System.Numerics.Matrix3x2, SimulationFramework.Drawing.TileMode)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/Gradient.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: CreateRadial
+    path: src/SimulationFramework/Drawing/Gradient.cs
+    startLine: 29
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: public static Gradient CreateRadial(Vector2 position, float radius, GradientStop[] stops, Matrix3x2 transform, TileMode tileMode = TileMode.Clamp)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+    - id: radius
+      type: System.Single
+    - id: stops
+      type: SimulationFramework.Drawing.GradientStop[]
+    - id: transform
+      type: System.Numerics.Matrix3x2
+    - id: tileMode
+      type: SimulationFramework.Drawing.TileMode
+    return:
+      type: SimulationFramework.Drawing.Gradient
+    content.vb: Public Shared Function CreateRadial(position As Vector2, radius As Single, stops As GradientStop(), transform As Matrix3x2, tileMode As TileMode = TileMode.Clamp) As Gradient
+  overload: SimulationFramework.Drawing.Gradient.CreateRadial*
+  nameWithType.vb: Gradient.CreateRadial(Vector2, Single, GradientStop(), Matrix3x2, TileMode)
+  fullName.vb: SimulationFramework.Drawing.Gradient.CreateRadial(System.Numerics.Vector2, Single, SimulationFramework.Drawing.GradientStop(), System.Numerics.Matrix3x2, SimulationFramework.Drawing.TileMode)
+  name.vb: CreateRadial(Vector2, Single, GradientStop(), Matrix3x2, TileMode)
+references:
+- uid: SimulationFramework.Drawing
+  commentId: N:SimulationFramework.Drawing
+  href: SimulationFramework.html
+  name: SimulationFramework.Drawing
+  nameWithType: SimulationFramework.Drawing
+  fullName: SimulationFramework.Drawing
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Drawing
+    name: Drawing
+    href: SimulationFramework.Drawing.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Drawing
+    name: Drawing
+    href: SimulationFramework.Drawing.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.IEquatable{SimulationFramework.Drawing.Gradient}
+  commentId: T:System.IEquatable{SimulationFramework.Drawing.Gradient}
+  parent: System
+  definition: System.IEquatable`1
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<Gradient>
+  nameWithType: IEquatable<Gradient>
+  fullName: System.IEquatable<SimulationFramework.Drawing.Gradient>
+  nameWithType.vb: IEquatable(Of Gradient)
+  fullName.vb: System.IEquatable(Of SimulationFramework.Drawing.Gradient)
+  name.vb: IEquatable(Of Gradient)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - uid: SimulationFramework.Drawing.Gradient
+    name: Gradient
+    href: SimulationFramework.Drawing.Gradient.html
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: SimulationFramework.Drawing.Gradient
+    name: Gradient
+    href: SimulationFramework.Drawing.Gradient.html
+  - name: )
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.IEquatable`1
+  commentId: T:System.IEquatable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  name: IEquatable<T>
+  nameWithType: IEquatable<T>
+  fullName: System.IEquatable<T>
+  nameWithType.vb: IEquatable(Of T)
+  fullName.vb: System.IEquatable(Of T)
+  name.vb: IEquatable(Of T)
+  spec.csharp:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.IEquatable`1
+    name: IEquatable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.iequatable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: SimulationFramework.Drawing.Gradient.#ctor*
+  commentId: Overload:SimulationFramework.Drawing.Gradient.#ctor
+  href: SimulationFramework.Drawing.Gradient.html#SimulationFramework.Drawing.Gradient.#ctor(SimulationFramework.Drawing.GradientStop[],System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode)
+  name: Gradient
+  nameWithType: Gradient.Gradient
+  fullName: SimulationFramework.Drawing.Gradient.Gradient
+  nameWithType.vb: Gradient.New
+  fullName.vb: SimulationFramework.Drawing.Gradient.New
+  name.vb: New
+- uid: SimulationFramework.Drawing.GradientStop[]
+  isExternal: true
+  href: SimulationFramework.Drawing.GradientStop.html
+  name: GradientStop[]
+  nameWithType: GradientStop[]
+  fullName: SimulationFramework.Drawing.GradientStop[]
+  nameWithType.vb: GradientStop()
+  fullName.vb: SimulationFramework.Drawing.GradientStop()
+  name.vb: GradientStop()
+  spec.csharp:
+  - uid: SimulationFramework.Drawing.GradientStop
+    name: GradientStop
+    href: SimulationFramework.Drawing.GradientStop.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: SimulationFramework.Drawing.GradientStop
+    name: GradientStop
+    href: SimulationFramework.Drawing.GradientStop.html
+  - name: (
+  - name: )
+- uid: System.Numerics.Matrix3x2
+  commentId: T:System.Numerics.Matrix3x2
+  parent: System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.matrix3x2
+  name: Matrix3x2
+  nameWithType: Matrix3x2
+  fullName: System.Numerics.Matrix3x2
+- uid: SimulationFramework.Drawing.TileMode
+  commentId: T:SimulationFramework.Drawing.TileMode
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.TileMode.html
+  name: TileMode
+  nameWithType: TileMode
+  fullName: SimulationFramework.Drawing.TileMode
+- uid: System.Numerics
+  commentId: N:System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Numerics
+  nameWithType: System.Numerics
+  fullName: System.Numerics
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+- uid: SimulationFramework.Drawing.Gradient.Stops*
+  commentId: Overload:SimulationFramework.Drawing.Gradient.Stops
+  href: SimulationFramework.Drawing.Gradient.html#SimulationFramework.Drawing.Gradient.Stops
+  name: Stops
+  nameWithType: Gradient.Stops
+  fullName: SimulationFramework.Drawing.Gradient.Stops
+- uid: SimulationFramework.Drawing.Gradient.Transform*
+  commentId: Overload:SimulationFramework.Drawing.Gradient.Transform
+  href: SimulationFramework.Drawing.Gradient.html#SimulationFramework.Drawing.Gradient.Transform
+  name: Transform
+  nameWithType: Gradient.Transform
+  fullName: SimulationFramework.Drawing.Gradient.Transform
+- uid: SimulationFramework.Drawing.Gradient.TileMode*
+  commentId: Overload:SimulationFramework.Drawing.Gradient.TileMode
+  href: SimulationFramework.Drawing.Gradient.html#SimulationFramework.Drawing.Gradient.TileMode
+  name: TileMode
+  nameWithType: Gradient.TileMode
+  fullName: SimulationFramework.Drawing.Gradient.TileMode
+- uid: SimulationFramework.Drawing.Gradient.Accept*
+  commentId: Overload:SimulationFramework.Drawing.Gradient.Accept
+  href: SimulationFramework.Drawing.Gradient.html#SimulationFramework.Drawing.Gradient.Accept(SimulationFramework.Drawing.IGradientVisitor)
+  name: Accept
+  nameWithType: Gradient.Accept
+  fullName: SimulationFramework.Drawing.Gradient.Accept
+- uid: SimulationFramework.Drawing.IGradientVisitor
+  commentId: T:SimulationFramework.Drawing.IGradientVisitor
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.IGradientVisitor.html
+  name: IGradientVisitor
+  nameWithType: IGradientVisitor
+  fullName: SimulationFramework.Drawing.IGradientVisitor
+- uid: SimulationFramework.Drawing.Gradient.CreateLinear*
+  commentId: Overload:SimulationFramework.Drawing.Gradient.CreateLinear
+  href: SimulationFramework.Drawing.Gradient.html#SimulationFramework.Drawing.Gradient.CreateLinear(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Color[])
+  name: CreateLinear
+  nameWithType: Gradient.CreateLinear
+  fullName: SimulationFramework.Drawing.Gradient.CreateLinear
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: SimulationFramework.Color[]
+  isExternal: true
+  href: SimulationFramework.Color.html
+  name: Color[]
+  nameWithType: Color[]
+  fullName: SimulationFramework.Color[]
+  nameWithType.vb: Color()
+  fullName.vb: SimulationFramework.Color()
+  name.vb: Color()
+  spec.csharp:
+  - uid: SimulationFramework.Color
+    name: Color
+    href: SimulationFramework.Color.html
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: SimulationFramework.Color
+    name: Color
+    href: SimulationFramework.Color.html
+  - name: (
+  - name: )
+- uid: SimulationFramework.Drawing.Gradient
+  commentId: T:SimulationFramework.Drawing.Gradient
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.Gradient.html
+  name: Gradient
+  nameWithType: Gradient
+  fullName: SimulationFramework.Drawing.Gradient
+- uid: System.Numerics.Vector2
+  commentId: T:System.Numerics.Vector2
+  parent: System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  name: Vector2
+  nameWithType: Vector2
+  fullName: System.Numerics.Vector2
+- uid: SimulationFramework.Drawing.Gradient.CreateRadial*
+  commentId: Overload:SimulationFramework.Drawing.Gradient.CreateRadial
+  href: SimulationFramework.Drawing.Gradient.html#SimulationFramework.Drawing.Gradient.CreateRadial(System.Single,System.Single,System.Single,SimulationFramework.Color[])
+  name: CreateRadial
+  nameWithType: Gradient.CreateRadial
+  fullName: SimulationFramework.Drawing.Gradient.CreateRadial

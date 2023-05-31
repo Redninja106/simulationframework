@@ -1,0 +1,204 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.SkiaSharp.ISkiaFrameProvider
+  commentId: T:SimulationFramework.SkiaSharp.ISkiaFrameProvider
+  id: ISkiaFrameProvider
+  parent: SimulationFramework.SkiaSharp
+  children:
+  - SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrame
+  - SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrameSize(System.Int32@,System.Int32@)
+  - SimulationFramework.SkiaSharp.ISkiaFrameProvider.SetContext(SkiaSharp.GRContext)
+  langs:
+  - csharp
+  - vb
+  name: ISkiaFrameProvider
+  nameWithType: ISkiaFrameProvider
+  fullName: SimulationFramework.SkiaSharp.ISkiaFrameProvider
+  type: Interface
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/ISkiaFrameProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: ISkiaFrameProvider
+    path: src/SimulationFramework.SkiaSharp/ISkiaFrameProvider.cs
+    startLine: 9
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  syntax:
+    content: public interface ISkiaFrameProvider
+    content.vb: Public Interface ISkiaFrameProvider
+- uid: SimulationFramework.SkiaSharp.ISkiaFrameProvider.SetContext(SkiaSharp.GRContext)
+  commentId: M:SimulationFramework.SkiaSharp.ISkiaFrameProvider.SetContext(SkiaSharp.GRContext)
+  id: SetContext(SkiaSharp.GRContext)
+  parent: SimulationFramework.SkiaSharp.ISkiaFrameProvider
+  langs:
+  - csharp
+  - vb
+  name: SetContext(GRContext)
+  nameWithType: ISkiaFrameProvider.SetContext(GRContext)
+  fullName: SimulationFramework.SkiaSharp.ISkiaFrameProvider.SetContext(SkiaSharp.GRContext)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/ISkiaFrameProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: SetContext
+    path: src/SimulationFramework.SkiaSharp/ISkiaFrameProvider.cs
+    startLine: 11
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  syntax:
+    content: void SetContext(GRContext context)
+    parameters:
+    - id: context
+      type: SkiaSharp.GRContext
+    content.vb: Sub SetContext(context As GRContext)
+  overload: SimulationFramework.SkiaSharp.ISkiaFrameProvider.SetContext*
+- uid: SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrame
+  commentId: M:SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrame
+  id: GetCurrentFrame
+  parent: SimulationFramework.SkiaSharp.ISkiaFrameProvider
+  langs:
+  - csharp
+  - vb
+  name: GetCurrentFrame()
+  nameWithType: ISkiaFrameProvider.GetCurrentFrame()
+  fullName: SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrame()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/ISkiaFrameProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: GetCurrentFrame
+    path: src/SimulationFramework.SkiaSharp/ISkiaFrameProvider.cs
+    startLine: 12
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  syntax:
+    content: SKCanvas GetCurrentFrame()
+    return:
+      type: SkiaSharp.SKCanvas
+    content.vb: Function GetCurrentFrame() As SKCanvas
+  overload: SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrame*
+- uid: SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrameSize(System.Int32@,System.Int32@)
+  commentId: M:SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrameSize(System.Int32@,System.Int32@)
+  id: GetCurrentFrameSize(System.Int32@,System.Int32@)
+  parent: SimulationFramework.SkiaSharp.ISkiaFrameProvider
+  langs:
+  - csharp
+  - vb
+  name: GetCurrentFrameSize(out int, out int)
+  nameWithType: ISkiaFrameProvider.GetCurrentFrameSize(out int, out int)
+  fullName: SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrameSize(out int, out int)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework.SkiaSharp/ISkiaFrameProvider.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: GetCurrentFrameSize
+    path: src/SimulationFramework.SkiaSharp/ISkiaFrameProvider.cs
+    startLine: 13
+  assemblies:
+  - SimulationFramework.SkiaSharp
+  namespace: SimulationFramework.SkiaSharp
+  syntax:
+    content: void GetCurrentFrameSize(out int width, out int height)
+    parameters:
+    - id: width
+      type: System.Int32
+    - id: height
+      type: System.Int32
+    content.vb: Sub GetCurrentFrameSize(width As Integer, height As Integer)
+  overload: SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrameSize*
+  nameWithType.vb: ISkiaFrameProvider.GetCurrentFrameSize(Integer, Integer)
+  fullName.vb: SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrameSize(Integer, Integer)
+  name.vb: GetCurrentFrameSize(Integer, Integer)
+references:
+- uid: SimulationFramework.SkiaSharp
+  commentId: N:SimulationFramework.SkiaSharp
+  href: SimulationFramework.html
+  name: SimulationFramework.SkiaSharp
+  nameWithType: SimulationFramework.SkiaSharp
+  fullName: SimulationFramework.SkiaSharp
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.SkiaSharp
+    name: SkiaSharp
+    href: SimulationFramework.SkiaSharp.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.SkiaSharp
+    name: SkiaSharp
+    href: SimulationFramework.SkiaSharp.html
+- uid: SimulationFramework.SkiaSharp.ISkiaFrameProvider.SetContext*
+  commentId: Overload:SimulationFramework.SkiaSharp.ISkiaFrameProvider.SetContext
+  href: SimulationFramework.SkiaSharp.ISkiaFrameProvider.html#SimulationFramework.SkiaSharp.ISkiaFrameProvider.SetContext(SkiaSharp.GRContext)
+  name: SetContext
+  nameWithType: ISkiaFrameProvider.SetContext
+  fullName: SimulationFramework.SkiaSharp.ISkiaFrameProvider.SetContext
+- uid: SkiaSharp.GRContext
+  commentId: T:SkiaSharp.GRContext
+  parent: SkiaSharp
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/skiasharp.grcontext
+  name: GRContext
+  nameWithType: GRContext
+  fullName: SkiaSharp.GRContext
+- uid: SkiaSharp
+  commentId: N:SkiaSharp
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/skiasharp
+  name: SkiaSharp
+  nameWithType: SkiaSharp
+  fullName: SkiaSharp
+- uid: SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrame*
+  commentId: Overload:SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrame
+  href: SimulationFramework.SkiaSharp.ISkiaFrameProvider.html#SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrame
+  name: GetCurrentFrame
+  nameWithType: ISkiaFrameProvider.GetCurrentFrame
+  fullName: SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrame
+- uid: SkiaSharp.SKCanvas
+  commentId: T:SkiaSharp.SKCanvas
+  parent: SkiaSharp
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/skiasharp.skcanvas
+  name: SKCanvas
+  nameWithType: SKCanvas
+  fullName: SkiaSharp.SKCanvas
+- uid: SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrameSize*
+  commentId: Overload:SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrameSize
+  href: SimulationFramework.SkiaSharp.ISkiaFrameProvider.html#SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrameSize(System.Int32@,System.Int32@)
+  name: GetCurrentFrameSize
+  nameWithType: ISkiaFrameProvider.GetCurrentFrameSize
+  fullName: SimulationFramework.SkiaSharp.ISkiaFrameProvider.GetCurrentFrameSize
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System

@@ -1,0 +1,3015 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Drawing.ICanvas
+  commentId: T:SimulationFramework.Drawing.ICanvas
+  id: ICanvas
+  parent: SimulationFramework.Drawing
+  children:
+  - SimulationFramework.Drawing.ICanvas.Antialias(System.Boolean)
+  - SimulationFramework.Drawing.ICanvas.Clear(SimulationFramework.Color)
+  - SimulationFramework.Drawing.ICanvas.Clip(System.Nullable{SimulationFramework.Rectangle})
+  - SimulationFramework.Drawing.ICanvas.DrawArc(SimulationFramework.Rectangle,System.Single,System.Single,System.Boolean)
+  - SimulationFramework.Drawing.ICanvas.DrawArc(System.Numerics.Vector2,System.Numerics.Vector2,System.Single,System.Single,System.Boolean,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawArc(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Boolean,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawCircle(SimulationFramework.Circle)
+  - SimulationFramework.Drawing.ICanvas.DrawCircle(System.Numerics.Vector2,System.Single,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawCircle(System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawEllipse(SimulationFramework.Rectangle)
+  - SimulationFramework.Drawing.ICanvas.DrawEllipse(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawEllipse(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawLine(System.Numerics.Vector2,System.Numerics.Vector2)
+  - SimulationFramework.Drawing.ICanvas.DrawLine(System.Single,System.Single,System.Single,System.Single)
+  - SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Collections.Generic.IEnumerable{System.Numerics.Vector2})
+  - SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Numerics.Vector2[])
+  - SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Span{System.Numerics.Vector2})
+  - SimulationFramework.Drawing.ICanvas.DrawRect(SimulationFramework.Rectangle)
+  - SimulationFramework.Drawing.ICanvas.DrawRect(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawRect(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawRoundedRect(SimulationFramework.Rectangle,System.Single)
+  - SimulationFramework.Drawing.ICanvas.DrawRoundedRect(System.Numerics.Vector2,System.Numerics.Vector2,System.Single,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawRoundedRect(System.Single,System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawText(System.String,System.Numerics.Vector2,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawText(System.String,System.Single,System.Single,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Rectangle)
+  - SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  - SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,System.Numerics.Vector2,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,System.Single,System.Single,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  - SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Color)
+  - SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Drawing.Gradient)
+  - SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Drawing.ITexture)
+  - SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Drawing.ITexture,System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode,SimulationFramework.Drawing.TileMode)
+  - SimulationFramework.Drawing.ICanvas.Flush
+  - SimulationFramework.Drawing.ICanvas.Font(System.String)
+  - SimulationFramework.Drawing.ICanvas.FontStyle(System.Single,SimulationFramework.Drawing.FontStyle)
+  - SimulationFramework.Drawing.ICanvas.Height
+  - SimulationFramework.Drawing.ICanvas.MeasureText(System.String)
+  - SimulationFramework.Drawing.ICanvas.MeasureText(System.String,System.Single,System.Int32@)
+  - SimulationFramework.Drawing.ICanvas.PopState
+  - SimulationFramework.Drawing.ICanvas.PushState
+  - SimulationFramework.Drawing.ICanvas.ResetState
+  - SimulationFramework.Drawing.ICanvas.Rotate(System.Single)
+  - SimulationFramework.Drawing.ICanvas.Rotate(System.Single,System.Numerics.Vector2)
+  - SimulationFramework.Drawing.ICanvas.Rotate(System.Single,System.Single,System.Single)
+  - SimulationFramework.Drawing.ICanvas.Scale(System.Numerics.Vector2)
+  - SimulationFramework.Drawing.ICanvas.Scale(System.Single)
+  - SimulationFramework.Drawing.ICanvas.Scale(System.Single,System.Single)
+  - SimulationFramework.Drawing.ICanvas.SetTransform(System.Numerics.Matrix3x2)
+  - SimulationFramework.Drawing.ICanvas.State
+  - SimulationFramework.Drawing.ICanvas.Stroke(SimulationFramework.Color)
+  - SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)
+  - SimulationFramework.Drawing.ICanvas.Target
+  - SimulationFramework.Drawing.ICanvas.Transform(System.Numerics.Matrix3x2)
+  - SimulationFramework.Drawing.ICanvas.Translate(System.Numerics.Vector2)
+  - SimulationFramework.Drawing.ICanvas.Translate(System.Single,System.Single)
+  - SimulationFramework.Drawing.ICanvas.Width
+  langs:
+  - csharp
+  - vb
+  name: ICanvas
+  nameWithType: ICanvas
+  fullName: SimulationFramework.Drawing.ICanvas
+  type: Interface
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: ICanvas
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 10
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Enables the rendering shapes to a texture.
+  example: []
+  syntax:
+    content: 'public interface ICanvas : IDisposable'
+    content.vb: Public Interface ICanvas Inherits IDisposable
+  inheritedMembers:
+  - System.IDisposable.Dispose
+- uid: SimulationFramework.Drawing.ICanvas.Width
+  commentId: P:SimulationFramework.Drawing.ICanvas.Width
+  id: Width
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Width
+  nameWithType: ICanvas.Width
+  fullName: SimulationFramework.Drawing.ICanvas.Width
+  type: Property
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Width
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 15
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Gets the width of the canvas, in pixels.
+  example: []
+  syntax:
+    content: int Width { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property Width As Integer
+  overload: SimulationFramework.Drawing.ICanvas.Width*
+- uid: SimulationFramework.Drawing.ICanvas.Height
+  commentId: P:SimulationFramework.Drawing.ICanvas.Height
+  id: Height
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Height
+  nameWithType: ICanvas.Height
+  fullName: SimulationFramework.Drawing.ICanvas.Height
+  type: Property
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Height
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 20
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Gets the height of the canvas, in pixels.
+  example: []
+  syntax:
+    content: int Height { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: ReadOnly Property Height As Integer
+  overload: SimulationFramework.Drawing.ICanvas.Height*
+- uid: SimulationFramework.Drawing.ICanvas.Target
+  commentId: P:SimulationFramework.Drawing.ICanvas.Target
+  id: Target
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Target
+  nameWithType: ICanvas.Target
+  fullName: SimulationFramework.Drawing.ICanvas.Target
+  type: Property
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Target
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 25
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: The texture to which this canvas is drawing to.
+  example: []
+  syntax:
+    content: ITexture Target { get; }
+    parameters: []
+    return:
+      type: SimulationFramework.Drawing.ITexture
+    content.vb: ReadOnly Property Target As ITexture
+  overload: SimulationFramework.Drawing.ICanvas.Target*
+- uid: SimulationFramework.Drawing.ICanvas.State
+  commentId: P:SimulationFramework.Drawing.ICanvas.State
+  id: State
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: State
+  nameWithType: ICanvas.State
+  fullName: SimulationFramework.Drawing.ICanvas.State
+  type: Property
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: State
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 30
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: The canvas's current state.
+  example: []
+  syntax:
+    content: CanvasState State { get; }
+    parameters: []
+    return:
+      type: SimulationFramework.Drawing.CanvasState
+    content.vb: ReadOnly Property State As CanvasState
+  overload: SimulationFramework.Drawing.ICanvas.State*
+- uid: SimulationFramework.Drawing.ICanvas.Clear(SimulationFramework.Color)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Clear(SimulationFramework.Color)
+  id: Clear(SimulationFramework.Color)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Clear(Color)
+  nameWithType: ICanvas.Clear(Color)
+  fullName: SimulationFramework.Drawing.ICanvas.Clear(SimulationFramework.Color)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Clear
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 37
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Clears the canvas.
+  example: []
+  syntax:
+    content: void Clear(Color color)
+    parameters:
+    - id: color
+      type: SimulationFramework.Color
+      description: The color with which to clear the canvas.
+    content.vb: Sub Clear(color As Color)
+  overload: SimulationFramework.Drawing.ICanvas.Clear*
+- uid: SimulationFramework.Drawing.ICanvas.Flush
+  commentId: M:SimulationFramework.Drawing.ICanvas.Flush
+  id: Flush
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Flush()
+  nameWithType: ICanvas.Flush()
+  fullName: SimulationFramework.Drawing.ICanvas.Flush()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Flush
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 42
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Waits for all drawing commands to finish executing.
+  example: []
+  syntax:
+    content: void Flush()
+    content.vb: Sub Flush()
+  overload: SimulationFramework.Drawing.ICanvas.Flush*
+- uid: SimulationFramework.Drawing.ICanvas.Antialias(System.Boolean)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Antialias(System.Boolean)
+  id: Antialias(System.Boolean)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Antialias(bool)
+  nameWithType: ICanvas.Antialias(bool)
+  fullName: SimulationFramework.Drawing.ICanvas.Antialias(bool)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Antialias
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 47
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Sets whether the canvas should use antialiasing when rendering or not.
+  example: []
+  syntax:
+    content: void Antialias(bool antialias)
+    parameters:
+    - id: antialias
+      type: System.Boolean
+    content.vb: Sub Antialias(antialias As Boolean)
+  overload: SimulationFramework.Drawing.ICanvas.Antialias*
+  nameWithType.vb: ICanvas.Antialias(Boolean)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.Antialias(Boolean)
+  name.vb: Antialias(Boolean)
+- uid: SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Color)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Color)
+  id: Fill(SimulationFramework.Color)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Fill(Color)
+  nameWithType: ICanvas.Fill(Color)
+  fullName: SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Color)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Fill
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 55
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Configures the canvas to fill shapes with the provided color.
+  example: []
+  syntax:
+    content: void Fill(Color color)
+    parameters:
+    - id: color
+      type: SimulationFramework.Color
+    content.vb: Sub Fill(color As Color)
+  overload: SimulationFramework.Drawing.ICanvas.Fill*
+- uid: SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Drawing.Gradient)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Drawing.Gradient)
+  id: Fill(SimulationFramework.Drawing.Gradient)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Fill(Gradient)
+  nameWithType: ICanvas.Fill(Gradient)
+  fullName: SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Drawing.Gradient)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Fill
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 64
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Configures the canvas to fill shapes using the provided gradient.
+  example: []
+  syntax:
+    content: void Fill(Gradient gradient)
+    parameters:
+    - id: gradient
+      type: SimulationFramework.Drawing.Gradient
+    content.vb: Sub Fill(gradient As Gradient)
+  overload: SimulationFramework.Drawing.ICanvas.Fill*
+- uid: SimulationFramework.Drawing.ICanvas.Stroke(SimulationFramework.Color)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Stroke(SimulationFramework.Color)
+  id: Stroke(SimulationFramework.Color)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Stroke(Color)
+  nameWithType: ICanvas.Stroke(Color)
+  fullName: SimulationFramework.Drawing.ICanvas.Stroke(SimulationFramework.Color)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Stroke
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 73
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Configures the canvas to outline shapes with the provided color.
+  example: []
+  syntax:
+    content: void Stroke(Color color)
+    parameters:
+    - id: color
+      type: SimulationFramework.Color
+    content.vb: Sub Stroke(color As Color)
+  overload: SimulationFramework.Drawing.ICanvas.Stroke*
+- uid: SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)
+  commentId: M:SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)
+  id: StrokeWidth(System.Single)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: StrokeWidth(float)
+  nameWithType: ICanvas.StrokeWidth(float)
+  fullName: SimulationFramework.Drawing.ICanvas.StrokeWidth(float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: StrokeWidth
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 82
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Sets the stroke width of the canvas.
+  example: []
+  syntax:
+    content: void StrokeWidth(float width)
+    parameters:
+    - id: width
+      type: System.Single
+    content.vb: Sub StrokeWidth(width As Single)
+  overload: SimulationFramework.Drawing.ICanvas.StrokeWidth*
+  nameWithType.vb: ICanvas.StrokeWidth(Single)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.StrokeWidth(Single)
+  name.vb: StrokeWidth(Single)
+- uid: SimulationFramework.Drawing.ICanvas.Clip(System.Nullable{SimulationFramework.Rectangle})
+  commentId: M:SimulationFramework.Drawing.ICanvas.Clip(System.Nullable{SimulationFramework.Rectangle})
+  id: Clip(System.Nullable{SimulationFramework.Rectangle})
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Clip(Rectangle?)
+  nameWithType: ICanvas.Clip(Rectangle?)
+  fullName: SimulationFramework.Drawing.ICanvas.Clip(SimulationFramework.Rectangle?)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Clip
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 87
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Sets the clipping rectangle of the canvas.
+  example: []
+  syntax:
+    content: void Clip(Rectangle? rectangle)
+    parameters:
+    - id: rectangle
+      type: System.Nullable{SimulationFramework.Rectangle}
+    content.vb: Sub Clip(rectangle As Rectangle?)
+  overload: SimulationFramework.Drawing.ICanvas.Clip*
+- uid: SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Drawing.ITexture)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Drawing.ITexture)
+  id: Fill(SimulationFramework.Drawing.ITexture)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Fill(ITexture)
+  nameWithType: ICanvas.Fill(ITexture)
+  fullName: SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Drawing.ITexture)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Fill
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 92
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Fills any drawn shapes with the provided texture.
+  example: []
+  syntax:
+    content: void Fill(ITexture texture)
+    parameters:
+    - id: texture
+      type: SimulationFramework.Drawing.ITexture
+    content.vb: Sub Fill(texture As ITexture)
+  overload: SimulationFramework.Drawing.ICanvas.Fill*
+- uid: SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Drawing.ITexture,System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode,SimulationFramework.Drawing.TileMode)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Drawing.ITexture,System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode,SimulationFramework.Drawing.TileMode)
+  id: Fill(SimulationFramework.Drawing.ITexture,System.Numerics.Matrix3x2,SimulationFramework.Drawing.TileMode,SimulationFramework.Drawing.TileMode)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Fill(ITexture, Matrix3x2, TileMode, TileMode)
+  nameWithType: ICanvas.Fill(ITexture, Matrix3x2, TileMode, TileMode)
+  fullName: SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Drawing.ITexture, System.Numerics.Matrix3x2, SimulationFramework.Drawing.TileMode, SimulationFramework.Drawing.TileMode)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Fill
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 97
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Fills any drawn shapes with the provided texture.
+  example: []
+  syntax:
+    content: void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX = TileMode.Clamp, TileMode tileModeY = TileMode.Clamp)
+    parameters:
+    - id: texture
+      type: SimulationFramework.Drawing.ITexture
+    - id: transform
+      type: System.Numerics.Matrix3x2
+    - id: tileModeX
+      type: SimulationFramework.Drawing.TileMode
+    - id: tileModeY
+      type: SimulationFramework.Drawing.TileMode
+    content.vb: Sub Fill(texture As ITexture, transform As Matrix3x2, tileModeX As TileMode = TileMode.Clamp, tileModeY As TileMode = TileMode.Clamp)
+  overload: SimulationFramework.Drawing.ICanvas.Fill*
+- uid: SimulationFramework.Drawing.ICanvas.DrawLine(System.Single,System.Single,System.Single,System.Single)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawLine(System.Single,System.Single,System.Single,System.Single)
+  id: DrawLine(System.Single,System.Single,System.Single,System.Single)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawLine(float, float, float, float)
+  nameWithType: ICanvas.DrawLine(float, float, float, float)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawLine(float, float, float, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawLine
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 110
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <xref href="SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: void DrawLine(float x1, float y1, float x2, float y2)
+    parameters:
+    - id: x1
+      type: System.Single
+      description: The x-coordinate of the first point of the line.
+    - id: y1
+      type: System.Single
+      description: The y-coordinate of the first point of the line.
+    - id: x2
+      type: System.Single
+      description: The x-coordinate of the second point of the line.
+    - id: y2
+      type: System.Single
+      description: The y-coordinate of the second point of the line.
+    content.vb: Sub DrawLine(x1 As Single, y1 As Single, x2 As Single, y2 As Single)
+  overload: SimulationFramework.Drawing.ICanvas.DrawLine*
+  nameWithType.vb: ICanvas.DrawLine(Single, Single, Single, Single)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawLine(Single, Single, Single, Single)
+  name.vb: DrawLine(Single, Single, Single, Single)
+- uid: SimulationFramework.Drawing.ICanvas.DrawLine(System.Numerics.Vector2,System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawLine(System.Numerics.Vector2,System.Numerics.Vector2)
+  id: DrawLine(System.Numerics.Vector2,System.Numerics.Vector2)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawLine(Vector2, Vector2)
+  nameWithType: ICanvas.DrawLine(Vector2, Vector2)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawLine(System.Numerics.Vector2, System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawLine
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 117
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <xref href="SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: void DrawLine(Vector2 p1, Vector2 p2)
+    parameters:
+    - id: p1
+      type: System.Numerics.Vector2
+      description: The first point of the line.
+    - id: p2
+      type: System.Numerics.Vector2
+      description: The second point of the line.
+    content.vb: Sub DrawLine(p1 As Vector2, p2 As Vector2)
+  overload: SimulationFramework.Drawing.ICanvas.DrawLine*
+- uid: SimulationFramework.Drawing.ICanvas.DrawRect(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawRect(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  id: DrawRect(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawRect(float, float, float, float, Alignment)
+  nameWithType: ICanvas.DrawRect(float, float, float, float, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawRect(float, float, float, float, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawRect
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 127
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a rectangle to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawRect(float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The X position of the rectangle.
+    - id: y
+      type: System.Single
+      description: The Y position of the rectangle.
+    - id: width
+      type: System.Single
+      description: The width of the rectangle.
+    - id: height
+      type: System.Single
+      description: The height of the rectangle.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the rectangle to align to the provided position.
+    content.vb: Sub DrawRect(x As Single, y As Single, width As Single, height As Single, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Drawing.ICanvas.DrawRect*
+  nameWithType.vb: ICanvas.DrawRect(Single, Single, Single, Single, Alignment)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawRect(Single, Single, Single, Single, SimulationFramework.Alignment)
+  name.vb: DrawRect(Single, Single, Single, Single, Alignment)
+- uid: SimulationFramework.Drawing.ICanvas.DrawRect(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawRect(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  id: DrawRect(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawRect(Vector2, Vector2, Alignment)
+  nameWithType: ICanvas.DrawRect(Vector2, Vector2, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawRect(System.Numerics.Vector2, System.Numerics.Vector2, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawRect
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 135
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a rectangle to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawRect(Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+      description: The position of the rectangle.
+    - id: size
+      type: System.Numerics.Vector2
+      description: The size of the rectangle.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the rectangle to align to the provided position.
+    content.vb: Sub DrawRect(position As Vector2, size As Vector2, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Drawing.ICanvas.DrawRect*
+- uid: SimulationFramework.Drawing.ICanvas.DrawRect(SimulationFramework.Rectangle)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawRect(SimulationFramework.Rectangle)
+  id: DrawRect(SimulationFramework.Rectangle)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawRect(Rectangle)
+  nameWithType: ICanvas.DrawRect(Rectangle)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawRect(SimulationFramework.Rectangle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawRect
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 142
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a rectangle to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawRect(Rectangle rect)
+    parameters:
+    - id: rect
+      type: SimulationFramework.Rectangle
+      description: The rectangle to draw.
+    content.vb: Sub DrawRect(rect As Rectangle)
+  overload: SimulationFramework.Drawing.ICanvas.DrawRect*
+- uid: SimulationFramework.Drawing.ICanvas.DrawRoundedRect(System.Single,System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawRoundedRect(System.Single,System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  id: DrawRoundedRect(System.Single,System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawRoundedRect(float, float, float, float, float, Alignment)
+  nameWithType: ICanvas.DrawRoundedRect(float, float, float, float, float, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawRoundedRect(float, float, float, float, float, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawRoundedRect
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 153
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a rounded rectangle to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawRoundedRect(float x, float y, float width, float height, float radius, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The X position of the rectangle.
+    - id: y
+      type: System.Single
+      description: The Y position of the rectangle.
+    - id: width
+      type: System.Single
+      description: The width of the rectangle.
+    - id: height
+      type: System.Single
+      description: The height of the rectangle.
+    - id: radius
+      type: System.Single
+      description: The radius of the rounded corners of the rectangle.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the rectangle to align to the provided position.
+    content.vb: Sub DrawRoundedRect(x As Single, y As Single, width As Single, height As Single, radius As Single, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Drawing.ICanvas.DrawRoundedRect*
+  nameWithType.vb: ICanvas.DrawRoundedRect(Single, Single, Single, Single, Single, Alignment)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawRoundedRect(Single, Single, Single, Single, Single, SimulationFramework.Alignment)
+  name.vb: DrawRoundedRect(Single, Single, Single, Single, Single, Alignment)
+- uid: SimulationFramework.Drawing.ICanvas.DrawRoundedRect(System.Numerics.Vector2,System.Numerics.Vector2,System.Single,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawRoundedRect(System.Numerics.Vector2,System.Numerics.Vector2,System.Single,SimulationFramework.Alignment)
+  id: DrawRoundedRect(System.Numerics.Vector2,System.Numerics.Vector2,System.Single,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawRoundedRect(Vector2, Vector2, float, Alignment)
+  nameWithType: ICanvas.DrawRoundedRect(Vector2, Vector2, float, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawRoundedRect(System.Numerics.Vector2, System.Numerics.Vector2, float, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawRoundedRect
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 162
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a rounded rectangle to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawRoundedRect(Vector2 position, Vector2 size, float radius, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+      description: The position of the rectangle.
+    - id: size
+      type: System.Numerics.Vector2
+      description: The size of the rectangle.
+    - id: radius
+      type: System.Single
+      description: The radius of the rounded corners of the rectangle.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the rectangle to align to the provided position.
+    content.vb: Sub DrawRoundedRect(position As Vector2, size As Vector2, radius As Single, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Drawing.ICanvas.DrawRoundedRect*
+  nameWithType.vb: ICanvas.DrawRoundedRect(Vector2, Vector2, Single, Alignment)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawRoundedRect(System.Numerics.Vector2, System.Numerics.Vector2, Single, SimulationFramework.Alignment)
+  name.vb: DrawRoundedRect(Vector2, Vector2, Single, Alignment)
+- uid: SimulationFramework.Drawing.ICanvas.DrawRoundedRect(SimulationFramework.Rectangle,System.Single)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawRoundedRect(SimulationFramework.Rectangle,System.Single)
+  id: DrawRoundedRect(SimulationFramework.Rectangle,System.Single)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawRoundedRect(Rectangle, float)
+  nameWithType: ICanvas.DrawRoundedRect(Rectangle, float)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawRoundedRect(SimulationFramework.Rectangle, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawRoundedRect
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 169
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a rounded rectangle to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawRoundedRect(Rectangle rect, float radius)
+    parameters:
+    - id: rect
+      type: SimulationFramework.Rectangle
+      description: The position and size of rectangle.
+    - id: radius
+      type: System.Single
+      description: The radius of the rounded corners of the rectangle.
+    content.vb: Sub DrawRoundedRect(rect As Rectangle, radius As Single)
+  overload: SimulationFramework.Drawing.ICanvas.DrawRoundedRect*
+  nameWithType.vb: ICanvas.DrawRoundedRect(Rectangle, Single)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawRoundedRect(SimulationFramework.Rectangle, Single)
+  name.vb: DrawRoundedRect(Rectangle, Single)
+- uid: SimulationFramework.Drawing.ICanvas.DrawCircle(System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawCircle(System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  id: DrawCircle(System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawCircle(float, float, float, Alignment)
+  nameWithType: ICanvas.DrawCircle(float, float, float, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawCircle(float, float, float, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawCircle
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 178
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a circle to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawCircle(float x, float y, float radius, Alignment alignment = Alignment.Center)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The x-coordinate of the circle.
+    - id: y
+      type: System.Single
+      description: The y-coordinate of the circle.
+    - id: radius
+      type: System.Single
+      description: The radius of the circle on the x-axis.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the bounding-box of the circle to align to the provided position.
+    content.vb: Sub DrawCircle(x As Single, y As Single, radius As Single, alignment As Alignment = Alignment.Center)
+  overload: SimulationFramework.Drawing.ICanvas.DrawCircle*
+  nameWithType.vb: ICanvas.DrawCircle(Single, Single, Single, Alignment)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawCircle(Single, Single, Single, SimulationFramework.Alignment)
+  name.vb: DrawCircle(Single, Single, Single, Alignment)
+- uid: SimulationFramework.Drawing.ICanvas.DrawCircle(SimulationFramework.Circle)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawCircle(SimulationFramework.Circle)
+  id: DrawCircle(SimulationFramework.Circle)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawCircle(Circle)
+  nameWithType: ICanvas.DrawCircle(Circle)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawCircle(SimulationFramework.Circle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawCircle
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 184
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a circle to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawCircle(Circle circle)
+    parameters:
+    - id: circle
+      type: SimulationFramework.Circle
+      description: The circle to draw.
+    content.vb: Sub DrawCircle(circle As Circle)
+  overload: SimulationFramework.Drawing.ICanvas.DrawCircle*
+- uid: SimulationFramework.Drawing.ICanvas.DrawCircle(System.Numerics.Vector2,System.Single,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawCircle(System.Numerics.Vector2,System.Single,SimulationFramework.Alignment)
+  id: DrawCircle(System.Numerics.Vector2,System.Single,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawCircle(Vector2, float, Alignment)
+  nameWithType: ICanvas.DrawCircle(Vector2, float, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawCircle(System.Numerics.Vector2, float, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawCircle
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 192
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a circle to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawCircle(Vector2 position, float radius, Alignment alignment = Alignment.Center)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+      description: The position of the circle.
+    - id: radius
+      type: System.Single
+      description: The radius of the circle on the x-axis.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the bounding-box of the circle to align to the provided position.
+    content.vb: Sub DrawCircle(position As Vector2, radius As Single, alignment As Alignment = Alignment.Center)
+  overload: SimulationFramework.Drawing.ICanvas.DrawCircle*
+  nameWithType.vb: ICanvas.DrawCircle(Vector2, Single, Alignment)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawCircle(System.Numerics.Vector2, Single, SimulationFramework.Alignment)
+  name.vb: DrawCircle(Vector2, Single, Alignment)
+- uid: SimulationFramework.Drawing.ICanvas.DrawEllipse(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawEllipse(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  id: DrawEllipse(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawEllipse(float, float, float, float, Alignment)
+  nameWithType: ICanvas.DrawEllipse(float, float, float, float, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawEllipse(float, float, float, float, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawEllipse
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 202
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws an ellipse to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawEllipse(float x, float y, float radiusX, float radiusY, Alignment alignment = Alignment.Center)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The x-coordinate of the ellipse.
+    - id: y
+      type: System.Single
+      description: The y-coordinate of the ellipse.
+    - id: radiusX
+      type: System.Single
+      description: The radius of the ellipse on the x-axis.
+    - id: radiusY
+      type: System.Single
+      description: The radius of the ellipse on the y-axis.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the bounding-box of the ellipse to align to the provided position
+    content.vb: Sub DrawEllipse(x As Single, y As Single, radiusX As Single, radiusY As Single, alignment As Alignment = Alignment.Center)
+  overload: SimulationFramework.Drawing.ICanvas.DrawEllipse*
+  nameWithType.vb: ICanvas.DrawEllipse(Single, Single, Single, Single, Alignment)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawEllipse(Single, Single, Single, Single, SimulationFramework.Alignment)
+  name.vb: DrawEllipse(Single, Single, Single, Single, Alignment)
+- uid: SimulationFramework.Drawing.ICanvas.DrawEllipse(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawEllipse(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  id: DrawEllipse(System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawEllipse(Vector2, Vector2, Alignment)
+  nameWithType: ICanvas.DrawEllipse(Vector2, Vector2, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawEllipse(System.Numerics.Vector2, System.Numerics.Vector2, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawEllipse
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 210
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws an ellipse to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawEllipse(Vector2 position, Vector2 radii, Alignment alignment = Alignment.Center)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+      description: The position of the rectangle.
+    - id: radii
+      type: System.Numerics.Vector2
+      description: The radii of the ellipse.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the bounding-box of the ellipse to align to the provided position.
+    content.vb: Sub DrawEllipse(position As Vector2, radii As Vector2, alignment As Alignment = Alignment.Center)
+  overload: SimulationFramework.Drawing.ICanvas.DrawEllipse*
+- uid: SimulationFramework.Drawing.ICanvas.DrawEllipse(SimulationFramework.Rectangle)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawEllipse(SimulationFramework.Rectangle)
+  id: DrawEllipse(SimulationFramework.Rectangle)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawEllipse(Rectangle)
+  nameWithType: ICanvas.DrawEllipse(Rectangle)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawEllipse(SimulationFramework.Rectangle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawEllipse
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 216
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws an ellipse to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawEllipse(Rectangle bounds)
+    parameters:
+    - id: bounds
+      type: SimulationFramework.Rectangle
+      description: The bounds into which the drawn ellipse should fit.
+    content.vb: Sub DrawEllipse(bounds As Rectangle)
+  overload: SimulationFramework.Drawing.ICanvas.DrawEllipse*
+- uid: SimulationFramework.Drawing.ICanvas.DrawArc(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Boolean,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawArc(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Boolean,SimulationFramework.Alignment)
+  id: DrawArc(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Boolean,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawArc(float, float, float, float, float, float, bool, Alignment)
+  nameWithType: ICanvas.DrawArc(float, float, float, float, float, float, bool, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawArc(float, float, float, float, float, float, bool, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawArc
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 229
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a segment of an ellipse to the canvas to form an arc, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawArc(float x, float y, float radiusX, float radiusY, float begin, float end, bool includeCenter, Alignment alignment = Alignment.Center)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The x-coordinate of the ellipse.
+    - id: y
+      type: System.Single
+      description: The y-coordinate of the ellipse.
+    - id: radiusX
+      type: System.Single
+      description: The radius of the ellipse on the x-axis.
+    - id: radiusY
+      type: System.Single
+      description: The radius of the ellipse on the y-axis.
+    - id: begin
+      type: System.Single
+      description: The angle at which the ellipse segment begins.
+    - id: end
+      type: System.Single
+      description: The angle at which the ellipse segment begins.
+    - id: includeCenter
+      type: System.Boolean
+      description: Whether the arc's endpoints should connect to one other or to the center of the ellipse.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the bounding-box of the ellipse to align to the provided position
+    content.vb: Sub DrawArc(x As Single, y As Single, radiusX As Single, radiusY As Single, begin As Single, [end] As Single, includeCenter As Boolean, alignment As Alignment = Alignment.Center)
+  overload: SimulationFramework.Drawing.ICanvas.DrawArc*
+  nameWithType.vb: ICanvas.DrawArc(Single, Single, Single, Single, Single, Single, Boolean, Alignment)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawArc(Single, Single, Single, Single, Single, Single, Boolean, SimulationFramework.Alignment)
+  name.vb: DrawArc(Single, Single, Single, Single, Single, Single, Boolean, Alignment)
+- uid: SimulationFramework.Drawing.ICanvas.DrawArc(System.Numerics.Vector2,System.Numerics.Vector2,System.Single,System.Single,System.Boolean,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawArc(System.Numerics.Vector2,System.Numerics.Vector2,System.Single,System.Single,System.Boolean,SimulationFramework.Alignment)
+  id: DrawArc(System.Numerics.Vector2,System.Numerics.Vector2,System.Single,System.Single,System.Boolean,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawArc(Vector2, Vector2, float, float, bool, Alignment)
+  nameWithType: ICanvas.DrawArc(Vector2, Vector2, float, float, bool, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawArc(System.Numerics.Vector2, System.Numerics.Vector2, float, float, bool, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawArc
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 240
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a segment of an ellipse to the canvas to form an arc, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawArc(Vector2 position, Vector2 radii, float begin, float end, bool includeCenter, Alignment alignment = Alignment.Center)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+      description: The position of the rectangle.
+    - id: radii
+      type: System.Numerics.Vector2
+      description: The radii of the ellipse.
+    - id: begin
+      type: System.Single
+      description: The angle at which the ellipse segment begins.
+    - id: end
+      type: System.Single
+      description: The angle at which the ellipse segment begins.
+    - id: includeCenter
+      type: System.Boolean
+      description: Whether the arc's endpoints include its center or just connect its endpoints.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the bounding-box of the ellipse to align to the provided position.
+    content.vb: Sub DrawArc(position As Vector2, radii As Vector2, begin As Single, [end] As Single, includeCenter As Boolean, alignment As Alignment = Alignment.Center)
+  overload: SimulationFramework.Drawing.ICanvas.DrawArc*
+  nameWithType.vb: ICanvas.DrawArc(Vector2, Vector2, Single, Single, Boolean, Alignment)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawArc(System.Numerics.Vector2, System.Numerics.Vector2, Single, Single, Boolean, SimulationFramework.Alignment)
+  name.vb: DrawArc(Vector2, Vector2, Single, Single, Boolean, Alignment)
+- uid: SimulationFramework.Drawing.ICanvas.DrawArc(SimulationFramework.Rectangle,System.Single,System.Single,System.Boolean)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawArc(SimulationFramework.Rectangle,System.Single,System.Single,System.Boolean)
+  id: DrawArc(SimulationFramework.Rectangle,System.Single,System.Single,System.Boolean)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawArc(Rectangle, float, float, bool)
+  nameWithType: ICanvas.DrawArc(Rectangle, float, float, bool)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawArc(SimulationFramework.Rectangle, float, float, bool)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawArc
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 249
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a segment of an ellipse to the canvas to form an arc, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter)
+    parameters:
+    - id: bounds
+      type: SimulationFramework.Rectangle
+      description: The bounds of the ellipse.
+    - id: begin
+      type: System.Single
+      description: The angle at which the ellipse segment begins.
+    - id: end
+      type: System.Single
+      description: The angle at which the ellipse segment begins.
+    - id: includeCenter
+      type: System.Boolean
+      description: Whether the arc's endpoints include its center or just connect its endpoints.
+    content.vb: Sub DrawArc(bounds As Rectangle, begin As Single, [end] As Single, includeCenter As Boolean)
+  overload: SimulationFramework.Drawing.ICanvas.DrawArc*
+  nameWithType.vb: ICanvas.DrawArc(Rectangle, Single, Single, Boolean)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawArc(SimulationFramework.Rectangle, Single, Single, Boolean)
+  name.vb: DrawArc(Rectangle, Single, Single, Boolean)
+- uid: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Alignment)
+  id: DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawTexture(ITexture, Alignment)
+  nameWithType: ICanvas.DrawTexture(ITexture, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawTexture
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 256
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a texture to the canvas at (0, 0), using the current transform and clipping settings.
+  example: []
+  syntax:
+    content: void DrawTexture(ITexture texture, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: texture
+      type: SimulationFramework.Drawing.ITexture
+      description: The texture to draw.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the texture to align to (0, 0).
+    content.vb: Sub DrawTexture(texture As ITexture, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Drawing.ICanvas.DrawTexture*
+- uid: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,System.Single,System.Single,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,System.Single,System.Single,SimulationFramework.Alignment)
+  id: DrawTexture(SimulationFramework.Drawing.ITexture,System.Single,System.Single,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawTexture(ITexture, float, float, Alignment)
+  nameWithType: ICanvas.DrawTexture(ITexture, float, float, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture, float, float, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawTexture
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 265
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a texture to the canvas using the current transform and clipping settings.
+  example: []
+  syntax:
+    content: void DrawTexture(ITexture texture, float x, float y, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: texture
+      type: SimulationFramework.Drawing.ITexture
+      description: The texture to draw.
+    - id: x
+      type: System.Single
+      description: The x-position of the texture.
+    - id: y
+      type: System.Single
+      description: The y-position of the texture.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the texture to align to the provided position.
+    content.vb: Sub DrawTexture(texture As ITexture, x As Single, y As Single, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Drawing.ICanvas.DrawTexture*
+  nameWithType.vb: ICanvas.DrawTexture(ITexture, Single, Single, Alignment)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture, Single, Single, SimulationFramework.Alignment)
+  name.vb: DrawTexture(ITexture, Single, Single, Alignment)
+- uid: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,System.Numerics.Vector2,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,System.Numerics.Vector2,SimulationFramework.Alignment)
+  id: DrawTexture(SimulationFramework.Drawing.ITexture,System.Numerics.Vector2,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawTexture(ITexture, Vector2, Alignment)
+  nameWithType: ICanvas.DrawTexture(ITexture, Vector2, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture, System.Numerics.Vector2, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawTexture
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 273
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a texture to the canvas using the current transform and clipping settings.
+  example: []
+  syntax:
+    content: void DrawTexture(ITexture texture, Vector2 position, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: texture
+      type: SimulationFramework.Drawing.ITexture
+      description: The texture to draw.
+    - id: position
+      type: System.Numerics.Vector2
+      description: The position of the texture's destination rectangle.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the texture to align to the provided position.
+    content.vb: Sub DrawTexture(texture As ITexture, position As Vector2, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Drawing.ICanvas.DrawTexture*
+- uid: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  id: DrawTexture(SimulationFramework.Drawing.ITexture,System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawTexture(ITexture, float, float, float, float, Alignment)
+  nameWithType: ICanvas.DrawTexture(ITexture, float, float, float, float, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture, float, float, float, float, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawTexture
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 284
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a texture to the canvas using the current transform and clipping settings.
+  example: []
+  syntax:
+    content: void DrawTexture(ITexture texture, float x, float y, float width, float height, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: texture
+      type: SimulationFramework.Drawing.ITexture
+      description: The texture to draw.
+    - id: x
+      type: System.Single
+      description: The x-position of the texture.
+    - id: y
+      type: System.Single
+      description: The y-position of the texture.
+    - id: width
+      type: System.Single
+      description: The width of the texture destination.
+    - id: height
+      type: System.Single
+      description: The height of the texture destination.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the texture to align to the provided position.
+    content.vb: Sub DrawTexture(texture As ITexture, x As Single, y As Single, width As Single, height As Single, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Drawing.ICanvas.DrawTexture*
+  nameWithType.vb: ICanvas.DrawTexture(ITexture, Single, Single, Single, Single, Alignment)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture, Single, Single, Single, Single, SimulationFramework.Alignment)
+  name.vb: DrawTexture(ITexture, Single, Single, Single, Single, Alignment)
+- uid: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  id: DrawTexture(SimulationFramework.Drawing.ITexture,System.Numerics.Vector2,System.Numerics.Vector2,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawTexture(ITexture, Vector2, Vector2, Alignment)
+  nameWithType: ICanvas.DrawTexture(ITexture, Vector2, Vector2, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture, System.Numerics.Vector2, System.Numerics.Vector2, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawTexture
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 293
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a texture to the canvas using the current transform and clipping settings.
+  example: []
+  syntax:
+    content: void DrawTexture(ITexture texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: texture
+      type: SimulationFramework.Drawing.ITexture
+      description: The texture to draw.
+    - id: position
+      type: System.Numerics.Vector2
+      description: The position of the texture's destination rectangle.
+    - id: size
+      type: System.Numerics.Vector2
+      description: The size of the texture's destination rectangle.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the texture to align to the provided position.
+    content.vb: Sub DrawTexture(texture As ITexture, position As Vector2, size As Vector2, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Drawing.ICanvas.DrawTexture*
+- uid: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Rectangle)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Rectangle)
+  id: DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Rectangle)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawTexture(ITexture, Rectangle)
+  nameWithType: ICanvas.DrawTexture(ITexture, Rectangle)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture, SimulationFramework.Rectangle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawTexture
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 300
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a texture to the canvas using the current transform and clipping settings.
+  example: []
+  syntax:
+    content: void DrawTexture(ITexture texture, Rectangle destination)
+    parameters:
+    - id: texture
+      type: SimulationFramework.Drawing.ITexture
+      description: The texture to draw.
+    - id: destination
+      type: SimulationFramework.Rectangle
+      description: The location to draw the texture.
+    content.vb: Sub DrawTexture(texture As ITexture, destination As Rectangle)
+  overload: SimulationFramework.Drawing.ICanvas.DrawTexture*
+- uid: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  id: DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Rectangle,SimulationFramework.Rectangle)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawTexture(ITexture, Rectangle, Rectangle)
+  nameWithType: ICanvas.DrawTexture(ITexture, Rectangle, Rectangle)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture, SimulationFramework.Rectangle, SimulationFramework.Rectangle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawTexture
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 308
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a texture to the canvas, using the current transform and clipping settings.
+  example: []
+  syntax:
+    content: void DrawTexture(ITexture texture, Rectangle source, Rectangle destination)
+    parameters:
+    - id: texture
+      type: SimulationFramework.Drawing.ITexture
+      description: The texture to draw.
+    - id: source
+      type: SimulationFramework.Rectangle
+      description: The source bounds of the texture.
+    - id: destination
+      type: SimulationFramework.Rectangle
+      description: The destination bounds of the texture.
+    content.vb: Sub DrawTexture(texture As ITexture, source As Rectangle, destination As Rectangle)
+  overload: SimulationFramework.Drawing.ICanvas.DrawTexture*
+- uid: SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Span{System.Numerics.Vector2})
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Span{System.Numerics.Vector2})
+  id: DrawPolygon(System.Span{System.Numerics.Vector2})
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawPolygon(Span<Vector2>)
+  nameWithType: ICanvas.DrawPolygon(Span<Vector2>)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Span<System.Numerics.Vector2>)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawPolygon
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 314
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawPolygon(Span<Vector2> polygon)
+    parameters:
+    - id: polygon
+      type: System.Span{System.Numerics.Vector2}
+      description: The vertices of the polygon.
+    content.vb: Sub DrawPolygon(polygon As Span(Of Vector2))
+  overload: SimulationFramework.Drawing.ICanvas.DrawPolygon*
+  nameWithType.vb: ICanvas.DrawPolygon(Span(Of Vector2))
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Span(Of System.Numerics.Vector2))
+  name.vb: DrawPolygon(Span(Of Vector2))
+- uid: SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Collections.Generic.IEnumerable{System.Numerics.Vector2})
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Collections.Generic.IEnumerable{System.Numerics.Vector2})
+  id: DrawPolygon(System.Collections.Generic.IEnumerable{System.Numerics.Vector2})
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawPolygon(IEnumerable<Vector2>)
+  nameWithType: ICanvas.DrawPolygon(IEnumerable<Vector2>)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Collections.Generic.IEnumerable<System.Numerics.Vector2>)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawPolygon
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 324
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: >-
+    Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
+
+    <p>
+
+    If the current <xref href="SimulationFramework.Drawing.DrawMode" data-throw-if-not-resolved="false"></xref> is <xref href="SimulationFramework.Drawing.DrawMode.Fill" data-throw-if-not-resolved="false"></xref> or <xref href="SimulationFramework.Drawing.DrawMode.Gradient" data-throw-if-not-resolved="false"></xref>,
+
+    the first and last vertices are connected to create a closed polygon.
+
+    </p>
+  example: []
+  syntax:
+    content: void DrawPolygon(IEnumerable<Vector2> polygon)
+    parameters:
+    - id: polygon
+      type: System.Collections.Generic.IEnumerable{System.Numerics.Vector2}
+      description: The vertices of the polygon.
+    content.vb: Sub DrawPolygon(polygon As IEnumerable(Of Vector2))
+  overload: SimulationFramework.Drawing.ICanvas.DrawPolygon*
+  nameWithType.vb: ICanvas.DrawPolygon(IEnumerable(Of Vector2))
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Collections.Generic.IEnumerable(Of System.Numerics.Vector2))
+  name.vb: DrawPolygon(IEnumerable(Of Vector2))
+- uid: SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Numerics.Vector2[])
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Numerics.Vector2[])
+  id: DrawPolygon(System.Numerics.Vector2[])
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawPolygon(Vector2[])
+  nameWithType: ICanvas.DrawPolygon(Vector2[])
+  fullName: SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Numerics.Vector2[])
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawPolygon
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 337
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: >-
+    Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
+
+    <p>
+
+    If the current <xref href="SimulationFramework.Drawing.DrawMode" data-throw-if-not-resolved="false"></xref> is <xref href="SimulationFramework.Drawing.DrawMode.Fill" data-throw-if-not-resolved="false"></xref> or <xref href="SimulationFramework.Drawing.DrawMode.Gradient" data-throw-if-not-resolved="false"></xref>,
+
+    the first and last vertices are connected to create a closed polygon.
+
+    </p>
+  example: []
+  syntax:
+    content: void DrawPolygon(Vector2[] polygon)
+    parameters:
+    - id: polygon
+      type: System.Numerics.Vector2[]
+      description: The vertices of the polygon.
+    content.vb: Sub DrawPolygon(polygon As Vector2())
+  overload: SimulationFramework.Drawing.ICanvas.DrawPolygon*
+  nameWithType.vb: ICanvas.DrawPolygon(Vector2())
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Numerics.Vector2())
+  name.vb: DrawPolygon(Vector2())
+- uid: SimulationFramework.Drawing.ICanvas.DrawText(System.String,System.Single,System.Single,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawText(System.String,System.Single,System.Single,SimulationFramework.Alignment)
+  id: DrawText(System.String,System.Single,System.Single,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawText(string, float, float, Alignment)
+  nameWithType: ICanvas.DrawText(string, float, float, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawText(string, float, float, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawText
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 346
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawText(string text, float x, float y, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: text
+      type: System.String
+      description: The text to draw.
+    - id: x
+      type: System.Single
+      description: The X position of the text.
+    - id: y
+      type: System.Single
+      description: The Y position of the text.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the text's bounding box to align to the provided position.
+    content.vb: Sub DrawText(text As String, x As Single, y As Single, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Drawing.ICanvas.DrawText*
+  nameWithType.vb: ICanvas.DrawText(String, Single, Single, Alignment)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawText(String, Single, Single, SimulationFramework.Alignment)
+  name.vb: DrawText(String, Single, Single, Alignment)
+- uid: SimulationFramework.Drawing.ICanvas.DrawText(System.String,System.Numerics.Vector2,SimulationFramework.Alignment)
+  commentId: M:SimulationFramework.Drawing.ICanvas.DrawText(System.String,System.Numerics.Vector2,SimulationFramework.Alignment)
+  id: DrawText(System.String,System.Numerics.Vector2,SimulationFramework.Alignment)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: DrawText(string, Vector2, Alignment)
+  nameWithType: ICanvas.DrawText(string, Vector2, Alignment)
+  fullName: SimulationFramework.Drawing.ICanvas.DrawText(string, System.Numerics.Vector2, SimulationFramework.Alignment)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DrawText
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 354
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
+  example: []
+  syntax:
+    content: void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft)
+    parameters:
+    - id: text
+      type: System.String
+      description: The text to draw.
+    - id: position
+      type: System.Numerics.Vector2
+      description: The position of the text.
+    - id: alignment
+      type: SimulationFramework.Alignment
+      description: The point on the text's bounding box to align to the provided position.
+    content.vb: Sub DrawText(text As String, position As Vector2, alignment As Alignment = Alignment.TopLeft)
+  overload: SimulationFramework.Drawing.ICanvas.DrawText*
+  nameWithType.vb: ICanvas.DrawText(String, Vector2, Alignment)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.DrawText(String, System.Numerics.Vector2, SimulationFramework.Alignment)
+  name.vb: DrawText(String, Vector2, Alignment)
+- uid: SimulationFramework.Drawing.ICanvas.MeasureText(System.String)
+  commentId: M:SimulationFramework.Drawing.ICanvas.MeasureText(System.String)
+  id: MeasureText(System.String)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: MeasureText(string)
+  nameWithType: ICanvas.MeasureText(string)
+  fullName: SimulationFramework.Drawing.ICanvas.MeasureText(string)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: MeasureText
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 361
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Determines the size of the provided text based on the current font selection.
+  example: []
+  syntax:
+    content: Vector2 MeasureText(string text)
+    parameters:
+    - id: text
+      type: System.String
+      description: The text to measure.
+    return:
+      type: System.Numerics.Vector2
+      description: The width and height of the provided text's bounds.
+    content.vb: Function MeasureText(text As String) As Vector2
+  overload: SimulationFramework.Drawing.ICanvas.MeasureText*
+  nameWithType.vb: ICanvas.MeasureText(String)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.MeasureText(String)
+  name.vb: MeasureText(String)
+- uid: SimulationFramework.Drawing.ICanvas.MeasureText(System.String,System.Single,System.Int32@)
+  commentId: M:SimulationFramework.Drawing.ICanvas.MeasureText(System.String,System.Single,System.Int32@)
+  id: MeasureText(System.String,System.Single,System.Int32@)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: MeasureText(string, float, out int)
+  nameWithType: ICanvas.MeasureText(string, float, out int)
+  fullName: SimulationFramework.Drawing.ICanvas.MeasureText(string, float, out int)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: MeasureText
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 372
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: >-
+    Determines the size of the provided text based on the current font selection,
+
+    stopping if the string's length exceeds a maximum.
+  example: []
+  syntax:
+    content: Vector2 MeasureText(string text, float maxLength, out int charsMeasured)
+    parameters:
+    - id: text
+      type: System.String
+      description: The text to measure.
+    - id: maxLength
+      type: System.Single
+      description: The maximum length of the string.
+    - id: charsMeasured
+      type: System.Int32
+      description: >-
+        The number of characters measured before measuring stopped,
+            or the length of <code class="paramref">text</code> if the entire string was measured.
+    return:
+      type: System.Numerics.Vector2
+      description: The width and height of the provided text's bounds.
+    content.vb: Function MeasureText(text As String, maxLength As Single, charsMeasured As Integer) As Vector2
+  overload: SimulationFramework.Drawing.ICanvas.MeasureText*
+  nameWithType.vb: ICanvas.MeasureText(String, Single, Integer)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.MeasureText(String, Single, Integer)
+  name.vb: MeasureText(String, Single, Integer)
+- uid: SimulationFramework.Drawing.ICanvas.Font(System.String)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Font(System.String)
+  id: Font(System.String)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Font(string)
+  nameWithType: ICanvas.Font(string)
+  fullName: SimulationFramework.Drawing.ICanvas.Font(string)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Font
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 379
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Sets a font with the specified attributes as current (and loads it if it is not already loaded).
+  example: []
+  syntax:
+    content: void Font(string name)
+    parameters:
+    - id: name
+      type: System.String
+      description: The name of the font to load.
+    content.vb: Sub Font(name As String)
+  overload: SimulationFramework.Drawing.ICanvas.Font*
+  nameWithType.vb: ICanvas.Font(String)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.Font(String)
+  name.vb: Font(String)
+- uid: SimulationFramework.Drawing.ICanvas.FontStyle(System.Single,SimulationFramework.Drawing.FontStyle)
+  commentId: M:SimulationFramework.Drawing.ICanvas.FontStyle(System.Single,SimulationFramework.Drawing.FontStyle)
+  id: FontStyle(System.Single,SimulationFramework.Drawing.FontStyle)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: FontStyle(float, FontStyle)
+  nameWithType: ICanvas.FontStyle(float, FontStyle)
+  fullName: SimulationFramework.Drawing.ICanvas.FontStyle(float, SimulationFramework.Drawing.FontStyle)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: FontStyle
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 386
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Configures the style of the current font.
+  example: []
+  syntax:
+    content: void FontStyle(float size, FontStyle style)
+    parameters:
+    - id: size
+      type: System.Single
+      description: The size of the font.
+    - id: style
+      type: SimulationFramework.Drawing.FontStyle
+      description: The style of the font.
+    content.vb: Sub FontStyle(size As Single, style As FontStyle)
+  overload: SimulationFramework.Drawing.ICanvas.FontStyle*
+  nameWithType.vb: ICanvas.FontStyle(Single, FontStyle)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.FontStyle(Single, SimulationFramework.Drawing.FontStyle)
+  name.vb: FontStyle(Single, FontStyle)
+- uid: SimulationFramework.Drawing.ICanvas.PushState
+  commentId: M:SimulationFramework.Drawing.ICanvas.PushState
+  id: PushState
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: PushState()
+  nameWithType: ICanvas.PushState()
+  fullName: SimulationFramework.Drawing.ICanvas.PushState()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: PushState
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 391
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Pushes the current transformation matrix, clipping rectangle, and drawing state onto the stack.
+  example: []
+  syntax:
+    content: void PushState()
+    content.vb: Sub PushState()
+  overload: SimulationFramework.Drawing.ICanvas.PushState*
+- uid: SimulationFramework.Drawing.ICanvas.PopState
+  commentId: M:SimulationFramework.Drawing.ICanvas.PopState
+  id: PopState
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: PopState()
+  nameWithType: ICanvas.PopState()
+  fullName: SimulationFramework.Drawing.ICanvas.PopState()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: PopState
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 396
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Pops a transformation matrix, clipping rectangle, and drawing state off the top of the stack.
+  example: []
+  syntax:
+    content: void PopState()
+    content.vb: Sub PopState()
+  overload: SimulationFramework.Drawing.ICanvas.PopState*
+- uid: SimulationFramework.Drawing.ICanvas.ResetState
+  commentId: M:SimulationFramework.Drawing.ICanvas.ResetState
+  id: ResetState
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: ResetState()
+  nameWithType: ICanvas.ResetState()
+  fullName: SimulationFramework.Drawing.ICanvas.ResetState()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: ResetState
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 401
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Resets the transformation matrix, clipping rectangle, and drawing state to their defaults.
+  example: []
+  syntax:
+    content: void ResetState()
+    content.vb: Sub ResetState()
+  overload: SimulationFramework.Drawing.ICanvas.ResetState*
+- uid: SimulationFramework.Drawing.ICanvas.SetTransform(System.Numerics.Matrix3x2)
+  commentId: M:SimulationFramework.Drawing.ICanvas.SetTransform(System.Numerics.Matrix3x2)
+  id: SetTransform(System.Numerics.Matrix3x2)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: SetTransform(Matrix3x2)
+  nameWithType: ICanvas.SetTransform(Matrix3x2)
+  fullName: SimulationFramework.Drawing.ICanvas.SetTransform(System.Numerics.Matrix3x2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: SetTransform
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 406
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Sets the canvas' transformation matrix.
+  example: []
+  syntax:
+    content: void SetTransform(Matrix3x2 transform)
+    parameters:
+    - id: transform
+      type: System.Numerics.Matrix3x2
+    content.vb: Sub SetTransform(transform As Matrix3x2)
+  overload: SimulationFramework.Drawing.ICanvas.SetTransform*
+- uid: SimulationFramework.Drawing.ICanvas.Transform(System.Numerics.Matrix3x2)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Transform(System.Numerics.Matrix3x2)
+  id: Transform(System.Numerics.Matrix3x2)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Transform(Matrix3x2)
+  nameWithType: ICanvas.Transform(Matrix3x2)
+  fullName: SimulationFramework.Drawing.ICanvas.Transform(System.Numerics.Matrix3x2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Transform
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 411
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Composes the provided transformation with the canvas' current transform.
+  example: []
+  syntax:
+    content: void Transform(Matrix3x2 transformation)
+    parameters:
+    - id: transformation
+      type: System.Numerics.Matrix3x2
+    content.vb: Sub Transform(transformation As Matrix3x2)
+  overload: SimulationFramework.Drawing.ICanvas.Transform*
+- uid: SimulationFramework.Drawing.ICanvas.Translate(System.Single,System.Single)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Translate(System.Single,System.Single)
+  id: Translate(System.Single,System.Single)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Translate(float, float)
+  nameWithType: ICanvas.Translate(float, float)
+  fullName: SimulationFramework.Drawing.ICanvas.Translate(float, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Translate
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 418
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Translates the current transformation matrix by the provided translation.
+  example: []
+  syntax:
+    content: void Translate(float x, float y)
+    parameters:
+    - id: x
+      type: System.Single
+      description: The X value of the translation.
+    - id: y
+      type: System.Single
+      description: The Y value of the translation.
+    content.vb: Sub Translate(x As Single, y As Single)
+  overload: SimulationFramework.Drawing.ICanvas.Translate*
+  nameWithType.vb: ICanvas.Translate(Single, Single)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.Translate(Single, Single)
+  name.vb: Translate(Single, Single)
+- uid: SimulationFramework.Drawing.ICanvas.Translate(System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Translate(System.Numerics.Vector2)
+  id: Translate(System.Numerics.Vector2)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Translate(Vector2)
+  nameWithType: ICanvas.Translate(Vector2)
+  fullName: SimulationFramework.Drawing.ICanvas.Translate(System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Translate
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 424
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Translates the current transformation matrix by the provided translation.
+  example: []
+  syntax:
+    content: void Translate(Vector2 translation)
+    parameters:
+    - id: translation
+      type: System.Numerics.Vector2
+      description: The value of the translation.
+    content.vb: Sub Translate(translation As Vector2)
+  overload: SimulationFramework.Drawing.ICanvas.Translate*
+- uid: SimulationFramework.Drawing.ICanvas.Rotate(System.Single)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Rotate(System.Single)
+  id: Rotate(System.Single)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Rotate(float)
+  nameWithType: ICanvas.Rotate(float)
+  fullName: SimulationFramework.Drawing.ICanvas.Rotate(float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Rotate
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 430
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Rotates the current transformation matrix center around the current translation by the provided angle.
+  example: []
+  syntax:
+    content: void Rotate(float angle)
+    parameters:
+    - id: angle
+      type: System.Single
+      description: The angle of the rotation, in radians.
+    content.vb: Sub Rotate(angle As Single)
+  overload: SimulationFramework.Drawing.ICanvas.Rotate*
+  nameWithType.vb: ICanvas.Rotate(Single)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.Rotate(Single)
+  name.vb: Rotate(Single)
+- uid: SimulationFramework.Drawing.ICanvas.Rotate(System.Single,System.Single,System.Single)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Rotate(System.Single,System.Single,System.Single)
+  id: Rotate(System.Single,System.Single,System.Single)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Rotate(float, float, float)
+  nameWithType: ICanvas.Rotate(float, float, float)
+  fullName: SimulationFramework.Drawing.ICanvas.Rotate(float, float, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Rotate
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 438
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Rotates the current transformation matrix around the provided point by the provided angle.
+  example: []
+  syntax:
+    content: void Rotate(float angle, float centerX, float centerY)
+    parameters:
+    - id: angle
+      type: System.Single
+      description: The angle of the rotation, in radians.
+    - id: centerX
+      type: System.Single
+      description: The X coordinate of the point around which the rotation occurs.
+    - id: centerY
+      type: System.Single
+      description: The Y coordinate of the point around which the rotation occurs.
+    content.vb: Sub Rotate(angle As Single, centerX As Single, centerY As Single)
+  overload: SimulationFramework.Drawing.ICanvas.Rotate*
+  nameWithType.vb: ICanvas.Rotate(Single, Single, Single)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.Rotate(Single, Single, Single)
+  name.vb: Rotate(Single, Single, Single)
+- uid: SimulationFramework.Drawing.ICanvas.Rotate(System.Single,System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Rotate(System.Single,System.Numerics.Vector2)
+  id: Rotate(System.Single,System.Numerics.Vector2)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Rotate(float, Vector2)
+  nameWithType: ICanvas.Rotate(float, Vector2)
+  fullName: SimulationFramework.Drawing.ICanvas.Rotate(float, System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Rotate
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 445
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Rotates the current transformation matrix around the provided point by the provided angle.
+  example: []
+  syntax:
+    content: void Rotate(float angle, Vector2 center)
+    parameters:
+    - id: angle
+      type: System.Single
+      description: The angle of the rotation, in radians.
+    - id: center
+      type: System.Numerics.Vector2
+      description: The point around which the rotation occurs.
+    content.vb: Sub Rotate(angle As Single, center As Vector2)
+  overload: SimulationFramework.Drawing.ICanvas.Rotate*
+  nameWithType.vb: ICanvas.Rotate(Single, Vector2)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.Rotate(Single, System.Numerics.Vector2)
+  name.vb: Rotate(Single, Vector2)
+- uid: SimulationFramework.Drawing.ICanvas.Scale(System.Single)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Scale(System.Single)
+  id: Scale(System.Single)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Scale(float)
+  nameWithType: ICanvas.Scale(float)
+  fullName: SimulationFramework.Drawing.ICanvas.Scale(float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Scale
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 451
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Scales the current transformation matrix by the provided value.
+  example: []
+  syntax:
+    content: void Scale(float scale)
+    parameters:
+    - id: scale
+      type: System.Single
+      description: The scale to transform the transformation matrix by.
+    content.vb: Sub Scale(scale As Single)
+  overload: SimulationFramework.Drawing.ICanvas.Scale*
+  nameWithType.vb: ICanvas.Scale(Single)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.Scale(Single)
+  name.vb: Scale(Single)
+- uid: SimulationFramework.Drawing.ICanvas.Scale(System.Single,System.Single)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Scale(System.Single,System.Single)
+  id: Scale(System.Single,System.Single)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Scale(float, float)
+  nameWithType: ICanvas.Scale(float, float)
+  fullName: SimulationFramework.Drawing.ICanvas.Scale(float, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Scale
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 458
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Scales the current transformation matrix by the provided values.
+  example: []
+  syntax:
+    content: void Scale(float scaleX, float scaleY)
+    parameters:
+    - id: scaleX
+      type: System.Single
+      description: The scale to transform the transformation matrix by on the x-axis.
+    - id: scaleY
+      type: System.Single
+      description: The scale to transform the transformation matrix by on the y-axis.
+    content.vb: Sub Scale(scaleX As Single, scaleY As Single)
+  overload: SimulationFramework.Drawing.ICanvas.Scale*
+  nameWithType.vb: ICanvas.Scale(Single, Single)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.Scale(Single, Single)
+  name.vb: Scale(Single, Single)
+- uid: SimulationFramework.Drawing.ICanvas.Scale(System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Drawing.ICanvas.Scale(System.Numerics.Vector2)
+  id: Scale(System.Numerics.Vector2)
+  parent: SimulationFramework.Drawing.ICanvas
+  langs:
+  - csharp
+  - vb
+  name: Scale(Vector2)
+  nameWithType: ICanvas.Scale(Vector2)
+  fullName: SimulationFramework.Drawing.ICanvas.Scale(System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/ICanvas.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Scale
+    path: src/SimulationFramework/Drawing/ICanvas.cs
+    startLine: 464
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  summary: Scales the current transformation matrix by the provided value.
+  example: []
+  syntax:
+    content: void Scale(Vector2 scale)
+    parameters:
+    - id: scale
+      type: System.Numerics.Vector2
+      description: The scales to transform the transformation matrix by on the X and Y axes.
+    content.vb: Sub Scale(scale As Vector2)
+  overload: SimulationFramework.Drawing.ICanvas.Scale*
+references:
+- uid: SimulationFramework.Drawing
+  commentId: N:SimulationFramework.Drawing
+  href: SimulationFramework.html
+  name: SimulationFramework.Drawing
+  nameWithType: SimulationFramework.Drawing
+  fullName: SimulationFramework.Drawing
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Drawing
+    name: Drawing
+    href: SimulationFramework.Drawing.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Drawing
+    name: Drawing
+    href: SimulationFramework.Drawing.html
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: SimulationFramework.Drawing.ICanvas.Width*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Width
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Width
+  name: Width
+  nameWithType: ICanvas.Width
+  fullName: SimulationFramework.Drawing.ICanvas.Width
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: SimulationFramework.Drawing.ICanvas.Height*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Height
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Height
+  name: Height
+  nameWithType: ICanvas.Height
+  fullName: SimulationFramework.Drawing.ICanvas.Height
+- uid: SimulationFramework.Drawing.ICanvas.Target*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Target
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Target
+  name: Target
+  nameWithType: ICanvas.Target
+  fullName: SimulationFramework.Drawing.ICanvas.Target
+- uid: SimulationFramework.Drawing.ITexture
+  commentId: T:SimulationFramework.Drawing.ITexture
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.ITexture.html
+  name: ITexture
+  nameWithType: ITexture
+  fullName: SimulationFramework.Drawing.ITexture
+- uid: SimulationFramework.Drawing.ICanvas.State*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.State
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.State
+  name: State
+  nameWithType: ICanvas.State
+  fullName: SimulationFramework.Drawing.ICanvas.State
+- uid: SimulationFramework.Drawing.CanvasState
+  commentId: T:SimulationFramework.Drawing.CanvasState
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.CanvasState.html
+  name: CanvasState
+  nameWithType: CanvasState
+  fullName: SimulationFramework.Drawing.CanvasState
+- uid: SimulationFramework.Drawing.ICanvas.Clear*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Clear
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Clear(SimulationFramework.Color)
+  name: Clear
+  nameWithType: ICanvas.Clear
+  fullName: SimulationFramework.Drawing.ICanvas.Clear
+- uid: SimulationFramework.Color
+  commentId: T:SimulationFramework.Color
+  parent: SimulationFramework
+  href: SimulationFramework.Color.html
+  name: Color
+  nameWithType: Color
+  fullName: SimulationFramework.Color
+- uid: SimulationFramework
+  commentId: N:SimulationFramework
+  href: SimulationFramework.html
+  name: SimulationFramework
+  nameWithType: SimulationFramework
+  fullName: SimulationFramework
+- uid: SimulationFramework.Drawing.ICanvas.Flush*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Flush
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Flush
+  name: Flush
+  nameWithType: ICanvas.Flush
+  fullName: SimulationFramework.Drawing.ICanvas.Flush
+- uid: SimulationFramework.Drawing.ICanvas.Antialias*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Antialias
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Antialias(System.Boolean)
+  name: Antialias
+  nameWithType: ICanvas.Antialias
+  fullName: SimulationFramework.Drawing.ICanvas.Antialias
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: SimulationFramework.Drawing.ICanvas.Fill*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Fill
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Fill(SimulationFramework.Color)
+  name: Fill
+  nameWithType: ICanvas.Fill
+  fullName: SimulationFramework.Drawing.ICanvas.Fill
+- uid: SimulationFramework.Drawing.Gradient
+  commentId: T:SimulationFramework.Drawing.Gradient
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.Gradient.html
+  name: Gradient
+  nameWithType: Gradient
+  fullName: SimulationFramework.Drawing.Gradient
+- uid: SimulationFramework.Drawing.ICanvas.Stroke*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Stroke
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Stroke(SimulationFramework.Color)
+  name: Stroke
+  nameWithType: ICanvas.Stroke
+  fullName: SimulationFramework.Drawing.ICanvas.Stroke
+- uid: SimulationFramework.Drawing.ICanvas.StrokeWidth*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.StrokeWidth
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)
+  name: StrokeWidth
+  nameWithType: ICanvas.StrokeWidth
+  fullName: SimulationFramework.Drawing.ICanvas.StrokeWidth
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: SimulationFramework.Drawing.ICanvas.Clip*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Clip
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Clip(System.Nullable{SimulationFramework.Rectangle})
+  name: Clip
+  nameWithType: ICanvas.Clip
+  fullName: SimulationFramework.Drawing.ICanvas.Clip
+- uid: System.Nullable{SimulationFramework.Rectangle}
+  commentId: T:System.Nullable{SimulationFramework.Rectangle}
+  parent: System
+  definition: System.Nullable`1
+  href: SimulationFramework.Rectangle.html
+  name: Rectangle?
+  nameWithType: Rectangle?
+  fullName: SimulationFramework.Rectangle?
+  spec.csharp:
+  - uid: SimulationFramework.Rectangle
+    name: Rectangle
+    href: SimulationFramework.Rectangle.html
+  - name: '?'
+  spec.vb:
+  - uid: SimulationFramework.Rectangle
+    name: Rectangle
+    href: SimulationFramework.Rectangle.html
+  - name: '?'
+- uid: System.Nullable`1
+  commentId: T:System.Nullable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  name: Nullable<T>
+  nameWithType: Nullable<T>
+  fullName: System.Nullable<T>
+  nameWithType.vb: Nullable(Of T)
+  fullName.vb: System.Nullable(Of T)
+  name.vb: Nullable(Of T)
+  spec.csharp:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Nullable`1
+    name: Nullable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.nullable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Numerics.Matrix3x2
+  commentId: T:System.Numerics.Matrix3x2
+  parent: System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.matrix3x2
+  name: Matrix3x2
+  nameWithType: Matrix3x2
+  fullName: System.Numerics.Matrix3x2
+- uid: SimulationFramework.Drawing.TileMode
+  commentId: T:SimulationFramework.Drawing.TileMode
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.TileMode.html
+  name: TileMode
+  nameWithType: TileMode
+  fullName: SimulationFramework.Drawing.TileMode
+- uid: System.Numerics
+  commentId: N:System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Numerics
+  nameWithType: System.Numerics
+  fullName: System.Numerics
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+- uid: SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)
+  commentId: M:SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)
+  isExternal: true
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)
+  name: StrokeWidth(float)
+  nameWithType: ICanvas.StrokeWidth(float)
+  fullName: SimulationFramework.Drawing.ICanvas.StrokeWidth(float)
+  nameWithType.vb: ICanvas.StrokeWidth(Single)
+  fullName.vb: SimulationFramework.Drawing.ICanvas.StrokeWidth(Single)
+  name.vb: StrokeWidth(Single)
+  spec.csharp:
+  - uid: SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)
+    name: StrokeWidth
+    href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)
+  - name: (
+  - uid: System.Single
+    name: float
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: )
+  spec.vb:
+  - uid: SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)
+    name: StrokeWidth
+    href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.StrokeWidth(System.Single)
+  - name: (
+  - uid: System.Single
+    name: Single
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.single
+  - name: )
+- uid: SimulationFramework.Drawing.ICanvas.DrawLine*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.DrawLine
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.DrawLine(System.Single,System.Single,System.Single,System.Single)
+  name: DrawLine
+  nameWithType: ICanvas.DrawLine
+  fullName: SimulationFramework.Drawing.ICanvas.DrawLine
+- uid: System.Numerics.Vector2
+  commentId: T:System.Numerics.Vector2
+  parent: System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  name: Vector2
+  nameWithType: Vector2
+  fullName: System.Numerics.Vector2
+- uid: SimulationFramework.Drawing.ICanvas.DrawRect*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.DrawRect
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.DrawRect(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  name: DrawRect
+  nameWithType: ICanvas.DrawRect
+  fullName: SimulationFramework.Drawing.ICanvas.DrawRect
+- uid: SimulationFramework.Alignment
+  commentId: T:SimulationFramework.Alignment
+  parent: SimulationFramework
+  href: SimulationFramework.Alignment.html
+  name: Alignment
+  nameWithType: Alignment
+  fullName: SimulationFramework.Alignment
+- uid: SimulationFramework.Rectangle
+  commentId: T:SimulationFramework.Rectangle
+  parent: SimulationFramework
+  href: SimulationFramework.Rectangle.html
+  name: Rectangle
+  nameWithType: Rectangle
+  fullName: SimulationFramework.Rectangle
+- uid: SimulationFramework.Drawing.ICanvas.DrawRoundedRect*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.DrawRoundedRect
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.DrawRoundedRect(System.Single,System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  name: DrawRoundedRect
+  nameWithType: ICanvas.DrawRoundedRect
+  fullName: SimulationFramework.Drawing.ICanvas.DrawRoundedRect
+- uid: SimulationFramework.Drawing.ICanvas.DrawCircle*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.DrawCircle
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.DrawCircle(System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  name: DrawCircle
+  nameWithType: ICanvas.DrawCircle
+  fullName: SimulationFramework.Drawing.ICanvas.DrawCircle
+- uid: SimulationFramework.Circle
+  commentId: T:SimulationFramework.Circle
+  parent: SimulationFramework
+  href: SimulationFramework.Circle.html
+  name: Circle
+  nameWithType: Circle
+  fullName: SimulationFramework.Circle
+- uid: SimulationFramework.Drawing.ICanvas.DrawEllipse*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.DrawEllipse
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.DrawEllipse(System.Single,System.Single,System.Single,System.Single,SimulationFramework.Alignment)
+  name: DrawEllipse
+  nameWithType: ICanvas.DrawEllipse
+  fullName: SimulationFramework.Drawing.ICanvas.DrawEllipse
+- uid: SimulationFramework.Drawing.ICanvas.DrawArc*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.DrawArc
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.DrawArc(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Boolean,SimulationFramework.Alignment)
+  name: DrawArc
+  nameWithType: ICanvas.DrawArc
+  fullName: SimulationFramework.Drawing.ICanvas.DrawArc
+- uid: SimulationFramework.Drawing.ICanvas.DrawTexture*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.DrawTexture
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.DrawTexture(SimulationFramework.Drawing.ITexture,SimulationFramework.Alignment)
+  name: DrawTexture
+  nameWithType: ICanvas.DrawTexture
+  fullName: SimulationFramework.Drawing.ICanvas.DrawTexture
+- uid: SimulationFramework.Drawing.ICanvas.DrawPolygon*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.DrawPolygon
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.DrawPolygon(System.Span{System.Numerics.Vector2})
+  name: DrawPolygon
+  nameWithType: ICanvas.DrawPolygon
+  fullName: SimulationFramework.Drawing.ICanvas.DrawPolygon
+- uid: System.Span{System.Numerics.Vector2}
+  commentId: T:System.Span{System.Numerics.Vector2}
+  parent: System
+  definition: System.Span`1
+  href: https://learn.microsoft.com/dotnet/api/system.span-1
+  name: Span<Vector2>
+  nameWithType: Span<Vector2>
+  fullName: System.Span<System.Numerics.Vector2>
+  nameWithType.vb: Span(Of Vector2)
+  fullName.vb: System.Span(Of System.Numerics.Vector2)
+  name.vb: Span(Of Vector2)
+  spec.csharp:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - uid: System.Numerics.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  - name: '>'
+  spec.vb:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Numerics.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  - name: )
+- uid: System.Span`1
+  commentId: T:System.Span`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.span-1
+  name: Span<T>
+  nameWithType: Span<T>
+  fullName: System.Span<T>
+  nameWithType.vb: Span(Of T)
+  fullName.vb: System.Span(Of T)
+  name.vb: Span(Of T)
+  spec.csharp:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Span`1
+    name: Span
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.span-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: SimulationFramework.Drawing.DrawMode
+  commentId: T:SimulationFramework.Drawing.DrawMode
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.DrawMode.html
+  name: DrawMode
+  nameWithType: DrawMode
+  fullName: SimulationFramework.Drawing.DrawMode
+- uid: SimulationFramework.Drawing.DrawMode.Fill
+  commentId: F:SimulationFramework.Drawing.DrawMode.Fill
+  href: SimulationFramework.Drawing.DrawMode.html#SimulationFramework.Drawing.DrawMode.Fill
+  name: Fill
+  nameWithType: DrawMode.Fill
+  fullName: SimulationFramework.Drawing.DrawMode.Fill
+- uid: SimulationFramework.Drawing.DrawMode.Gradient
+  commentId: F:SimulationFramework.Drawing.DrawMode.Gradient
+  href: SimulationFramework.Drawing.DrawMode.html#SimulationFramework.Drawing.DrawMode.Gradient
+  name: Gradient
+  nameWithType: DrawMode.Gradient
+  fullName: SimulationFramework.Drawing.DrawMode.Gradient
+- uid: System.Collections.Generic.IEnumerable{System.Numerics.Vector2}
+  commentId: T:System.Collections.Generic.IEnumerable{System.Numerics.Vector2}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IEnumerable`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<Vector2>
+  nameWithType: IEnumerable<Vector2>
+  fullName: System.Collections.Generic.IEnumerable<System.Numerics.Vector2>
+  nameWithType.vb: IEnumerable(Of Vector2)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of System.Numerics.Vector2)
+  name.vb: IEnumerable(Of Vector2)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - uid: System.Numerics.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Numerics.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  - name: )
+- uid: System.Collections.Generic.IEnumerable`1
+  commentId: T:System.Collections.Generic.IEnumerable`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  name: IEnumerable<T>
+  nameWithType: IEnumerable<T>
+  fullName: System.Collections.Generic.IEnumerable<T>
+  nameWithType.vb: IEnumerable(Of T)
+  fullName.vb: System.Collections.Generic.IEnumerable(Of T)
+  name.vb: IEnumerable(Of T)
+  spec.csharp:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IEnumerable`1
+    name: IEnumerable
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: System.Numerics.Vector2[]
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  name: Vector2[]
+  nameWithType: Vector2[]
+  fullName: System.Numerics.Vector2[]
+  nameWithType.vb: Vector2()
+  fullName.vb: System.Numerics.Vector2()
+  name.vb: Vector2()
+  spec.csharp:
+  - uid: System.Numerics.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  - name: '['
+  - name: ']'
+  spec.vb:
+  - uid: System.Numerics.Vector2
+    name: Vector2
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  - name: (
+  - name: )
+- uid: SimulationFramework.Drawing.ICanvas.DrawText*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.DrawText
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.DrawText(System.String,System.Single,System.Single,SimulationFramework.Alignment)
+  name: DrawText
+  nameWithType: ICanvas.DrawText
+  fullName: SimulationFramework.Drawing.ICanvas.DrawText
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: SimulationFramework.Drawing.ICanvas.MeasureText*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.MeasureText
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.MeasureText(System.String)
+  name: MeasureText
+  nameWithType: ICanvas.MeasureText
+  fullName: SimulationFramework.Drawing.ICanvas.MeasureText
+- uid: SimulationFramework.Drawing.ICanvas.Font*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Font
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Font(System.String)
+  name: Font
+  nameWithType: ICanvas.Font
+  fullName: SimulationFramework.Drawing.ICanvas.Font
+- uid: SimulationFramework.Drawing.ICanvas.FontStyle*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.FontStyle
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.FontStyle(System.Single,SimulationFramework.Drawing.FontStyle)
+  name: FontStyle
+  nameWithType: ICanvas.FontStyle
+  fullName: SimulationFramework.Drawing.ICanvas.FontStyle
+- uid: SimulationFramework.Drawing.FontStyle
+  commentId: T:SimulationFramework.Drawing.FontStyle
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.FontStyle.html
+  name: FontStyle
+  nameWithType: FontStyle
+  fullName: SimulationFramework.Drawing.FontStyle
+- uid: SimulationFramework.Drawing.ICanvas.PushState*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.PushState
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.PushState
+  name: PushState
+  nameWithType: ICanvas.PushState
+  fullName: SimulationFramework.Drawing.ICanvas.PushState
+- uid: SimulationFramework.Drawing.ICanvas.PopState*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.PopState
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.PopState
+  name: PopState
+  nameWithType: ICanvas.PopState
+  fullName: SimulationFramework.Drawing.ICanvas.PopState
+- uid: SimulationFramework.Drawing.ICanvas.ResetState*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.ResetState
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.ResetState
+  name: ResetState
+  nameWithType: ICanvas.ResetState
+  fullName: SimulationFramework.Drawing.ICanvas.ResetState
+- uid: SimulationFramework.Drawing.ICanvas.SetTransform*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.SetTransform
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.SetTransform(System.Numerics.Matrix3x2)
+  name: SetTransform
+  nameWithType: ICanvas.SetTransform
+  fullName: SimulationFramework.Drawing.ICanvas.SetTransform
+- uid: SimulationFramework.Drawing.ICanvas.Transform*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Transform
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Transform(System.Numerics.Matrix3x2)
+  name: Transform
+  nameWithType: ICanvas.Transform
+  fullName: SimulationFramework.Drawing.ICanvas.Transform
+- uid: SimulationFramework.Drawing.ICanvas.Translate*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Translate
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Translate(System.Single,System.Single)
+  name: Translate
+  nameWithType: ICanvas.Translate
+  fullName: SimulationFramework.Drawing.ICanvas.Translate
+- uid: SimulationFramework.Drawing.ICanvas.Rotate*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Rotate
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Rotate(System.Single)
+  name: Rotate
+  nameWithType: ICanvas.Rotate
+  fullName: SimulationFramework.Drawing.ICanvas.Rotate
+- uid: SimulationFramework.Drawing.ICanvas.Scale*
+  commentId: Overload:SimulationFramework.Drawing.ICanvas.Scale
+  href: SimulationFramework.Drawing.ICanvas.html#SimulationFramework.Drawing.ICanvas.Scale(System.Single)
+  name: Scale
+  nameWithType: ICanvas.Scale
+  fullName: SimulationFramework.Drawing.ICanvas.Scale

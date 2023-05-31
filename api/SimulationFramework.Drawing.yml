@@ -1,0 +1,133 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Drawing
+  commentId: N:SimulationFramework.Drawing
+  id: Drawing
+  parent: SimulationFramework
+  children:
+  - SimulationFramework.Drawing.CanvasState
+  - SimulationFramework.Drawing.DrawMode
+  - SimulationFramework.Drawing.FontStyle
+  - SimulationFramework.Drawing.Gradient
+  - SimulationFramework.Drawing.GradientStop
+  - SimulationFramework.Drawing.Graphics
+  - SimulationFramework.Drawing.ICanvas
+  - SimulationFramework.Drawing.IGradientVisitor
+  - SimulationFramework.Drawing.IGraphicsProvider
+  - SimulationFramework.Drawing.ITexture
+  - SimulationFramework.Drawing.TextureOptions
+  - SimulationFramework.Drawing.TileMode
+  langs:
+  - csharp
+  - vb
+  name: SimulationFramework.Drawing
+  nameWithType: SimulationFramework.Drawing
+  fullName: SimulationFramework.Drawing
+  type: Namespace
+  assemblies:
+  - SimulationFramework
+references:
+- uid: SimulationFramework.Drawing.CanvasState
+  commentId: T:SimulationFramework.Drawing.CanvasState
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.CanvasState.html
+  name: CanvasState
+  nameWithType: CanvasState
+  fullName: SimulationFramework.Drawing.CanvasState
+- uid: SimulationFramework.Drawing.DrawMode
+  commentId: T:SimulationFramework.Drawing.DrawMode
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.DrawMode.html
+  name: DrawMode
+  nameWithType: DrawMode
+  fullName: SimulationFramework.Drawing.DrawMode
+- uid: SimulationFramework.Drawing.FontStyle
+  commentId: T:SimulationFramework.Drawing.FontStyle
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.FontStyle.html
+  name: FontStyle
+  nameWithType: FontStyle
+  fullName: SimulationFramework.Drawing.FontStyle
+- uid: SimulationFramework.Drawing.Gradient
+  commentId: T:SimulationFramework.Drawing.Gradient
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.Gradient.html
+  name: Gradient
+  nameWithType: Gradient
+  fullName: SimulationFramework.Drawing.Gradient
+- uid: SimulationFramework.Drawing.GradientStop
+  commentId: T:SimulationFramework.Drawing.GradientStop
+  href: SimulationFramework.Drawing.GradientStop.html
+  name: GradientStop
+  nameWithType: GradientStop
+  fullName: SimulationFramework.Drawing.GradientStop
+- uid: SimulationFramework.Drawing.Graphics
+  commentId: T:SimulationFramework.Drawing.Graphics
+  href: SimulationFramework.Drawing.Graphics.html
+  name: Graphics
+  nameWithType: Graphics
+  fullName: SimulationFramework.Drawing.Graphics
+- uid: SimulationFramework.Drawing.ICanvas
+  commentId: T:SimulationFramework.Drawing.ICanvas
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.ICanvas.html
+  name: ICanvas
+  nameWithType: ICanvas
+  fullName: SimulationFramework.Drawing.ICanvas
+- uid: SimulationFramework.Drawing.IGradientVisitor
+  commentId: T:SimulationFramework.Drawing.IGradientVisitor
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.IGradientVisitor.html
+  name: IGradientVisitor
+  nameWithType: IGradientVisitor
+  fullName: SimulationFramework.Drawing.IGradientVisitor
+- uid: SimulationFramework.Drawing.IGraphicsProvider
+  commentId: T:SimulationFramework.Drawing.IGraphicsProvider
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.IGraphicsProvider.html
+  name: IGraphicsProvider
+  nameWithType: IGraphicsProvider
+  fullName: SimulationFramework.Drawing.IGraphicsProvider
+- uid: SimulationFramework.Drawing.ITexture
+  commentId: T:SimulationFramework.Drawing.ITexture
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.ITexture.html
+  name: ITexture
+  nameWithType: ITexture
+  fullName: SimulationFramework.Drawing.ITexture
+- uid: SimulationFramework.Drawing.TextureOptions
+  commentId: T:SimulationFramework.Drawing.TextureOptions
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.TextureOptions.html
+  name: TextureOptions
+  nameWithType: TextureOptions
+  fullName: SimulationFramework.Drawing.TextureOptions
+- uid: SimulationFramework.Drawing.TileMode
+  commentId: T:SimulationFramework.Drawing.TileMode
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.TileMode.html
+  name: TileMode
+  nameWithType: TileMode
+  fullName: SimulationFramework.Drawing.TileMode
+- uid: SimulationFramework.Drawing
+  commentId: N:SimulationFramework.Drawing
+  href: SimulationFramework.html
+  name: SimulationFramework.Drawing
+  nameWithType: SimulationFramework.Drawing
+  fullName: SimulationFramework.Drawing
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Drawing
+    name: Drawing
+    href: SimulationFramework.Drawing.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Drawing
+    name: Drawing
+    href: SimulationFramework.Drawing.html

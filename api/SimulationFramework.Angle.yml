@@ -1,0 +1,768 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Angle
+  commentId: T:SimulationFramework.Angle
+  id: Angle
+  parent: SimulationFramework
+  children:
+  - SimulationFramework.Angle.DegreesToRadians
+  - SimulationFramework.Angle.Distance(System.Single,System.Single)
+  - SimulationFramework.Angle.FromVector(System.Numerics.Vector2)
+  - SimulationFramework.Angle.Lerp(System.Single,System.Single,System.Single)
+  - SimulationFramework.Angle.LerpClamped(System.Single,System.Single,System.Single)
+  - SimulationFramework.Angle.Normalize(System.Single)
+  - SimulationFramework.Angle.RadiansToDegrees
+  - SimulationFramework.Angle.Step(System.Single,System.Single,System.Single)
+  - SimulationFramework.Angle.ToDegrees(System.Single)
+  - SimulationFramework.Angle.ToRadians(System.Single)
+  - SimulationFramework.Angle.ToVector(System.Single)
+  langs:
+  - csharp
+  - vb
+  name: Angle
+  nameWithType: Angle
+  fullName: SimulationFramework.Angle
+  type: Class
+  source:
+    remote:
+      path: src/SimulationFramework/Angle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Angle
+    path: src/SimulationFramework/Angle.cs
+    startLine: 9
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public static class Angle
+    content.vb: Public Module Angle
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: SimulationFramework.Angle.RadiansToDegrees
+  commentId: F:SimulationFramework.Angle.RadiansToDegrees
+  id: RadiansToDegrees
+  parent: SimulationFramework.Angle
+  langs:
+  - csharp
+  - vb
+  name: RadiansToDegrees
+  nameWithType: Angle.RadiansToDegrees
+  fullName: SimulationFramework.Angle.RadiansToDegrees
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Angle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: RadiansToDegrees
+    path: src/SimulationFramework/Angle.cs
+    startLine: 11
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public const float RadiansToDegrees = 57.295776
+    return:
+      type: System.Single
+    content.vb: Public Const RadiansToDegrees As Single = 57.295776
+- uid: SimulationFramework.Angle.DegreesToRadians
+  commentId: F:SimulationFramework.Angle.DegreesToRadians
+  id: DegreesToRadians
+  parent: SimulationFramework.Angle
+  langs:
+  - csharp
+  - vb
+  name: DegreesToRadians
+  nameWithType: Angle.DegreesToRadians
+  fullName: SimulationFramework.Angle.DegreesToRadians
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Angle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: DegreesToRadians
+    path: src/SimulationFramework/Angle.cs
+    startLine: 12
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public const float DegreesToRadians = 0.017453292
+    return:
+      type: System.Single
+    content.vb: Public Const DegreesToRadians As Single = 0.017453292
+- uid: SimulationFramework.Angle.ToDegrees(System.Single)
+  commentId: M:SimulationFramework.Angle.ToDegrees(System.Single)
+  id: ToDegrees(System.Single)
+  parent: SimulationFramework.Angle
+  langs:
+  - csharp
+  - vb
+  name: ToDegrees(float)
+  nameWithType: Angle.ToDegrees(float)
+  fullName: SimulationFramework.Angle.ToDegrees(float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Angle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: ToDegrees
+    path: src/SimulationFramework/Angle.cs
+    startLine: 14
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public static float ToDegrees(float radians)
+    parameters:
+    - id: radians
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function ToDegrees(radians As Single) As Single
+  overload: SimulationFramework.Angle.ToDegrees*
+  nameWithType.vb: Angle.ToDegrees(Single)
+  fullName.vb: SimulationFramework.Angle.ToDegrees(Single)
+  name.vb: ToDegrees(Single)
+- uid: SimulationFramework.Angle.ToRadians(System.Single)
+  commentId: M:SimulationFramework.Angle.ToRadians(System.Single)
+  id: ToRadians(System.Single)
+  parent: SimulationFramework.Angle
+  langs:
+  - csharp
+  - vb
+  name: ToRadians(float)
+  nameWithType: Angle.ToRadians(float)
+  fullName: SimulationFramework.Angle.ToRadians(float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Angle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: ToRadians
+    path: src/SimulationFramework/Angle.cs
+    startLine: 19
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public static float ToRadians(float degrees)
+    parameters:
+    - id: degrees
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function ToRadians(degrees As Single) As Single
+  overload: SimulationFramework.Angle.ToRadians*
+  nameWithType.vb: Angle.ToRadians(Single)
+  fullName.vb: SimulationFramework.Angle.ToRadians(Single)
+  name.vb: ToRadians(Single)
+- uid: SimulationFramework.Angle.ToVector(System.Single)
+  commentId: M:SimulationFramework.Angle.ToVector(System.Single)
+  id: ToVector(System.Single)
+  parent: SimulationFramework.Angle
+  langs:
+  - csharp
+  - vb
+  name: ToVector(float)
+  nameWithType: Angle.ToVector(float)
+  fullName: SimulationFramework.Angle.ToVector(float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Angle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: ToVector
+    path: src/SimulationFramework/Angle.cs
+    startLine: 24
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public static Vector2 ToVector(float radians)
+    parameters:
+    - id: radians
+      type: System.Single
+    return:
+      type: System.Numerics.Vector2
+    content.vb: Public Shared Function ToVector(radians As Single) As Vector2
+  overload: SimulationFramework.Angle.ToVector*
+  nameWithType.vb: Angle.ToVector(Single)
+  fullName.vb: SimulationFramework.Angle.ToVector(Single)
+  name.vb: ToVector(Single)
+- uid: SimulationFramework.Angle.FromVector(System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Angle.FromVector(System.Numerics.Vector2)
+  id: FromVector(System.Numerics.Vector2)
+  parent: SimulationFramework.Angle
+  langs:
+  - csharp
+  - vb
+  name: FromVector(Vector2)
+  nameWithType: Angle.FromVector(Vector2)
+  fullName: SimulationFramework.Angle.FromVector(System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Angle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: FromVector
+    path: src/SimulationFramework/Angle.cs
+    startLine: 30
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public static float FromVector(Vector2 vector)
+    parameters:
+    - id: vector
+      type: System.Numerics.Vector2
+    return:
+      type: System.Single
+    content.vb: Public Shared Function FromVector(vector As Vector2) As Single
+  overload: SimulationFramework.Angle.FromVector*
+- uid: SimulationFramework.Angle.Normalize(System.Single)
+  commentId: M:SimulationFramework.Angle.Normalize(System.Single)
+  id: Normalize(System.Single)
+  parent: SimulationFramework.Angle
+  langs:
+  - csharp
+  - vb
+  name: Normalize(float)
+  nameWithType: Angle.Normalize(float)
+  fullName: SimulationFramework.Angle.Normalize(float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Angle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Normalize
+    path: src/SimulationFramework/Angle.cs
+    startLine: 39
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Normalizes an angle to the range [0, 2pi).
+  example: []
+  syntax:
+    content: public static float Normalize(float radians)
+    parameters:
+    - id: radians
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function Normalize(radians As Single) As Single
+  overload: SimulationFramework.Angle.Normalize*
+  nameWithType.vb: Angle.Normalize(Single)
+  fullName.vb: SimulationFramework.Angle.Normalize(Single)
+  name.vb: Normalize(Single)
+- uid: SimulationFramework.Angle.LerpClamped(System.Single,System.Single,System.Single)
+  commentId: M:SimulationFramework.Angle.LerpClamped(System.Single,System.Single,System.Single)
+  id: LerpClamped(System.Single,System.Single,System.Single)
+  parent: SimulationFramework.Angle
+  langs:
+  - csharp
+  - vb
+  name: LerpClamped(float, float, float)
+  nameWithType: Angle.LerpClamped(float, float, float)
+  fullName: SimulationFramework.Angle.LerpClamped(float, float, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Angle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: LerpClamped
+    path: src/SimulationFramework/Angle.cs
+    startLine: 49
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public static float LerpClamped(float a, float b, float t)
+    parameters:
+    - id: a
+      type: System.Single
+    - id: b
+      type: System.Single
+    - id: t
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function LerpClamped(a As Single, b As Single, t As Single) As Single
+  overload: SimulationFramework.Angle.LerpClamped*
+  nameWithType.vb: Angle.LerpClamped(Single, Single, Single)
+  fullName.vb: SimulationFramework.Angle.LerpClamped(Single, Single, Single)
+  name.vb: LerpClamped(Single, Single, Single)
+- uid: SimulationFramework.Angle.Lerp(System.Single,System.Single,System.Single)
+  commentId: M:SimulationFramework.Angle.Lerp(System.Single,System.Single,System.Single)
+  id: Lerp(System.Single,System.Single,System.Single)
+  parent: SimulationFramework.Angle
+  langs:
+  - csharp
+  - vb
+  name: Lerp(float, float, float)
+  nameWithType: Angle.Lerp(float, float, float)
+  fullName: SimulationFramework.Angle.Lerp(float, float, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Angle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Lerp
+    path: src/SimulationFramework/Angle.cs
+    startLine: 54
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public static float Lerp(float a, float b, float t)
+    parameters:
+    - id: a
+      type: System.Single
+    - id: b
+      type: System.Single
+    - id: t
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function Lerp(a As Single, b As Single, t As Single) As Single
+  overload: SimulationFramework.Angle.Lerp*
+  nameWithType.vb: Angle.Lerp(Single, Single, Single)
+  fullName.vb: SimulationFramework.Angle.Lerp(Single, Single, Single)
+  name.vb: Lerp(Single, Single, Single)
+- uid: SimulationFramework.Angle.Step(System.Single,System.Single,System.Single)
+  commentId: M:SimulationFramework.Angle.Step(System.Single,System.Single,System.Single)
+  id: Step(System.Single,System.Single,System.Single)
+  parent: SimulationFramework.Angle
+  langs:
+  - csharp
+  - vb
+  name: Step(float, float, float)
+  nameWithType: Angle.Step(float, float, float)
+  fullName: SimulationFramework.Angle.Step(float, float, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Angle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Step
+    path: src/SimulationFramework/Angle.cs
+    startLine: 62
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public static float Step(float a, float b, float s)
+    parameters:
+    - id: a
+      type: System.Single
+    - id: b
+      type: System.Single
+    - id: s
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function [Step](a As Single, b As Single, s As Single) As Single
+  overload: SimulationFramework.Angle.Step*
+  nameWithType.vb: Angle.Step(Single, Single, Single)
+  fullName.vb: SimulationFramework.Angle.Step(Single, Single, Single)
+  name.vb: Step(Single, Single, Single)
+- uid: SimulationFramework.Angle.Distance(System.Single,System.Single)
+  commentId: M:SimulationFramework.Angle.Distance(System.Single,System.Single)
+  id: Distance(System.Single,System.Single)
+  parent: SimulationFramework.Angle
+  langs:
+  - csharp
+  - vb
+  name: Distance(float, float)
+  nameWithType: Angle.Distance(float, float)
+  fullName: SimulationFramework.Angle.Distance(float, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Angle.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Distance
+    path: src/SimulationFramework/Angle.cs
+    startLine: 75
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Finds the distance between two angles along the unit circle.
+  example: []
+  syntax:
+    content: public static float Distance(float a, float b)
+    parameters:
+    - id: a
+      type: System.Single
+    - id: b
+      type: System.Single
+    return:
+      type: System.Single
+    content.vb: Public Shared Function Distance(a As Single, b As Single) As Single
+  overload: SimulationFramework.Angle.Distance*
+  nameWithType.vb: Angle.Distance(Single, Single)
+  fullName.vb: SimulationFramework.Angle.Distance(Single, Single)
+  name.vb: Distance(Single, Single)
+references:
+- uid: SimulationFramework
+  commentId: N:SimulationFramework
+  href: SimulationFramework.html
+  name: SimulationFramework
+  nameWithType: SimulationFramework
+  fullName: SimulationFramework
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: SimulationFramework.Angle.ToDegrees*
+  commentId: Overload:SimulationFramework.Angle.ToDegrees
+  href: SimulationFramework.Angle.html#SimulationFramework.Angle.ToDegrees(System.Single)
+  name: ToDegrees
+  nameWithType: Angle.ToDegrees
+  fullName: SimulationFramework.Angle.ToDegrees
+- uid: SimulationFramework.Angle.ToRadians*
+  commentId: Overload:SimulationFramework.Angle.ToRadians
+  href: SimulationFramework.Angle.html#SimulationFramework.Angle.ToRadians(System.Single)
+  name: ToRadians
+  nameWithType: Angle.ToRadians
+  fullName: SimulationFramework.Angle.ToRadians
+- uid: SimulationFramework.Angle.ToVector*
+  commentId: Overload:SimulationFramework.Angle.ToVector
+  href: SimulationFramework.Angle.html#SimulationFramework.Angle.ToVector(System.Single)
+  name: ToVector
+  nameWithType: Angle.ToVector
+  fullName: SimulationFramework.Angle.ToVector
+- uid: System.Numerics.Vector2
+  commentId: T:System.Numerics.Vector2
+  parent: System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  name: Vector2
+  nameWithType: Vector2
+  fullName: System.Numerics.Vector2
+- uid: System.Numerics
+  commentId: N:System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Numerics
+  nameWithType: System.Numerics
+  fullName: System.Numerics
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+- uid: SimulationFramework.Angle.FromVector*
+  commentId: Overload:SimulationFramework.Angle.FromVector
+  href: SimulationFramework.Angle.html#SimulationFramework.Angle.FromVector(System.Numerics.Vector2)
+  name: FromVector
+  nameWithType: Angle.FromVector
+  fullName: SimulationFramework.Angle.FromVector
+- uid: SimulationFramework.Angle.Normalize*
+  commentId: Overload:SimulationFramework.Angle.Normalize
+  href: SimulationFramework.Angle.html#SimulationFramework.Angle.Normalize(System.Single)
+  name: Normalize
+  nameWithType: Angle.Normalize
+  fullName: SimulationFramework.Angle.Normalize
+- uid: SimulationFramework.Angle.LerpClamped*
+  commentId: Overload:SimulationFramework.Angle.LerpClamped
+  href: SimulationFramework.Angle.html#SimulationFramework.Angle.LerpClamped(System.Single,System.Single,System.Single)
+  name: LerpClamped
+  nameWithType: Angle.LerpClamped
+  fullName: SimulationFramework.Angle.LerpClamped
+- uid: SimulationFramework.Angle.Lerp*
+  commentId: Overload:SimulationFramework.Angle.Lerp
+  href: SimulationFramework.Angle.html#SimulationFramework.Angle.Lerp(System.Single,System.Single,System.Single)
+  name: Lerp
+  nameWithType: Angle.Lerp
+  fullName: SimulationFramework.Angle.Lerp
+- uid: SimulationFramework.Angle.Step*
+  commentId: Overload:SimulationFramework.Angle.Step
+  href: SimulationFramework.Angle.html#SimulationFramework.Angle.Step(System.Single,System.Single,System.Single)
+  name: Step
+  nameWithType: Angle.Step
+  fullName: SimulationFramework.Angle.Step
+- uid: SimulationFramework.Angle.Distance*
+  commentId: Overload:SimulationFramework.Angle.Distance
+  href: SimulationFramework.Angle.html#SimulationFramework.Angle.Distance(System.Single,System.Single)
+  name: Distance
+  nameWithType: Angle.Distance
+  fullName: SimulationFramework.Angle.Distance

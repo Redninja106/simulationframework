@@ -1,0 +1,112 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Messaging
+  commentId: N:SimulationFramework.Messaging
+  id: Messaging
+  parent: SimulationFramework
+  children:
+  - SimulationFramework.Messaging.ExitMessage
+  - SimulationFramework.Messaging.FrameBeginMessage
+  - SimulationFramework.Messaging.FrameEndMessage
+  - SimulationFramework.Messaging.InitializeMessage
+  - SimulationFramework.Messaging.ListenerPriority
+  - SimulationFramework.Messaging.Message
+  - SimulationFramework.Messaging.MessageDispatcher
+  - SimulationFramework.Messaging.RenderMessage
+  - SimulationFramework.Messaging.ResizeMessage
+  - SimulationFramework.Messaging.UninitializeMessage
+  langs:
+  - csharp
+  - vb
+  name: SimulationFramework.Messaging
+  nameWithType: SimulationFramework.Messaging
+  fullName: SimulationFramework.Messaging
+  type: Namespace
+  assemblies:
+  - SimulationFramework
+references:
+- uid: SimulationFramework.Messaging.ExitMessage
+  commentId: T:SimulationFramework.Messaging.ExitMessage
+  href: SimulationFramework.Messaging.ExitMessage.html
+  name: ExitMessage
+  nameWithType: ExitMessage
+  fullName: SimulationFramework.Messaging.ExitMessage
+- uid: SimulationFramework.Messaging.FrameBeginMessage
+  commentId: T:SimulationFramework.Messaging.FrameBeginMessage
+  href: SimulationFramework.Messaging.FrameBeginMessage.html
+  name: FrameBeginMessage
+  nameWithType: FrameBeginMessage
+  fullName: SimulationFramework.Messaging.FrameBeginMessage
+- uid: SimulationFramework.Messaging.FrameEndMessage
+  commentId: T:SimulationFramework.Messaging.FrameEndMessage
+  href: SimulationFramework.Messaging.FrameEndMessage.html
+  name: FrameEndMessage
+  nameWithType: FrameEndMessage
+  fullName: SimulationFramework.Messaging.FrameEndMessage
+- uid: SimulationFramework.Messaging.InitializeMessage
+  commentId: T:SimulationFramework.Messaging.InitializeMessage
+  href: SimulationFramework.Messaging.InitializeMessage.html
+  name: InitializeMessage
+  nameWithType: InitializeMessage
+  fullName: SimulationFramework.Messaging.InitializeMessage
+- uid: SimulationFramework.Messaging.ListenerPriority
+  commentId: T:SimulationFramework.Messaging.ListenerPriority
+  parent: SimulationFramework.Messaging
+  href: SimulationFramework.Messaging.ListenerPriority.html
+  name: ListenerPriority
+  nameWithType: ListenerPriority
+  fullName: SimulationFramework.Messaging.ListenerPriority
+- uid: SimulationFramework.Messaging.Message
+  commentId: T:SimulationFramework.Messaging.Message
+  parent: SimulationFramework.Messaging
+  href: SimulationFramework.Messaging.Message.html
+  name: Message
+  nameWithType: Message
+  fullName: SimulationFramework.Messaging.Message
+- uid: SimulationFramework.Messaging.MessageDispatcher
+  commentId: T:SimulationFramework.Messaging.MessageDispatcher
+  parent: SimulationFramework.Messaging
+  href: SimulationFramework.Messaging.MessageDispatcher.html
+  name: MessageDispatcher
+  nameWithType: MessageDispatcher
+  fullName: SimulationFramework.Messaging.MessageDispatcher
+- uid: SimulationFramework.Messaging.RenderMessage
+  commentId: T:SimulationFramework.Messaging.RenderMessage
+  href: SimulationFramework.Messaging.RenderMessage.html
+  name: RenderMessage
+  nameWithType: RenderMessage
+  fullName: SimulationFramework.Messaging.RenderMessage
+- uid: SimulationFramework.Messaging.ResizeMessage
+  commentId: T:SimulationFramework.Messaging.ResizeMessage
+  href: SimulationFramework.Messaging.ResizeMessage.html
+  name: ResizeMessage
+  nameWithType: ResizeMessage
+  fullName: SimulationFramework.Messaging.ResizeMessage
+- uid: SimulationFramework.Messaging.UninitializeMessage
+  commentId: T:SimulationFramework.Messaging.UninitializeMessage
+  href: SimulationFramework.Messaging.UninitializeMessage.html
+  name: UninitializeMessage
+  nameWithType: UninitializeMessage
+  fullName: SimulationFramework.Messaging.UninitializeMessage
+- uid: SimulationFramework.Messaging
+  commentId: N:SimulationFramework.Messaging
+  href: SimulationFramework.html
+  name: SimulationFramework.Messaging
+  nameWithType: SimulationFramework.Messaging
+  fullName: SimulationFramework.Messaging
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Messaging
+    name: Messaging
+    href: SimulationFramework.Messaging.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Messaging
+    name: Messaging
+    href: SimulationFramework.Messaging.html

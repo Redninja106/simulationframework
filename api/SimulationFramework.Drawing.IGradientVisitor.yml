@@ -1,0 +1,194 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Drawing.IGradientVisitor
+  commentId: T:SimulationFramework.Drawing.IGradientVisitor
+  id: IGradientVisitor
+  parent: SimulationFramework.Drawing
+  children:
+  - SimulationFramework.Drawing.IGradientVisitor.VisitLinear(SimulationFramework.Drawing.Gradient,System.Numerics.Vector2,System.Numerics.Vector2)
+  - SimulationFramework.Drawing.IGradientVisitor.VisitRadial(SimulationFramework.Drawing.Gradient,System.Numerics.Vector2,System.Single)
+  langs:
+  - csharp
+  - vb
+  name: IGradientVisitor
+  nameWithType: IGradientVisitor
+  fullName: SimulationFramework.Drawing.IGradientVisitor
+  type: Interface
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/IGradientVisitor.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: IGradientVisitor
+    path: src/SimulationFramework/Drawing/IGradientVisitor.cs
+    startLine: 9
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: public interface IGradientVisitor
+    content.vb: Public Interface IGradientVisitor
+- uid: SimulationFramework.Drawing.IGradientVisitor.VisitRadial(SimulationFramework.Drawing.Gradient,System.Numerics.Vector2,System.Single)
+  commentId: M:SimulationFramework.Drawing.IGradientVisitor.VisitRadial(SimulationFramework.Drawing.Gradient,System.Numerics.Vector2,System.Single)
+  id: VisitRadial(SimulationFramework.Drawing.Gradient,System.Numerics.Vector2,System.Single)
+  parent: SimulationFramework.Drawing.IGradientVisitor
+  langs:
+  - csharp
+  - vb
+  name: VisitRadial(Gradient, Vector2, float)
+  nameWithType: IGradientVisitor.VisitRadial(Gradient, Vector2, float)
+  fullName: SimulationFramework.Drawing.IGradientVisitor.VisitRadial(SimulationFramework.Drawing.Gradient, System.Numerics.Vector2, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/IGradientVisitor.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: VisitRadial
+    path: src/SimulationFramework/Drawing/IGradientVisitor.cs
+    startLine: 11
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: void VisitRadial(Gradient gradient, Vector2 position, float radius)
+    parameters:
+    - id: gradient
+      type: SimulationFramework.Drawing.Gradient
+    - id: position
+      type: System.Numerics.Vector2
+    - id: radius
+      type: System.Single
+    content.vb: Sub VisitRadial(gradient As Gradient, position As Vector2, radius As Single)
+  overload: SimulationFramework.Drawing.IGradientVisitor.VisitRadial*
+  nameWithType.vb: IGradientVisitor.VisitRadial(Gradient, Vector2, Single)
+  fullName.vb: SimulationFramework.Drawing.IGradientVisitor.VisitRadial(SimulationFramework.Drawing.Gradient, System.Numerics.Vector2, Single)
+  name.vb: VisitRadial(Gradient, Vector2, Single)
+- uid: SimulationFramework.Drawing.IGradientVisitor.VisitLinear(SimulationFramework.Drawing.Gradient,System.Numerics.Vector2,System.Numerics.Vector2)
+  commentId: M:SimulationFramework.Drawing.IGradientVisitor.VisitLinear(SimulationFramework.Drawing.Gradient,System.Numerics.Vector2,System.Numerics.Vector2)
+  id: VisitLinear(SimulationFramework.Drawing.Gradient,System.Numerics.Vector2,System.Numerics.Vector2)
+  parent: SimulationFramework.Drawing.IGradientVisitor
+  langs:
+  - csharp
+  - vb
+  name: VisitLinear(Gradient, Vector2, Vector2)
+  nameWithType: IGradientVisitor.VisitLinear(Gradient, Vector2, Vector2)
+  fullName: SimulationFramework.Drawing.IGradientVisitor.VisitLinear(SimulationFramework.Drawing.Gradient, System.Numerics.Vector2, System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/Drawing/IGradientVisitor.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: VisitLinear
+    path: src/SimulationFramework/Drawing/IGradientVisitor.cs
+    startLine: 12
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Drawing
+  syntax:
+    content: void VisitLinear(Gradient gradient, Vector2 from, Vector2 to)
+    parameters:
+    - id: gradient
+      type: SimulationFramework.Drawing.Gradient
+    - id: from
+      type: System.Numerics.Vector2
+    - id: to
+      type: System.Numerics.Vector2
+    content.vb: Sub VisitLinear(gradient As Gradient, from As Vector2, [to] As Vector2)
+  overload: SimulationFramework.Drawing.IGradientVisitor.VisitLinear*
+references:
+- uid: SimulationFramework.Drawing
+  commentId: N:SimulationFramework.Drawing
+  href: SimulationFramework.html
+  name: SimulationFramework.Drawing
+  nameWithType: SimulationFramework.Drawing
+  fullName: SimulationFramework.Drawing
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Drawing
+    name: Drawing
+    href: SimulationFramework.Drawing.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Drawing
+    name: Drawing
+    href: SimulationFramework.Drawing.html
+- uid: SimulationFramework.Drawing.IGradientVisitor.VisitRadial*
+  commentId: Overload:SimulationFramework.Drawing.IGradientVisitor.VisitRadial
+  href: SimulationFramework.Drawing.IGradientVisitor.html#SimulationFramework.Drawing.IGradientVisitor.VisitRadial(SimulationFramework.Drawing.Gradient,System.Numerics.Vector2,System.Single)
+  name: VisitRadial
+  nameWithType: IGradientVisitor.VisitRadial
+  fullName: SimulationFramework.Drawing.IGradientVisitor.VisitRadial
+- uid: SimulationFramework.Drawing.Gradient
+  commentId: T:SimulationFramework.Drawing.Gradient
+  parent: SimulationFramework.Drawing
+  href: SimulationFramework.Drawing.Gradient.html
+  name: Gradient
+  nameWithType: Gradient
+  fullName: SimulationFramework.Drawing.Gradient
+- uid: System.Numerics.Vector2
+  commentId: T:System.Numerics.Vector2
+  parent: System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  name: Vector2
+  nameWithType: Vector2
+  fullName: System.Numerics.Vector2
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: System.Numerics
+  commentId: N:System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Numerics
+  nameWithType: System.Numerics
+  fullName: System.Numerics
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: SimulationFramework.Drawing.IGradientVisitor.VisitLinear*
+  commentId: Overload:SimulationFramework.Drawing.IGradientVisitor.VisitLinear
+  href: SimulationFramework.Drawing.IGradientVisitor.html#SimulationFramework.Drawing.IGradientVisitor.VisitLinear(SimulationFramework.Drawing.Gradient,System.Numerics.Vector2,System.Numerics.Vector2)
+  name: VisitLinear
+  nameWithType: IGradientVisitor.VisitLinear
+  fullName: SimulationFramework.Drawing.IGradientVisitor.VisitLinear

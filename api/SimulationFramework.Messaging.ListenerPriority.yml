@@ -1,0 +1,176 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.Messaging.ListenerPriority
+  commentId: T:SimulationFramework.Messaging.ListenerPriority
+  id: ListenerPriority
+  parent: SimulationFramework.Messaging
+  children:
+  - SimulationFramework.Messaging.ListenerPriority.High
+  - SimulationFramework.Messaging.ListenerPriority.Internal
+  - SimulationFramework.Messaging.ListenerPriority.Low
+  - SimulationFramework.Messaging.ListenerPriority.Normal
+  langs:
+  - csharp
+  - vb
+  name: ListenerPriority
+  nameWithType: ListenerPriority
+  fullName: SimulationFramework.Messaging.ListenerPriority
+  type: Enum
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessagePriority.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: ListenerPriority
+    path: src/SimulationFramework/Messaging/MessagePriority.cs
+    startLine: 11
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: Specifies how a message listener should be prioritized by the dispatcher. Higher priority listeners are notified before lower ones.
+  example: []
+  syntax:
+    content: public enum ListenerPriority
+    content.vb: Public Enum ListenerPriority
+- uid: SimulationFramework.Messaging.ListenerPriority.Low
+  commentId: F:SimulationFramework.Messaging.ListenerPriority.Low
+  id: Low
+  parent: SimulationFramework.Messaging.ListenerPriority
+  langs:
+  - csharp
+  - vb
+  name: Low
+  nameWithType: ListenerPriority.Low
+  fullName: SimulationFramework.Messaging.ListenerPriority.Low
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessagePriority.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Low
+    path: src/SimulationFramework/Messaging/MessagePriority.cs
+    startLine: 16
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: The listener is low priority.
+  example: []
+  syntax:
+    content: Low = 0
+    return:
+      type: SimulationFramework.Messaging.ListenerPriority
+- uid: SimulationFramework.Messaging.ListenerPriority.Normal
+  commentId: F:SimulationFramework.Messaging.ListenerPriority.Normal
+  id: Normal
+  parent: SimulationFramework.Messaging.ListenerPriority
+  langs:
+  - csharp
+  - vb
+  name: Normal
+  nameWithType: ListenerPriority.Normal
+  fullName: SimulationFramework.Messaging.ListenerPriority.Normal
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessagePriority.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Normal
+    path: src/SimulationFramework/Messaging/MessagePriority.cs
+    startLine: 20
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: The listener is normal priority.
+  example: []
+  syntax:
+    content: Normal = 1
+    return:
+      type: SimulationFramework.Messaging.ListenerPriority
+- uid: SimulationFramework.Messaging.ListenerPriority.High
+  commentId: F:SimulationFramework.Messaging.ListenerPriority.High
+  id: High
+  parent: SimulationFramework.Messaging.ListenerPriority
+  langs:
+  - csharp
+  - vb
+  name: High
+  nameWithType: ListenerPriority.High
+  fullName: SimulationFramework.Messaging.ListenerPriority.High
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessagePriority.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: High
+    path: src/SimulationFramework/Messaging/MessagePriority.cs
+    startLine: 24
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: The listener is high priority.
+  example: []
+  syntax:
+    content: High = 2
+    return:
+      type: SimulationFramework.Messaging.ListenerPriority
+- uid: SimulationFramework.Messaging.ListenerPriority.Internal
+  commentId: F:SimulationFramework.Messaging.ListenerPriority.Internal
+  id: Internal
+  parent: SimulationFramework.Messaging.ListenerPriority
+  langs:
+  - csharp
+  - vb
+  name: Internal
+  nameWithType: ListenerPriority.Internal
+  fullName: SimulationFramework.Messaging.ListenerPriority.Internal
+  type: Field
+  source:
+    remote:
+      path: src/SimulationFramework/Messaging/MessagePriority.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Internal
+    path: src/SimulationFramework/Messaging/MessagePriority.cs
+    startLine: 28
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework.Messaging
+  summary: The listener is internal. This is for internal use only.
+  example: []
+  syntax:
+    content: Internal = 3
+    return:
+      type: SimulationFramework.Messaging.ListenerPriority
+references:
+- uid: SimulationFramework.Messaging
+  commentId: N:SimulationFramework.Messaging
+  href: SimulationFramework.html
+  name: SimulationFramework.Messaging
+  nameWithType: SimulationFramework.Messaging
+  fullName: SimulationFramework.Messaging
+  spec.csharp:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Messaging
+    name: Messaging
+    href: SimulationFramework.Messaging.html
+  spec.vb:
+  - uid: SimulationFramework
+    name: SimulationFramework
+    href: SimulationFramework.html
+  - name: .
+  - uid: SimulationFramework.Messaging
+    name: Messaging
+    href: SimulationFramework.Messaging.html
+- uid: SimulationFramework.Messaging.ListenerPriority
+  commentId: T:SimulationFramework.Messaging.ListenerPriority
+  parent: SimulationFramework.Messaging
+  href: SimulationFramework.Messaging.ListenerPriority.html
+  name: ListenerPriority
+  nameWithType: ListenerPriority
+  fullName: SimulationFramework.Messaging.ListenerPriority

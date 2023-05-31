@@ -1,0 +1,828 @@
+### YamlMime:ManagedReference
+items:
+- uid: SimulationFramework.InputContext
+  commentId: T:SimulationFramework.InputContext
+  id: InputContext
+  parent: SimulationFramework
+  children:
+  - SimulationFramework.InputContext.Dispose
+  - SimulationFramework.InputContext.Initialize(SimulationFramework.Application)
+  - SimulationFramework.InputContext.SendChar(System.Char)
+  - SimulationFramework.InputContext.UpdateGamepadButton(SimulationFramework.GamepadButton,System.Boolean)
+  - SimulationFramework.InputContext.UpdateGamepadJoysticks(System.Numerics.Vector2,System.Numerics.Vector2)
+  - SimulationFramework.InputContext.UpdateGamepadTriggers(System.Single,System.Single)
+  - SimulationFramework.InputContext.UpdateKey(SimulationFramework.Key,System.Boolean)
+  - SimulationFramework.InputContext.UpdateMouseButton(SimulationFramework.MouseButton,System.Boolean)
+  - SimulationFramework.InputContext.UpdateMousePosition(System.Numerics.Vector2)
+  - SimulationFramework.InputContext.UpdateMouseScroll(System.Int32)
+  langs:
+  - csharp
+  - vb
+  name: InputContext
+  nameWithType: InputContext
+  fullName: SimulationFramework.InputContext
+  type: Class
+  source:
+    remote:
+      path: src/SimulationFramework/InputContext.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: InputContext
+    path: src/SimulationFramework/InputContext.cs
+    startLine: 13
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Controls the input sent to a simulation.
+  example: []
+  syntax:
+    content: 'public sealed class InputContext : IApplicationComponent, IDisposable'
+    content.vb: Public NotInheritable Class InputContext Implements IApplicationComponent, IDisposable
+  inheritance:
+  - System.Object
+  implements:
+  - SimulationFramework.IApplicationComponent
+  - System.IDisposable
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: SimulationFramework.InputContext.UpdateKey(SimulationFramework.Key,System.Boolean)
+  commentId: M:SimulationFramework.InputContext.UpdateKey(SimulationFramework.Key,System.Boolean)
+  id: UpdateKey(SimulationFramework.Key,System.Boolean)
+  parent: SimulationFramework.InputContext
+  langs:
+  - csharp
+  - vb
+  name: UpdateKey(Key, bool)
+  nameWithType: InputContext.UpdateKey(Key, bool)
+  fullName: SimulationFramework.InputContext.UpdateKey(SimulationFramework.Key, bool)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/InputContext.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: UpdateKey
+    path: src/SimulationFramework/InputContext.cs
+    startLine: 42
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public void UpdateKey(Key key, bool isDown)
+    parameters:
+    - id: key
+      type: SimulationFramework.Key
+    - id: isDown
+      type: System.Boolean
+    content.vb: Public Sub UpdateKey(key As Key, isDown As Boolean)
+  overload: SimulationFramework.InputContext.UpdateKey*
+  nameWithType.vb: InputContext.UpdateKey(Key, Boolean)
+  fullName.vb: SimulationFramework.InputContext.UpdateKey(SimulationFramework.Key, Boolean)
+  name.vb: UpdateKey(Key, Boolean)
+- uid: SimulationFramework.InputContext.UpdateMouseButton(SimulationFramework.MouseButton,System.Boolean)
+  commentId: M:SimulationFramework.InputContext.UpdateMouseButton(SimulationFramework.MouseButton,System.Boolean)
+  id: UpdateMouseButton(SimulationFramework.MouseButton,System.Boolean)
+  parent: SimulationFramework.InputContext
+  langs:
+  - csharp
+  - vb
+  name: UpdateMouseButton(MouseButton, bool)
+  nameWithType: InputContext.UpdateMouseButton(MouseButton, bool)
+  fullName: SimulationFramework.InputContext.UpdateMouseButton(SimulationFramework.MouseButton, bool)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/InputContext.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: UpdateMouseButton
+    path: src/SimulationFramework/InputContext.cs
+    startLine: 64
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public void UpdateMouseButton(MouseButton button, bool isDown)
+    parameters:
+    - id: button
+      type: SimulationFramework.MouseButton
+    - id: isDown
+      type: System.Boolean
+    content.vb: Public Sub UpdateMouseButton(button As MouseButton, isDown As Boolean)
+  overload: SimulationFramework.InputContext.UpdateMouseButton*
+  nameWithType.vb: InputContext.UpdateMouseButton(MouseButton, Boolean)
+  fullName.vb: SimulationFramework.InputContext.UpdateMouseButton(SimulationFramework.MouseButton, Boolean)
+  name.vb: UpdateMouseButton(MouseButton, Boolean)
+- uid: SimulationFramework.InputContext.UpdateMousePosition(System.Numerics.Vector2)
+  commentId: M:SimulationFramework.InputContext.UpdateMousePosition(System.Numerics.Vector2)
+  id: UpdateMousePosition(System.Numerics.Vector2)
+  parent: SimulationFramework.InputContext
+  langs:
+  - csharp
+  - vb
+  name: UpdateMousePosition(Vector2)
+  nameWithType: InputContext.UpdateMousePosition(Vector2)
+  fullName: SimulationFramework.InputContext.UpdateMousePosition(System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/InputContext.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: UpdateMousePosition
+    path: src/SimulationFramework/InputContext.cs
+    startLine: 81
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public void UpdateMousePosition(Vector2 position)
+    parameters:
+    - id: position
+      type: System.Numerics.Vector2
+    content.vb: Public Sub UpdateMousePosition(position As Vector2)
+  overload: SimulationFramework.InputContext.UpdateMousePosition*
+- uid: SimulationFramework.InputContext.UpdateMouseScroll(System.Int32)
+  commentId: M:SimulationFramework.InputContext.UpdateMouseScroll(System.Int32)
+  id: UpdateMouseScroll(System.Int32)
+  parent: SimulationFramework.InputContext
+  langs:
+  - csharp
+  - vb
+  name: UpdateMouseScroll(int)
+  nameWithType: InputContext.UpdateMouseScroll(int)
+  fullName: SimulationFramework.InputContext.UpdateMouseScroll(int)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/InputContext.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: UpdateMouseScroll
+    path: src/SimulationFramework/InputContext.cs
+    startLine: 86
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public void UpdateMouseScroll(int scrollDelta)
+    parameters:
+    - id: scrollDelta
+      type: System.Int32
+    content.vb: Public Sub UpdateMouseScroll(scrollDelta As Integer)
+  overload: SimulationFramework.InputContext.UpdateMouseScroll*
+  nameWithType.vb: InputContext.UpdateMouseScroll(Integer)
+  fullName.vb: SimulationFramework.InputContext.UpdateMouseScroll(Integer)
+  name.vb: UpdateMouseScroll(Integer)
+- uid: SimulationFramework.InputContext.UpdateGamepadTriggers(System.Single,System.Single)
+  commentId: M:SimulationFramework.InputContext.UpdateGamepadTriggers(System.Single,System.Single)
+  id: UpdateGamepadTriggers(System.Single,System.Single)
+  parent: SimulationFramework.InputContext
+  langs:
+  - csharp
+  - vb
+  name: UpdateGamepadTriggers(float, float)
+  nameWithType: InputContext.UpdateGamepadTriggers(float, float)
+  fullName: SimulationFramework.InputContext.UpdateGamepadTriggers(float, float)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/InputContext.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: UpdateGamepadTriggers
+    path: src/SimulationFramework/InputContext.cs
+    startLine: 91
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public void UpdateGamepadTriggers(float rightTrigger, float leftTrigger)
+    parameters:
+    - id: rightTrigger
+      type: System.Single
+    - id: leftTrigger
+      type: System.Single
+    content.vb: Public Sub UpdateGamepadTriggers(rightTrigger As Single, leftTrigger As Single)
+  overload: SimulationFramework.InputContext.UpdateGamepadTriggers*
+  nameWithType.vb: InputContext.UpdateGamepadTriggers(Single, Single)
+  fullName.vb: SimulationFramework.InputContext.UpdateGamepadTriggers(Single, Single)
+  name.vb: UpdateGamepadTriggers(Single, Single)
+- uid: SimulationFramework.InputContext.UpdateGamepadJoysticks(System.Numerics.Vector2,System.Numerics.Vector2)
+  commentId: M:SimulationFramework.InputContext.UpdateGamepadJoysticks(System.Numerics.Vector2,System.Numerics.Vector2)
+  id: UpdateGamepadJoysticks(System.Numerics.Vector2,System.Numerics.Vector2)
+  parent: SimulationFramework.InputContext
+  langs:
+  - csharp
+  - vb
+  name: UpdateGamepadJoysticks(Vector2, Vector2)
+  nameWithType: InputContext.UpdateGamepadJoysticks(Vector2, Vector2)
+  fullName: SimulationFramework.InputContext.UpdateGamepadJoysticks(System.Numerics.Vector2, System.Numerics.Vector2)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/InputContext.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: UpdateGamepadJoysticks
+    path: src/SimulationFramework/InputContext.cs
+    startLine: 97
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public void UpdateGamepadJoysticks(Vector2 rightJoystick, Vector2 leftJoystick)
+    parameters:
+    - id: rightJoystick
+      type: System.Numerics.Vector2
+    - id: leftJoystick
+      type: System.Numerics.Vector2
+    content.vb: Public Sub UpdateGamepadJoysticks(rightJoystick As Vector2, leftJoystick As Vector2)
+  overload: SimulationFramework.InputContext.UpdateGamepadJoysticks*
+- uid: SimulationFramework.InputContext.UpdateGamepadButton(SimulationFramework.GamepadButton,System.Boolean)
+  commentId: M:SimulationFramework.InputContext.UpdateGamepadButton(SimulationFramework.GamepadButton,System.Boolean)
+  id: UpdateGamepadButton(SimulationFramework.GamepadButton,System.Boolean)
+  parent: SimulationFramework.InputContext
+  langs:
+  - csharp
+  - vb
+  name: UpdateGamepadButton(GamepadButton, bool)
+  nameWithType: InputContext.UpdateGamepadButton(GamepadButton, bool)
+  fullName: SimulationFramework.InputContext.UpdateGamepadButton(SimulationFramework.GamepadButton, bool)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/InputContext.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: UpdateGamepadButton
+    path: src/SimulationFramework/InputContext.cs
+    startLine: 103
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public void UpdateGamepadButton(GamepadButton button, bool isDown)
+    parameters:
+    - id: button
+      type: SimulationFramework.GamepadButton
+    - id: isDown
+      type: System.Boolean
+    content.vb: Public Sub UpdateGamepadButton(button As GamepadButton, isDown As Boolean)
+  overload: SimulationFramework.InputContext.UpdateGamepadButton*
+  nameWithType.vb: InputContext.UpdateGamepadButton(GamepadButton, Boolean)
+  fullName.vb: SimulationFramework.InputContext.UpdateGamepadButton(SimulationFramework.GamepadButton, Boolean)
+  name.vb: UpdateGamepadButton(GamepadButton, Boolean)
+- uid: SimulationFramework.InputContext.SendChar(System.Char)
+  commentId: M:SimulationFramework.InputContext.SendChar(System.Char)
+  id: SendChar(System.Char)
+  parent: SimulationFramework.InputContext
+  langs:
+  - csharp
+  - vb
+  name: SendChar(char)
+  nameWithType: InputContext.SendChar(char)
+  fullName: SimulationFramework.InputContext.SendChar(char)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/InputContext.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: SendChar
+    path: src/SimulationFramework/InputContext.cs
+    startLine: 114
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  syntax:
+    content: public void SendChar(char keycode)
+    parameters:
+    - id: keycode
+      type: System.Char
+    content.vb: Public Sub SendChar(keycode As Char)
+  overload: SimulationFramework.InputContext.SendChar*
+  nameWithType.vb: InputContext.SendChar(Char)
+  fullName.vb: SimulationFramework.InputContext.SendChar(Char)
+  name.vb: SendChar(Char)
+- uid: SimulationFramework.InputContext.Dispose
+  commentId: M:SimulationFramework.InputContext.Dispose
+  id: Dispose
+  parent: SimulationFramework.InputContext
+  langs:
+  - csharp
+  - vb
+  name: Dispose()
+  nameWithType: InputContext.Dispose()
+  fullName: SimulationFramework.InputContext.Dispose()
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/InputContext.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Dispose
+    path: src/SimulationFramework/InputContext.cs
+    startLine: 137
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+  example: []
+  syntax:
+    content: public void Dispose()
+    content.vb: Public Sub Dispose()
+  overload: SimulationFramework.InputContext.Dispose*
+  implements:
+  - System.IDisposable.Dispose
+- uid: SimulationFramework.InputContext.Initialize(SimulationFramework.Application)
+  commentId: M:SimulationFramework.InputContext.Initialize(SimulationFramework.Application)
+  id: Initialize(SimulationFramework.Application)
+  parent: SimulationFramework.InputContext
+  langs:
+  - csharp
+  - vb
+  name: Initialize(Application)
+  nameWithType: InputContext.Initialize(Application)
+  fullName: SimulationFramework.InputContext.Initialize(SimulationFramework.Application)
+  type: Method
+  source:
+    remote:
+      path: src/SimulationFramework/InputContext.cs
+      branch: master
+      repo: https://github.com/Redninja106/simulationframework
+    id: Initialize
+    path: src/SimulationFramework/InputContext.cs
+    startLine: 141
+  assemblies:
+  - SimulationFramework
+  namespace: SimulationFramework
+  summary: >-
+    Initializes the component.
+
+    This method is only called once on each component.
+  example: []
+  syntax:
+    content: public void Initialize(Application application)
+    parameters:
+    - id: application
+      type: SimulationFramework.Application
+      description: The application to which this <xref href="SimulationFramework.IApplicationComponent" data-throw-if-not-resolved="false"></xref> belongs to.
+    content.vb: Public Sub Initialize(application As Application)
+  overload: SimulationFramework.InputContext.Initialize*
+  implements:
+  - SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+references:
+- uid: SimulationFramework
+  commentId: N:SimulationFramework
+  href: SimulationFramework.html
+  name: SimulationFramework
+  nameWithType: SimulationFramework
+  fullName: SimulationFramework
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: SimulationFramework.IApplicationComponent
+  commentId: T:SimulationFramework.IApplicationComponent
+  parent: SimulationFramework
+  href: SimulationFramework.IApplicationComponent.html
+  name: IApplicationComponent
+  nameWithType: IApplicationComponent
+  fullName: SimulationFramework.IApplicationComponent
+- uid: System.IDisposable
+  commentId: T:System.IDisposable
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable
+  name: IDisposable
+  nameWithType: IDisposable
+  fullName: System.IDisposable
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: SimulationFramework.InputContext.UpdateKey*
+  commentId: Overload:SimulationFramework.InputContext.UpdateKey
+  href: SimulationFramework.InputContext.html#SimulationFramework.InputContext.UpdateKey(SimulationFramework.Key,System.Boolean)
+  name: UpdateKey
+  nameWithType: InputContext.UpdateKey
+  fullName: SimulationFramework.InputContext.UpdateKey
+- uid: SimulationFramework.Key
+  commentId: T:SimulationFramework.Key
+  parent: SimulationFramework
+  href: SimulationFramework.Key.html
+  name: Key
+  nameWithType: Key
+  fullName: SimulationFramework.Key
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: SimulationFramework.InputContext.UpdateMouseButton*
+  commentId: Overload:SimulationFramework.InputContext.UpdateMouseButton
+  href: SimulationFramework.InputContext.html#SimulationFramework.InputContext.UpdateMouseButton(SimulationFramework.MouseButton,System.Boolean)
+  name: UpdateMouseButton
+  nameWithType: InputContext.UpdateMouseButton
+  fullName: SimulationFramework.InputContext.UpdateMouseButton
+- uid: SimulationFramework.MouseButton
+  commentId: T:SimulationFramework.MouseButton
+  parent: SimulationFramework
+  href: SimulationFramework.MouseButton.html
+  name: MouseButton
+  nameWithType: MouseButton
+  fullName: SimulationFramework.MouseButton
+- uid: SimulationFramework.InputContext.UpdateMousePosition*
+  commentId: Overload:SimulationFramework.InputContext.UpdateMousePosition
+  href: SimulationFramework.InputContext.html#SimulationFramework.InputContext.UpdateMousePosition(System.Numerics.Vector2)
+  name: UpdateMousePosition
+  nameWithType: InputContext.UpdateMousePosition
+  fullName: SimulationFramework.InputContext.UpdateMousePosition
+- uid: System.Numerics.Vector2
+  commentId: T:System.Numerics.Vector2
+  parent: System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.numerics.vector2
+  name: Vector2
+  nameWithType: Vector2
+  fullName: System.Numerics.Vector2
+- uid: System.Numerics
+  commentId: N:System.Numerics
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Numerics
+  nameWithType: System.Numerics
+  fullName: System.Numerics
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Numerics
+    name: Numerics
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.numerics
+- uid: SimulationFramework.InputContext.UpdateMouseScroll*
+  commentId: Overload:SimulationFramework.InputContext.UpdateMouseScroll
+  href: SimulationFramework.InputContext.html#SimulationFramework.InputContext.UpdateMouseScroll(System.Int32)
+  name: UpdateMouseScroll
+  nameWithType: InputContext.UpdateMouseScroll
+  fullName: SimulationFramework.InputContext.UpdateMouseScroll
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: SimulationFramework.InputContext.UpdateGamepadTriggers*
+  commentId: Overload:SimulationFramework.InputContext.UpdateGamepadTriggers
+  href: SimulationFramework.InputContext.html#SimulationFramework.InputContext.UpdateGamepadTriggers(System.Single,System.Single)
+  name: UpdateGamepadTriggers
+  nameWithType: InputContext.UpdateGamepadTriggers
+  fullName: SimulationFramework.InputContext.UpdateGamepadTriggers
+- uid: System.Single
+  commentId: T:System.Single
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.single
+  name: float
+  nameWithType: float
+  fullName: float
+  nameWithType.vb: Single
+  fullName.vb: Single
+  name.vb: Single
+- uid: SimulationFramework.InputContext.UpdateGamepadJoysticks*
+  commentId: Overload:SimulationFramework.InputContext.UpdateGamepadJoysticks
+  href: SimulationFramework.InputContext.html#SimulationFramework.InputContext.UpdateGamepadJoysticks(System.Numerics.Vector2,System.Numerics.Vector2)
+  name: UpdateGamepadJoysticks
+  nameWithType: InputContext.UpdateGamepadJoysticks
+  fullName: SimulationFramework.InputContext.UpdateGamepadJoysticks
+- uid: SimulationFramework.InputContext.UpdateGamepadButton*
+  commentId: Overload:SimulationFramework.InputContext.UpdateGamepadButton
+  href: SimulationFramework.InputContext.html#SimulationFramework.InputContext.UpdateGamepadButton(SimulationFramework.GamepadButton,System.Boolean)
+  name: UpdateGamepadButton
+  nameWithType: InputContext.UpdateGamepadButton
+  fullName: SimulationFramework.InputContext.UpdateGamepadButton
+- uid: SimulationFramework.GamepadButton
+  commentId: T:SimulationFramework.GamepadButton
+  parent: SimulationFramework
+  href: SimulationFramework.GamepadButton.html
+  name: GamepadButton
+  nameWithType: GamepadButton
+  fullName: SimulationFramework.GamepadButton
+- uid: SimulationFramework.InputContext.SendChar*
+  commentId: Overload:SimulationFramework.InputContext.SendChar
+  href: SimulationFramework.InputContext.html#SimulationFramework.InputContext.SendChar(System.Char)
+  name: SendChar
+  nameWithType: InputContext.SendChar
+  fullName: SimulationFramework.InputContext.SendChar
+- uid: System.Char
+  commentId: T:System.Char
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.char
+  name: char
+  nameWithType: char
+  fullName: char
+  nameWithType.vb: Char
+  fullName.vb: Char
+  name.vb: Char
+- uid: SimulationFramework.InputContext.Dispose*
+  commentId: Overload:SimulationFramework.InputContext.Dispose
+  href: SimulationFramework.InputContext.html#SimulationFramework.InputContext.Dispose
+  name: Dispose
+  nameWithType: InputContext.Dispose
+  fullName: SimulationFramework.InputContext.Dispose
+- uid: System.IDisposable.Dispose
+  commentId: M:System.IDisposable.Dispose
+  parent: System.IDisposable
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  name: Dispose()
+  nameWithType: IDisposable.Dispose()
+  fullName: System.IDisposable.Dispose()
+  spec.csharp:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.IDisposable.Dispose
+    name: Dispose
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+  - name: (
+  - name: )
+- uid: SimulationFramework.InputContext.Initialize*
+  commentId: Overload:SimulationFramework.InputContext.Initialize
+  href: SimulationFramework.InputContext.html#SimulationFramework.InputContext.Initialize(SimulationFramework.Application)
+  name: Initialize
+  nameWithType: InputContext.Initialize
+  fullName: SimulationFramework.InputContext.Initialize
+- uid: SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  commentId: M:SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  parent: SimulationFramework.IApplicationComponent
+  href: SimulationFramework.IApplicationComponent.html#SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  name: Initialize(Application)
+  nameWithType: IApplicationComponent.Initialize(Application)
+  fullName: SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  spec.csharp:
+  - uid: SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+    name: Initialize
+    href: SimulationFramework.IApplicationComponent.html#SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  - name: (
+  - uid: SimulationFramework.Application
+    name: Application
+    href: SimulationFramework.Application.html
+  - name: )
+  spec.vb:
+  - uid: SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+    name: Initialize
+    href: SimulationFramework.IApplicationComponent.html#SimulationFramework.IApplicationComponent.Initialize(SimulationFramework.Application)
+  - name: (
+  - uid: SimulationFramework.Application
+    name: Application
+    href: SimulationFramework.Application.html
+  - name: )
+- uid: SimulationFramework.Application
+  commentId: T:SimulationFramework.Application
+  parent: SimulationFramework
+  href: SimulationFramework.Application.html
+  name: Application
+  nameWithType: Application
+  fullName: SimulationFramework.Application
