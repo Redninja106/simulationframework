@@ -52,6 +52,10 @@ public interface ICanvas : IDisposable
 
     /// <summary>
     /// Configures the canvas to fill shapes with the provided color.
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Fill"/>, 
+    /// meaning that any shapes drawn after this call will be filled with the provided color. 
+    /// </para>
     /// </summary>
     sealed void Fill(Color color)
     {
@@ -61,6 +65,10 @@ public interface ICanvas : IDisposable
 
     /// <summary>
     /// Configures the canvas to fill shapes using the provided gradient.
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Gradient"/>, 
+    /// meaning that any shapes drawn after this call will be filled with the provided gradient. 
+    /// </para>
     /// </summary>
     sealed void Fill(Gradient gradient)
     {
@@ -70,6 +78,10 @@ public interface ICanvas : IDisposable
 
     /// <summary>
     /// Configures the canvas to outline shapes with the provided color.
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Stroke"/>, 
+    /// meaning that any shapes drawn after this call will be outlined with the provided color. 
+    /// </para>
     /// </summary>
     sealed void Stroke(Color color)
     {
@@ -89,11 +101,19 @@ public interface ICanvas : IDisposable
 
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Textured"/>, 
+    /// meaning that any shapes drawn after this call will be filled with the provided texture. 
+    /// </para>
     /// </summary>
     sealed void Fill(ITexture texture) => Fill(texture, Matrix3x2.Identity);
 
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Textured"/>, 
+    /// meaning that any shapes drawn after this call will be filled with the provided texture. 
+    /// </para>
     /// </summary>
     sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX = TileMode.Clamp, TileMode tileModeY = TileMode.Clamp)
     {
