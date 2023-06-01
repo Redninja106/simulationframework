@@ -1,13 +1,7 @@
 ﻿using Silk.NET.Input;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework.Desktop;
 internal class DesktopMouseProvider : IMouseProvider

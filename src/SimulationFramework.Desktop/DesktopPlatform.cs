@@ -6,7 +6,6 @@ using Silk.NET.Windowing.Glfw;
 using Silk.NET.Input;
 using Silk.NET.Input.Glfw;
 using SimulationFramework.Drawing;
-using SimulationFramework.Input;
 
 namespace SimulationFramework.Desktop;
 

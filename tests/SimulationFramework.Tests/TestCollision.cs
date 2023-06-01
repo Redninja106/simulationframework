@@ -1,6 +1,3 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Numerics;
-
 namespace SimulationFramework.Tests;
 
 [TestClass]

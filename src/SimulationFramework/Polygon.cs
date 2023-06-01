@@ -1,9 +1,6 @@
-﻿using SimulationFramework.Drawing;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using System.Numerics;
-using System.Reflection.Metadata;
 
 // parameter's docs may be inherited
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)

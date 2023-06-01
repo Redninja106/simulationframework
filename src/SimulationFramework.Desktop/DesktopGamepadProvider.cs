@@ -1,15 +1,8 @@
-﻿using Silk.NET.Core.Native;
-using Silk.NET.Input;
+﻿using Silk.NET.Input;
 using Silk.NET.Input.Extensions;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework.Desktop;
 internal class DesktopGamepadProvider : IGamepadProvider

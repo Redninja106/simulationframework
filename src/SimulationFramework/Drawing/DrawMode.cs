@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimulationFramework.Drawing;
+﻿namespace SimulationFramework.Drawing;
 
 /// <summary>
 /// Describes the behavior of an <see cref="ICanvas"/> when drawing shapes.

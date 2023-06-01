@@ -1,7 +1,6 @@
 ﻿using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Input;
-using System;
 using System.Numerics;
 
 namespace DrawingShapes;

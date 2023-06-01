@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SimulationFramework.Components;
+﻿namespace SimulationFramework.Components;
 
 /// <summary>
 /// Provides Fullscreen functionality to the application.
