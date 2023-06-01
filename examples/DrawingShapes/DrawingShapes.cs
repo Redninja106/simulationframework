@@ -32,7 +32,7 @@ class DrawingShapesSimulation : Simulation
         canvas.Fill(Color.Red);
         canvas.DrawRect(100, 100, 100, 100);
 
-        canvas.Fill(Gradient.CreateLinear(300, 100, 400, 200, Color.Blue, Color.Purple, Color.Red));
+        canvas.Fill(new LinearGradient(300, 100, 400, 200, Color.Blue, Color.Purple, Color.Red));
         canvas.DrawRect(300, 100, 100, 100);
 
         canvas.Stroke(Color.Yellow);
