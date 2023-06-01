@@ -102,9 +102,11 @@ internal sealed class SkiaCanvas : ICanvas
         // even when the matrix transform may still scale it back up. 
         // As a workaround, we temporarily set the TextSize to 100, then manually rescale the bounds from there.
 
+        const float measureTextWorkaroundSize = 100;
+
         // save old text size
         var prevTextSize = currentState.Paint.TextSize;
-        currentState.Paint.TextSize = 100;
+        currentState.Paint.TextSize = measureTextWorkaroundSize;
 
         // measure text
         SKRect skbounds = default;
@@ -114,10 +116,10 @@ internal sealed class SkiaCanvas : ICanvas
         currentState.Paint.TextSize = prevTextSize;
 
         // rescale rectangle
-        skbounds.Left *= (1 / 100f) * prevTextSize;
-        skbounds.Right *= (1 / 100f) * prevTextSize;
-        skbounds.Top *= (1 / 100f) * prevTextSize;
-        skbounds.Bottom *= (1 / 100f) * prevTextSize;
+        skbounds.Left *= (1f / measureTextWorkaroundSize) * prevTextSize;
+        skbounds.Right *= (1f / measureTextWorkaroundSize) * prevTextSize;
+        skbounds.Top *= (1f / measureTextWorkaroundSize) * prevTextSize;
+        skbounds.Bottom *= (1f / measureTextWorkaroundSize) * prevTextSize;
 
         // make an sf rectangle to take Alignment into account
         Rectangle bounds = new(position, new(skbounds.Width, skbounds.Height), alignment);
