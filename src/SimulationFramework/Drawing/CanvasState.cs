@@ -145,11 +145,17 @@ public abstract class CanvasState
         UpdateAntialias(other.Antialias);
     }
 
+    /// <summary>
+    /// Reapplies the state's settings.
+    /// </summary>
     internal protected void Reapply()
     {
         UpdateValues(this);
     }
 
+    /// <summary>
+    /// When overridden in dervied classes, updates the canvas state's fill texture and any respective settings.
+    /// </summary>
     internal protected virtual void UpdateFillTexture(ITexture? texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
     {
         FillTexture = texture;
@@ -158,52 +164,83 @@ public abstract class CanvasState
         FillTextureTileModeY = tileModeY;
     }
 
+    /// <summary>
+    /// When overridden in dervied classes, updates the canvas state's stroke color.
+    /// </summary>
     internal protected virtual void UpdateStrokeColor(Color strokeColor)
     {
         StrokeColor = strokeColor;
     }
 
+    /// <summary>
+    /// When overridden in dervied classes, updates the canvas state's fill color.
+    /// </summary>
     internal protected virtual void UpdateFillColor(Color fillColor)
     {
         FillColor = fillColor;
     }
 
+    /// <summary>
+    /// When overridden in dervied classes, updates the canvas state's gradient.
+    /// </summary>
     internal protected virtual void UpdateGradient(Gradient? gradient)
     {
         Gradient = gradient;
     }
 
+    /// <summary>
+    /// When overridden in dervied classes, updates the canvas state's transform.
+    /// </summary>
     internal protected virtual void UpdateTransform(Matrix3x2 transform)
     {
         Transform = transform;
     }
 
+    /// <summary>
+    /// When overridden in dervied classes, updates the canvas state's clip region.
+    /// </summary>
     internal protected virtual void UpdateClipRegion(Rectangle? clipRegion)
     {
         ClipRegion = clipRegion;
     }
 
+    /// <summary>
+    /// When overridden in dervied classes, updates the canvas state's stroke width.
+    /// </summary>
     internal protected virtual void UpdateStrokeWidth(float strokeWidth)
     {
         StrokeWidth = strokeWidth;
     }
 
+    /// <summary>
+    /// When overridden in dervied classes, updates the canvas state's draw mode.
+    /// </summary>
     internal protected virtual void UpdateDrawMode(DrawMode drawMode)
     {
         DrawMode = drawMode;
     }
 
+    /// <summary>
+    /// When overridden in dervied classes, updates the canvas state's font size and style.
+    /// </summary>
     internal protected virtual void UpdateFontStyle(float size, FontStyle style)
     {
         FontSize = size;
         FontStyle = style;
     }
 
+    /// <summary>
+    /// When overridden in dervied classes, updates the canvas state's font.
+    /// </summary>
     internal protected virtual void UpdateFont(string? name)
     {
         FontName = name;
     }
 
+
+    /// <summary>
+    /// When overridden in dervied classes, updates whether canvas state has antialiasing enabled.
+    /// </summary>
     internal protected virtual void UpdateAntialias(bool antialias)
     {
         Antialias = antialias;

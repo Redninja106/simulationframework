@@ -22,7 +22,7 @@ SimulationFramework is a cross-platform library for creative coding, game develo
 
 - **Portable**: The core package is dependency free, meaning SimulationFramework can run anywhere .NET can.
 
-- **Documented**: [The wiki](https://github.com/Redninja106/simulationframework/wiki) contains everything you need to know about SimulationFramework, its features, and how to use them.
+- **Documented**: [The SimulationFramework Docs](https://wyan.dev/simulationframework/) contain everything you need to know about SimulationFramework, its features, and how to use them.
 
 
 ### Features:
