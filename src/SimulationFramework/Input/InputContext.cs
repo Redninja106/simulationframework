@@ -163,6 +163,7 @@ public sealed class InputContext : ISimulationComponent
     {
     }
 
+    /// <inheritdoc/>
     public void Initialize(MessageDispatcher dispatcher)
     {
         dispatcher.Subscribe<AfterRenderMessage>(m =>

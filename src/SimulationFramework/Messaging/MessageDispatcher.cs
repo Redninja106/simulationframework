@@ -80,7 +80,6 @@ public sealed class MessageDispatcher
     /// </summary>
     /// <typeparam name="T">The type of message to listen for.</typeparam>
     /// <param name="listener">The listener delegate.</param>
-    /// <param name="priority">The priority of the listener</param>
     public void Subscribe<T>(Action<T> listener) where T : Message
     {
         ArgumentNullException.ThrowIfNull(listener);

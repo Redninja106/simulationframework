@@ -9,12 +9,10 @@ internal class DesktopGamepadProvider : IGamepadProvider
 {
     private readonly IGamepad gamepad;
 
-    private GamepadState state;
-
-    public Vector2 LeftJoystick => new(state.GetThumbsticks()[0].X, state.GetThumbsticks()[0].X);
-    public Vector2 RightJoystick => new(state.GetThumbsticks()[1].X, state.GetThumbsticks()[1].X);
-    public float LeftTrigger => state.GetTriggers()[0].Position;
-    public float RightTrigger => state.GetTriggers()[1].Position;
+    public Vector2 LeftJoystick => new(gamepad.Thumbsticks[0].X, gamepad.Thumbsticks[0].X);
+    public Vector2 RightJoystick => new(gamepad.Thumbsticks[1].X, gamepad.Thumbsticks[1].X);
+    public float LeftTrigger => gamepad.Triggers[0].Position;
+    public float RightTrigger => gamepad.Triggers[1].Position;
     public IEnumerable<GamepadButton> HeldButtons => heldButtons;
     public IEnumerable<GamepadButton> PressedButtons => pressedButtons;
     public IEnumerable<GamepadButton> ReleasedButtons => releasedButtons;
@@ -83,5 +81,6 @@ internal class DesktopGamepadProvider : IGamepadProvider
         ButtonName.DPadRight => GamepadButton.Right,
         ButtonName.DPadDown => GamepadButton.Down,
         ButtonName.DPadLeft => GamepadButton.Left,
+        _ => throw new Exception("Unrecognized gamepad button"),
     };
 }

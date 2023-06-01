@@ -5,5 +5,8 @@
 /// </summary>
 public abstract class Message
 {
+    /// <summary>
+    /// The time at which the message was dispatched.
+    /// </summary>
     public float DispatchTime { get; internal set; }
 }

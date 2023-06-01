@@ -3,11 +3,29 @@ using Silk.NET.Windowing;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
+using System.Numerics;
 
 namespace SimulationFramework.Desktop;
 internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
 {
-    public string Title { get; set; }
+    private readonly IWindow window;
+    private Rectangle windowedBounds;
+    private readonly Glfw glfw = Glfw.GetApi();
+
+    private string title;
+
+    public unsafe string Title 
+    { 
+        get
+        {
+            return title;
+        }
+        set
+        {
+            glfw.SetWindowTitle(WindowHandle, title);
+            title = value;
+        }
+    }
     public IDisplay Display => GetDisplay();
     
     public int Width
@@ -28,14 +46,18 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     public bool IsMaximized { get; }
     public bool IsFullscreen { get; private set; }
 
-    private readonly IWindow window;
-
-    private Rectangle windowedBounds;
-    private Glfw glfw = Glfw.GetApi();
-
     private unsafe WindowHandle* WindowHandle => (WindowHandle*)window.Native.Glfw!.Value;
 
     public bool PreferExclusive { get; set; }
+
+    public unsafe Vector2 Position 
+    { 
+        get 
+        { 
+            glfw.GetWindowPos(WindowHandle, out int x, out int y);
+            return new(x, y);
+        } 
+    }
 
     public DesktopWindowProvider(IWindow window)
     {
@@ -110,7 +132,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
         return glfw.GetError(out _) == ErrorCode.NoError;
     }
 
-    public unsafe bool TrySetPosition(int x, int y)
+    public unsafe bool TryMove(int x, int y)
     {
         glfw.SetWindowPos(WindowHandle, x, y);
         return glfw.GetError(out _) == ErrorCode.NoError;

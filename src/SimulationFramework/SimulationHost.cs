@@ -9,16 +9,26 @@ using System.Linq;
 using System.Reflection;
 
 namespace SimulationFramework;
+
+/// <summary>
+/// Runs a simulation and manages its components.
+/// </summary>
 public class SimulationHost
 {
+    /// <summary>
+    /// The currently running simulation host.
+    /// </summary>
     public static SimulationHost? Current { get; private set; }
 
     private Simulation? simulation;
+
+    /// <summary>
+    /// The simulation's dispatcher.
+    /// </summary>
     public MessageDispatcher Dispatcher { get; set; }
     private bool initialized = false;
 
     private readonly List<ISimulationComponent> components = new();
-    private readonly HashSet<Type> requiredComponents = new();
 
     private static List<Func<ISimulationPlatform?>> platformFactories = new();
 
@@ -204,14 +214,23 @@ public class SimulationHost
         Current = null;
     }
 
+    /// <summary>
+    /// Register a component with the simulation.
+    /// </summary>
+    /// <param name="component">The component to register.</param>
     public void RegisterComponent(ISimulationComponent component)
     {
         component.Initialize(this.Dispatcher);
         components.Add(component);
     }
 
+    /// <summary>
+    /// Gets a component of the provided type.
+    /// </summary>
+    /// <typeparam name="T">The type of component to find.</typeparam>
+    /// <returns>The component, of type <typeparamref name="T"/>, or null if it was not found.</returns>
     public T? GetComponent<T>() where T : class, ISimulationComponent
     {
-        return components.SingleOrDefault(c => c is T) as T;
+        return components.OfType<T>().FirstOrDefault();
     }
 }

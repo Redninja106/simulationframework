@@ -10,7 +10,7 @@ class MySimulation : Simulation
     bool wantToggleResize;
     public override void OnInitialize()
     {
-        SimulationHost.Current.Dispatcher.Subscribe<BeforeRenderMessage>(m =>
+        SimulationHost.Current!.Dispatcher.Subscribe<BeforeRenderMessage>(m =>
         {
             if (wantToggleResize) 
             {

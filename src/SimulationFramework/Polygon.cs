@@ -111,14 +111,12 @@ public static class Polygon
     /// <returns><see langword="true"/> if <paramref name="polygon"/> is convex; otherwise <see langword="false"/></returns>
     public static bool IsConvex(ReadOnlySpan<Vector2> polygon, [NotNullWhen(true)] out bool? isClockwise)
     {
-        if (!IsValid(polygon))
-            throw new ArgumentException(null, nameof(polygon));
-
+        // for a convex polygon every point will have the same winding value
         bool isAllClockwise = IsClockwiseWinding(polygon, 0);
         for (int i = 0; i < polygon.Length; i++)
         {
             bool vertexClockwise = IsClockwiseWinding(polygon, i);
-            if (isAllClockwise == vertexClockwise)
+            if (isAllClockwise != vertexClockwise)
             {
                 return false;
             }
@@ -221,32 +219,14 @@ public static class Polygon
 
         return polygon.Length;
     }
-
-    // TODO: document
+    
+    /// <summary>
+    /// Determines if a polygon is closed.
+    /// </summary>
+    /// <returns><see langword="true"/> if the polygon is closed; otherwise <see langword="false"/>.</returns>
     public static bool IsClosed(ReadOnlySpan<Vector2> polygon)
     {
         return polygon[0] == polygon[^1];
-    }
-
-    // TODO: document
-    public static bool IsValid(ReadOnlySpan<Vector2> polygon)
-    {
-        if (RemoveCollinearVertices(polygon, Span<Vector2>.Empty) < 3)
-            return false;
-
-        return true;
-    }
-
-    public static Vector2[] RemoveCollinearVertices(ReadOnlySpan<Vector2> polygon)
-    {
-        // TODO: implement
-        throw new NotImplementedException();
-    }
-
-    public static int RemoveCollinearVertices(ReadOnlySpan<Vector2> polygon, Span<Vector2> result)
-    {
-        // TODO: implement
-        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -256,9 +236,6 @@ public static class Polygon
     /// <returns>The smallest possible rectangle that contains all the points in <paramref name="polygon"/>.</returns>
     public static Rectangle GetBoundingBox(ReadOnlySpan<Vector2> polygon)
     {
-        if (!IsValid(polygon))
-            CheckValidity(polygon);
-
         Vector2 min = new(float.PositiveInfinity, float.PositiveInfinity);
         Vector2 max = new(float.NegativeInfinity, float.NegativeInfinity);
         
@@ -270,11 +247,5 @@ public static class Polygon
         }
 
         return Rectangle.FromPoints(min, max);
-    }
-
-    private static void CheckValidity(ReadOnlySpan<Vector2> polygon)
-    {
-        if (!IsValid(polygon))
-            throw new("Invalid polygon!");
     }
 }

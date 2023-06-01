@@ -7,5 +7,8 @@ namespace SimulationFramework.Components;
 /// </summary>
 public interface ISimulationPlatform : ISimulationComponent
 {
+    /// <summary>
+    /// Gets all of the system's currently active displays.
+    /// </summary>
     IEnumerable<IDisplay> GetDisplays();
 }

@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Linq;
+using System.Numerics;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 
 namespace SimulationFramework;
 
+/// <summary>
+/// Provides access to the simulation's window.
+/// </summary>
 public static class Window
 {
     private static IWindowProvider Provider => Application.GetComponent<IWindowProvider>();
@@ -145,19 +149,27 @@ public static class Window
             throw new ArgumentOutOfRangeException(nameof(height), "height must not be negative!");
 
         // 0 means leave as is
-        if (width is 0) width = Window.Width;
-        if (height is 0) height = Window.Height;
+        if (width is 0) width = Width;
+        if (height is 0) height = Height;
 
         return Provider.TryResize(width, height);
     }
 
-    public static void GetPosition(out int x, out int y)
-    {
-        Provider.GetPosition(out x, out y);
-    }
+    /// <summary>
+    /// The position of the window.
+    /// </summary>
+    public static Vector2 Position => Provider.Position;
 
-    public static bool TrySetPosition(int x, int y)
+    /// <summary>
+    /// Sets the position of the window. 
+    /// <para>
+    /// On some platforms or when the window is fullscreen, the window cannot be moved, and this method always returns <see langword="false"/>.</para>
+    /// </summary>
+    /// <param name="x">The x position to move the window to desktop space.</param>
+    /// <param name="y">The y position of move the window to in desktop space.</param>
+    /// <returns><see langword="true"/> if moving the window succeeded; otherwise <see langword="false"/>.</returns>
+    public static bool TryMove(int x, int y)
     {
-        return Provider.TrySetPosition(x, y);
+        return Provider.TryMove(x, y);
     }
 }

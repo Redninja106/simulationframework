@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Drawing;
+using System.Numerics;
 
 namespace SimulationFramework.Components;
 
@@ -10,7 +11,8 @@ public interface IWindowProvider : ISimulationComponent
     IDisplay Display { get; }
     int Width { get; set; }
     int Height { get; set; }
-    
+    Vector2 Position { get; }
+
     bool IsUserResizable { get; set; }
     bool ShowSystemMenu { get; set; }
 
@@ -19,7 +21,6 @@ public interface IWindowProvider : ISimulationComponent
 
     ITexture GetBackBuffer();
 
-    void GetPosition(out int x, out int y);
-    bool TrySetPosition(int x, int y);
+    bool TryMove(int x, int y);
     bool TryResize(int width, int height);
 }
