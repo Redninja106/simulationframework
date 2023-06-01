@@ -131,7 +131,7 @@ public struct Rectangle : IEquatable<Rectangle>
     /// Determines if the rectangle contains the provided point.
     /// </summary>
     /// <param name="point">The point to check the rectangle for.</param>
-    /// <returns>True if the rectangle contains <paramref name="point"/>, otherwise false.</returns>
+    /// <returns><see langword="true"/> if the rectangle contains <paramref name="point"/>; otherwise <see langword="false"/>.</returns>
     public bool ContainsPoint(Vector2 point)
     {
         return this.X <= point.X && this.X + this.Width >= point.X &&
@@ -142,7 +142,7 @@ public struct Rectangle : IEquatable<Rectangle>
     /// Determines if the rectangle has an intersection with another.
     /// </summary>
     /// <param name="other">The rectangle to check for an intersection with.</param>
-    /// <returns>True if the rectangles are intersecting, otherwise false.</returns>
+    /// <returns><see langword="true"/> if the rectangles are intersecting; otherwise <see langword="false"/>.</returns>
     public bool Intersects(Rectangle other)
     {
         return Intersects(other, out _);
@@ -153,7 +153,7 @@ public struct Rectangle : IEquatable<Rectangle>
     /// </summary>
     /// <param name="other">The rectangle to check for an intersection with.</param>
     /// <param name="overlap">The overlapping area between the two rectangles.</param>
-    /// <returns>True if the rectangles are intersecting, otherwise false.</returns>
+    /// <returns><see langword="true"/> if the rectangles are intersecting; otherwise <see langword="false"/>.</returns>
     public bool Intersects(Rectangle other, out Rectangle overlap)
     {
         float x1 = MathF.Max(this.X, other.X);
@@ -225,14 +225,29 @@ public struct Rectangle : IEquatable<Rectangle>
     }
 
     /// <summary>
-    /// Creates a rectangle given the absoulte position of each of its sides.
+    /// Creates a rectangle given the absolute position of each of its sides.
     /// </summary>
     /// <param name="left">The position of the left side of the rectangle on the x-axis.</param>
     /// <param name="top">The position of the top of the rectangle on the y-axis.</param>
     /// <param name="right">The position of the right side of the rectangle on the x-axis.</param>
     /// <param name="bottom">The position of the bottom of the rectangle on the y-axis.</param>
-    public static Rectangle CreateLTRB(float left, float top, float right, float bottom)
+    public static Rectangle FromLTRB(float left, float top, float right, float bottom)
     {
         return new Rectangle(left, top, right - left, bottom - top);
+    }
+
+    /// <summary>
+    /// Creates the smallest possible rectangle that contains a pair of points.
+    /// </summary>
+    /// <param name="a">The first point.</param>
+    /// <param name="b">The second point.</param>
+    public static Rectangle FromPoints(Vector2 a, Vector2 b)
+    {
+        var min = Vector2.Min(a, b);
+        var max = Vector2.Max(a, b);
+
+        var size = max - min;
+
+        return new(min, size);
     }
 }

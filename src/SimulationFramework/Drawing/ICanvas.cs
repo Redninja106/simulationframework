@@ -308,6 +308,7 @@ public interface ICanvas : IDisposable
     /// <param name="destination">The destination bounds of the texture.</param>
     void DrawTexture(ITexture texture, Rectangle source, Rectangle destination);
 
+    // TODO: add a parameter: (bool close = true)
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
     /// </summary>

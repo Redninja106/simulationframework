@@ -72,24 +72,46 @@ public struct Circle : IEquatable<Circle>
         return Position + new Vector2(MathF.Cos(angle) * Radius, MathF.Sin(angle) * Radius);
     }
 
-    /// <summary>
-    /// Computes the distance from this circle to another.
-    /// </summary>
-    /// <param name="other">The circle to compute the distance to.</param>
-    /// <returns>The computed distance.</returns>
-    public float Distance(Circle other)
-    {
-        return Vector2.Distance(this.Position, other.Position) - (this.Radius + other.Radius);
-    }
 
     /// <summary>
     /// Computes the distance from this circle to a given point.
     /// </summary>
     /// <param name="point">The point to compute the distance to.</param>
-    /// <returns>The computed distance.</returns>
+    /// <returns>The computed distance, or 0 if the point lies within this circle.</returns>
     public float Distance(Vector2 point)
     {
         return Distance(new Circle(point, 0));
+    }
+
+
+    /// <summary>
+    /// Computes the distance from this circle to another.
+    /// </summary>
+    /// <param name="other">The circle to compute the distance to.</param>
+    /// <returns>The computed distance, or 0 if the point lies within this circle.</returns>
+    public float Distance(Circle other)
+    {
+        return MathF.Max(0, SignedDistance(other));
+    }
+
+    /// <summary>
+    /// Computes the signed distance from this circle to a given point.
+    /// </summary>
+    /// <param name="point">The point to compute the distance to.</param>
+    /// <returns>The computed distance.</returns>
+    public float SignedDistance(Vector2 point)
+    {
+        return SignedDistance(new Circle(point, 0));
+    }
+
+    /// <summary>
+    /// Computes the signed distance from this circle to another.
+    /// </summary>
+    /// <param name="other">The circle to compute the distance to.</param>
+    /// <returns>The computed distance.</returns>
+    public float SignedDistance(Circle other)
+    {
+        return Vector2.Distance(this.Position, other.Position) - (this.Radius + other.Radius);
     }
 
     /// <summary>
@@ -100,6 +122,26 @@ public struct Circle : IEquatable<Circle>
     public bool Equals(Circle other)
     {
         return this.Radius == other.Radius && this.Position == other.Position;
+    }
+
+    /// <summary>
+    /// Determines if a point lies within this circle.
+    /// </summary>
+    /// <param name="point">The point to check the circle for.</param>
+    /// <returns><see langword="true"/> if this circle contains the provided point; otherwise <see langword="false"/></returns>
+    public bool ContainsPoint(Vector2 point)
+    {
+        return this.Intersects(new Circle(point, 0));
+    }
+
+    /// <summary>
+    /// Determines if two circles are intersecting.
+    /// </summary>
+    /// <param name="other">The circle to check for an intersection with.</param>
+    /// <returns><see langword="true"/> if the circles are intersecting; otherwise <see langword="false"/></returns>
+    public bool Intersects(Circle other)
+    {
+        return Vector2.DistanceSquared(this.Position, other.Position) <= (this.Radius + other.Radius);
     }
 
     /// <inheritdoc/>
