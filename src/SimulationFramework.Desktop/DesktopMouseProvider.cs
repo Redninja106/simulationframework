@@ -39,6 +39,8 @@ internal class DesktopMouseProvider : IMouseProvider
 
         _ = heldButtons.Remove(button);
         releasedButtons.Add(button);
+
+        ButtonReleased?.Invoke(button);
     }
 
     private void Mouse_MouseDown(IMouse arg1, SilkButton arg2)
@@ -49,6 +51,8 @@ internal class DesktopMouseProvider : IMouseProvider
             heldButtons.Add(button);
 
         pressedButtons.Add(button);
+
+        ButtonPressed?.Invoke(button);
     }
 
     public void Initialize(MessageDispatcher dispatcher)

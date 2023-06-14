@@ -14,7 +14,6 @@ internal class DesktopSimulationController : ISimulationController
     private bool isRunning;
 
     // where the window was located before we went into fullscreen
-    private Vector2D<int>? lastWindowPosition;
     private Glfw glfw = Glfw.GetApi();
 
     public DesktopSimulationController(IWindow window)
@@ -49,7 +48,7 @@ internal class DesktopSimulationController : ISimulationController
 
         glfw.SetFramebufferSizeCallback((WindowHandle*)window.Native.Glfw.Value, (window, width, height) =>
         {
-            // when resizing the window contents seem to lag behind the rest of the window by ~1 on the y axis
+            // when resizing, the window contents seem to lag behind the rest of the window by ~1 on the y axis
             // calculate change in size and adjust so content stays in place
             var dh = height - lastHeight;
             Graphics.GetOutputCanvas().Translate(0, -dh);

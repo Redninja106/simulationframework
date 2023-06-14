@@ -39,6 +39,8 @@ internal class DesktopGamepadProvider : IGamepadProvider
 
         heldButtons.Remove(button);
         releasedButtons.Add(button);
+
+        ButtonReleased(button);
     }
 
     private void Gamepad_ButtonDown(IGamepad arg1, Button arg2)
@@ -49,6 +51,8 @@ internal class DesktopGamepadProvider : IGamepadProvider
             heldButtons.Add(button);
         
         pressedButtons.Add(button);
+
+        ButtonPressed(button);
     }
 
     public void Initialize(MessageDispatcher dispatcher)
