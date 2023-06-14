@@ -23,6 +23,8 @@ internal sealed class SkiaCanvas : ICanvas
     // do we own this skcanvas object?
     private readonly bool owner;
 
+    public bool IsDisposed { get; private set; }
+
     public SkiaCanvas(SkiaGraphicsProvider provider, ITexture texture, SKCanvas canvas, bool owner)
     {
         this.Target = texture;
@@ -213,5 +215,7 @@ internal sealed class SkiaCanvas : ICanvas
         {
             stateStack.Pop().Dispose();
         }
+
+        this.IsDisposed = true;
     }
 }

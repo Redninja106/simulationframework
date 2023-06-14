@@ -45,10 +45,9 @@ public interface ITexture : IDisposable
     }
 
     /// <summary>
-    /// Opens a new canvas which draws to this texture.
+    /// Gets a canvas which draws to this texture.
     /// </summary>
-    /// <returns>An <see cref="ICanvas"/> which draws onto this texture.</returns>
-    ICanvas CreateCanvas();
+    ICanvas GetCanvas();
 
     /// <summary>
     /// Applies any changes made do the bitmap's data using <see cref="Pixels"/> or <see cref="GetPixel(int, int)"/>.

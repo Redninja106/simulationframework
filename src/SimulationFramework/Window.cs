@@ -16,6 +16,11 @@ public static class Window
     private static IFullscreenProvider FullscreenProvider => Application.GetComponent<IFullscreenProvider>();
 
     /// <summary>
+    /// The window's back buffer. Drawing to this texture during a frame will make it's contents visible in the window.
+    /// </summary>
+    public static ITexture BackBuffer => Provider.GetBackBuffer();
+
+    /// <summary>
     /// The display the window is on.
     /// </summary>
     public static IDisplay Display => Provider.Display;
