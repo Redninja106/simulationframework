@@ -259,7 +259,7 @@ public sealed class MessageDispatcher
         private void SendNotifications(T message, Queue<Action<T>> queue)
         {
             // while the queue has elements
-            while (beforeNotifications.TryDequeue(out Action<T>? notification))
+            while (queue.TryDequeue(out Action<T>? notification))
             {
                 // skip null values
                 if (notification is null)
