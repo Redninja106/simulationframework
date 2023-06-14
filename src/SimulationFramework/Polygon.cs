@@ -167,18 +167,38 @@ public static class Polygon
         }
 
         return false;
-
-        static bool LineIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4)
-        {
-            // https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
-
-            float t_numerator = (p1.X - p3.X) * (p1.Y - p2.Y) - (p1.Y - p3.Y) * (p1.X - p2.X);
-            float t_denominator = (p1.X - p2.X) * (p3.Y - p4.Y) - (p1.Y - p2.Y) * (p3.X - p4.X);
-            float t = t_numerator / t_denominator;
-
-            return 0 <= t && t <= 1;
-        }
     }
+
+    static bool LineIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4) => LineIntersect(p1, p2, p3, p4, out _);
+    static bool LineIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, out Vector2 position)
+    {
+        // https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
+        position = Vector2.Zero;
+
+        float t_numerator = (p1.X - p3.X) * (p3.Y - p4.Y) - (p1.Y - p3.Y) * (p3.X - p4.X);
+        float t_denominator = (p1.X - p2.X) * (p3.Y - p4.Y) - (p1.Y - p2.Y) * (p3.X - p4.X);
+        
+        if (t_numerator > t_denominator || t_denominator <= 0)
+        {
+            return false;
+        }
+
+        float t = t_numerator / t_denominator;
+
+        float u_numerator = (p1.X - p3.X) * (p1.Y - p2.Y) - (p1.Y - p3.Y) * (p1.X - p2.X);
+        float u_denominator = (p1.X - p2.X) * (p3.Y - p4.Y) - (p1.Y - p2.Y) * (p3.X - p4.X);
+
+
+        if (u_numerator > u_denominator || u_denominator <= 0)
+        {
+            return false;
+        }
+
+        position = p1 + t * (p2 - p1);
+
+        return true;
+    }
+
 
     /// <summary>
     /// Closes a polygon. This method returns a new polygon; <paramref name="polygon"/> is unmodified.
