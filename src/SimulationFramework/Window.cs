@@ -78,8 +78,8 @@ public static class Window
     public static bool IsFullscreen => FullscreenProvider.IsFullscreen;
 
     /// <summary>
-    /// Attempts to enter fullscreen mode. This method does not have any immediate effects, as the fullscreen transition is made
-    /// directly after the current frame. To check if the transition succeeded, use <see cref="IsFullscreen"/> during the next frame.
+    /// Attempts to enter fullscreen mode. This method does not have any immediate effects, as any window state changes are made
+    /// after the current frame. To check if the transition succeeded, use <see cref="IsFullscreen"/> during the next frame.
     /// <para>
     /// If the window is already in requested fullscreen state, this method has no effect.
     /// </para>
@@ -103,8 +103,8 @@ public static class Window
     }
 
     /// <summary>
-    /// Attempts to exit fullscreen mode. This method does not have any immediate effects, as the fullscreen transition is made
-    /// directly after the current frame. To check if the transition succeeded, use <see cref="IsFullscreen"/> during the next frame.
+    /// Attempts to exit fullscreen mode. This method does not have any immediate effects, as any window state changes are made
+    /// after the current frame. To check if the transition succeeded, use <see cref="IsFullscreen"/> during the next frame.
     /// <para>
     /// If the window is not in fullscreen, or the platform requires the window to always be fullscreen (like mobile), this method has no effect.
     /// </para>

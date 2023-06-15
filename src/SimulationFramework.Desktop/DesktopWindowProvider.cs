@@ -44,7 +44,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     public bool ShowSystemMenu { get; set; }
     public bool IsMinimized { get; }
     public bool IsMaximized { get; }
-    public bool IsFullscreen { get; private set; }
+    public bool IsFullscreen => window.WindowState == WindowState.Fullscreen;
 
     private unsafe WindowHandle* WindowHandle => (WindowHandle*)window.Native.Glfw!.Value;
 
@@ -91,25 +91,13 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     {
         if (display is not DesktopDisplay desktopDisplay)
             throw new ArgumentException("display must be a desktop display.");
-
-        GetPosition(out int x, out int y);
-        windowedBounds.Position = new(x, y);
-        windowedBounds.Size = new(this.Width, this.Height);
-
-        glfw.SetWindowMonitor(WindowHandle, desktopDisplay.monitor, 0, 0, (int)display.Bounds.Width, (int)display.Bounds.Height, (int)display.RefreshRate);
-        if (glfw.GetError(out _) == ErrorCode.NoError)
-        {
-            IsFullscreen = true;
-        }
+        
+        window.WindowState = WindowState.Fullscreen;
     }
 
     public unsafe void ExitFullscreen()
     {
-        glfw.SetWindowMonitor(WindowHandle, null, (int)windowedBounds.X, (int)windowedBounds.Y, (int)windowedBounds.Width, (int)windowedBounds.Height, Glfw.DontCare);
-        if (glfw.GetError(out _) == ErrorCode.NoError)
-        {
-            IsFullscreen = false;
-        }
+        window.WindowState = WindowState.Normal;
     }
 
     public ITexture GetBackBuffer()
