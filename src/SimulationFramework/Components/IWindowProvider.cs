@@ -23,4 +23,8 @@ public interface IWindowProvider : ISimulationComponent
 
     void SetPosition(Vector2 position);
     void Resize(Vector2 size);
+
+    void Maximize();
+    void Minimize();
+    void Restore();
 }

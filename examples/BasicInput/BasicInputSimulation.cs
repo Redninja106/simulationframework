@@ -56,5 +56,41 @@ internal class BasicInputSimulation : Simulation
                 }
             }
         }
+
+        if (Keyboard.IsKeyPressed(Key.R))
+        {
+            if (!Window.IsMaximized)
+            {
+                Window.Maximize();
+            }
+            else
+            {
+                Window.Restore();
+            }
+        }
+
+        if (Keyboard.IsKeyPressed(Key.T))
+        {
+            if (!Window.IsMinimized)
+            {
+                Window.Minimize();
+            }
+            else
+            {
+                Window.Restore();
+            }
+        }
+
+        if (Keyboard.IsKeyPressed(Key.F))
+        {
+            if (Window.IsFullscreen)
+            {
+                Window.ExitFullscreen();
+            }
+            else
+            {
+                Window.EnterFullscreen();
+            }
+        }
     }
 }

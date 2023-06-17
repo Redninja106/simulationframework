@@ -154,4 +154,19 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     {
         glfw.SetWindowSize(WindowHandle, (int)size.X, (int)size.Y);
     }
+
+    public void Maximize()
+    {
+        window.WindowState = WindowState.Maximized;
+    }
+
+    public void Minimize()
+    {
+        window.WindowState = WindowState.Minimized;
+    }
+
+    public void Restore()
+    {
+        window.WindowState = WindowState.Normal;
+    }
 }

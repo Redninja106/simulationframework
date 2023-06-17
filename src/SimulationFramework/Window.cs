@@ -229,4 +229,46 @@ public static class Window
 
         Provider.SetPosition(position);
     }
+
+    /// <summary>
+    /// Maximizes the window. If the window is fullscreen, calling this method exits fullscreen.
+    /// </summary>
+    public static void Maximize()
+    {
+        SimulationHost.GetCurrent().Dispatcher.NotifyAfter<AfterRenderMessage>(m =>
+        {
+            if (IsFullscreen)
+                FullscreenProvider.ExitFullscreen();
+
+            Provider.Maximize();
+        });
+    }
+
+    /// <summary>
+    /// Minimizes the window. If the window is fullscreen, calling this method exits fullscreen.
+    /// </summary>
+    public static void Minimize()
+    {
+        SimulationHost.GetCurrent().Dispatcher.NotifyAfter<AfterRenderMessage>(m =>
+        {
+            if (IsFullscreen)
+                FullscreenProvider.ExitFullscreen();
+
+            Provider.Minimize();
+        });
+    }
+
+    /// <summary>
+    /// Restores the window to its default state (neither minimized nor maximized). If the window is fullscreen, calling this method exits fullscreen.
+    /// </summary>
+    public static void Restore()
+    {
+        SimulationHost.GetCurrent().Dispatcher.NotifyAfter<AfterRenderMessage>(m =>
+        {
+            if (IsFullscreen)
+                FullscreenProvider.ExitFullscreen();
+
+            Provider.Restore();
+        });
+    }
 }
