@@ -1,5 +1,6 @@
 ﻿using Silk.NET.GLFW;
 using Silk.NET.Maths;
+using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;
@@ -57,12 +58,21 @@ internal class DesktopSimulationController : ISimulationController
             dispatcher.ImmediateDispatch(new ResizeMessage(size.X, size.Y));
         };
 
+        var gl = GL.GetApi(window.GLContext);
+
+        // window.GLContext.SwapInterval(1);
         while (isRunning)
         {
             dispatcher.ImmediateDispatch<BeforeEventsMessage>(new());
             window.DoEvents();
             runFrame();
+
+            var fence = gl.FenceSync(GLEnum.SyncGpuCommandsComplete, (uint)0);
+            gl.Flush();
+            gl.ClientWaitSync(fence, SyncObjectMask.Bit, 1_000_000_000);
+
             window.GLContext.SwapBuffers();
+            gl.Finish();
         }
     }    
 }
