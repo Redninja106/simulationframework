@@ -1,4 +1,5 @@
-﻿using Silk.NET.GLFW;
+﻿using ImGuiNET;
+using Silk.NET.GLFW;
 using Silk.NET.Windowing;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;
@@ -40,15 +41,55 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
         set => window.Size = new(Width, value);
     }
 
-    public bool IsUserResizable { get; set; }
-    public bool ShowSystemMenu { get; set; }
-    public bool IsMinimized { get; }
-    public bool IsMaximized { get; }
+    public bool IsUserResizable
+    {
+        get => isUserResizable;
+        set
+        {
+            isUserResizable = value;
+            UpdateWindowBorder();
+        }
+    }
+
+    public bool ShowSystemMenu 
+    {
+        get => showSystemMenu;
+        set
+        {
+            showSystemMenu = value;
+            UpdateWindowBorder();
+        } 
+    }
+
+    private void UpdateWindowBorder()
+    {
+        if (showSystemMenu)
+        {
+            if (IsUserResizable)
+            {
+                window.WindowBorder = WindowBorder.Resizable;
+            }
+            else
+            {
+                window.WindowBorder = WindowBorder.Fixed;
+            }
+        }
+        else
+        {
+            window.WindowBorder = WindowBorder.Hidden;
+        }
+    }
+
+    public bool IsMinimized => window.WindowState == WindowState.Minimized;
+    public bool IsMaximized => window.WindowState == WindowState.Maximized;
     public bool IsFullscreen => window.WindowState == WindowState.Fullscreen;
 
     private unsafe WindowHandle* WindowHandle => (WindowHandle*)window.Native.Glfw!.Value;
 
     public bool PreferExclusive { get; set; }
+
+    private bool isUserResizable = true;
+    private bool showSystemMenu = true;
 
     public unsafe Vector2 Position 
     { 

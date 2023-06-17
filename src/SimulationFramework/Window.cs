@@ -42,6 +42,7 @@ public static class Window
 
     /// <summary>
     /// Whether the window can be resized by the user. To handle user resize events, see <see cref="Simulation.OnResize(int, int)"/>.
+    /// <para>If <see cref="ShowSystemMenu"/> is false, the window is never user-resizable, even if this value is <see langword="true"/>.</para>
     /// </summary>
     public static bool IsUserResizable { get => Provider.IsUserResizable; set => Provider.IsUserResizable = value; }
 
