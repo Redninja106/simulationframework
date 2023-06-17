@@ -14,7 +14,8 @@ internal class BasicInputSimulation : Simulation
     }
 
     int c;
-    Vector2 lastDeltaPosition;
+    Vector2 p;
+
     public override void OnRender(ICanvas canvas)
     {
         if (Mouse.IsButtonPressed(MouseButton.Left))
@@ -29,7 +30,31 @@ internal class BasicInputSimulation : Simulation
 
         canvas.Clear(Color.Gray);
         canvas.Fill(Color.Red);
-        canvas.DrawCircle(Mouse.Position, 10, Alignment.Center);
+        p += Mouse.DeltaPosition;
+        canvas.DrawCircle(p, 10, Alignment.Center);
         canvas.DrawText(c.ToString(), Vector2.One * 20);
+
+        if (Keyboard.IsKeyPressed(Key.Q))
+        {
+            Mouse.Visible = !Mouse.Visible;
+        }
+
+        if (Keyboard.IsKeyPressed(Key.W))
+        {
+            Mouse.SetCursor((SystemCursor)(c % 7));
+        }
+
+        if (Keyboard.IsKeyPressed(Key.E))
+        {
+            Color[,] colors = new Color[32, 32];
+
+            for (int y = 0; y < colors.GetLength(1); y++)
+            {
+                for (int x = 0; x < colors.GetLength(0); x++)
+                {
+                    colors[x, y] = Color.Blue;
+                }
+            }
+        }
     }
 }

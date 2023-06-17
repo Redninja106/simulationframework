@@ -1,7 +1,10 @@
-﻿using Silk.NET.Input;
+﻿using Silk.NET.GLFW;
+using Silk.NET.Input;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
+using System.Buffers;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace SimulationFramework.Desktop;
 internal class DesktopMouseProvider : IMouseProvider
@@ -14,6 +17,12 @@ internal class DesktopMouseProvider : IMouseProvider
     public IEnumerable<MouseButton> HeldButtons => heldButtons;
     public IEnumerable<MouseButton> PressedButtons => pressedButtons;
     public IEnumerable<MouseButton> ReleasedButtons => releasedButtons;
+
+    public bool Visible
+    {
+        get => mouse.Cursor.CursorMode == CursorMode.Normal;
+        set => mouse.Cursor.CursorMode = value ? CursorMode.Normal : CursorMode.Hidden;
+    }
 
     public event MouseButtonEvent ButtonPressed;
     public event MouseButtonEvent ButtonReleased;
@@ -89,5 +98,66 @@ internal class DesktopMouseProvider : IMouseProvider
             SilkButton.Button5 => MouseButton.X2,
             _ => throw new Exception(),
         };
+    }
+
+    public unsafe void SetCursor(int width, int height, ReadOnlySpan<Color> colors, int centerX, int centerY)
+    {
+        fixed (Color* colorsPtr = &colors[0])
+        {
+            var memoryManager = new UnsafePinnedMemoryManager<byte>((byte*)colorsPtr, sizeof(Color) * width * height);
+            this.mouse.Cursor.Image = new(width, height, memoryManager.Memory);
+        }
+
+        this.mouse.Cursor.HotspotX = centerX;
+        this.mouse.Cursor.HotspotY = centerY;
+
+        this.mouse.Cursor.Type = CursorType.Custom;
+    }
+
+    public void SetCursor(SystemCursor cursor)
+    {
+        this.mouse.Cursor.StandardCursor = cursor switch
+        {
+            SystemCursor.Default => StandardCursor.Default,
+            SystemCursor.Arrow => StandardCursor.Arrow,
+            SystemCursor.IBeam => StandardCursor.IBeam,
+            SystemCursor.Crosshair => StandardCursor.Crosshair,
+            SystemCursor.Hand => StandardCursor.Hand,
+            SystemCursor.HorizontalResize => StandardCursor.HResize,
+            SystemCursor.VerticalResize => StandardCursor.VResize,
+            _ => throw new ArgumentException(null, nameof(cursor))
+        };
+
+        this.mouse.Cursor.Type = CursorType.Standard;
+    }
+
+    private unsafe class UnsafePinnedMemoryManager<T> : MemoryManager<T> where T : unmanaged
+    {
+        private readonly T* pointer;
+        private readonly int length;
+
+        public UnsafePinnedMemoryManager(T* pointer, int length)
+        {
+            this.pointer = pointer;
+            this.length = length;
+        }
+
+        public override Span<T> GetSpan()
+        {
+            return new(pointer, length);
+        }
+
+        public override MemoryHandle Pin(int elementIndex = 0)
+        {
+            return new MemoryHandle(pointer);
+        }
+
+        public override void Unpin()
+        {
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+        }
     }
 }

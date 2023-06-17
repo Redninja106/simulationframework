@@ -1,7 +1,9 @@
-﻿using System;
+﻿using SimulationFramework.Drawing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace SimulationFramework.Input;
 
@@ -30,6 +32,12 @@ public static class Mouse
     /// The distance the scroll whell has moved since the last frame.
     /// </summary>
     public static int ScrollWheelDelta => Provider.ScrollWheelDelta;
+
+    public static bool Visible
+    {
+        get => Provider.Visible;
+        set => Provider.Visible = value;
+    }
 
     /// <summary>
     /// Fired when the user presses a mouse button.
@@ -78,4 +86,30 @@ public static class Mouse
     /// Returns <see langword="true"/> if the provided button was just released this frame; otherwise <see langword="false"/>.
     /// </summary>
     public static bool IsButtonReleased(MouseButton button) => Provider.ReleasedButtons.Contains(button);
+
+    public static unsafe void SetCursor(Color[,] colors, int centerX = 0, int centerY = 0)
+    {
+        int width = colors.GetLength(0);
+        int height = colors.GetLength(1);
+        
+        fixed (Color* colorsPtr = &colors[0, 0])
+        {
+            SetCursor(new ReadOnlySpan<Color>(colorsPtr, width * height), width, height, centerX, centerY);
+        }
+    }
+
+    public static void SetCursor(ITexture texture, int centerX = 0, int centerY = 0)
+    {
+        SetCursor(texture.Pixels, texture.Width, texture.Height, centerX, centerY);
+    }
+
+    public static void SetCursor(ReadOnlySpan<Color> colors, int width, int height, int centerX = 0, int centerY = 0)
+    {
+        Provider.SetCursor(width, height, colors, centerX, centerY);
+    }
+
+    public static void SetCursor(SystemCursor cursor)
+    {
+        Provider.SetCursor(cursor);
+    }
 }

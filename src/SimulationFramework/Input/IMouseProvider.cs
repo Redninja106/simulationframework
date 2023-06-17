@@ -1,4 +1,6 @@
 ﻿using SimulationFramework.Components;
+using SimulationFramework.Drawing;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -34,6 +36,8 @@ public interface IMouseProvider : ISimulationComponent
     /// </summary>
     int ScrollWheelDelta { get; }
 
+    public bool Visible { get; set; }
+
     /// <summary>
     /// Gets a collection of all buttons which are held this frame.
     /// </summary>
@@ -48,4 +52,7 @@ public interface IMouseProvider : ISimulationComponent
     /// Gets a collection of all buttons released this frame. A key is only considered released on the first frame that it is not held.
     /// </summary>
     IEnumerable<MouseButton> ReleasedButtons { get; }
+
+    void SetCursor(int width, int height, ReadOnlySpan<Color> colors, int centerX, int centerY);
+    void SetCursor(SystemCursor cursor);
 }
