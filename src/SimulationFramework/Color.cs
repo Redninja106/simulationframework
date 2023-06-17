@@ -14,14 +14,9 @@ namespace SimulationFramework;
 public readonly partial struct Color : IEquatable<Color>
 {
     /// <summary>
-    /// The 8-bit value of the alpha component of this color.
+    /// The 8-bit value of the red component of this color.
     /// </summary>
-    public byte A { readonly get; init; }
-
-    /// <summary>
-    /// The 8-bit value of the blue component of this color.
-    /// </summary>
-    public byte B { readonly get; init; }
+    public byte R { readonly get; init; }
 
     /// <summary>
     /// The 8-bit value of the green component of this color.
@@ -29,9 +24,14 @@ public readonly partial struct Color : IEquatable<Color>
     public byte G { readonly get; init; }
 
     /// <summary>
-    /// The 8-bit value of the red component of this color.
+    /// The 8-bit value of the blue component of this color.
     /// </summary>
-    public byte R { readonly get; init; }
+    public byte B { readonly get; init; }
+
+    /// <summary>
+    /// The 8-bit value of the alpha component of this color.
+    /// </summary>
+    public byte A { readonly get; init; }
 
     /// <summary>
     /// The 32-bit, RGBA value of this color.
