@@ -46,14 +46,8 @@ internal class DesktopSimulationController : ISimulationController
         isRunning = true;
         var lastHeight = Window.Height;
 
-        glfw.SetFramebufferSizeCallback((WindowHandle*)window.Native.Glfw.Value, (window, width, height) =>
+        glfw.SetWindowRefreshCallback((WindowHandle*)window.Native.Glfw.Value, (window) =>
         {
-            // when resizing, the window contents seem to lag behind the rest of the window by ~1 on the y axis
-            // calculate change in size and adjust so content stays in place
-            var dh = height - lastHeight;
-            Graphics.GetOutputCanvas().Translate(0, -dh);
-            lastHeight = height;
-
             runFrame();
             this.window.GLContext.SwapBuffers();
         });

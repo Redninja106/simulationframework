@@ -31,14 +31,20 @@ public static class Window
     public static string Title { get => Provider.Title; set => Provider.Title = value; }
 
     /// <summary>
-    /// The width of the window, in pixels. To change the width of the window, see <see cref="TryResize(int, int)"/>.
+    /// The width of the window, in pixels. To change the width of the window, see <see cref="TryResize(float, float)"/>.
     /// </summary>
-    public static int Width => Provider.Width;
+    public static int Width => (int)Size.X;
 
     /// <summary>
-    /// The height of the window in pixels. To change the height of the window, see <see cref="TryResize(int, int)"/>.
+    /// The height of the window in pixels. To change the height of the window, see <see cref="TryResize(float, float)"/>.
     /// </summary>
-    public static int Height => Provider.Height;
+    public static int Height => (int)Size.Y;
+
+    /// <summary>
+    /// The size of the window, in pixels.
+    /// 
+    /// </summary>
+    public static Vector2 Size => Provider.Size;
 
     /// <summary>
     /// Whether the window can be resized by the user. To handle user resize events, see <see cref="Simulation.OnResize(int, int)"/>.
@@ -133,20 +139,21 @@ public static class Window
 
     /// <summary>
     /// Attempts to resize the window. Changes may not take effect until the next frame.
-    /// <para>On some platforms, resizing the window. In those cases this method always returns <see langword="false"/>.</para>
+    /// <para>
+    /// When the window is fullscreen, the window cannot be resized, so this method will throw an exception.
+    /// </para>
     /// </summary>
     /// <param name="width">
     /// The width to resize the window to. Must not be negative. 
     /// <para>If this value is 0, the width of the window is left unchanged.</para>
-    /// <para>This value may be clamped to be within the platform's limits.</para>
+    /// <para>This value may be clamped to be within the platform's limits, or rounded to the nearest integer.</para>
     /// </param>
     /// <param name="height">
     /// The height to resize the window to. Must not be negative. 
     /// <para>If this value is 0, the height of the window is left unchanged.</para>
-    /// <para>This value may be clamped to be within the platform's limits.</para>
+    /// <para>This value may be clamped to be within the platform's limits, or rounded to the nearest integer.</para>
     /// </param>
-    /// <returns><see langword="true"/> if the window was successfully resized; otherwise <see langword="false"/>.</returns>
-    public static bool TryResize(int width, int height)
+    public static void Resize(float width, float height)
     { 
         if (width < 0)
             throw new ArgumentOutOfRangeException(nameof(width), "width must not be negative!");
@@ -154,11 +161,31 @@ public static class Window
         if (height < 0)
             throw new ArgumentOutOfRangeException(nameof(height), "height must not be negative!");
 
+        if (IsFullscreen)
+            throw new InvalidOperationException("The window may not be resized while fullscreened.");
+
         // 0 means leave as is
         if (width is 0) width = Width;
         if (height is 0) height = Height;
 
-        return Provider.TryResize(width, height);
+        SimulationHost.GetCurrent().Dispatcher.NotifyAfter<AfterRenderMessage>(m =>
+        {
+            Provider.Resize(new(width, height));
+        });
+    }
+
+    /// <summary>
+    /// Resize the window. Changes may not take effect until the next frame.
+    /// <para>On some platforms, resizing the window is not supported. In those cases this method always throws an exception.</para>
+    /// </summary>
+    /// <param name="size">
+    /// The new size for the window. Must not be negative in either dimension. 
+    /// <para>If either dimension is 0, the size of the window on that dimension is left unchanged.</para>
+    /// <para>This value may be clamped to be within the platform's limits, and may be rounded to the nearest integer.</para>
+    /// </param>
+    public static void Resize(Vector2 size)
+    {
+        Resize(size.X, size.Y);
     }
 
     /// <summary>
@@ -169,13 +196,37 @@ public static class Window
     /// <summary>
     /// Sets the position of the window. 
     /// <para>
-    /// On some platforms or when the window is fullscreen, the window cannot be moved, and this method always returns <see langword="false"/>.</para>
+    /// When the window is fullscreen, the window cannot be moved, so this method will throw an exception.
+    /// </para>
     /// </summary>
-    /// <param name="x">The x position to move the window to desktop space.</param>
-    /// <param name="y">The y position of move the window to in desktop space.</param>
-    /// <returns><see langword="true"/> if moving the window succeeded; otherwise <see langword="false"/>.</returns>
-    public static bool TryMove(int x, int y)
+    /// <param name="x">
+    /// The x position to move the window to, in desktop (client) space.
+    /// <para>This value may be clamped to be within the platform's limits, and may be rounded to the nearest integer.</para>
+    /// </param>
+    /// <param name="y">
+    /// The y position of move the window tom in desktop (client) space.
+    /// <para>This value may be clamped to be within the platform's limits, and may be rounded to the nearest integer.</para>
+    /// </param>
+    public static void SetPosition(float x, float y)
     {
-        return Provider.TryMove(x, y);
+        SetPosition(new(x, y));
+    }
+
+    /// <summary>
+    /// Sets the position of the window. 
+    /// <para>
+    /// When the window is fullscreen, the window cannot be moved, so this method will throw an exception.
+    /// </para>
+    /// </summary>
+    /// <param name="position">
+    /// The position to move the window to, in desktop (client) space.
+    /// <para>This value may be clamped to be within the platform's limits, and may be rounded to the nearest integer.</para>
+    /// </param>
+    public static void SetPosition(Vector2 position)
+    {
+        if (IsFullscreen)
+            throw new InvalidOperationException("The window may not be moved while fullscreened.");
+
+        Provider.SetPosition(position);
     }
 }

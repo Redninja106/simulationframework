@@ -9,8 +9,8 @@ public interface IWindowProvider : ISimulationComponent
 {
     string Title { get; set; }
     IDisplay Display { get; }
-    int Width { get; set; }
-    int Height { get; set; }
+
+    Vector2 Size { get; }
     Vector2 Position { get; }
 
     bool IsUserResizable { get; set; }
@@ -21,6 +21,6 @@ public interface IWindowProvider : ISimulationComponent
 
     ITexture GetBackBuffer();
 
-    bool TryMove(int x, int y);
-    bool TryResize(int width, int height);
+    void SetPosition(Vector2 position);
+    void Resize(Vector2 size);
 }

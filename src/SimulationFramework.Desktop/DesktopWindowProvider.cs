@@ -29,18 +29,6 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     }
     public IDisplay Display => GetDisplay();
     
-    public int Width
-    {
-        get => window.Size.X;
-        set => window.Size = new(value, Height);
-    }
-
-    public int Height 
-    { 
-        get => window.Size.Y;
-        set => window.Size = new(Width, value);
-    }
-
     public bool IsUserResizable
     {
         get => isUserResizable;
@@ -97,7 +85,16 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
         { 
             glfw.GetWindowPos(WindowHandle, out int x, out int y);
             return new(x, y);
-        } 
+        }
+    }
+
+    public unsafe Vector2 Size
+    {
+        get
+        {
+            glfw.GetWindowSize(WindowHandle, out int x, out int y);
+            return new(x, y);
+        }
     }
 
     public DesktopWindowProvider(IWindow window)
@@ -114,8 +111,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
         var displays = DesktopDisplay.GetDisplayList();
         DesktopDisplay fullscreenDisplay = displays.SingleOrDefault(display => display.monitor == glfw.GetWindowMonitor(WindowHandle));
 
-        GetPosition(out int x, out int y);
-        Rectangle clientArea = new(x, y, Width, Height);
+        Rectangle clientArea = new((int)Position.X, (int)Position.Y, Size.X, Size.Y);
 
         foreach (var d in displays)
         {
@@ -146,24 +142,17 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
         throw new NotImplementedException();
     }
 
-    public unsafe void GetPosition(out int x, out int y)
-    {
-        glfw.GetWindowPos(WindowHandle, out x, out y);
-    }
-
     public void Initialize(MessageDispatcher dispatcher)
     {
     }
 
-    public unsafe bool TryResize(int width, int height)
+    public unsafe void SetPosition(Vector2 position)
     {
-        glfw.SetWindowSize(WindowHandle, width, height);
-        return glfw.GetError(out _) == ErrorCode.NoError;
+        glfw.SetWindowPos(WindowHandle, (int)position.X, (int)position.Y);
     }
 
-    public unsafe bool TryMove(int x, int y)
+    public unsafe void Resize(Vector2 size)
     {
-        glfw.SetWindowPos(WindowHandle, x, y);
-        return glfw.GetError(out _) == ErrorCode.NoError;
+        glfw.SetWindowSize(WindowHandle, (int)size.X, (int)size.Y);
     }
 }
