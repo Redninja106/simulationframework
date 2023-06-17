@@ -1,7 +1,9 @@
 ﻿using SimulationFramework;
+using SimulationFramework.Components;
 using SimulationFramework.Drawing;
 using SimulationFramework.Input;
 using System.Numerics;
+using System.Reflection;
 
 namespace BasicInput;
 
@@ -28,6 +30,5 @@ internal class BasicInputSimulation : Simulation
 
         canvas.DrawRect(Mouse.Position, Vector2.One * 100, Alignment.Center);
         canvas.DrawText(c.ToString(), Vector2.One * 20);
-        Window.ShowSystemMenu = false;
     }
 }
