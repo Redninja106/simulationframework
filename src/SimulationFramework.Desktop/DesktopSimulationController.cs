@@ -64,6 +64,7 @@ internal class DesktopSimulationController : ISimulationController
         {
             dispatcher.ImmediateDispatch<BeforeEventsMessage>(new());
             window.DoEvents();
+            dispatcher.ImmediateDispatch<AfterEventsMessage>(new());
             runFrame();
 
             var fence = gl.FenceSync(GLEnum.SyncGpuCommandsComplete, (uint)0);

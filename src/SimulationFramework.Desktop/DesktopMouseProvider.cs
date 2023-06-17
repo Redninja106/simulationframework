@@ -12,8 +12,8 @@ internal class DesktopMouseProvider : IMouseProvider
     private readonly IMouse mouse;
 
     public Vector2 Position { get => mouse.Position; set => mouse.Position = value; }
-    public Vector2 DeltaPosition => Mouse.Position - lastMousePosition;
-    public int ScrollWheelDelta => (int)(mouse.ScrollWheels.FirstOrDefault().Y - lastScrollWheel);
+    public Vector2 DeltaPosition => mousePosition - lastMousePosition;
+    public int ScrollWheelDelta => (int)(scrollWheel);
     public IEnumerable<MouseButton> HeldButtons => heldButtons;
     public IEnumerable<MouseButton> PressedButtons => pressedButtons;
     public IEnumerable<MouseButton> ReleasedButtons => releasedButtons;
@@ -31,8 +31,10 @@ internal class DesktopMouseProvider : IMouseProvider
     private readonly List<MouseButton> pressedButtons = new();
     private readonly List<MouseButton> releasedButtons = new();
 
+    private Vector2 mousePosition;
     private Vector2 lastMousePosition;
-    private float lastScrollWheel;
+
+    private float scrollWheel;
 
     public DesktopMouseProvider(IMouse mouse)
     {
@@ -67,6 +69,7 @@ internal class DesktopMouseProvider : IMouseProvider
     public void Initialize(MessageDispatcher dispatcher)
     {
         dispatcher.Subscribe<BeforeEventsMessage>(m => BeforeEvents());
+        dispatcher.Subscribe<AfterEventsMessage>(m => AfterEvents());
         dispatcher.Subscribe<AfterRenderMessage>(m => AfterRender());
     }
 
@@ -76,15 +79,20 @@ internal class DesktopMouseProvider : IMouseProvider
         releasedButtons.Clear();
     }
 
+    void AfterEvents()
+    {
+        lastMousePosition = mousePosition;
+        mousePosition = mouse.Position;
+
+        scrollWheel = mouse.ScrollWheels.FirstOrDefault().Y;
+    }
+
     void AfterRender()
     {
-        lastScrollWheel = mouse.ScrollWheels.FirstOrDefault().Y;
-        lastMousePosition = mouse.Position;
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
     }
 
     private static MouseButton ConvertButton(SilkButton button)

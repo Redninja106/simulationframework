@@ -25,6 +25,9 @@ public static class Mouse
 
     /// <summary>
     /// The distance the mouse has moved since the last frame.
+    /// <para>
+    /// Note: this value may not be accurate if the window was moved or resized.
+    /// </para>
     /// </summary>
     public static Vector2 DeltaPosition => Provider.DeltaPosition;
 
@@ -123,11 +126,11 @@ public static class Mouse
     /// Sets the mouse cursor to a custom image.
     /// </summary>
     /// <param name="texture">The image to set the mouse cursor to.</param>
-    /// <param name="centerX">The X position of the cursor's center, relative to the top-left corner of the image.</param>
-    /// <param name="centerY">The Y position of the cursor's center, relative to the top-left corner of the image.</param>
-    public static void SetCursor(ITexture texture, int centerX = 0, int centerY = 0)
+    /// <param name="anchorX">The X position of the cursor's center, relative to the top-left corner of the image.</param>
+    /// <param name="anchorY">The Y position of the cursor's center, relative to the top-left corner of the image.</param>
+    public static void SetCursor(ITexture texture, int anchorX = 0, int anchorY = 0)
     {
-        SetCursor(texture.Pixels, texture.Width, texture.Height, centerX, centerY);
+        SetCursor(texture.Pixels, texture.Width, texture.Height, anchorX, anchorY);
     }
 
     /// <summary>
@@ -161,11 +164,11 @@ public static class Mouse
     /// <param name="colors">A <see cref="ReadOnlySpan{T}"/> of <see cref="Color"/> containing the cursor image data. Must be of size <paramref name="width"/> * <paramref name="height"/>.</param>
     /// <param name="width">The width of the cursor image, in pixels.</param>
     /// <param name="height">The height of the cursor image, in pixels.</param>
-    /// <param name="centerX">The X position of the cursor's center, relative to the top-left corner of the image.</param>
-    /// <param name="centerY">The Y position of the cursor's center, relative to the top-left corner of the image.</param>
-    public static void SetCursor(ReadOnlySpan<Color> colors, int width, int height, int centerX = 0, int centerY = 0)
+    /// <param name="anchorX">The X position of the cursor's center, relative to the top-left corner of the image.</param>
+    /// <param name="anchorY">The Y position of the cursor's center, relative to the top-left corner of the image.</param>
+    public static void SetCursor(ReadOnlySpan<Color> colors, int width, int height, int anchorX = 0, int anchorY = 0)
     {
-        Provider.SetCursor(width, height, colors, centerX, centerY);
+        Provider.SetCursor(width, height, colors, anchorX, anchorY);
     }
 
     /// <summary>

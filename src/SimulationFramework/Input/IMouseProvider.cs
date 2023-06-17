@@ -59,7 +59,7 @@ public interface IMouseProvider : ISimulationComponent
     /// <summary>
     /// Sets the mouse cursor to a custom image.
     /// </summary>
-    void SetCursor(int width, int height, ReadOnlySpan<Color> colors, int centerX, int centerY);
+    void SetCursor(int width, int height, ReadOnlySpan<Color> colors, int anchorX, int anchorY);
 
     /// <summary>
     /// Sets the mouse cursor to a system cursor.

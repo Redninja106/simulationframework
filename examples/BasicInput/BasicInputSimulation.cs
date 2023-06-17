@@ -28,6 +28,8 @@ internal class BasicInputSimulation : Simulation
             c++;
         }
 
+        c += Mouse.ScrollWheelDelta;
+
         canvas.Clear(Color.Gray);
         canvas.Fill(Color.Red);
         p += Mouse.DeltaPosition;
@@ -55,6 +57,8 @@ internal class BasicInputSimulation : Simulation
                     colors[x, y] = Color.Blue;
                 }
             }
+
+            Mouse.SetCursor(colors, Alignment.CenterLeft);
         }
 
         if (Keyboard.IsKeyPressed(Key.R))
