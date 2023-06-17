@@ -16,7 +16,7 @@ public class DesktopPlatform : ISimulationPlatform
 {
     public IWindow Window { get; }
 
-    private IInputContext inputContext;
+    private readonly IInputContext inputContext;
 
     private DesktopSkiaFrameProvider frameProvider;
 
@@ -35,8 +35,9 @@ public class DesktopPlatform : ISimulationPlatform
         inputContext = Window.CreateInput();
     }
 
-    public void Dispose()
+    public virtual void Dispose()
     {
+        GC.SuppressFinalize(this);
     }
 
     public virtual void Initialize(MessageDispatcher dispatcher)

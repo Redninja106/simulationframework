@@ -10,7 +10,7 @@ public readonly partial struct Color
     /// <summary>
     /// An RGBA color with the value #0000CDFF.
     /// </summary>
-    public static readonly Color MediumBlue = new Color(0x00, 0x00, 0xCD, 0xFF);
+    public static readonly Color MediumBlue = new(0x00, 0x00, 0xCD, 0xFF);
 
     /// <summary>
     /// An RGBA color with the value #BA55D3FF.

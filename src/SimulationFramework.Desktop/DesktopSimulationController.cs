@@ -14,8 +14,7 @@ internal class DesktopSimulationController : ISimulationController
     
     private bool isRunning;
 
-    // where the window was located before we went into fullscreen
-    private Glfw glfw = Glfw.GetApi();
+    private readonly Glfw glfw = Glfw.GetApi();
 
     public DesktopSimulationController(IWindow window)
     {

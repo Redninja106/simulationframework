@@ -10,7 +10,6 @@ namespace SimulationFramework.Desktop;
 internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
 {
     private readonly IWindow window;
-    private Rectangle windowedBounds;
     private readonly Glfw glfw = Glfw.GetApi();
 
     private string title;
@@ -126,7 +125,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
 
     public unsafe void EnterFullscreen(IDisplay display)
     {
-        if (display is not DesktopDisplay desktopDisplay)
+        if (display is not DesktopDisplay)
             throw new ArgumentException("display must be a desktop display.");
         
         window.WindowState = WindowState.Fullscreen;

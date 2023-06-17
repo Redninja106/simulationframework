@@ -30,7 +30,7 @@ public class SimulationHost
 
     private readonly List<ISimulationComponent> components = new();
 
-    private static List<Func<ISimulationPlatform?>> platformFactories = new();
+    private static readonly List<Func<ISimulationPlatform?>> platformFactories = new();
 
     /// <summary>
     /// Creates a new <see cref="SimulationHost"/> instance.

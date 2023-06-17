@@ -104,9 +104,4 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
 
         return fonts[(fontName, styles, size)];
     }
-
-    public bool TryEnterFullscreenExclusive(IDisplay display)
-    {
-        return false;
-    }
 }

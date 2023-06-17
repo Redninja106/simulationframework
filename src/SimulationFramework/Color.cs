@@ -379,7 +379,6 @@ public readonly partial struct Color : IEquatable<Color>
     /// <returns><see langword="true"/> if the string represents a color, otherwise <see langword="false"/>.</returns>
     public static bool TryParse(ReadOnlySpan<char> value, out Color result)
     {
-        byte r, g, b, a;
         result = default;
 
         // consume valid prefixes
@@ -388,27 +387,28 @@ public readonly partial struct Color : IEquatable<Color>
         if (value.StartsWith("0x"))
             value = value[2..];
 
-        if (value.Length < 2 || !byte.TryParse(value[..2], NumberStyles.AllowHexSpecifier, null, out r))
+        if (value.Length < 2 || !byte.TryParse(value[..2], NumberStyles.AllowHexSpecifier, null, out byte r))
         {
             return false;
         }
 
         value = value[2..];
 
-        if (value.Length < 2 || !byte.TryParse(value[..2], NumberStyles.AllowHexSpecifier, null, out g))
+        if (value.Length < 2 || !byte.TryParse(value[..2], NumberStyles.AllowHexSpecifier, null, out byte g))
         {
             return false;
         }
 
         value = value[2..];
 
-        if (value.Length < 2 || !byte.TryParse(value[..2], NumberStyles.AllowHexSpecifier, null, out b))
+        if (value.Length < 2 || !byte.TryParse(value[..2], NumberStyles.AllowHexSpecifier, null, out byte b))
         {
             return false;
         }
 
         value = value[2..];
 
+        byte a;
         if (value.IsEmpty)
         {
             a = 255;

@@ -16,7 +16,7 @@ public static class Window
     private static IFullscreenProvider FullscreenProvider => Application.GetComponent<IFullscreenProvider>();
 
     /// <summary>
-    /// The window's back buffer. Drawing to this texture during a frame will make it's contents visible in the window.
+    /// The window's back buffer. Drawing to this texture during a frame will make its contents visible on the window.
     /// </summary>
     public static ITexture BackBuffer => Provider.GetBackBuffer();
 
@@ -31,12 +31,12 @@ public static class Window
     public static string Title { get => Provider.Title; set => Provider.Title = value; }
 
     /// <summary>
-    /// The width of the window, in pixels. To change the width of the window, see <see cref="TryResize(float, float)"/>.
+    /// The width of the window, in pixels. To change the width of the window, see <see cref="Resize(float, float)"/>.
     /// </summary>
     public static int Width => (int)Size.X;
 
     /// <summary>
-    /// The height of the window in pixels. To change the height of the window, see <see cref="TryResize(float, float)"/>.
+    /// The height of the window in pixels. To change the height of the window, see <see cref="Resize(float, float)"/>.
     /// </summary>
     public static int Height => (int)Size.Y;
 

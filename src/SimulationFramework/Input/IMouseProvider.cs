@@ -36,6 +36,9 @@ public interface IMouseProvider : ISimulationComponent
     /// </summary>
     int ScrollWheelDelta { get; }
 
+    /// <summary>
+    /// Whether the mouse cursor is visible.
+    /// </summary>
     public bool Visible { get; set; }
 
     /// <summary>
@@ -53,6 +56,13 @@ public interface IMouseProvider : ISimulationComponent
     /// </summary>
     IEnumerable<MouseButton> ReleasedButtons { get; }
 
+    /// <summary>
+    /// Sets the mouse cursor to a custom image.
+    /// </summary>
     void SetCursor(int width, int height, ReadOnlySpan<Color> colors, int centerX, int centerY);
+
+    /// <summary>
+    /// Sets the mouse cursor to a system cursor.
+    /// </summary>
     void SetCursor(SystemCursor cursor);
 }
