@@ -96,7 +96,7 @@ internal sealed class SkiaCanvas : ICanvas
         canvas.DrawPath(path, currentState.Paint);
     }
 
-    public void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft)
+    public void DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft)
     {
         // ok wow, this is bad:
         // SKPaint.MeasureText seems to return a (0,0,0,0) rectangle for really small text sizes,
@@ -124,9 +124,11 @@ internal sealed class SkiaCanvas : ICanvas
 
         // make an sf rectangle to take Alignment into account
         Rectangle bounds = new(position, new(skbounds.Width, skbounds.Height), alignment);
-        
+
+        using var skFont = currentState.Paint.ToFont();
+        using var textBlob = SKTextBlob.Create(text, skFont);
         // subtract top left corner so that text is aligned (ie ignore any margins from skiasharp)
-        canvas.DrawText(text, bounds.X - skbounds.Left, bounds.Y - skbounds.Top, currentState.Paint);
+        canvas.DrawText(textBlob, bounds.X - skbounds.Left, bounds.Y - skbounds.Top, currentState.Paint);
 
         if (currentState.FontStyle.HasFlag(FontStyle.Underline))
         {
@@ -161,7 +163,7 @@ internal sealed class SkiaCanvas : ICanvas
         }
     }
 
-    public Vector2 MeasureText(string text, float maxWidth, out int charsMeasured)
+    public Vector2 MeasureText(ReadOnlySpan<char> text, float maxWidth, out int charsMeasured)
     {
         if (text == null)
         {
@@ -176,7 +178,7 @@ internal sealed class SkiaCanvas : ICanvas
         }
             
         SKRect bounds = default;
-        currentState.Paint.MeasureText(text.Length == length ? text : text[0..length], ref bounds);
+        currentState.Paint.MeasureText(text[0..length], ref bounds);
         charsMeasured = length;
         return new(bounds.Width, bounds.Height);
     }

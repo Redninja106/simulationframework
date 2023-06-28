@@ -30,7 +30,6 @@ public interface ICanvas : IDisposable
     /// </summary>
     CanvasState State { get; }
 
-
     /// <summary>
     /// Clears the canvas.
     /// </summary>
@@ -365,7 +364,7 @@ public interface ICanvas : IDisposable
     /// <param name="x">The X position of the text.</param>
     /// <param name="y">The Y position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    sealed void DrawText(string text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text, new(x, y), alignment);
+    sealed void DrawText(string text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text.AsSpan(), new(x, y), alignment);
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
@@ -373,14 +372,31 @@ public interface ICanvas : IDisposable
     /// <param name="text">The text to draw.</param>
     /// <param name="position">The position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft);
+    sealed void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft) => DrawText(text.AsSpan(), position, alignment);
+
+    /// <summary>
+    /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
+    /// </summary>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="x">The X position of the text.</param>
+    /// <param name="y">The Y position of the text.</param>
+    /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
+    sealed void DrawText(ReadOnlySpan<char> text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text, new(x, y), alignment);
+
+    /// <summary>
+    /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
+    /// </summary>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="position">The position of the text.</param>
+    /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
+    void DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft);
 
     /// <summary>
     /// Determines the size of the provided text based on the current font selection.
     /// </summary>
     /// <param name="text">The text to measure.</param>
     /// <returns>The width and height of the provided text's bounds.</returns>
-    sealed Vector2 MeasureText(string text) => MeasureText(text, 0, out _);
+    sealed Vector2 MeasureText(string text) => MeasureText(text.AsSpan(), 0, out _);
 
     /// <summary>
     /// Determines the size of the provided text based on the current font selection,
@@ -391,7 +407,25 @@ public interface ICanvas : IDisposable
     /// <param name="charsMeasured">The number of characters measured before measuring stopped,
     /// or the length of <paramref name="text"/> if the entire string was measured.</param>
     /// <returns>The width and height of the provided text's bounds.</returns>
-    Vector2 MeasureText(string text, float maxLength, out int charsMeasured);
+    sealed Vector2 MeasureText(string text, float maxLength, out int charsMeasured) => MeasureText(text.AsSpan(), maxLength, out charsMeasured);
+
+    /// <summary>
+    /// Determines the size of the provided text based on the current font selection.
+    /// </summary>
+    /// <param name="text">The text to measure.</param>
+    /// <returns>The width and height of the provided text's bounds.</returns>
+    sealed Vector2 MeasureText(ReadOnlySpan<char> text) => MeasureText(text, 0, out _);
+
+    /// <summary>
+    /// Determines the size of the provided text based on the current font selection,
+    /// stopping if the string's length exceeds a maximum.
+    /// </summary>
+    /// <param name="text">The text to measure.</param>
+    /// <param name="maxLength">The maximum length of the string.</param>
+    /// <param name="charsMeasured">The number of characters measured before measuring stopped,
+    /// or the length of <paramref name="text"/> if the entire string was measured.</param>
+    /// <returns>The width and height of the provided text's bounds.</returns>
+    Vector2 MeasureText(ReadOnlySpan<char> text, float maxLength, out int charsMeasured);
 
     /// <summary>
     /// Sets a font with the specified attributes as current (and loads it if it is not already loaded).
