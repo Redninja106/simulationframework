@@ -15,6 +15,7 @@ namespace SimulationFramework.Desktop;
 public class DesktopPlatform : ISimulationPlatform
 {
     public IWindow Window { get; }
+    public IDisplay PrimaryDisplay => GetDisplays().Single(d => d.IsPrimary);
 
     private readonly IInputContext inputContext;
 

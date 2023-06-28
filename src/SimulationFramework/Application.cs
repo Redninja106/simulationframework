@@ -65,4 +65,6 @@ public static class Application
     {
         return GetComponent<ISimulationPlatform>().GetDisplays();
     }
+
+    public static IDisplay PrimaryDisplay => GetComponent<ISimulationPlatform>().PrimaryDisplay;
 }
