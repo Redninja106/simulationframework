@@ -12,7 +12,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     private readonly IWindow window;
     private readonly Glfw glfw = Glfw.GetApi();
 
-    private string title;
+    private string title = "Simulation";
 
     public unsafe string Title 
     { 
@@ -22,7 +22,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
         }
         set
         {
-            glfw.SetWindowTitle(WindowHandle, title);
+            glfw.SetWindowTitle(WindowHandle, value);
             title = value;
         }
     }
@@ -99,6 +99,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     public DesktopWindowProvider(IWindow window)
     {
         this.window = window;
+        window.Title = this.title;
     }
 
     public void Dispose()
