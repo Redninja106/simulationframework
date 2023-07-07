@@ -53,9 +53,9 @@ public class DesktopPlatform : ISimulationPlatform
         Application.RegisterComponent(CreateTimeProvider());
         Application.RegisterComponent(CreateSimulationController());
         Application.RegisterComponent(CreateWindowProvider());
-        Application.RegisterComponent(CreateImGuiProvider());
 
         RegisterInputProviders();
+        Application.RegisterComponent(CreateImGuiProvider());
     }
 
 

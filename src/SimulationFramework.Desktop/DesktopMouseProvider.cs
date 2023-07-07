@@ -35,6 +35,7 @@ internal class DesktopMouseProvider : IMouseProvider
     private Vector2 lastMousePosition;
 
     private float scrollWheel;
+    internal bool capturedByImgui;
 
     public DesktopMouseProvider(IMouse mouse)
     {
@@ -46,6 +47,9 @@ internal class DesktopMouseProvider : IMouseProvider
 
     private void Mouse_MouseUp(IMouse arg1, SilkButton arg2)
     {
+        if (capturedByImgui)
+            return;
+
         var button = ConvertButton(arg2);
 
         _ = heldButtons.Remove(button);
@@ -56,6 +60,9 @@ internal class DesktopMouseProvider : IMouseProvider
 
     private void Mouse_MouseDown(IMouse arg1, SilkButton arg2)
     {
+        if (capturedByImgui)
+            return;
+
         var button = ConvertButton(arg2);
 
         if (!heldButtons.Contains(button))
@@ -84,7 +91,7 @@ internal class DesktopMouseProvider : IMouseProvider
         lastMousePosition = mousePosition;
         mousePosition = mouse.Position;
 
-        scrollWheel = mouse.ScrollWheels.FirstOrDefault().Y;
+        scrollWheel = capturedByImgui ? 0 : mouse.ScrollWheels.FirstOrDefault().Y;
     }
 
     void AfterRender()

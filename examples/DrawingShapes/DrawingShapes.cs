@@ -13,15 +13,18 @@ class DrawingShapesSimulation : Simulation
     {
         logo = Graphics.LoadTexture("./logo-512x512.png");
     }
-
+    float f;
     public override void OnRender(ICanvas canvas)
     {
         canvas.Clear(Color.Gray);
 
+        ImGuiNET.ImGui.Text("hello, world!");
+
         canvas.Fill(Color.Orange);
+        f += Mouse.ScrollWheelDelta;
         canvas.DrawPolygon(new[]
         {
-            new Vector2(500, 10),
+            new Vector2(500, f),
             new Vector2(10, 10),
             new Vector2(10, 500),
             Mouse.Position,

@@ -20,6 +20,7 @@ internal class DesktopKeyboardProvider : IKeyboardProvider
     private readonly List<Key> heldKeys = new();
     private readonly List<Key> pressedKeys = new();
     private readonly List<Key> releasedKeys = new();
+    internal bool capturedByImgui;
 
     public DesktopKeyboardProvider(IKeyboard keyboard)
     {
