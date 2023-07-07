@@ -34,12 +34,12 @@ public interface IMouseProvider : ISimulationComponent
     /// <summary>
     /// The scroll wheel movement since the last frame.
     /// </summary>
-    int ScrollWheelDelta { get; }
+    float ScrollWheelDelta { get; }
 
     /// <summary>
     /// Whether the mouse cursor is visible.
     /// </summary>
-    public bool Visible { get; set; }
+    bool Visible { get; set; }
 
     /// <summary>
     /// Gets a collection of all buttons which are held this frame.

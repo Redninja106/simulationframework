@@ -34,7 +34,7 @@ public static class Mouse
     /// <summary>
     /// The distance the scroll whell has moved since the last frame.
     /// </summary>
-    public static int ScrollWheelDelta => Provider.ScrollWheelDelta;
+    public static float ScrollWheelDelta => Provider.ScrollWheelDelta;
 
     /// <summary>
     /// Whether the cursor is visible or not.

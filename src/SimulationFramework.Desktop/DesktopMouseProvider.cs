@@ -13,7 +13,7 @@ internal class DesktopMouseProvider : IMouseProvider
 
     public Vector2 Position { get => mouse.Position; set => mouse.Position = value; }
     public Vector2 DeltaPosition => mousePosition - lastMousePosition;
-    public int ScrollWheelDelta => (int)(scrollWheel);
+    public float ScrollWheelDelta => scrollWheel;
     public IEnumerable<MouseButton> HeldButtons => heldButtons;
     public IEnumerable<MouseButton> PressedButtons => pressedButtons;
     public IEnumerable<MouseButton> ReleasedButtons => releasedButtons;
