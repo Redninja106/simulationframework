@@ -377,6 +377,17 @@ public readonly partial struct Color : IEquatable<Color>
     /// <param name="value">The string representation of the color.</param>
     /// <param name="result">The value of the color.</param>
     /// <returns><see langword="true"/> if the string represents a color, otherwise <see langword="false"/>.</returns>
+    public static bool TryParse(string value, out Color result)
+    {
+        return TryParse(value.AsSpan(), out result);
+    }
+
+    /// <summary>
+    /// Attempts to converts to a color from its string representation.
+    /// </summary>
+    /// <param name="value">The string representation of the color.</param>
+    /// <param name="result">The value of the color.</param>
+    /// <returns><see langword="true"/> if the string represents a color, otherwise <see langword="false"/>.</returns>
     public static bool TryParse(ReadOnlySpan<char> value, out Color result)
     {
         result = default;
@@ -428,6 +439,17 @@ public readonly partial struct Color : IEquatable<Color>
 
         result = new(r, g, b, a);
         return true;
+    }
+
+    /// <summary>
+    /// Converts to a color from its string representation.
+    /// </summary>
+    /// <param name="value">The string representation of the color.</param>
+    /// <returns>The color that the string represents.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"/>
+    public static Color Parse(string value)
+    {
+        return Parse(value.AsSpan());
     }
 
     /// <summary>
