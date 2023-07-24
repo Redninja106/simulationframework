@@ -71,7 +71,7 @@ public static class Mouse
     /// <summary>
     /// Gets a collection of all buttons pressed this frame. A key is only considered pressed on the first frame that it is held.
     /// </summary>
-    public static IEnumerable<MouseButton> HeldPressedButtons => Provider.PressedButtons;
+    public static IEnumerable<MouseButton> PressedButtons => Provider.PressedButtons;
 
     /// <summary>
     /// Gets a collection of all buttons released this frame. A key is only considered released on the first frame that it is not held.
