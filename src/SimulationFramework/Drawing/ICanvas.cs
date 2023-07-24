@@ -331,7 +331,7 @@ public interface ICanvas : IDisposable
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="polygon">The vertices of the polygon.</param>
-    /// <param name="close">Whether the polygon should be closed.</param>
+    /// <param name="close">Whether the first and last vertices of the polygon should be treated as connected.</param>
     void DrawPolygon(ReadOnlySpan<Vector2> polygon, bool close = true);
 
     /// <summary>
@@ -342,9 +342,10 @@ public interface ICanvas : IDisposable
     /// </para>
     /// </summary>
     /// <param name="polygon">The vertices of the polygon.</param>
-    sealed void DrawPolygon(IEnumerable<Vector2> polygon)
+    /// <param name="close">Whether the first and last vertices of the polygon should be treated as connected.</param>
+    sealed void DrawPolygon(IEnumerable<Vector2> polygon, bool close = true)
     {
-        CollectionsHelper.EnumerableAsSpan(polygon, 0, (span, _) => DrawPolygon(span));
+        CollectionsHelper.EnumerableAsSpan(polygon, 0, (span, _) => DrawPolygon(span, close));
     }
 
     /// <summary>
@@ -355,7 +356,8 @@ public interface ICanvas : IDisposable
     /// </para>
     /// </summary>
     /// <param name="polygon">The vertices of the polygon.</param>
-    sealed void DrawPolygon(Vector2[] polygon) => DrawPolygon(polygon.AsSpan());
+    /// <param name="close">Whether the first and last vertices of the polygon should be treated as connected.</param>
+    sealed void DrawPolygon(Vector2[] polygon, bool close = true) => DrawPolygon(polygon.AsSpan(), close);
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
