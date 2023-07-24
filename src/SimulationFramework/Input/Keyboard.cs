@@ -56,7 +56,7 @@ public static class Keyboard
     /// <summary>
     /// Gets a collection of all keys released this frame. A key is only considered released on the first frame that it is not held.
     /// </summary>
-    public static IEnumerable<Key> ReleasedKeys => ReleasedKeys;
+    public static IEnumerable<Key> ReleasedKeys => Provider.ReleasedKeys;
 
     /// <summary>
     /// Returns true if the provided key is pressed.
