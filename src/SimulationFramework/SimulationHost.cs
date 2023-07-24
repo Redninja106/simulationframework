@@ -197,6 +197,7 @@ public class SimulationHost
         Dispatcher.ImmediateDispatch<BeforeRenderMessage>(new());
 
         var canvas = Graphics.GetOutputCanvas();
+        canvas.ResetState();
         Dispatcher.ImmediateDispatch<RenderMessage>(new(canvas));
         simulation?.OnRender(canvas);
         canvas.Flush();
