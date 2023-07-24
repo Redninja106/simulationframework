@@ -364,7 +364,7 @@ public interface ICanvas : IDisposable
     /// <param name="x">The X position of the text.</param>
     /// <param name="y">The Y position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    sealed void DrawText(string text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text.AsSpan(), new(x, y), alignment);
+    sealed void DrawText(string text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text, new(x, y), alignment); 
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
@@ -372,7 +372,12 @@ public interface ICanvas : IDisposable
     /// <param name="text">The text to draw.</param>
     /// <param name="position">The position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    sealed void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft) => DrawText(text.AsSpan(), position, alignment);
+    sealed void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        DrawText(text.AsSpan(), position, alignment);
+    }
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.

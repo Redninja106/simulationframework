@@ -105,6 +105,10 @@ internal sealed class SkiaCanvas : ICanvas
 
         const float measureTextWorkaroundSize = 100;
 
+        // no nothing on empty string
+        if (text.Length == 0)
+            return;
+
         // save old text size
         var prevTextSize = currentState.Paint.TextSize;
         currentState.Paint.TextSize = measureTextWorkaroundSize;
