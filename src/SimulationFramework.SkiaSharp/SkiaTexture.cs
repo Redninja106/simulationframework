@@ -20,7 +20,7 @@ internal sealed class SkiaTexture : ITexture
         this.bitmap = bitmap;
         this.owner = owner;
         this.options = options;
-
+        
         if (!options.HasFlag(TextureOptions.NoAccess))
         {
             colors = new Color[bitmap.Width * bitmap.Height];
@@ -44,7 +44,7 @@ internal sealed class SkiaTexture : ITexture
         get
         {
             if (colors is null)
-                throw new InvalidOperationException("CPU acess is disallowed on this texture!");
+                throw new InvalidOperationException("CPU access is not allowed on this texture!");
 
             return colors.AsSpan();
         }
