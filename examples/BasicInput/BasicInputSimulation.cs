@@ -13,7 +13,7 @@ internal class BasicInputSimulation : Simulation
     {
     }
 
-    int c;
+    float c;
     Vector2 p;
 
     public override void OnRender(ICanvas canvas)
