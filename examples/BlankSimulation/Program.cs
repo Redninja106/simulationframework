@@ -1,11 +1,10 @@
 ﻿using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Input;
-using SimulationFramework.Messaging;
 
-Simulation.Start<MySimulation>();
+Start<Program>();
 
-class MySimulation : Simulation
+partial class Program : Simulation
 {
     public override void OnInitialize()
     {
@@ -14,18 +13,6 @@ class MySimulation : Simulation
 
     public override void OnRender(ICanvas canvas)
     {
-        canvas.Clear(Color.Red);
-
-        if (Keyboard.IsKeyPressed(Key.Space))
-        {
-            if (Window.IsFullscreen)
-            {
-                Window.ExitFullscreen();
-            }
-            else
-            {
-                Window.EnterFullscreen(null);
-            }
-        }
+        canvas.Clear(Color.Black);
     }
 }

@@ -29,13 +29,8 @@ internal class DesktopSimulationController : ISimulationController
     {
         window.Closing += () =>
         {
-            dispatcher.ImmediateDispatch<ExitMessage>(new());
+            Application.Exit(true);
         };
-
-        dispatcher.Subscribe<ExitMessage>(m => 
-        {
-            isRunning = false;
-        });
     }
     
     public unsafe void Start(Action runFrame)
@@ -74,5 +69,10 @@ internal class DesktopSimulationController : ISimulationController
             window.GLContext.SwapBuffers();
             gl.Finish();
         }
-    }    
+    }
+
+    internal void NotifySuccessfulExit()
+    {
+        isRunning = false;
+    }
 }

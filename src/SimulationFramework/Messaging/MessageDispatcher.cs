@@ -80,7 +80,7 @@ public sealed class MessageDispatcher
     /// </summary>
     /// <typeparam name="T">The type of message to listen for.</typeparam>
     /// <param name="listener">The listener delegate.</param>
-    public void Subscribe<T>(Action<T> listener) where T : Message
+    public void Subscribe<T>(MessageEvent<T> listener) where T : Message
     {
         ArgumentNullException.ThrowIfNull(listener);
 
@@ -100,7 +100,7 @@ public sealed class MessageDispatcher
     /// </summary>
     /// <typeparam name="T">The type of messages the delegate was listening for.</typeparam>
     /// <param name="listener">The listener to unsubscribe.</param>
-    public void Unsubscribe<T>(Action<T> listener) where T : Message
+    public void Unsubscribe<T>(MessageEvent<T> listener) where T : Message
     {
         ArgumentNullException.ThrowIfNull(listener);
         
@@ -119,7 +119,7 @@ public sealed class MessageDispatcher
     /// </summary>
     /// <typeparam name="T">The type of message to be notified of.</typeparam>
     /// <param name="listener">The notification delegate.</param>
-    public void NotifyBefore<T>(Action<T> listener) where T : Message
+    public void NotifyBefore<T>(MessageEvent<T> listener) where T : Message
     {
         ArgumentNullException.ThrowIfNull(listener);
 
@@ -133,7 +133,7 @@ public sealed class MessageDispatcher
     /// </summary>
     /// <typeparam name="T">The type of message to be notified of.</typeparam>
     /// <param name="listener">The notification delegate.</param>
-    public void NotifyAfter<T>(Action<T> listener) where T : Message
+    public void NotifyAfter<T>(MessageEvent<T> listener) where T : Message
     {
         ArgumentNullException.ThrowIfNull(listener);
 
@@ -172,13 +172,13 @@ public sealed class MessageDispatcher
     private class Event<T> : IMessageListener where T : Message
     {
         // one-time listeners for before dispatch
-        private readonly Queue<Action<T>> beforeNotifications = new();
+        private readonly Queue<MessageEvent<T>> beforeNotifications = new();
 
         // one-time listeners for after dispatch
-        private readonly Queue<Action<T>> afterNotifications = new();
+        private readonly Queue<MessageEvent<T>> afterNotifications = new();
 
         // EventListener list, should always be kept sorted by priority
-        private readonly List<Action<T>> eventListeners = new();
+        private readonly List<MessageEvent<T>> eventListeners = new();
 
         // does the listener want to be notified for mesasges of this type?
         public bool IsListeningFor(Type type)
@@ -187,19 +187,19 @@ public sealed class MessageDispatcher
         }
 
         // adds an action to the before dispatch notification queue
-        public void NotifyBefore(Action<T> action)
+        public void NotifyBefore(MessageEvent<T> action)
         {
             AddNotify(action, beforeNotifications);
         }
 
         // adds an action to the after dispatch notification queue
-        public void NotifyAfter(Action<T> action)
+        public void NotifyAfter(MessageEvent<T> action)
         {
             AddNotify(action, afterNotifications);
         }
 
         // adds an action to a notification queue, checking for duplicates
-        private static void AddNotify(Action<T> action, Queue<Action<T>> queue)
+        private static void AddNotify(MessageEvent<T> action, Queue<MessageEvent<T>> queue)
         {
             if (queue.Any(n => n == action))
             {
@@ -210,7 +210,7 @@ public sealed class MessageDispatcher
         }
 
         // adds a listener to this event with the provided priority
-        public void AddListener(Action<T> action)
+        public void AddListener(MessageEvent<T> action)
         {
             if (eventListeners.Any(listener => listener == action))
             {
@@ -222,7 +222,7 @@ public sealed class MessageDispatcher
         }
 
         // removes a listener by its MethodInfo
-        public void RemoveListener(Action<T> action)
+        public void RemoveListener(MessageEvent<T> action)
         {
             // find our target method it in listeners
             var listener = eventListeners.FirstOrDefault(a => a == action);
@@ -256,10 +256,10 @@ public sealed class MessageDispatcher
         }
 
         // clears a notification queue
-        private void SendNotifications(T message, Queue<Action<T>> queue)
+        private void SendNotifications(T message, Queue<MessageEvent<T>> queue)
         {
             // while the queue has elements
-            while (queue.TryDequeue(out Action<T>? notification))
+            while (queue.TryDequeue(out MessageEvent<T>? notification))
             {
                 // skip null values
                 if (notification is null)

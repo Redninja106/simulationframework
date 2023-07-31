@@ -5,4 +5,10 @@
 /// </summary>
 public sealed class ExitMessage : Message
 {
+    public bool IsCancellable { get; }
+
+    public ExitMessage(bool isCancellable)
+    {
+        IsCancellable = isCancellable;
+    }
 }

@@ -7,13 +7,4 @@ namespace SimulationFramework.Components;
 /// </summary>
 public interface ISimulationPlatform : ISimulationComponent
 {
-    /// <summary>
-    /// Gets all of the system's currently active displays.
-    /// </summary>
-    IEnumerable<IDisplay> GetDisplays();
-
-    /// <summary>
-    /// The system's primary display.
-    /// </summary>
-    IDisplay PrimaryDisplay { get; }
 }

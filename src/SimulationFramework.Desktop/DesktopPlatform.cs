@@ -15,7 +15,6 @@ namespace SimulationFramework.Desktop;
 public class DesktopPlatform : ISimulationPlatform
 {
     public IWindow Window { get; }
-    public IDisplay PrimaryDisplay => GetDisplays().Single(d => d.IsPrimary);
 
     private readonly IInputContext inputContext;
 
@@ -49,6 +48,7 @@ public class DesktopPlatform : ISimulationPlatform
         });
 
         frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
+        Application.RegisterComponent(new DesktopApplicationProvider());
         Application.RegisterComponent(CreateGraphicsProvider());
         Application.RegisterComponent(CreateTimeProvider());
         Application.RegisterComponent(CreateSimulationController());
@@ -58,11 +58,6 @@ public class DesktopPlatform : ISimulationPlatform
         Application.RegisterComponent(CreateImGuiProvider());
     }
 
-
-    public IEnumerable<IDisplay> GetDisplays()
-    {
-        return DesktopDisplay.GetDisplayList();
-    }
 
     public static void Register()
     {

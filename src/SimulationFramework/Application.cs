@@ -1,4 +1,6 @@
 ﻿using SimulationFramework.Components;
+using SimulationFramework.Messaging;
+using System;
 using System.Collections.Generic;
 
 namespace SimulationFramework;
@@ -8,6 +10,17 @@ namespace SimulationFramework;
 /// </summary>
 public static class Application
 {
+    private static ISimulationPlatform Platform => GetComponent<ISimulationPlatform>();
+    private static IApplicationProvider Provider => GetComponent<IApplicationProvider>();
+
+    public static IDisplay PrimaryDisplay => Provider.PrimaryDisplay;
+
+    public static event MessageEvent<ExitMessage> Exiting
+    {
+        add => SimulationHost.Current!.Dispatcher.Subscribe(value);
+        remove => SimulationHost.Current!.Dispatcher.Unsubscribe(value);
+    }
+
     /// <summary>
     /// Gets the first component of the a specific type. If no components of the specified type are found, this method throws an exception.
     /// </summary>
@@ -63,8 +76,17 @@ public static class Application
     /// <returns>An <see cref="IEnumerable{IDisplay}"/> containing the system's displays.</returns>
     public static IEnumerable<IDisplay> GetDisplays()
     {
-        return GetComponent<ISimulationPlatform>().GetDisplays();
+        return Provider.GetDisplays();
     }
 
-    public static IDisplay PrimaryDisplay => GetComponent<ISimulationPlatform>().PrimaryDisplay;
+    public static void Exit(bool cancellable)
+    {
+        Provider.Exit(cancellable);
+    }
+
+    public static void CancelExit()
+    {
+        Provider.CancelExit();
+    }
+
 }

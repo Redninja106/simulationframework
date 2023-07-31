@@ -206,16 +206,6 @@ public class SimulationHost
     }
 
     /// <summary>
-    /// Stops the simulation this host is currently hosting and makes this host non-current.
-    /// </summary>
-    public void Stop()
-    {
-        this.simulation?.OnUninitialize();
-        this.simulation = null;
-        Current = null;
-    }
-
-    /// <summary>
     /// Register a component with the simulation.
     /// </summary>
     /// <param name="component">The component to register.</param>

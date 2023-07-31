@@ -34,7 +34,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{D5B828
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomFonts", "examples\CustomFonts\CustomFonts.csproj", "{3FE0C09B-2933-4661-BB62-B157A2F10EC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FontOrigins", "examples\FontOrigins\FontOrigins.csproj", "{EB2D147D-181E-42D7-82C1-BF8B34275F53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FontOrigins", "examples\FontOrigins\FontOrigins.csproj", "{EB2D147D-181E-42D7-82C1-BF8B34275F53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExitCancelling", "examples\ExitCancelling\ExitCancelling.csproj", "{43A89D65-00FD-4265-996B-5D920F1DCB82}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,6 +84,10 @@ Global
 		{EB2D147D-181E-42D7-82C1-BF8B34275F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB2D147D-181E-42D7-82C1-BF8B34275F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB2D147D-181E-42D7-82C1-BF8B34275F53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43A89D65-00FD-4265-996B-5D920F1DCB82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43A89D65-00FD-4265-996B-5D920F1DCB82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43A89D65-00FD-4265-996B-5D920F1DCB82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43A89D65-00FD-4265-996B-5D920F1DCB82}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +102,7 @@ Global
 		{C742E8CA-9EE6-4E72-B67A-6605B35CF17A} = {813D5E58-CE77-4969-B74A-A724228D8F73}
 		{3FE0C09B-2933-4661-BB62-B157A2F10EC0} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 		{EB2D147D-181E-42D7-82C1-BF8B34275F53} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
+		{43A89D65-00FD-4265-996B-5D920F1DCB82} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09D3B2BE-AC85-48C2-835F-6B781E265873}
