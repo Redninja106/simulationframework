@@ -155,7 +155,7 @@ public static class Mouse
     {
         var bounds = new Rectangle(0, 0, width, height);
         var anchorPoint = bounds.GetAlignedPoint(anchor);
-        Provider.SetCursor(width, height, colors, (int)anchorPoint.X, (int)anchorPoint.Y);
+        Provider.SetCursor(colors, width, height, (int)anchorPoint.X, (int)anchorPoint.Y);
     }
 
     /// <summary>
@@ -168,7 +168,7 @@ public static class Mouse
     /// <param name="anchorY">The Y position of the cursor's center, relative to the top-left corner of the image.</param>
     public static void SetCursor(ReadOnlySpan<Color> colors, int width, int height, int anchorX = 0, int anchorY = 0)
     {
-        Provider.SetCursor(width, height, colors, anchorX, anchorY);
+        Provider.SetCursor(colors, width, height, anchorX, anchorY);
     }
 
     /// <summary>

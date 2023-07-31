@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using Silk.NET.Core;
 using Silk.NET.GLFW;
 using Silk.NET.Windowing;
 using SimulationFramework.Components;
@@ -169,5 +170,15 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     public void Restore()
     {
         window.WindowState = WindowState.Normal;
+    }
+
+    public unsafe void SetIcon(ReadOnlySpan<Color> icon, int width, int height)
+    {
+        fixed (Color* colorsPtr = icon)
+        {
+            var memoryManager = new UnsafePinnedMemoryManager<byte>((byte*)colorsPtr, sizeof(Color) * width * height);
+            RawImage image = new(width, height, memoryManager.Memory);
+            window.SetWindowIcon(ref image);
+        }
     }
 }

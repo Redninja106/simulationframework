@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Drawing;
+using System;
 using System.Numerics;
 
 namespace SimulationFramework.Components;
@@ -27,4 +28,6 @@ public interface IWindowProvider : ISimulationComponent
     void Maximize();
     void Minimize();
     void Restore();
+
+    void SetIcon(ReadOnlySpan<Color> icon, int width, int height);
 }

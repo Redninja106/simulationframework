@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices.Marshalling;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
@@ -270,5 +271,26 @@ public static class Window
 
             Provider.Restore();
         });
+    }
+
+    public static void SetIcon(ITexture icon)
+    {
+        SetIcon(icon.Pixels, icon.Width, icon.Height);
+    }
+
+    public static unsafe void SetIcon(Color[,] icon)
+    {
+        int width = icon.GetLength(0);
+        int height = icon.GetLength(1);
+
+        fixed (Color* colorsPtr = &icon[0, 0])
+        {
+            SetIcon(new ReadOnlySpan<Color>(colorsPtr, width * height), width, height);
+        }
+    }
+
+    public static void SetIcon(ReadOnlySpan<Color> icon, int width, int height)
+    {
+        Provider.SetIcon(icon, width, height);
     }
 }

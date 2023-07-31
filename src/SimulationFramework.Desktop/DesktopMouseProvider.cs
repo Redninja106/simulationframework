@@ -2,7 +2,6 @@
 using Silk.NET.Input;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
-using System.Buffers;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -115,7 +114,7 @@ internal class DesktopMouseProvider : IMouseProvider
         };
     }
 
-    public unsafe void SetCursor(int width, int height, ReadOnlySpan<Color> colors, int centerX, int centerY)
+    public unsafe void SetCursor(ReadOnlySpan<Color> colors, int width, int height, int centerX, int centerY)
     {
         fixed (Color* colorsPtr = &colors[0])
         {
@@ -144,35 +143,5 @@ internal class DesktopMouseProvider : IMouseProvider
         };
 
         this.mouse.Cursor.Type = CursorType.Standard;
-    }
-
-    private unsafe class UnsafePinnedMemoryManager<T> : MemoryManager<T> where T : unmanaged
-    {
-        private readonly T* pointer;
-        private readonly int length;
-
-        public UnsafePinnedMemoryManager(T* pointer, int length)
-        {
-            this.pointer = pointer;
-            this.length = length;
-        }
-
-        public override Span<T> GetSpan()
-        {
-            return new(pointer, length);
-        }
-
-        public override MemoryHandle Pin(int elementIndex = 0)
-        {
-            return new MemoryHandle(pointer);
-        }
-
-        public override void Unpin()
-        {
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-        }
     }
 }
