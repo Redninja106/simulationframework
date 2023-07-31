@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using SkiaSharp;
 
@@ -23,10 +24,26 @@ internal unsafe static class SkiaNativeApi
     [DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
     internal static extern void sk_canvas_draw_points(IntPtr param0, SKPointMode param1, /* size_t */ IntPtr param2, SKPoint* param3, IntPtr param4);
     [DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
+    internal static extern void sk_canvas_draw_simple_text(IntPtr param0, nint text, nint byteLength, SKTextEncoding encoding, float x, float y, nint font, nint paint);
+    [DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
     internal static extern void sk_path_add_poly(IntPtr cpath, Vector2* points, int count, [MarshalAs(UnmanagedType.I1)] bool close);
     [DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
     internal static extern IntPtr sk_shader_new_linear_gradient(Vector2* points, uint* colors, float* colorPos, int colorCount, SKShaderTileMode tileMode, SKMatrix* localMatrix);
     [DllImport(SKIA, CallingConvention = CallingConvention.Cdecl)]
     internal static extern IntPtr sk_shader_new_radial_gradient(Vector2* center, Single radius, UInt32* colors, Single* colorPos, Int32 colorCount, SKShaderTileMode tileMode, SKMatrix* localMatrix);
 
+    private static Func<SKPaint, SKFont> skPaintGetFont;
+
+    public static SKFont GetFont(this SKPaint paint)
+    {
+        // this is fun
+        if (skPaintGetFont is null)
+        {
+            // hackity hack hack hack
+            var method = typeof(SKPaint).GetMethod(nameof(GetFont), BindingFlags.Instance | BindingFlags.NonPublic);
+            skPaintGetFont = method.CreateDelegate<Func<SKPaint, SKFont>>();
+        }
+
+        return skPaintGetFont.Invoke(paint);
+    }
 }

@@ -44,14 +44,13 @@ internal sealed class SkiaCanvas : ICanvas
         if (rect.Width <= 0 || rect.Height <= 0)
             return;
 
-        if (radius <= 0)
-        {
-            canvas.DrawRect(rect.AsSKRect(), currentState.Paint);
-        }
-        else
-        {
-            canvas.DrawRoundRect(rect.AsSKRect(), radius, radius, currentState.Paint);
-        }
+        
+        canvas.DrawRoundRect(rect.AsSKRect(), radius, radius, currentState.Paint);
+    }
+
+    public void DrawRect(Rectangle rectangle)
+    {
+        canvas.DrawRect(rectangle.AsSKRect(), currentState.Paint);
     }
 
     public void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter)
@@ -96,95 +95,128 @@ internal sealed class SkiaCanvas : ICanvas
         canvas.DrawPath(path, currentState.Paint);
     }
 
-    public void DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft)
+    public void DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft, TextBounds bounds = TextBounds.BestFit)
+    {
+        var fontMetrics = currentState.Paint.FontMetrics;
+
+        currentState.Paint.SubpixelText = true;
+        currentState.Paint.TextAlign = SKTextAlign.Left;
+        var size = MeasureTextInternal(text, 0, out _, bounds, out Vector2 skiaOffset);
+
+        Rectangle textRect = new(position, size, alignment);
+        
+        var drawPos = skiaOffset + textRect.GetAlignedPoint(Alignment.BottomLeft);
+        using var blob = SKTextBlob.Create(text, currentState.Paint.GetFont());
+        canvas.DrawText(blob, drawPos.X, drawPos.Y, currentState.Paint);
+
+        if (currentState.FontStyle.HasFlag(FontStyle.Underline))
+        {
+            using var underline = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = fontMetrics.UnderlineThickness ?? 0,
+                Color = currentState.FillColor.AsSKColor()
+            };
+
+            float y = skiaOffset.Y + textRect.Y + textRect.Height + (fontMetrics.UnderlinePosition ?? 0);
+
+            canvas.DrawLine(textRect.X, y, textRect.X + textRect.Width, y, underline);
+        }
+        
+        if (currentState.FontStyle.HasFlag(FontStyle.Strikethrough))
+        {
+            using var strikethrough = new SKPaint
+            {
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = fontMetrics.StrikeoutThickness ?? 0,
+                Color = currentState.FillColor.AsSKColor()
+            };
+
+            float y = skiaOffset.Y + textRect.Y + textRect.Height + (fontMetrics.StrikeoutPosition ?? 0);
+
+            canvas.DrawLine(textRect.X, y, textRect.X + textRect.Width, y, strikethrough);
+        }
+    }
+
+    public Vector2 MeasureText(ReadOnlySpan<char> text, float maxWidth, out int charsMeasured, TextBounds origin)
+    {
+        return MeasureTextInternal(text, maxWidth, out charsMeasured, origin, out _);
+    }
+
+    private Vector2 MeasureTextInternal(ReadOnlySpan<char> text, float maxWidth, out int charsMeasured, TextBounds bounds, out Vector2 skiaOffset)
     {
         // ok wow, this is bad:
-        // SKPaint.MeasureText seems to return a (0,0,0,0) rectangle for really small text sizes,
-        // even when the matrix transform may still scale it back up. 
-        // As a workaround, we temporarily set the TextSize to 100, then manually rescale the bounds from there.
-
+        // SKPaint.MeasureText seems to return a zero-size rectangle for really small text sizes,
+        // even when the transform matrix may still scale it back up. 
+        // As a workaround, we measure with the TextSize set to 100, then manually rescale the bounds from there.
         const float measureTextWorkaroundSize = 100;
-
-        // no nothing on empty string
-        if (text.Length == 0)
-            return;
 
         // save old text size
         var prevTextSize = currentState.Paint.TextSize;
         currentState.Paint.TextSize = measureTextWorkaroundSize;
 
-        // measure text
-        SKRect skbounds = default;
-        currentState.Paint.MeasureText(text, ref skbounds);
-        
+        // if we have a max width, make sure we don't exceed it
+        charsMeasured = text.Length;
+        if (maxWidth > 0)
+        {
+            charsMeasured = (int)currentState.Paint.BreakText(text, maxWidth);
+        }
+
+        // actually measure the text
+        SKRect skiabounds = default;
+        currentState.Paint.MeasureText(text, ref skiabounds);
+
         // restore old text size
         currentState.Paint.TextSize = prevTextSize;
 
         // rescale rectangle
-        skbounds.Left *= (1f / measureTextWorkaroundSize) * prevTextSize;
-        skbounds.Right *= (1f / measureTextWorkaroundSize) * prevTextSize;
-        skbounds.Top *= (1f / measureTextWorkaroundSize) * prevTextSize;
-        skbounds.Bottom *= (1f / measureTextWorkaroundSize) * prevTextSize;
+        skiabounds.Left *= (1f / measureTextWorkaroundSize) * prevTextSize;
+        skiabounds.Right *= (1f / measureTextWorkaroundSize) * prevTextSize;
+        skiabounds.Top *= (1f / measureTextWorkaroundSize) * prevTextSize;
+        skiabounds.Bottom *= (1f / measureTextWorkaroundSize) * prevTextSize;
 
-        // make an sf rectangle to take Alignment into account
-        Rectangle bounds = new(position, new(skbounds.Width, skbounds.Height), alignment);
-
-        using var skFont = currentState.Paint.ToFont();
-        using var textBlob = SKTextBlob.Create(text, skFont);
-        // subtract top left corner so that text is aligned (ie ignore any margins from skiasharp)
-        canvas.DrawText(textBlob, bounds.X - skbounds.Left, bounds.Y - skbounds.Top, currentState.Paint);
-
-        if (currentState.FontStyle.HasFlag(FontStyle.Underline))
+        var fontMetrics = currentState.Paint.FontMetrics;
+        Vector2 offset = Vector2.Zero;
+        float width = skiabounds.Width;
+        float height = skiabounds.Height;
+        switch (bounds)
         {
-            var font = currentState.Paint.FontMetrics;
+            case TextBounds.BestFit:
+                offset.X -= skiabounds.Left;
+                offset.Y -= skiabounds.Bottom;
 
-            using var underline = new SKPaint
-            {
-                Style = SKPaintStyle.Stroke,
-                StrokeWidth = font.UnderlineThickness ?? 0,
-                Color = currentState.FillColor.AsSKColor()
-            };
-
-            float y = bounds.Y + font.CapHeight + (font.UnderlinePosition ?? 0);
-
-            canvas.DrawLine(bounds.X, y, bounds.X + bounds.Width, y, underline);
-        }
-        
-        if (currentState.FontStyle.HasFlag(FontStyle.Strikethrough))
-        {
-            var font = currentState.Paint.FontMetrics;
-
-            using var strikethrough = new SKPaint
-            {
-                Style = SKPaintStyle.Stroke,
-                StrokeWidth = font.StrikeoutThickness ?? 0,
-                Color = currentState.FillColor.AsSKColor()
-            };
-
-            float y = bounds.Y + font.CapHeight + (font.StrikeoutPosition ?? 0);
-
-            canvas.DrawLine(bounds.X, y, bounds.X + bounds.Width, y, strikethrough);
-        }
-    }
-
-    public Vector2 MeasureText(ReadOnlySpan<char> text, float maxWidth, out int charsMeasured)
-    {
-        if (text == null)
-        {
-            charsMeasured = 0;
-            return Vector2.Zero;
+                break;
+            case TextBounds.Largest:
+                offset.X -= skiabounds.Left;
+                offset.Y -= fontMetrics.Descent;
+                height = fontMetrics.CapHeight + fontMetrics.Descent;
+                break;
+            case TextBounds.Smallest:
+                offset.X -= skiabounds.Left;
+                height = fontMetrics.XHeight;
+                break;
+            default:
+                throw new ArgumentException(null, nameof(bounds));
         }
 
-        int length = text.Length;
-        if (maxWidth > 0)
+        // if using best fit, include underline
+        if (bounds is TextBounds.BestFit && this.currentState.FontStyle.HasFlag(FontStyle.Underline))
         {
-            length = (int)currentState.Paint.BreakText(text, maxWidth);
-        }
+            float underlinePos = offset.Y + height + (fontMetrics.UnderlinePosition ?? 0);
+            float underlineThickness = (fontMetrics.UnderlineThickness ?? 0);
+            float underlineBottom = underlinePos + underlineThickness / 2f;
             
-        SKRect bounds = default;
-        currentState.Paint.MeasureText(text[0..length], ref bounds);
-        charsMeasured = length;
-        return new(bounds.Width, bounds.Height);
+            // how much larger does the text's bounds get?
+            float growth = underlineBottom - height;
+            if (growth > 0)
+            {
+                height += growth;
+                offset.Y -= growth;
+            }
+        }
+
+        skiaOffset = offset;
+        return new(width, height);
     }
 
     public void PushState()

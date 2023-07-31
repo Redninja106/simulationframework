@@ -77,9 +77,9 @@ public abstract class CanvasState
     public FontStyle FontStyle { get; private set; }
 
     /// <summary>
-    /// The name of the current font.
+    /// The current font.
     /// </summary>
-    public string? FontName { get; private set; }
+    public IFont? Font { get; private set; }
 
     /// <summary>
     /// If the canvas should render using antialiasing.
@@ -107,8 +107,9 @@ public abstract class CanvasState
 
             UpdateDrawMode(DrawMode.Fill);
 
-            UpdateFont("Verdana");
-            UpdateFontStyle(16, FontStyle.Normal);
+            UpdateFont(Graphics.DefaultFont);
+            UpdateFontStyle(FontStyle.Normal);
+            UpdateFontSize(16);
 
             UpdateAntialias(true);
         }
@@ -134,8 +135,9 @@ public abstract class CanvasState
 
         UpdateDrawMode(other.DrawMode);
 
-        UpdateFont(other.FontName);
-        UpdateFontStyle(other.FontSize, other.FontStyle);
+        UpdateFont(other.Font);
+        UpdateFontStyle(other.FontStyle);
+        UpdateFontSize(other.FontSize);
 
         UpdateAntialias(other.Antialias);
     }
@@ -216,20 +218,24 @@ public abstract class CanvasState
     }
 
     /// <summary>
-    /// When overridden in dervied classes, updates the canvas state's font size and style.
+    /// When overridden in dervied classes, updates the canvas state's font style.
     /// </summary>
-    internal protected virtual void UpdateFontStyle(float size, FontStyle style)
+    internal protected virtual void UpdateFontStyle(FontStyle style)
     {
-        FontSize = size;
         FontStyle = style;
+    }
+
+    internal protected virtual void UpdateFontSize(float fontSize)
+    {
+        FontSize = fontSize;
     }
 
     /// <summary>
     /// When overridden in dervied classes, updates the canvas state's font.
     /// </summary>
-    internal protected virtual void UpdateFont(string? name)
+    internal protected virtual void UpdateFont(IFont font)
     {
-        FontName = name;
+        Font = font;
     }
 
 

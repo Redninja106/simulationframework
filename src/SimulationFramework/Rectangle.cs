@@ -169,6 +169,17 @@ public struct Rectangle : IEquatable<Rectangle>
     }
 
     /// <summary>
+    /// Returns the smallest rectangle that contains both this rectangle and another.
+    /// </summary>
+    public readonly Rectangle Union(Rectangle other)
+    {
+        return FromPoints(
+            Vector2.Min(this.Position, other.Position),
+            Vector2.Max(this.Position + this.Size, other.Position + other.Size)
+            );
+    }
+
+    /// <summary>
     /// Indicates if this rectangle is equal to another.
     /// </summary>
     /// <param name="other">The rectangle to compare against this one.</param>

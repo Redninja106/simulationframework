@@ -59,7 +59,6 @@ internal class DesktopSimulationController : ISimulationController
 
         var gl = GL.GetApi(window.GLContext);
 
-        // window.GLContext.SwapInterval(1);
         while (isRunning)
         {
             dispatcher.ImmediateDispatch<BeforeEventsMessage>(new());
@@ -70,6 +69,7 @@ internal class DesktopSimulationController : ISimulationController
             var fence = gl.FenceSync(GLEnum.SyncGpuCommandsComplete, (uint)0);
             gl.Flush();
             gl.ClientWaitSync(fence, SyncObjectMask.Bit, 1_000_000_000);
+            gl.DeleteSync(fence);
 
             window.GLContext.SwapBuffers();
             gl.Finish();

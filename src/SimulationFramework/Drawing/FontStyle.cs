@@ -3,7 +3,7 @@
 namespace SimulationFramework.Drawing;
 
 /// <summary>
-/// Options for drawing text.
+/// Options for drawing text. Multiple values can be combined using the "<c>|</c>" (bitwise or) operator.
 /// </summary>
 [Flags]
 public enum FontStyle
