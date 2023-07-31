@@ -6,4 +6,7 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Messaging;
 
-public delegate void MessageEvent<in T>(T message) where T : Message;
+/// <summary>
+/// Represents a message listener.
+/// </summary>
+public delegate void MessageListener<in T>(T message) where T : Message;

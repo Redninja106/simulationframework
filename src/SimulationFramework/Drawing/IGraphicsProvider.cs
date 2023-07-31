@@ -10,6 +10,9 @@ namespace SimulationFramework.Drawing;
 /// </summary>
 public interface IGraphicsProvider : ISimulationComponent
 {
+    /// <summary>
+    /// Returns an instance of the default font.
+    /// </summary>
     IFont DefaultFont { get; }
 
     /// <summary>

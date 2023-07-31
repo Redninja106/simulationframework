@@ -13,9 +13,15 @@ public static class Application
     private static ISimulationPlatform Platform => GetComponent<ISimulationPlatform>();
     private static IApplicationProvider Provider => GetComponent<IApplicationProvider>();
 
+    /// <summary>
+    /// Gets an <see cref="IDisplay"/> instance which represents the system's primary display.
+    /// </summary>
     public static IDisplay PrimaryDisplay => Provider.PrimaryDisplay;
 
-    public static event MessageEvent<ExitMessage> Exiting
+    /// <summary>
+    /// Invoked when the simulation is trying to exit. The exit can be cancelled using <see cref="CancelExit"/>.
+    /// </summary>
+    public static event MessageListener<ExitMessage> Exiting
     {
         add => SimulationHost.Current!.Dispatcher.Subscribe(value);
         remove => SimulationHost.Current!.Dispatcher.Unsubscribe(value);
@@ -79,14 +85,23 @@ public static class Application
         return Provider.GetDisplays();
     }
 
+    /// <summary>
+    /// Makes request to exit the simulation.
+    /// <para>
+    /// Calling this method invokes the <see cref="Exiting"/> event and dispatches an <see cref="ExitMessage"/>, during which <see cref="CancelExit"/> can be called to cancel the exit request. </para>
+    /// </summary>
+    /// <param name="cancellable">Whether the exit request can be cancelled using <see cref="CancelExit"/>.</param>
     public static void Exit(bool cancellable)
     {
         Provider.Exit(cancellable);
     }
 
+    /// <summary>
+    /// Cancels a pending request to exit the simulation. Must be called from a listener of either the <see cref="Exiting"/> event or an <see cref="ExitMessage"/>.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"/>
     public static void CancelExit()
     {
         Provider.CancelExit();
     }
-
 }

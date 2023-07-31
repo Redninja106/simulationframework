@@ -405,6 +405,7 @@ public interface ICanvas : IDisposable
     /// Determines the size of the provided text based on the current font selection.
     /// </summary>
     /// <param name="text">The text to measure.</param>
+    /// <param name="bounds">Determines how the text's bounding box is calculated.</param>
     /// <returns>The width and height of the provided text's bounds.</returns>
     sealed Vector2 MeasureText(string text, TextBounds bounds = TextBounds.BestFit) => MeasureText(text.AsSpan(), 0, out _, bounds);
 
@@ -416,6 +417,7 @@ public interface ICanvas : IDisposable
     /// <param name="maxLength">The maximum length of the string.</param>
     /// <param name="charsMeasured">The number of characters measured before measuring stopped,
     /// or the length of <paramref name="text"/> if the entire string was measured.</param>
+    /// <param name="bounds">Determines how the text's bounding box is calculated.</param>
     /// <returns>The width and height of the provided text's bounds.</returns>
     sealed Vector2 MeasureText(string text, float maxLength, out int charsMeasured, TextBounds bounds = TextBounds.BestFit) => MeasureText(text.AsSpan(), maxLength, out charsMeasured, bounds);
 
@@ -423,6 +425,7 @@ public interface ICanvas : IDisposable
     /// Determines the size of the provided text based on the current font selection.
     /// </summary>
     /// <param name="text">The text to measure.</param>
+    /// <param name="bounds">Determines how the text's bounding box is calculated.</param>
     /// <returns>The width and height of the provided text's bounds.</returns>
     sealed Vector2 MeasureText(ReadOnlySpan<char> text, TextBounds bounds = TextBounds.BestFit) => MeasureText(text, 0, out _, bounds);
 
@@ -434,6 +437,7 @@ public interface ICanvas : IDisposable
     /// <param name="maxLength">The maximum length of the string.</param>
     /// <param name="charsMeasured">The number of characters measured before measuring stopped,
     /// or the length of <paramref name="text"/> if the entire string was measured.</param>
+    /// <param name="bounds">Determines how the text's bounding box is calculated.</param>
     /// <returns>The width and height of the provided text's bounds.</returns>
     Vector2 MeasureText(ReadOnlySpan<char> text, float maxLength, out int charsMeasured, TextBounds bounds = TextBounds.BestFit);
 
@@ -444,6 +448,10 @@ public interface ICanvas : IDisposable
     /// <returns><see langword="true"/> if the font was successfully loaded, otherwise <see langword="false"/>.</returns>
     sealed void Font(string name) => Font(Graphics.LoadFontByName(name));
 
+    /// <summary>
+    /// Sets the font used for text rendering.
+    /// </summary>
+    /// <param name="font">The font to use when drawing text.</param>
     sealed void Font(IFont font) => State.UpdateFont(font);
 
     /// <summary>
@@ -451,6 +459,11 @@ public interface ICanvas : IDisposable
     /// </summary>
     /// <param name="style">The style of the font.</param>
     sealed void FontStyle(FontStyle style) => State.UpdateFontStyle(style);
+
+    /// <summary>
+    /// Configures the size of the current font.
+    /// </summary>
+    /// <param name="size">The size of the font.</param>
     sealed void FontSize(float size) => State.UpdateFontSize(size);
 
     /// <summary>

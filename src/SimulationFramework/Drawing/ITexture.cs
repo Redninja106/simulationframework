@@ -3,7 +3,7 @@
 namespace SimulationFramework.Drawing;
 
 /// <summary>
-/// A 2D bitmap that can be rendered, or rendered to.
+/// A 2D bitmap used for rendering. Textures can be created using <see cref="Graphics.CreateTexture(int, int, TextureOptions)"/> or loaded using <see cref="Graphics.LoadTexture(string, TextureOptions)"/>.
 /// </summary>
 public interface ITexture : IDisposable
 {

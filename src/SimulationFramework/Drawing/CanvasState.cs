@@ -225,6 +225,10 @@ public abstract class CanvasState
         FontStyle = style;
     }
 
+    /// <summary>
+    /// Updates the canvas state's current font size.
+    /// </summary>
+    /// <param name="fontSize"></param>
     internal protected virtual void UpdateFontSize(float fontSize)
     {
         FontSize = fontSize;
@@ -233,7 +237,7 @@ public abstract class CanvasState
     /// <summary>
     /// When overridden in dervied classes, updates the canvas state's font.
     /// </summary>
-    internal protected virtual void UpdateFont(IFont font)
+    internal protected virtual void UpdateFont(IFont? font)
     {
         Font = font;
     }
