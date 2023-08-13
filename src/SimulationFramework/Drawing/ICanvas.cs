@@ -30,7 +30,6 @@ public interface ICanvas : IDisposable
     /// </summary>
     CanvasState State { get; }
 
-
     /// <summary>
     /// Clears the canvas.
     /// </summary>
@@ -52,6 +51,10 @@ public interface ICanvas : IDisposable
 
     /// <summary>
     /// Configures the canvas to fill shapes with the provided color.
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Fill"/>, 
+    /// meaning that any shapes drawn after this call will be filled with the provided color. 
+    /// </para>
     /// </summary>
     sealed void Fill(Color color)
     {
@@ -61,6 +64,10 @@ public interface ICanvas : IDisposable
 
     /// <summary>
     /// Configures the canvas to fill shapes using the provided gradient.
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Gradient"/>, 
+    /// meaning that any shapes drawn after this call will be filled with the provided gradient. 
+    /// </para>
     /// </summary>
     sealed void Fill(Gradient gradient)
     {
@@ -70,6 +77,10 @@ public interface ICanvas : IDisposable
 
     /// <summary>
     /// Configures the canvas to outline shapes with the provided color.
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Stroke"/>, 
+    /// meaning that any shapes drawn after this call will be outlined with the provided color. 
+    /// </para>
     /// </summary>
     sealed void Stroke(Color color)
     {
@@ -89,11 +100,19 @@ public interface ICanvas : IDisposable
 
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Textured"/>, 
+    /// meaning that any shapes drawn after this call will be filled with the provided texture. 
+    /// </para>
     /// </summary>
     sealed void Fill(ITexture texture) => Fill(texture, Matrix3x2.Identity);
 
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Textured"/>, 
+    /// meaning that any shapes drawn after this call will be filled with the provided texture. 
+    /// </para>
     /// </summary>
     sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX = TileMode.Clamp, TileMode tileModeY = TileMode.Clamp)
     {
@@ -133,14 +152,13 @@ public interface ICanvas : IDisposable
     /// <param name="position">The position of the rectangle.</param>
     /// <param name="size">The size of the rectangle.</param>
     /// <param name="alignment">The point on the rectangle to align to the provided position.</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     sealed void DrawRect(Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawRect(new(position, size, alignment));
 
     /// <summary>
     /// Draws a rectangle to the canvas, using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="rect">The rectangle to draw.</param>
-    sealed void DrawRect(Rectangle rect) => DrawRoundedRect(rect, 0);
+    void DrawRect(Rectangle rect);
 
     /// <summary>
     /// Draws a rounded rectangle to the canvas, using the current transform, clipping, and drawing settings.
@@ -310,21 +328,16 @@ public interface ICanvas : IDisposable
 
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
-    /// </summary>
-    /// <param name="polygon">The vertices of the polygon.</param>
-    void DrawPolygon(Span<Vector2> polygon);
-
-    /// <summary>
-    /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
     /// <para>
     /// If the current <see cref="DrawMode"/> is <see cref="DrawMode.Fill"/> or <see cref="DrawMode.Gradient"/>,
     /// the first and last vertices are connected to create a closed polygon.
     /// </para>
     /// </summary>
     /// <param name="polygon">The vertices of the polygon.</param>
-    sealed void DrawPolygon(IEnumerable<Vector2> polygon)
+    /// <param name="close">Whether the first and last vertices of the polygon should be treated as connected.</param>
+    sealed void DrawPolygon(IEnumerable<Vector2> polygon, bool close = true)
     {
-        CollectionsHelper.EnumerableAsSpan(polygon, 0, (span, _) => DrawPolygon(span));
+        CollectionsHelper.EnumerableAsSpan(polygon, 0, (span, _) => DrawPolygon(span, close));
     }
 
     /// <summary>
@@ -335,7 +348,15 @@ public interface ICanvas : IDisposable
     /// </para>
     /// </summary>
     /// <param name="polygon">The vertices of the polygon.</param>
-    sealed void DrawPolygon(Vector2[] polygon) => DrawPolygon(polygon.AsSpan());
+    /// <param name="close">Whether the first and last vertices of the polygon should be treated as connected.</param>
+    sealed void DrawPolygon(Vector2[] polygon, bool close = true) => DrawPolygon(polygon.AsSpan(), close);
+    
+    /// <summary>
+    /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
+    /// </summary>
+    /// <param name="polygon">The vertices of the polygon.</param>
+    /// <param name="close">Whether the first and last vertices of the polygon should be treated as connected.</param>
+    void DrawPolygon(ReadOnlySpan<Vector2> polygon, bool close = true);
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
@@ -344,7 +365,8 @@ public interface ICanvas : IDisposable
     /// <param name="x">The X position of the text.</param>
     /// <param name="y">The Y position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    sealed void DrawText(string text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text, new(x, y), alignment);
+    /// <param name="origin">Determines the text's bounding box.</param>
+    sealed void DrawText(string text, float x, float y, Alignment alignment = Alignment.TopLeft, TextBounds origin = TextBounds.BestFit) => DrawText(text, new(x, y), alignment, origin);
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
@@ -352,14 +374,40 @@ public interface ICanvas : IDisposable
     /// <param name="text">The text to draw.</param>
     /// <param name="position">The position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft);
+    /// <param name="origin">Determines the text's bounding box.</param>
+    sealed void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft, TextBounds origin = TextBounds.BestFit)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        DrawText(text.AsSpan(), position, alignment, origin);
+    }
+
+    /// <summary>
+    /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
+    /// </summary>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="x">The X position of the text.</param>
+    /// <param name="y">The Y position of the text.</param>
+    /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
+    /// <param name="origin">Determines the text's bounding box.</param>
+    sealed void DrawText(ReadOnlySpan<char> text, float x, float y, Alignment alignment = Alignment.TopLeft, TextBounds origin = TextBounds.BestFit) => DrawText(text, new(x, y), alignment, origin);
+
+    /// <summary>
+    /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
+    /// </summary>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="position">The position of the text.</param>
+    /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
+    /// <param name="origin">Determines the text's bounding box.</param>
+    void DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft, TextBounds origin = TextBounds.BestFit);
 
     /// <summary>
     /// Determines the size of the provided text based on the current font selection.
     /// </summary>
     /// <param name="text">The text to measure.</param>
+    /// <param name="bounds">Determines how the text's bounding box is calculated.</param>
     /// <returns>The width and height of the provided text's bounds.</returns>
-    sealed Vector2 MeasureText(string text) => MeasureText(text, 0, out _);
+    sealed Vector2 MeasureText(string text, TextBounds bounds = TextBounds.BestFit) => MeasureText(text.AsSpan(), 0, out _, bounds);
 
     /// <summary>
     /// Determines the size of the provided text based on the current font selection,
@@ -369,22 +417,54 @@ public interface ICanvas : IDisposable
     /// <param name="maxLength">The maximum length of the string.</param>
     /// <param name="charsMeasured">The number of characters measured before measuring stopped,
     /// or the length of <paramref name="text"/> if the entire string was measured.</param>
+    /// <param name="bounds">Determines how the text's bounding box is calculated.</param>
     /// <returns>The width and height of the provided text's bounds.</returns>
-    Vector2 MeasureText(string text, float maxLength, out int charsMeasured);
+    sealed Vector2 MeasureText(string text, float maxLength, out int charsMeasured, TextBounds bounds = TextBounds.BestFit) => MeasureText(text.AsSpan(), maxLength, out charsMeasured, bounds);
+
+    /// <summary>
+    /// Determines the size of the provided text based on the current font selection.
+    /// </summary>
+    /// <param name="text">The text to measure.</param>
+    /// <param name="bounds">Determines how the text's bounding box is calculated.</param>
+    /// <returns>The width and height of the provided text's bounds.</returns>
+    sealed Vector2 MeasureText(ReadOnlySpan<char> text, TextBounds bounds = TextBounds.BestFit) => MeasureText(text, 0, out _, bounds);
+
+    /// <summary>
+    /// Determines the size of the provided text based on the current font selection,
+    /// stopping if the string's length exceeds a maximum.
+    /// </summary>
+    /// <param name="text">The text to measure.</param>
+    /// <param name="maxLength">The maximum length of the string.</param>
+    /// <param name="charsMeasured">The number of characters measured before measuring stopped,
+    /// or the length of <paramref name="text"/> if the entire string was measured.</param>
+    /// <param name="bounds">Determines how the text's bounding box is calculated.</param>
+    /// <returns>The width and height of the provided text's bounds.</returns>
+    Vector2 MeasureText(ReadOnlySpan<char> text, float maxLength, out int charsMeasured, TextBounds bounds = TextBounds.BestFit);
 
     /// <summary>
     /// Sets a font with the specified attributes as current (and loads it if it is not already loaded).
     /// </summary>
     /// <param name="name">The name of the font to load.</param>
     /// <returns><see langword="true"/> if the font was successfully loaded, otherwise <see langword="false"/>.</returns>
-    sealed void Font(string name) => State.UpdateFont(name);
+    sealed void Font(string name) => Font(Graphics.LoadFontByName(name));
+
+    /// <summary>
+    /// Sets the font used for text rendering.
+    /// </summary>
+    /// <param name="font">The font to use when drawing text.</param>
+    sealed void Font(IFont font) => State.UpdateFont(font);
 
     /// <summary>
     /// Configures the style of the current font.
     /// </summary>
-    /// <param name="size">The size of the font.</param>
     /// <param name="style">The style of the font.</param>
-    sealed void FontStyle(float size, FontStyle style) => State.UpdateFontStyle(size, style);
+    sealed void FontStyle(FontStyle style) => State.UpdateFontStyle(style);
+
+    /// <summary>
+    /// Configures the size of the current font.
+    /// </summary>
+    /// <param name="size">The size of the font.</param>
+    sealed void FontSize(float size) => State.UpdateFontSize(size);
 
     /// <summary>
     /// Pushes the current transformation matrix, clipping rectangle, and drawing state onto the stack.

@@ -1,39 +1,49 @@
-﻿using Silk.NET.OpenGL;
+﻿using ImGuiNET;
+using Silk.NET.Input;
+using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
+using SimulationFramework.Components;
+using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework.Desktop;
-internal class DesktopImGuiComponent : IApplicationComponent
+internal class DesktopImGuiComponent : ISimulationComponent
 {
     GL gl;
     ImGuiController imGuiController;
 
-    public DesktopImGuiComponent(IWindow window)
+    private DesktopMouseProvider mouseProvider;
+    private DesktopKeyboardProvider keyboardProvider;
+
+    public DesktopImGuiComponent(IWindow window, IInputContext input)
     {
-        var inputComponent = Application.Current.GetComponent<DesktopInputComponent>();
         gl = window.CreateOpenGL();
-        imGuiController = new(gl, window, inputComponent.silkInputContext);
+        imGuiController = new(gl, window, input);
+
+        // we expect the mouse & keyboard providers to be registered already
+        mouseProvider = Application.GetComponent<DesktopMouseProvider>();
+        keyboardProvider = Application.GetComponent<DesktopKeyboardProvider>();
     }
 
-    public void Initialize(Application application)
+    public void Initialize(MessageDispatcher dispatcher)
     {
-        application.Dispatcher.Subscribe<RenderMessage>(PreRender, ListenerPriority.High);
-        application.Dispatcher.Subscribe<RenderMessage>(PostRender, ListenerPriority.Low);
+        dispatcher.Subscribe<BeforeRenderMessage>(PreRender);
+        dispatcher.Subscribe<AfterRenderMessage>(PostRender);
     }
 
-    void PreRender(RenderMessage renderMessage)
+    void PreRender(BeforeRenderMessage renderMessage)
     {
-        gl.Viewport(0, 0, (uint)renderMessage.Canvas.Width, (uint)renderMessage.Canvas.Height);
+        var canvas = Graphics.GetOutputCanvas();
+        gl.Viewport(0, 0, (uint)canvas.Width, (uint)canvas.Height);
         imGuiController.Update(Time.DeltaTime);
+
+        var io = ImGui.GetIO();
+        keyboardProvider.capturedByImgui = io.WantCaptureKeyboard;
+        mouseProvider.capturedByImgui = io.WantCaptureMouse;
     }
 
-    void PostRender(RenderMessage renderMessage)
+    void PostRender(AfterRenderMessage renderMessage)
     {
         imGuiController.Render();
     }

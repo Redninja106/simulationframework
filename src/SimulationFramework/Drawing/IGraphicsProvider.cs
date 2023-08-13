@@ -1,12 +1,20 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using SimulationFramework.Components;
 
 namespace SimulationFramework.Drawing;
 
 /// <summary>
 /// Interface which provides graphics functionality as a component of a simulation.
 /// </summary>
-public interface IGraphicsProvider : IApplicationComponent
+public interface IGraphicsProvider : ISimulationComponent
 {
+    /// <summary>
+    /// Returns an instance of the default font.
+    /// </summary>
+    IFont DefaultFont { get; }
+
     /// <summary>
     /// Gets the canvas for the current frame.
     /// </summary>
@@ -18,23 +26,20 @@ public interface IGraphicsProvider : IApplicationComponent
     /// <summary>
     /// Creates a new bitmap with the provided data.
     /// </summary>
-    /// <param name="width">The width of the bitmap, in pixels.</param>
-    /// <param name="height">The height of the bitmap, in pixels.</param>
-    /// <param name="data">The initial raw bitmap data. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
-    /// <param name="flags"></param>
-    /// <returns>The new <see cref="ITexture"/>.</returns>
-    ITexture CreateTexture(int width, int height, Span<Color> data, TextureOptions flags);
+    bool TryCreateTexture(int width, int height, ReadOnlySpan<Color> pixels, TextureOptions options, [NotNullWhen(true)] out ITexture texture);
 
     /// <summary>
-    /// Loads a bitmap from it's raw encoded data.
+    /// Loads a bitmap from a image file.
     /// </summary>
-    /// <param name="encodedData"></param>
-    /// <param name="flags"></param>
-    /// <returns></returns>
-    ITexture LoadTexture(Span<byte> encodedData, TextureOptions flags = TextureOptions.None);
+    bool TryLoadTexture(ReadOnlySpan<byte> encodedData, TextureOptions options, [NotNullWhen(true)] out ITexture? texture);
 
     /// <summary>
-    /// Clears all cached fonts.
+    /// Loads a font from a font file.
     /// </summary>
-    void ClearFontCache();
+    bool TryLoadFont(ReadOnlySpan<byte> encodedData, [NotNullWhen(true)] out IFont? font);
+
+    /// <summary>
+    /// Attempts to load a system font by name.
+    /// </summary>
+    bool TryLoadSystemFont(string name, [NotNullWhen(true)] out IFont? font);
 }

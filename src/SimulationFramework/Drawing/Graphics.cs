@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace SimulationFramework.Drawing;
 
@@ -12,7 +10,9 @@ namespace SimulationFramework.Drawing;
 /// </summary>
 public static class Graphics
 {
-    private static IGraphicsProvider Provider => Application.Current?.GetComponent<IGraphicsProvider>() ?? throw Exceptions.CoreComponentNotFound();
+    private static IGraphicsProvider Provider => Application.GetComponent<IGraphicsProvider>();
+
+    public static IFont DefaultFont => Provider.DefaultFont;
 
     /// <summary>
     /// Gets canvas which draws to the current frame.
@@ -23,81 +23,132 @@ public static class Graphics
         return Provider.GetFrameCanvas();
     }
 
-    /// <summary>
-    /// Loads a texture from a file.
-    /// </summary>
-    /// <param name="file">The path to a .PNG image file.</param>
-    /// <param name="options">A <see cref="TextureOptions"/> value which influences the behavior of the texture.</param>
-    /// <returns>The new texture.</returns>
     public static ITexture LoadTexture(string file, TextureOptions options = TextureOptions.None)
     {
-        var fileData = File.ReadAllBytes(file);
-
-        return LoadTexture(fileData, options);
+        var encodedData = File.ReadAllBytes(file);
+        return LoadTexture(encodedData, options);
     }
 
-    /// <summary>
-    /// Loads a texture from raw, encoded file data.
-    /// </summary>
-    /// <param name="encodedBytes">An array of the bytes of a supported image file.</param>
-    /// <param name="options">A <see cref="TextureOptions"/> value which influences the behavior of the texture.</param>
-    /// <returns>The new texture.</returns>
-    public static ITexture LoadTexture(byte[] encodedBytes, TextureOptions options = TextureOptions.None)
+    public static ITexture LoadTexture(byte[] encodedData, TextureOptions options = TextureOptions.None)
     {
-        return LoadTexture(encodedBytes.AsSpan(), options);
+        return LoadTexture(encodedData.AsSpan(), options);
     }
 
-    /// <summary>
-    /// Loads a texture from raw, encoded file data.
-    /// </summary>
-    /// <param name="encodedBytes">A span of the bytes of a supported image file.</param>
-    /// <param name="options">A <see cref="TextureOptions"/> value which influences the behavior of the texture.</param>
-    /// <returns>The new texture.</returns>
-    public static ITexture LoadTexture(Span<byte> encodedBytes, TextureOptions options = TextureOptions.None)
+    public static ITexture LoadTexture(ReadOnlySpan<byte> encodedData, TextureOptions options = TextureOptions.None)
     {
-        return Provider.LoadTexture(encodedBytes, options);
+        return TryLoadTexture(encodedData, options, out ITexture? texture) ? texture : throw new("Error loading texture!");
     }
 
-    /// <summary>
-    /// Creates a blank texture of the provided size.
-    /// </summary>
-    /// <param name="width">The width of the texture, in pixels.</param>
-    /// <param name="height">The height of the texture, in pixels.</param>
-    /// <param name="options">A <see cref="TextureOptions"/> value which influences the behavior of the texture.</param>
-    /// <returns>The new texture.</returns>
+    public static bool TryLoadTexture(string file, TextureOptions options, [NotNullWhen(true)] out ITexture? texture)
+    {
+        byte[] encodedData;
+        try
+        {
+            encodedData = File.ReadAllBytes(file);
+        }
+        catch
+        {
+            texture = null;
+            return false;
+        }
+        
+        return Provider.TryLoadTexture(encodedData, options, out texture);
+    }
+
+    public static bool TryLoadTexture(byte[] encodedData, TextureOptions options, [NotNullWhen(true)] out ITexture? texture)
+    {
+        return TryLoadTexture(encodedData.AsSpan(), options, out texture);
+    }
+
+    public static bool TryLoadTexture(ReadOnlySpan<byte> encodedData, TextureOptions options, [NotNullWhen(true)] out ITexture? texture)
+    {
+        return Provider.TryLoadTexture(encodedData, options, out texture);
+    }
+
     public static ITexture CreateTexture(int width, int height, TextureOptions options = TextureOptions.None)
     {
-        return Provider.CreateTexture(width, height, null, options);
+        return CreateTexture(width, height, ReadOnlySpan<Color>.Empty, options);
     }
 
-    /// <summary>
-    /// Creates a texture of the provided size and fills it with the provided colors.
-    /// </summary>
-    /// <param name="width">The width of the texture, in pixels.</param>
-    /// <param name="height">The height of the texture, in pixels.</param>
-    /// <param name="colors">The data of to fill the texture with. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
-    /// <param name="flags">A <see cref="TextureOptions"/> value which influences the behavior of the texture.</param>
-    /// <returns>The new texture.</returns>
-    public static ITexture CreateTexture(int width, int height, Span<Color> colors, TextureOptions flags = TextureOptions.None)
-    {
-        return Provider.CreateTexture(width, height, colors, flags);
-    }
-
-    /// <summary>
-    /// Creates a texture of the provided size and fills it with the provided colors.
-    /// </summary>
-    /// <param name="width">The width of the texture, in pixels.</param>
-    /// <param name="height">The height of the texture, in pixels.</param>
-    /// <param name="colors">The data of to fill the texture with. Must be of length <paramref name="width"/> * <paramref name="height"/>.</param>
-    /// <param name="options">A <see cref="TextureOptions"/> value which influences the behavior of the texture.</param>
-    /// <returns>The new texture.</returns>
     public static ITexture CreateTexture(int width, int height, Color[] colors, TextureOptions options = TextureOptions.None)
     {
-        return Provider.CreateTexture(width, height, colors.AsSpan(), options);
+        return CreateTexture(width, height, colors.AsSpan(), options);
     }
 
-    /// <summary>
-    /// Clears all cached fonts.
-    /// </summary>
-    public static void ClearFontCache() => Provider.ClearFontCache();
+    public static ITexture CreateTexture(int width, int height, ReadOnlySpan<Color> colors, TextureOptions options = TextureOptions.None)
+    {
+        return TryCreateTexture(width, height, colors, options, out ITexture? texture) ? texture : throw new("Error creating texture!");
+    }
+
+    public static bool TryCreateTexture(int width, int height, TextureOptions options, [NotNullWhen(true)] out ITexture? texture)
+    {
+        return TryCreateTexture(width, height, ReadOnlySpan<Color>.Empty, options, out texture);
+    }
+
+    public static bool TryCreateTexture(int width, int height, Color[] pixels, TextureOptions options, [NotNullWhen(true)] out ITexture? texture)
+    {
+        return TryCreateTexture(width, height, pixels.AsSpan(), options, out texture);
+    }
+
+    public static bool TryCreateTexture(int width, int height, ReadOnlySpan<Color> pixels, TextureOptions options, [NotNullWhen(true)] out ITexture? texture)
+    {
+        return Provider.TryCreateTexture(width, height, pixels, options, out texture);
+    }
+
+    public static IFont LoadFontByName(string name)
+    {
+        return TryLoadSystemFont(name, out IFont? font) ? font : throw new("Error loading font.");
+    }
+
+    public static bool TryLoadSystemFont(string name, [NotNullWhen(true)] out IFont? font)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            font = null;
+            return false;
+        }
+
+        return Provider.TryLoadSystemFont(name, out font);
+    }
+
+    public static IFont LoadFont(string file)
+    {
+        var encodedData = File.ReadAllBytes(file);
+        return LoadFont(encodedData);
+    }
+
+    public static IFont LoadFont(ReadOnlySpan<byte> encodedData)
+    {
+        if (encodedData.IsEmpty)
+            throw new ArgumentException($"{nameof(encodedData)} was empty!");
+
+        return TryLoadFont(encodedData, out IFont? result) ? result : throw new Exception("Error loading font!");
+    }
+
+    public static bool TryLoadFont(string file, [NotNullWhen(true)] out IFont? font)
+    {
+        byte[] encodedData;
+        try
+        {
+            encodedData = File.ReadAllBytes(file);
+        }
+        catch
+        {
+            font = null;
+            return false;
+        }
+
+        return TryLoadFont(encodedData, out font);
+    }
+
+    public static bool TryLoadFont(ReadOnlySpan<byte> encodedData, [NotNullWhen(true)] out IFont? font)
+    {
+        if (encodedData.IsEmpty)
+        {
+            font = null;
+            return false;
+        }
+
+        return Provider.TryLoadFont(encodedData, out font);
+    }
 }

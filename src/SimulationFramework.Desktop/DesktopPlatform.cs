@@ -1,80 +1,115 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Silk.NET.Windowing;
+﻿using Silk.NET.Windowing;
 using SimulationFramework.SkiaSharp;
-using ImGuiNET;
-using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
-using SimulationFramework.Desktop;
-using SimulationFramework;
+using SimulationFramework.Components;
 using Silk.NET.Windowing.Glfw;
+using Silk.NET.Input;
 using Silk.NET.Input.Glfw;
-
-[assembly: ApplicationPlatform(typeof(DesktopPlatform))]
+using SimulationFramework.Drawing;
 
 namespace SimulationFramework.Desktop;
 
 /// <summary>
 /// Implements a simulation environment which runs the simulation in a window.
 /// </summary>
-public sealed class DesktopPlatform : IApplicationPlatform
+public class DesktopPlatform : ISimulationPlatform
 {
     public IWindow Window { get; }
 
+    private readonly IInputContext inputContext;
+
     private DesktopSkiaFrameProvider frameProvider;
-    
-    public IApplicationController CreateController()
+
+    public DesktopPlatform(WindowOptions? windowOptions = null)
     {
-        return new DesktopAppController(this.Window);
+        windowOptions ??= WindowOptions.Default;
+
+        GlfwWindowing.RegisterPlatform();
+        GlfwInput.RegisterPlatform();
+
+        GlfwWindowing.Use();
+
+        Window = Silk.NET.Windowing.Window.Create(windowOptions.Value with { IsVisible = false });
+        Window.Initialize();
+
+        inputContext = Window.CreateInput();
     }
 
-    public IGraphicsProvider CreateGraphicsProvider()
+    public virtual void Dispose()
     {
-        frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
-        return new SkiaGraphicsProvider(frameProvider, name =>
+        GC.SuppressFinalize(this);
+    }
+
+    public virtual void Initialize(MessageDispatcher dispatcher)
+    {
+        dispatcher.Subscribe<ResizeMessage>(m =>
         {
-            Window.GLContext.TryGetProcAddress(name, out nint addr);
-            return addr;
+            frameProvider?.Resize(m.Width, m.Height);
         });
+
+        frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
+        Application.RegisterComponent(new DesktopApplicationProvider());
+        Application.RegisterComponent(CreateGraphicsProvider());
+        Application.RegisterComponent(CreateTimeProvider());
+        Application.RegisterComponent(CreateSimulationController());
+        Application.RegisterComponent(CreateWindowProvider());
+
+        RegisterInputProviders();
+        Application.RegisterComponent(CreateImGuiProvider());
     }
 
-    public ITimeProvider CreateTimeProvider()
+
+    public static void Register()
+    {
+        SimulationHost.RegisterPlatform(() => new DesktopPlatform());
+    }
+
+    protected virtual IGraphicsProvider CreateGraphicsProvider()
+    {
+        return new SkiaGraphicsProvider(frameProvider, name => Window.GLContext.TryGetProcAddress(name, out nint addr) ? addr : 0);
+    }
+
+    protected virtual ITimeProvider CreateTimeProvider()
     {
         return new RealtimeProvider();
     }
 
-    public DesktopPlatform()
+    protected virtual ISimulationController CreateSimulationController()
     {
-        GlfwWindowing.Use();
-        GlfwWindowing.RegisterPlatform();
-        GlfwInput.RegisterPlatform();
-        Window = Silk.NET.Windowing.Window.Create(WindowOptions.Default with { IsVisible = false });
-        Window.Initialize();
+        return new DesktopSimulationController(this.Window);
     }
 
-    public void Dispose()
+    protected virtual IWindowProvider CreateWindowProvider()
     {
+        return new DesktopWindowProvider(this.Window);
     }
 
-    public IEnumerable<IApplicationComponent> CreateAdditionalComponents()
+    protected virtual ISimulationComponent CreateImGuiProvider()
     {
-        yield return new DesktopInputComponent(this.Window);
-        yield return new DesktopImGuiComponent(this.Window);
+        return new DesktopImGuiComponent(this.Window, this.inputContext);
     }
 
-    public void Initialize(Application application)
+    protected virtual void RegisterInputProviders()
     {
-        application.Dispatcher.Subscribe<ResizeMessage>(m =>
+        var mouse = inputContext.Mice.FirstOrDefault();
+
+        if (mouse is not null)
         {
-            frameProvider?.Resize(m.Width, m.Height);
-        });
-    }
+            Application.RegisterComponent(new DesktopMouseProvider(mouse));
+        }
 
-    public static bool IsSupported()
-    {
-        return OperatingSystem.IsWindows() || OperatingSystem.IsMacOS() || OperatingSystem.IsLinux();
+        var keyboard = inputContext.Keyboards.FirstOrDefault();
+
+        if (keyboard is not null)
+        {
+            Application.RegisterComponent(new DesktopKeyboardProvider(keyboard));
+        }
+
+        var gamepad = inputContext.Gamepads.FirstOrDefault();
+        
+        if (gamepad is not null)
+        {
+            Application.RegisterComponent(new DesktopGamepadProvider(gamepad));
+        }
     }
 }

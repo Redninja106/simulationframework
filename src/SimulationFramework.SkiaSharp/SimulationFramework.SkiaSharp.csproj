@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -10,7 +10,7 @@
     <PackageIcon>logo-128x128.png</PackageIcon>
     <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
     <AssemblyVersion></AssemblyVersion>
-    <Version>0.1.10</Version>
+    <Version>0.2.0</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Ryan Andersen</Authors>
@@ -18,18 +18,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\assets\logo-128x128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="SkiaSharp" Version="2.80.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="logo-128x128.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>

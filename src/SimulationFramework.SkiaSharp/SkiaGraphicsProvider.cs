@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using SimulationFramework.Drawing;
+using SimulationFramework.Messaging;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
 
-public sealed class SkiaGraphicsProvider : IGraphicsProvider
+public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
 {
     internal readonly ISkiaFrameProvider frameProvider;
     internal readonly GRGlGetProcedureAddressDelegate getProcAddress;
@@ -17,16 +16,20 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
     internal GRGlInterface glInterface;
     internal GRContext backendContext;
     internal SkiaCanvas frameCanvas;
-    internal Dictionary<(string fontName, FontStyle styles, int size), SKFont> fonts = new(); 
+    internal Dictionary<(string fontName, FontStyle styles, int size), SKFont> fonts = new();
+    internal SkiaFont defaultFont;
+
+    public IFont DefaultFont => defaultFont;
 
     public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate getProcAddress)
     {
         this.frameProvider = frameProvider;
         this.getProcAddress = getProcAddress;
 
+        defaultFont = SkiaFont.FromName("Verdana");
     }
 
-    public void Initialize(Application application)
+    public void Initialize(MessageDispatcher application)
     {
         glInterface = GRGlInterface.CreateOpenGl(getProcAddress);
         backendContext = GRContext.CreateGl(glInterface);
@@ -48,46 +51,50 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         return frameCanvas;
     }
 
-
-    public ITexture CreateTexture(int width, int height, Span<Color> data, TextureOptions options = TextureOptions.None)
+    public bool TryCreateTexture(int width, int height, ReadOnlySpan<Color> pixels, TextureOptions options, out ITexture texture)
     {
-        var texture = new SkiaTexture(this, new SKBitmap(width, height), true, options);
-
-        if (!data.IsEmpty)
+        try
         {
-            if (data.Length != width * height)
-                throw new ArgumentException("data.Length != width * height");
+            texture = new SkiaTexture(this, new SKBitmap(width, height), true, options);
 
-            data.CopyTo(texture.Pixels);
-            texture.ApplyChanges();
+            if (!pixels.IsEmpty)
+            {
+                if (pixels.Length != width * height)
+                    throw new ArgumentException("data.Length != width * height");
+
+                pixels.CopyTo(texture.Pixels);
+                texture.ApplyChanges();
+            }
+
+            return true;
         }
-
-        return texture;
+        catch
+        {
+            texture = null;
+            return false;
+        }
     }
 
-    public ITexture LoadTexture(Span<byte> encodedData, TextureOptions options = TextureOptions.None)
+    public bool TryLoadTexture(ReadOnlySpan<byte> encodedData, TextureOptions options, out ITexture texture)
     {
-        return new SkiaTexture(this, SKBitmap.Decode(encodedData), true, options);
+        try
+        {
+            texture = new SkiaTexture(this, SKBitmap.Decode(encodedData), true, options);
+            return true;
+        }
+        catch
+        {
+            texture = null;
+            return false;
+        }
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
+        base.Dispose();
         frameCanvas.Dispose();
         backendContext.Dispose();
         glInterface.Dispose();
-
-        ClearFontCache();
-    }
-
-    public void ClearFontCache()
-    {
-        while (fonts.Count > 0)
-        {
-            if (fonts.Remove(fonts.Keys.Last(), out var font))
-            {
-                font.Dispose();
-            }
-        }
     }
 
     public SKFont GetFont(string fontName, FontStyle styles, int size)
@@ -108,4 +115,31 @@ public sealed class SkiaGraphicsProvider : IGraphicsProvider
         return fonts[(fontName, styles, size)];
     }
 
+    public bool TryLoadFont(ReadOnlySpan<byte> encodedData, [NotNullWhen(true)] out IFont font)
+    {
+        try
+        {
+            font = SkiaFont.FromFileData(encodedData);
+            return true;
+        }
+        catch
+        {
+            font = null;
+            return false;
+        }
+    }
+
+    public bool TryLoadSystemFont(string name, [NotNullWhen(true)] out IFont font)
+    {
+        try
+        {
+            font = SkiaFont.FromName(name);
+            return true;
+        }
+        catch
+        {
+            font = null;
+            return false;
+        }
+    }
 }

@@ -1,11 +1,7 @@
 ﻿using SimulationFramework.Drawing;
 using SkiaSharp;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework.SkiaSharp;
 
@@ -20,7 +16,8 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
     private SKShader fillTextureShader;
     private SKShader gradientShader;
 
-    private SKTypeface typeface;
+    private SkiaFont currentFont;
+
 
     public SkiaCanvasState(SKCanvas canvas, SkiaCanvasState other = null)
     {
@@ -35,11 +32,10 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
             this.paint = new SKPaint();
             this.paint.FilterQuality = SKFilterQuality.High;
         }
-        else if (other != this)
+        else
         {
             this.paint = ((SkiaCanvasState)other).paint.Clone();
             this.gradientShader = GradientShaderCache.GetShader(other.Gradient);
-            this.typeface = FontTypefaceCache.GetTypeface(other.FontName, other.FontStyle);
         }
 
         base.Initialize(other);
@@ -135,25 +131,23 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
         base.UpdateFillTexture(texture, transform, tileModeX, tileModeY);
     }
 
-    protected override void UpdateFontStyle(float size, FontStyle style)
+    protected override void UpdateFontStyle(FontStyle style)
     {
-        this.paint.TextSize = size;
-        UpdateTypeface(this.FontName, style);
-        base.UpdateFontStyle(size, style);
+        paint.Typeface = currentFont.GetTypeface(style);
+        base.UpdateFontStyle(style);
     }
 
-    protected override void UpdateFont(string name)
+    protected override void UpdateFontSize(float fontSize)
     {
-        UpdateTypeface(name, this.FontStyle);
-        base.UpdateFont(name);
+        this.paint.TextSize = fontSize;
+        base.UpdateFontSize(fontSize);
     }
 
-    private void UpdateTypeface(string name, FontStyle style)
+    protected override void UpdateFont(IFont font)
     {
-        if (this.FontName != name || this.FontStyle != style)
-        {
-            paint.Typeface = this.typeface = FontTypefaceCache.GetTypeface(name, style);
-        }
+        currentFont = (SkiaFont)font;
+        paint.Typeface = currentFont.GetTypeface(FontStyle);
+        base.UpdateFont(font);
     }
 
     protected override void UpdateAntialias(bool antialias)

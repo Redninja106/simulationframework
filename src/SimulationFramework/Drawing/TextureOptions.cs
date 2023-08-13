@@ -3,7 +3,7 @@ using System;
 namespace SimulationFramework.Drawing;
 
 /// <summary>
-/// Provides of control over the functionality of a texture. Used by <see cref="Graphics.CreateTexture(int, int, TextureOptions)"/>.
+/// Provides control over the functionality of a texture. Used by <see cref="Graphics.CreateTexture(int, int, TextureOptions)"/>.
 /// </summary>
 [Flags]
 public enum TextureOptions

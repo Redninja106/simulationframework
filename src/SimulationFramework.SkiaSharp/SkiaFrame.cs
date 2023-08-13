@@ -1,9 +1,5 @@
 ﻿using SimulationFramework.Drawing;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework.SkiaSharp
 {
@@ -34,9 +30,9 @@ namespace SimulationFramework.SkiaSharp
             throw new NotSupportedException("This operation is not support on the main frame texture!");
         }
 
-        public ICanvas CreateCanvas()
+        public ICanvas GetCanvas()
         {
-            throw new NotSupportedException("This operation is not support on the main frame texture!");
+            return Graphics.GetOutputCanvas();
         }
     }
 }

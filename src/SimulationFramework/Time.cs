@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SimulationFramework.Components;
 
 namespace SimulationFramework;
 
@@ -11,7 +7,7 @@ namespace SimulationFramework;
 /// </summary>
 public static class Time
 {
-    internal static ITimeProvider Provider => Application.Current?.GetComponent<ITimeProvider>() ?? throw Exceptions.CoreComponentNotFound();
+    internal static ITimeProvider Provider => Application.GetComponent<ITimeProvider>();
 
     /// <summary>
     /// The number of seconds since the last frame.
@@ -29,9 +25,14 @@ public static class Time
     public static bool IsRunningSlowly => Provider.IsRunningSlowly();
 
     /// <summary>
-    /// The highest allowed value of <see cref="DeltaTime"/>.
+    /// The highest allowed value of <see cref="DeltaTime"/>. Defaults to <see cref="float.PositiveInfinity"/>.
     /// </summary>
     public static float MaxDeltaTime { get => Provider.MaxDeltaTime; set => Provider.MaxDeltaTime = value; }
+
+    /// <summary>
+    /// Controls the rate at which <see cref="DeltaTime"/> and <see cref="TotalTime"/> passes.
+    /// </summary>
+    public static float Scale { get => Provider.Scale; set => Provider.Scale = value; }
 
     /// <summary>
     /// The default value of <see cref="MaxDeltaTime"/>.

@@ -12,6 +12,7 @@ internal sealed class SkiaTexture : ITexture
     private readonly TextureOptions options;
 
     private Color[] colors;
+    private SkiaCanvas canvas;
 
     public SkiaTexture(SkiaGraphicsProvider provider, SKBitmap bitmap, bool owner, TextureOptions options)
     {
@@ -19,7 +20,7 @@ internal sealed class SkiaTexture : ITexture
         this.bitmap = bitmap;
         this.owner = owner;
         this.options = options;
-
+        
         if (!options.HasFlag(TextureOptions.NoAccess))
         {
             colors = new Color[bitmap.Width * bitmap.Height];
@@ -43,7 +44,7 @@ internal sealed class SkiaTexture : ITexture
         get
         {
             if (colors is null)
-                throw new InvalidOperationException("CPU acess is disallowed on this texture!");
+                throw new InvalidOperationException("CPU access is not allowed on this texture!");
 
             return colors.AsSpan();
         }
@@ -53,11 +54,18 @@ internal sealed class SkiaTexture : ITexture
     {
         if (owner)
             bitmap.Dispose();
+
+        this.canvas.Dispose();
     }
 
-    public ICanvas CreateCanvas()
+    public ICanvas GetCanvas()
     {
-        return new SkiaCanvas(this.provider, this, new SKCanvas(bitmap), false);
+        if (this.canvas is null || this.canvas.IsDisposed)
+        {
+            this.canvas = new SkiaCanvas(this.provider, this, new SKCanvas(bitmap), false);
+        }
+
+        return this.canvas;
     }
 
     public void ApplyChanges()

@@ -1,160 +1,107 @@
-﻿using SimulationFramework.Drawing;
+﻿using SimulationFramework.Components;
 using SimulationFramework.Messaging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
 /// <summary>
-/// Hosts all of the components in a simulation.
+/// Provides mechanisms for acquiring components to the simulation.
 /// </summary>
-public sealed class Application : IDisposable
+public static class Application
 {
-    /// <summary>
-    /// The currently running application, or null if there is none.
-    /// </summary>
-    public static Application? Current { get; private set; }
+    private static ISimulationPlatform Platform => GetComponent<ISimulationPlatform>();
+    private static IApplicationProvider Provider => GetComponent<IApplicationProvider>();
 
     /// <summary>
-    /// The application's dispatcher.
+    /// Gets an <see cref="IDisplay"/> instance which represents the system's primary display.
     /// </summary>
-    public MessageDispatcher Dispatcher { get; private set; }
-
-    private readonly List<IApplicationComponent> components = new();
-    private readonly IApplicationPlatform platform;
-    private bool initialized;
+    public static IDisplay PrimaryDisplay => Provider.PrimaryDisplay;
 
     /// <summary>
-    /// Creates a new instance of the <see cref="Application"/> class.
+    /// Invoked when the simulation is trying to exit. The exit can be cancelled using <see cref="CancelExit"/>.
     /// </summary>
-    public Application(IApplicationPlatform platform)
+    public static event MessageListener<ExitMessage> Exiting
     {
-        ArgumentNullException.ThrowIfNull(platform);
-        
-        this.platform = platform;
-        components.Add(platform);
-
-        Dispatcher = new();
-
-        Dispatcher.Subscribe<InitializeMessage>(m =>
-        {
-            for (int i = 0; i < components.Count; i++)
-            {
-                components[i].Initialize(this);
-            }
-            
-            this.initialized = true;
-        }, ListenerPriority.Internal);
+        add => SimulationHost.Current!.Dispatcher.Subscribe(value);
+        remove => SimulationHost.Current!.Dispatcher.Unsubscribe(value);
     }
 
     /// <summary>
-    /// Finds the component of the provided type.
+    /// Gets the first component of the a specific type. If no components of the specified type are found, this method throws an exception.
     /// </summary>
-    /// <typeparam name="T">The type of component to find.</typeparam>
-    /// <returns>The component if one of the provided type was found, else null.</returns>
-    public T? GetComponent<T>() where T : IApplicationComponent
+    /// <typeparam name="TComponent">The type of component to get.</typeparam>
+    /// <returns>A component of type <typeparamref name="TComponent"/>.</returns>
+    public static TComponent GetComponent<TComponent>() where TComponent : class, ISimulationComponent
     {
-        return components.OfType<T>().FirstOrDefault();
+        return GetComponentOrDefault<TComponent>() ?? throw Exceptions.ComponentNotFound(typeof(TComponent));
     }
 
     /// <summary>
-    /// Adds the provided component to the application.
+    /// Gets the first component of the a specific type. If no components of the specified type are found, this method returns null.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="component"></param>
-    public void AddComponent<T>(T component) where T : IApplicationComponent
+    /// <typeparam name="TComponent">The type of component to get.</typeparam>
+    /// <returns>A component of type <typeparamref name="TComponent"/>; or null if one wasn't found.</returns>
+    public static TComponent? GetComponentOrDefault<TComponent>() where TComponent : class, ISimulationComponent
     {
-        AddComponent(component as IApplicationComponent);
+        return SimulationHost.Current?.GetComponent<TComponent>();
     }
 
     /// <summary>
-    /// Adds the provided component to the application.
+    /// Adds a new component to the simulation.
     /// </summary>
-    /// <param name="component"></param>
-    public void AddComponent(IApplicationComponent component)
+    /// <typeparam name="TComponent">The type of component to add. Must be a class and have a parameterless constructor.</typeparam>
+    public static void RegisterComponent<TComponent>() where TComponent : class, ISimulationComponent, new()
     {
-        var componentType = component.GetType();
-
-        if (components.Any(c => c.GetType() == componentType))
-            throw Exceptions.DuplicateComponent(componentType);
-
-        Debug.Message($"Added component \"{componentType}\".");
-
-        components.Add(component);
-
-        if (initialized)
-            component.Initialize(this);
-    }
-
-    /// <inheritdoc/>
-    public void Dispose()
-    {
-        foreach (var component in components)
-        {
-            try
-            {
-                component.Dispose();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"{e.GetType().Name} while disposing component {component.GetType().Name}: {e.Message}");
-            }
-        }
-        
-        GC.SuppressFinalize(this);
-        
-        if (Current == this)
-            Current = null;
+        RegisterComponent(new TComponent());
     }
 
     /// <summary>
-    /// Notifies the simulation to exit after the current frame.
+    /// Adds a new component to the simulation.
     /// </summary>
-    public void Exit()
+    /// <typeparam name="TComponent">The type of component to add. Must be a class.</typeparam>
+    /// <param name="component">The component to add.</param>
+    public static void RegisterComponent<TComponent>(TComponent component) where TComponent : class, ISimulationComponent
     {
-        Dispatcher.NotifyAfter<Messaging.FrameEndMessage>(msg => Dispatcher.QueueDispatch(new ExitMessage()));
+        SimulationHost.Current?.RegisterComponent(component);
     }
 
     /// <summary>
-    /// Runs the app using the provided platform.
+    /// Determines if the true if the simulation has a component of the specified type.
     /// </summary>
-    public void Start()
+    /// <typeparam name="TComponent">The type of component.</typeparam>
+    /// <returns><see langword="true"/> if the simulation has a component of type <typeparamref name="TComponent"/>; otherwise <see langword="false"/>.</returns>
+    public static bool HasComponent<TComponent>() where TComponent : class, ISimulationComponent
     {
-        Current = this;
-
-        AddComponent(platform.CreateController());
-        AddComponent(platform.CreateGraphicsProvider());
-        AddComponent(platform.CreateTimeProvider());
-
-        foreach (var additionalComponent in platform.CreateAdditionalComponents())
-        {
-            AddComponent(additionalComponent);
-        }
-
-        AddComponent(new InputContext());
-
-        var controller = GetComponent<IApplicationController>()!;
-        controller.Start(this.Dispatcher);
-
-        Current = null;
+        return GetComponent<TComponent>() is not null;
     }
 
     /// <summary>
-    /// Redirects all internal console messages to the provided text writer.
+    /// Gets all of the system's currently active displays.
     /// </summary>
-    /// <param name="writer">The writer to redirect to, or null to redirect to the console.</param>
-    public static void RedirectConsoleOutput(TextWriter? writer)
+    /// <returns>An <see cref="IEnumerable{IDisplay}"/> containing the system's displays.</returns>
+    public static IEnumerable<IDisplay> GetDisplays()
     {
-        if (writer == Console.Out)
-        {
-            writer = null;
-        }
+        return Provider.GetDisplays();
+    }
 
-        Debug.Redirect(writer);
+    /// <summary>
+    /// Makes request to exit the simulation.
+    /// <para>
+    /// Calling this method invokes the <see cref="Exiting"/> event and dispatches an <see cref="ExitMessage"/>, during which <see cref="CancelExit"/> can be called to cancel the exit request. </para>
+    /// </summary>
+    /// <param name="cancellable">Whether the exit request can be cancelled using <see cref="CancelExit"/>.</param>
+    public static void Exit(bool cancellable)
+    {
+        Provider.Exit(cancellable);
+    }
+
+    /// <summary>
+    /// Cancels a pending request to exit the simulation. Must be called from a listener of either the <see cref="Exiting"/> event or an <see cref="ExitMessage"/>.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"/>
+    public static void CancelExit()
+    {
+        Provider.CancelExit();
     }
 }

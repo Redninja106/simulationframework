@@ -1,39 +1,19 @@
-﻿using SimulationFramework.Drawing;
-using SimulationFramework.Messaging;
+﻿using SimulationFramework.Components;
+using SimulationFramework.Drawing;
+using SimulationFramework.Input;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
-/// <summary>
-/// The base class for all simulations. Inherit this class or use <see cref="Create(Action{SimulationFramework.AppConfig}, Action{ICanvas})"/> to create a simulation.
+/// <summary>e
+/// The base class for all simulations. Inherit this class or use <see cref="Create(Action, Action{ICanvas})"/> to create a simulation.
 /// </summary>
 public abstract class Simulation
 {
-    private static readonly string[] knownPlatforms = new[]
-    {
-        "SimulationFramework.Desktop.dll",
-    };
-
-    /// <summary>
-    /// This simulation's application.
-    /// <para>
-    /// If this simulation has been initialized (any overload of <see cref="Run()"/> has been called), this property will not be null.
-    /// </para>
-    /// </summary>
-    public Application? Application { get; private set; }
-
     /// <summary>
     /// Called when the simulation should initialize.
     /// </summary>
-    /// <param name="config"></param>
-    public abstract void OnInitialize(AppConfig config);
+    public abstract void OnInitialize();
 
     /// <summary>
     /// Called when the simulation should render.
@@ -54,221 +34,126 @@ public abstract class Simulation
     public virtual void OnResize(int width, int height) { }
 
     /// <summary>
-    /// Starts this simulation using the provided platform.
+    /// Called when a key is pressed on the keyboard.
     /// </summary>
-    /// <param name="platform"></param>
-    public void Run(IApplicationPlatform platform)
-    {
-        ArgumentNullException.ThrowIfNull(platform);
-
-        Application = new Application(platform);
-
-        Application.Dispatcher.Subscribe<InitializeMessage>(m => {
-            var config = AppConfig.CreateDefault();
-            config.Title = "Simulation";
-            OnInitialize(config);
-            config.Apply();
-        });
-
-        Application.Dispatcher.Subscribe<RenderMessage>(m =>
-        {
-            m.Canvas.ResetState();
-            OnRender(m.Canvas);
-            m.Canvas.Flush();
-        });
-
-        Application.Dispatcher.Subscribe<UninitializeMessage>(m =>
-        {
-            OnUninitialize();
-        });
-
-        Application.Dispatcher.Subscribe<ResizeMessage>(m =>
-        {
-            OnResize(m.Width, m.Height);
-        });
-        
-        Application.Start();
-
-        Application.Dispose();
-    }
+    /// <param name="key">The key that was pressed.</param>
+    public virtual void OnKeyPressed(Key key) { }
 
     /// <summary>
-    /// Starts this simulation.
+    /// Called when a key is released on the keyboard.
+    /// </summary>
+    /// <param name="key">The key that was released.</param>
+    public virtual void OnKeyReleased(Key key) { }
+
+    /// <summary>
+    /// Called when a key is typed. This is usually used for text input.
+    /// </summary>
+    /// <param name="character">The character that was typed.</param>
+    public virtual void OnKeyTyped(char character) { }
+
+    /// <summary>
+    /// Called when a button is pressed on the mouse.
+    /// </summary>
+    /// <param name="button">The button that was pressed.</param>
+    public virtual void OnButtonPressed(MouseButton button) { }
+
+    /// <summary>
+    /// Called when a button is released on the mouse.
+    /// </summary>
+    /// <param name="button">The button that was released.</param>
+    public virtual void OnButtonReleased(MouseButton button) { }
+
+    /// <summary>
+    /// Runs the simulation, automatically determining a platform.
     /// </summary>
     public void Run()
     {
-        IEnumerable<IApplicationPlatform> platforms = GetAvailablePlatforms();
-
-        IApplicationPlatform? selectedPlatform = platforms.FirstOrDefault();
-
-        if (selectedPlatform is null)
-        {
-            throw Exceptions.NoPlatformAvailable();
-        }
-
-        Debug.Message($"Selected platform \"{selectedPlatform.GetType()}\".");
-
-        Run(selectedPlatform);
+        Run(null);
     }
 
     /// <summary>
-    /// Finds available, sorted platforms provided from loaded assemblies via the <see cref="ApplicationPlatformAttribute"/>.
+    /// Runs the simulation using the provided platform.
     /// </summary>
-    /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="IApplicationPlatform"/> containing all currently available platforms.</returns>
-    public static IEnumerable<IApplicationPlatform> GetAvailablePlatforms()
+    /// <param name="platform">The platform to run the simulation on. If this value is <see langword="null"/>, the platform is automatically determined.</param>
+    public void Run(ISimulationPlatform? platform)
     {
-        const string IsPlatformSupportedMethodName = "IsSupported";
-        const string TypePlatformSearchContext = "It will not be used as an available platform.";
-        const string MethodPlatformSearchContext = "Its base type will not be used as an available platform.";
-                
-        List<IApplicationPlatform> platforms = new();
-        foreach (var knownPlatform in knownPlatforms)
-        {
-            try
-            {
-                Assembly.LoadFile(Path.GetFullPath("./" + knownPlatform));
-            }
-            catch { }
-        }
-        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-        var attributes = assemblies.SelectMany(CustomAttributeExtensions.GetCustomAttributes<ApplicationPlatformAttribute>);
-
-        foreach (var attr in attributes)
-        {
-            Type type = attr.PlatformType;
-
-            Type? platformInterface = type.FindInterfaces((t, o) => t == typeof(IApplicationPlatform), null).SingleOrDefault();
-            if (platformInterface is null)
-            {
-                Debug.Warn(Warnings.TypeDoesNotImplementInterface(type, typeof(IApplicationPlatform), TypePlatformSearchContext));
-                continue;
-            }
-
-            var constructor = type.GetConstructor(Type.EmptyTypes);
-            if (constructor is null)
-            {
-                Debug.Warn(Warnings.TypeDoesNotHaveParameterlessConstructor(type, TypePlatformSearchContext));
-                continue;
-            }
-
-            MethodInfo? isPlatformSupportedMethod = type.GetMethod(IsPlatformSupportedMethodName, BindingFlags.Static | BindingFlags.Public, Type.EmptyTypes);
-            if (isPlatformSupportedMethod is null)
-            {
-                Debug.Warn(Warnings.TypeDoesNotHavePublicStaticMethod(type, IsPlatformSupportedMethodName, TypePlatformSearchContext));
-                continue;
-            }
-
-            if (isPlatformSupportedMethod.IsGenericMethod)
-            {
-                Debug.Warn(Warnings.MethodExpectedNonGeneric(isPlatformSupportedMethod, MethodPlatformSearchContext));
-                continue;
-            }
-
-            if (isPlatformSupportedMethod.ReturnType != typeof(bool))
-            {
-                Debug.Warn(Warnings.MethodExpectedReturnType(isPlatformSupportedMethod, typeof(bool), MethodPlatformSearchContext));
-                continue;
-            }
-
-            bool isSupported = false;
-            try
-            {
-                isSupported = (bool)isPlatformSupportedMethod.Invoke(null, null)!;
-            }
-            catch
-            {
-                Debug.Warn(Warnings.MethodInvocationFailed(isPlatformSupportedMethod, MethodPlatformSearchContext));
-                continue;
-            }
-
-            if (!isSupported)
-            {
-                continue;
-            }
-
-            var platformInstance = (IApplicationPlatform)constructor.Invoke(null)!;
-            platforms.Add(platformInstance);
-        }
-
-        return platforms;
+        SimulationHost host = new();
+        host.Initialize(platform);
+        host.Start(this);
     }
 
     /// <summary>
-    /// Creates a simulation from the provided callbacks.
+    /// Runs a simulation of the given type, automatically determining a platform. This method initializes a <see cref="SimulationHost"/> before creating the simulation so that the constructor of <typeparamref name="TSimulation"/> can use SimulationFramework components (like <see cref="Time"/> and <see cref="Graphics"/>).
     /// </summary>
-    /// <param name="initialize">The delegate to call when simulation initializes.</param>
-    /// <param name="render">The delegate to call when simulation renders.</param>
-    /// <returns>A simulation which uses the provided delegates.</returns>
-    public static Simulation Create(Action<AppConfig> initialize, Action<ICanvas> render)
+    /// <typeparam name="TSimulation">The type of simulation to run.</typeparam>
+    public static void Start<TSimulation>() where TSimulation : Simulation, new()
     {
-        return Create(initialize, render, null);
+        Start<TSimulation>(null);
     }
 
     /// <summary>
-    /// Creates a simulation from the provided delegates.
+    /// Runs a simulation of the given type using the provided platform. This method initializes a <see cref="SimulationHost"/> before creating the simulation so that the constructor of <typeparamref name="TSimulation"/> can use SimulationFramework components (like <see cref="Time"/> and <see cref="Graphics"/>).
     /// </summary>
-    /// <param name="initialize">The delegate to call when simulation initializes.</param>
-    /// <param name="render">The delegate to call when simulation renders.</param>
-    /// <param name="uninitialize">The delegate to call when simulation uninitializes.</param>
-    /// <returns>A simulation which uses the provided delegates.</returns>
-    public static Simulation Create(Action<AppConfig> initialize, Action<ICanvas> render, Action? uninitialize)
+    /// <typeparam name="TSimulation">The type of simulation to run.</typeparam>
+    /// <param name="platform">The platform to run the simulation on. If this value is <see langword="null"/>, the platform is automatically determined.</param>
+    public static void Start<TSimulation>(ISimulationPlatform? platform) where TSimulation : Simulation, new()
     {
-        return new ActionSimulation(initialize, render, uninitialize);
+        SimulationHost host = new();
+        host.Initialize(platform);
+        host.Start(new TSimulation());
     }
 
     /// <summary>
-    /// Creates and runs a simulation using the provided callbacks.
+    /// Creates a <see cref="Simulation"/> from callbacks.
     /// </summary>
-    /// <param name="initialize">The delegate to call when simulation initializes.</param>
-    /// <param name="render">The delegate to call when simulation renders.</param>
-    /// <returns>A simulation which uses the provided delegates.</returns>
-    public static void CreateAndRun(Action<AppConfig> initialize, Action<ICanvas> render)
+    /// <param name="initialize">Called once when the simulation should initialize.</param>
+    /// <param name="render">Called every frame when the simulation should render.</param>
+    /// <returns>A new <see cref="Simulation"/> which calls the given delegates.</returns>
+    public static Simulation Create(Action? initialize, Action<ICanvas>? render)
+    {
+        return new ActionSimulation(initialize, render);
+    }
+
+    /// <summary>
+    /// Creates a simulaton from callbacks, and then runs it, automatically determining the platform.
+    /// </summary>
+    /// <param name="initialize">Called once when the simulation should initialize.</param>
+    /// <param name="render">Called every frame when the simulation should render.</param>
+    public static void CreateAndRun(Action? initialize, Action<ICanvas>? render)
     {
         CreateAndRun(initialize, render, null);
     }
 
     /// <summary>
-    /// Creates and runs a simulation using the provided callbacks.
+    /// Creates a simulaton from callbacks, and then runs it using the provided platform
     /// </summary>
-    /// <param name="initialize">The delegate to call when simulation initializes.</param>
-    /// <param name="render">The delegate to call when simulation renders.</param>
-    /// <param name="uninitialize">The delegate to call when simulation uninitializes.</param>
-    /// <returns>A simulation which uses the provided delegates.</returns>
-    public static void CreateAndRun(Action<AppConfig> initialize, Action<ICanvas> render, Action? uninitialize)
+    /// <param name="initialize">Called once when the simulation should initialize.</param>
+    /// <param name="render">Called every frame when the simulation should render.</param>
+    /// <param name="platform">The platform to run the simulation on. If this value is <see langword="null"/>, the platform is automatically determined.</param>
+    public static void CreateAndRun(Action? initialize, Action<ICanvas>? render, ISimulationPlatform? platform)
     {
-        var simulation = Create(initialize, render, uninitialize);
-        simulation.Run();
+        Create(initialize, render).Run(platform);
     }
 
     private class ActionSimulation : Simulation
     {
-        private readonly Action<AppConfig> initialize;
-        private readonly Action<ICanvas> render;
-        private readonly Action? uninitialize;
+        public readonly Action? initialize;
+        public readonly Action<ICanvas>? render;
 
-        public ActionSimulation(Action<AppConfig> initialize, Action<ICanvas> render, Action? uninitialize)
+        public ActionSimulation(Action? initialize, Action<ICanvas>? render)
         {
-            this.initialize= initialize;
+            this.initialize = initialize;
             this.render = render;
-            this.uninitialize = uninitialize;
         }
 
-        public override void OnInitialize(AppConfig config)
+        public override void OnInitialize()
         {
-            this.initialize(config);
+            this.initialize?.Invoke();
         }
 
         public override void OnRender(ICanvas canvas)
         {
-            this.render(canvas);
-        }
-
-        public override void OnUninitialize()
-        {
-            if (this.uninitialize is not null)
-            {
-                this.uninitialize();
-            }
+            this.render?.Invoke(canvas);
         }
     }
 }

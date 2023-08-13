@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
 
 /// <summary>
-/// A 2D bitmap that can be rendered, or rendered to.
+/// A 2D bitmap used for rendering. Textures can be created using <see cref="Graphics.CreateTexture(int, int, TextureOptions)"/> or loaded using <see cref="Graphics.LoadTexture(string, TextureOptions)"/>.
 /// </summary>
 public interface ITexture : IDisposable
 {
@@ -50,10 +45,9 @@ public interface ITexture : IDisposable
     }
 
     /// <summary>
-    /// Opens a new canvas which draws to this texture.
+    /// Gets a canvas which draws to this texture.
     /// </summary>
-    /// <returns>An <see cref="ICanvas"/> which draws onto this texture.</returns>
-    ICanvas CreateCanvas();
+    ICanvas GetCanvas();
 
     /// <summary>
     /// Applies any changes made do the bitmap's data using <see cref="Pixels"/> or <see cref="GetPixel(int, int)"/>.

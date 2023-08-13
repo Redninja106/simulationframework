@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
@@ -18,14 +14,9 @@ namespace SimulationFramework;
 public readonly partial struct Color : IEquatable<Color>
 {
     /// <summary>
-    /// The 8-bit value of the alpha component of this color.
+    /// The 8-bit value of the red component of this color.
     /// </summary>
-    public byte A { readonly get; init; }
-
-    /// <summary>
-    /// The 8-bit value of the blue component of this color.
-    /// </summary>
-    public byte B { readonly get; init; }
+    public byte R { readonly get; init; }
 
     /// <summary>
     /// The 8-bit value of the green component of this color.
@@ -33,9 +24,14 @@ public readonly partial struct Color : IEquatable<Color>
     public byte G { readonly get; init; }
 
     /// <summary>
-    /// The 8-bit value of the red component of this color.
+    /// The 8-bit value of the blue component of this color.
     /// </summary>
-    public byte R { readonly get; init; }
+    public byte B { readonly get; init; }
+
+    /// <summary>
+    /// The 8-bit value of the alpha component of this color.
+    /// </summary>
+    public byte A { readonly get; init; }
 
     /// <summary>
     /// The 32-bit, RGBA value of this color.
@@ -97,7 +93,7 @@ public readonly partial struct Color : IEquatable<Color>
     /// <summary>
     /// Creates a new color from the provided RGB values.
     /// </summary>
-    /// <param name="values">The RGB values of the color.</param>
+    /// <param name="values">The RGB values of the color. The value of each component should be between 0 and 1.</param>
     public Color(Vector3 values) : this(values.X, values.Y, values.Z)
     {
     }
@@ -105,7 +101,7 @@ public readonly partial struct Color : IEquatable<Color>
     /// <summary>
     /// Creates a new color from the provided RGBA values.
     /// </summary>
-    /// <param name="values">The RGBA values of the color.</param>
+    /// <param name="values">The RGBA values of the color. The value of each component should be between 0 and 1.</param>
     public Color(Vector4 values) : this(values.X, values.Y, values.Z, values.W)
     {
     }
@@ -113,9 +109,9 @@ public readonly partial struct Color : IEquatable<Color>
     /// <summary>
     /// Creates a new color from the provided RGB values, and an alpha component of 255.
     /// </summary>
-    /// <param name="r">The red component of the color.</param>
-    /// <param name="g">The green component of the color.</param>
-    /// <param name="b">The blue component of the color.</param>
+    /// <param name="r">The red component of the color. This value should be between 0 and 1.</param>
+    /// <param name="g">The green component of the color. This value should be between 0 and 1.</param>
+    /// <param name="b">The blue component of the color. This value should be between 0 and 1.</param>
     public Color(float r, float g, float b) : this(r, g, b, 1.0f)
     {
     }
@@ -123,10 +119,10 @@ public readonly partial struct Color : IEquatable<Color>
     /// <summary>
     /// Creates a new color from the provided RGBA values.
     /// </summary>
-    /// <param name="r">The red component of the color.</param>
-    /// <param name="g">The green component of the color.</param>
-    /// <param name="b">The blue component of the color.</param>
-    /// <param name="a">The alpha component of the color.</param>
+    /// <param name="r">The red component of the color. This value should be between 0 and 1.</param>
+    /// <param name="g">The green component of the color. This value should be between 0 and 1.</param>
+    /// <param name="b">The blue component of the color. This value should be between 0 and 1.</param>
+    /// <param name="a">The alpha component of the color. This value should be between 0 and 1.</param>
     public Color(float r, float g, float b, float a)
     {
         this.R = (byte)(MathHelper.Normalize(r) * 255);
@@ -381,9 +377,19 @@ public readonly partial struct Color : IEquatable<Color>
     /// <param name="value">The string representation of the color.</param>
     /// <param name="result">The value of the color.</param>
     /// <returns><see langword="true"/> if the string represents a color, otherwise <see langword="false"/>.</returns>
+    public static bool TryParse(string value, out Color result)
+    {
+        return TryParse(value.AsSpan(), out result);
+    }
+
+    /// <summary>
+    /// Attempts to converts to a color from its string representation.
+    /// </summary>
+    /// <param name="value">The string representation of the color.</param>
+    /// <param name="result">The value of the color.</param>
+    /// <returns><see langword="true"/> if the string represents a color, otherwise <see langword="false"/>.</returns>
     public static bool TryParse(ReadOnlySpan<char> value, out Color result)
     {
-        byte r, g, b, a;
         result = default;
 
         // consume valid prefixes
@@ -392,27 +398,28 @@ public readonly partial struct Color : IEquatable<Color>
         if (value.StartsWith("0x"))
             value = value[2..];
 
-        if (value.Length < 2 || !byte.TryParse(value[..2], NumberStyles.AllowHexSpecifier, null, out r))
+        if (value.Length < 2 || !byte.TryParse(value[..2], NumberStyles.AllowHexSpecifier, null, out byte r))
         {
             return false;
         }
 
         value = value[2..];
 
-        if (value.Length < 2 || !byte.TryParse(value[..2], NumberStyles.AllowHexSpecifier, null, out g))
+        if (value.Length < 2 || !byte.TryParse(value[..2], NumberStyles.AllowHexSpecifier, null, out byte g))
         {
             return false;
         }
 
         value = value[2..];
 
-        if (value.Length < 2 || !byte.TryParse(value[..2], NumberStyles.AllowHexSpecifier, null, out b))
+        if (value.Length < 2 || !byte.TryParse(value[..2], NumberStyles.AllowHexSpecifier, null, out byte b))
         {
             return false;
         }
 
         value = value[2..];
 
+        byte a;
         if (value.IsEmpty)
         {
             a = 255;
@@ -432,6 +439,17 @@ public readonly partial struct Color : IEquatable<Color>
 
         result = new(r, g, b, a);
         return true;
+    }
+
+    /// <summary>
+    /// Converts to a color from its string representation.
+    /// </summary>
+    /// <param name="value">The string representation of the color.</param>
+    /// <returns>The color that the string represents.</returns>
+    /// <exception cref="ArgumentOutOfRangeException"/>
+    public static Color Parse(string value)
+    {
+        return Parse(value.AsSpan());
     }
 
     /// <summary>
