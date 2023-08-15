@@ -33,6 +33,7 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     {
         glInterface = GRGlInterface.CreateOpenGl(getProcAddress);
         backendContext = GRContext.CreateGl(glInterface);
+        
 
         frameProvider.SetContext(this.backendContext);
     }

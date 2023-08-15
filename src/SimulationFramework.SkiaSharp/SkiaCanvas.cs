@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Numerics;
 using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Shaders;
+using SimulationFramework.Drawing.Shaders.Compiler;
+using SimulationFramework.SkiaSharp.Shaders;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
@@ -50,7 +54,45 @@ internal sealed class SkiaCanvas : ICanvas
 
     public void DrawRect(Rectangle rectangle)
     {
+        if (State.DrawMode == DrawMode.Shader)
+        {
+            var shader = State.Shader;
+            var compiler = new CanvasShaderCompiler();
+            var compilation = compiler.Compile(shader);
+            var codeGenerator = new SKSLCodeGenerator(compilation);
+
+            StringWriter writer = new();
+            codeGenerator.Emit(writer);
+            var source = writer.ToString();
+            Console.WriteLine(source);
+            var effect = SKRuntimeEffect.Create(source, out string errors);
+
+            if (errors != null)
+                throw new Exception(errors);
+
+            SKRuntimeEffectUniforms uniforms = new SKRuntimeEffectUniforms(effect);
+
+            foreach (var u in compilation.Uniforms)
+            {
+                uniforms[u.Name] = GetUniformValue(shader, u);
+            }
+
+            var skshader = effect.ToShader(true, uniforms);
+            currentState.Paint.Shader = skshader;
+            currentState.Paint.Style = SKPaintStyle.Fill;
+        }
+
         canvas.DrawRect(rectangle.AsSKRect(), currentState.Paint);
+    }
+
+    private SKRuntimeEffectUniform GetUniformValue(CanvasShader shader, ShaderVariable uniform)
+    {
+        var value = uniform.BackingField.GetValue(shader);
+
+        if (value is float f)
+            return f;
+
+        throw new NotImplementedException();
     }
 
     public void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter)

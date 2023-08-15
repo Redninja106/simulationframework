@@ -24,8 +24,11 @@ internal class DesktopSkiaFrameProvider : ISkiaFrameProvider
         frameSurface?.Dispose();
 
         const SKColorType format = SKColorType.Rgba8888;
-        backendRenderTarget = new GRBackendRenderTarget(width, height, 1, 32, new GRGlFramebufferInfo { Format = format.ToGlSizedFormat(), FramebufferObjectId = 0 });
+        backendRenderTarget = new GRBackendRenderTarget(width, height, 1, 0, new GRGlFramebufferInfo { Format = format.ToGlSizedFormat(), FramebufferObjectId = 0 });
         frameSurface = SKSurface.Create(context, backendRenderTarget, format);
+
+        if (frameSurface is null)
+            throw new Exception("Error creating render target surface");
 
         this.width = width;
         this.height = height;

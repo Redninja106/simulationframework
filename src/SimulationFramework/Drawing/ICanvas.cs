@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using SimulationFramework.Drawing.Shaders;
 
 namespace SimulationFramework.Drawing;
 
@@ -86,6 +87,12 @@ public interface ICanvas : IDisposable
     {
         State.UpdateStrokeColor(color);
         State.UpdateDrawMode(DrawMode.Stroke);
+    }
+
+    sealed void Fill(CanvasShader shader)
+    {
+        State.UpdateShader(shader);
+        State.UpdateDrawMode(DrawMode.Shader);
     }
 
     /// <summary>

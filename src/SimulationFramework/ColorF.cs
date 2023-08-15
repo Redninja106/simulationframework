@@ -293,4 +293,19 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     {
         return !(left == right);
     }
+
+    public static ColorF operator *(float left, ColorF right)
+    {
+        return right * left;
+    }
+
+    public static ColorF operator *(ColorF left, float right)
+    {
+        return new(left.AsVector4() * right);
+    }
+
+    public static ColorF operator *(ColorF left, ColorF right)
+    {
+        return new(left.AsVector4() * right.AsVector4());
+    }
 }
