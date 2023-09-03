@@ -1,37 +1,67 @@
 ﻿using SimulationFramework.Drawing.Shaders;
-using SimulationFramework.Drawing.Shaders.Compiler.Passes;
+using SimulationFramework.Drawing.Shaders.Compiler.Expressions;
+using SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
+using SimulationFramework.Drawing.Shaders.Compiler.Translation;
+using SimulationFramework.Drawing.Shaders.Compiler.Translation.OLD;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.SymbolStore;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler;
 
 public class CanvasShaderCompiler
 {
-    private List<CompilerPass> Rules = new()
-    {
-        new ConstructorPass(),
-        new VariableAccessReplacements(),
-        new ShaderTypeParameterPass(),
-        new ShaderTypeRestrictions(),
-        new ShaderIntrinsicSubstitutions(),
-        new IntrinsicTypeVariableInlines(),
-        new DependencyResolver(),
-        new CallSubstitutions(),
-        new GlobalMethodCall(),
-        new InlineSourceInsertion(),
-    };
+    /*
+     *             |------------------------------------------------------------------
+     * stages:     V                                                                 |
+     * decompilation -> control flow -> expression builder -> dependency resolver -> intercept resolver -> translation passes -> shader code emitter 
+     *             ^                                          |      ^                           ^
+     *             |-------------------------------------------       \                         /
+     *                                                                 \-- intrinsic manager --/
+     *             
+     * decompilation:
+     * turns byte[] into MethodDecompilation
+     * 
+     * control flow:
+     * MethodDecompilation to control flow graph with basicBlockNodes
+     * 
+     * expression builder:
+     * cfg of basicblocks into expression tree
+     * 
+     * dependency resolver:
+     * - figures out what else needs to be compiled and restarts the process for those (recursively)
+     * 
+     * translation passes:
+     * - translate C# ast into language agnostic shader ast  
+     * 
+     * shader code emitter:
+     * - shader ast to final shader source
+     */
+
+    //private List<CompilerPass> Rules = new()
+    //{
+    //    new ConstructorPass(),
+    //    new VariableAccessReplacements(),
+    //    new ShaderTypeParameterPass(),
+    //    new ShaderTypeRestrictions(),
+    //    new ShaderIntrinsicSubstitutions(),
+    //    new IntrinsicTypeVariableInlines(),
+    //    new CallSubstitutions(),
+    //    new GlobalMethodCall(),
+    //    new InlineSourceInsertion(),
+    //};
 
     public CanvasShaderCompiler()
     {
-
     }
 
     public ShaderCompilation Compile(CanvasShader shader)
@@ -76,116 +106,190 @@ public class CanvasShaderCompiler
          *
          */
 
-        var entryPoint = GetShaderEntryPoint(shader);
 
-        var context = new CompilationContext(this);
+        /*
+         * Two phases:
+         *      method discovery (decomp->intercepts)
+         *      translation (everything after)
+         *      
+         * 
+         */
 
-        context.ShaderType = shader.GetType();
+        CompilerContext context = new(shader.GetType());
+        ShaderCompilation compilation = new();
 
-        CompileShaderType(context, context.ShaderType);
-        CompileMethod(context, entryPoint, true);
+        CompileVariables(context, compilation);
+        CompileMethods(context, compilation);
 
-        return context.GetResult();
-    }
-
-    private MethodInfo GetShaderEntryPoint(CanvasShader shader)
-    {
-        var shaderType = shader.GetType();
-        return shaderType.GetMethod(nameof(CanvasShader.GetPixelColor), new Type[] { typeof(Vector2) });
-    }
-
-    internal void CompileMethod(CompilationContext context, MethodBase method, bool isEntryPoint = false)
-    {
-        if (IsMethodIntrinsic(method))
-            return;
-
-        CompiledMethod m = new CompiledMethod(method);
-
-        if (isEntryPoint)
+        CompilerPipeline translationPass = new(new CompilerStage[]
         {
-            context.EntryPoint = m;
+            new RemoveThisOnGlobalsStage(context),
+            new CallReplacementsStage(context),
+            new UniformAccessReplacementStage(context),
+        });
+
+        translationPass.Run(compilation);
+        return compilation; // .GetResult() ?
+    }
+
+    private void CompileVariables(CompilerContext context, ShaderCompilation compilation)
+    {
+        foreach (var field in context.ShaderType.GetFields())
+        {
+            compilation.AddUniform(field);
+        }
+    }
+
+    private MethodInfo GetShaderEntryPoint(CompilerContext context)
+    {
+        return context.ShaderType.GetMethod(nameof(CanvasShader.GetPixelColor), new Type[] { typeof(Vector2) });
+    }
+
+    private void CompileMethods(CompilerContext context, ShaderCompilation compilation)
+    {
+        var entryPoint = GetShaderEntryPoint(context);
+        context.CompilationQueue.EnqueueMethod(entryPoint);
+
+        CompilerPipeline methodPass = new(new MethodCompilerStage[]
+        {
+            new DisassemblyStage(context),
+            new CFGStage(context),
+            new ExpressionBuilderStage(context),
+            new InterceptResolverStage(context),
+            new DependencyResolverStage(context),
+        });
+
+        while (context.CompilationQueue.TryDequeueMethod(out MethodBase method))
+        {
+            context.SetCurrentMethod(method);
+            compilation.AddMethod(method);
+            methodPass.Run(compilation);
         }
 
-        foreach (var rule in this.Rules)
-        {
-            rule.CheckMethod(context, m);
-        }
-
-        context.methods.Add(m);
+        compilation.EntryPoint = compilation.GetMethod(entryPoint);
     }
 
-    public static bool IsMethodIntrinsic(MethodBase method)
-    {
-        if (method.GetCustomAttribute<ShaderIntrinsicAttribute>() is not null)
-            return true;
+    //internal void CompileMethod(CompilationContextOLD context, MethodBase method, bool isEntryPoint = false)
+    //{
+    //    if (intrinsicManager.IsIntrinsic(method))
+    //        return;
 
-        var property = PropertyFromAccessor(method);
+    //    ShaderMethod shaderMethod = new ShaderMethod(method);
 
-        if (property is not null && property.GetCustomAttribute<ShaderIntrinsicAttribute>() is not null)
-            return true;
+    //    if (isEntryPoint)
+    //    {
+    //        context.EntryPoint = shaderMethod;
+    //    }
+    //    var interceptionsVisitor = new InterceptionsVisitor();
+    //    interceptionsVisitor.RegisterType(typeof(ShaderIntrinsics));
+    //    shaderMethod.TransformBody(interceptionsVisitor);
 
-        return false;
-    }
+    //    var constructorFixer = new ConstructorFixer();
+    //    constructorFixer.FixMethod(context, shaderMethod);
 
-    private static PropertyInfo PropertyFromAccessor(MethodBase info)
-    {
-        var type = info.DeclaringType ?? throw new Exception();
-        foreach (var property in type.GetProperties())
-        {
-            if (property.GetAccessors().Contains(info))
-                return property;
-        }
-        return null;
-    }
+    //    dependencyResolver.AddDependencies(context, shaderMethod);
+    //    context.methods.Add(shaderMethod);
+    //}
 
-    public static bool IsTypeIntrinsic(Type type) => type.GetCustomAttribute<ShaderIntrinsicAttribute>() is not null;
+    //class InterceptionsVisitor : ExpressionVisitor
+    //{
+    //    private Dictionary<MethodBase, MethodBase> interceptions = new();
 
-    internal void CompileStruct(CompilationContext context, Type structType)
-    {
-        if (IsTypeIntrinsic(structType))
-        {
-            foreach (var genericArg in structType.GetGenericArguments())
-            {
-                if (context.structs.Any(s => s.StructType == genericArg))
-                    continue;
+    //    public override Expression VisitCallExpression(CallExpression expression)
+    //    {
+    //        if (interceptions.TryGetValue(expression.Callee, out MethodBase? value))
+    //        {
+    //            var replacement = value as MethodInfo ?? throw new Exception("constructors may only intercept other constructors.");
+    //            return new CallExpression(null, replacement, expression.Arguments);
+    //        }
 
-                if (DependencyResolver.intrinsicTypes.Contains(genericArg))
-                    continue;
+    //        return base.VisitCallExpression(expression);
+    //    }
 
-                CompileStruct(context, genericArg);
-            }
+    //    public override Expression VisitNewExpression(NewExpression expression)
+    //    {
+    //        if (interceptions.TryGetValue(expression.Constructor!, out MethodBase? replacement))
+    //        {
+    //            if (replacement is ConstructorInfo constructor)
+    //            {
+    //                return new NewExpression(constructor, expression.Arguments);
+    //            }
+    //            else if (replacement is MethodInfo method)
+    //            {
+    //                return new CallExpression(null, method, expression.Arguments);
+    //            }
+    //            else
+    //            {
+    //                throw new Exception();
+    //            }
+    //        }
 
-            return;
-        }
+    //        return base.VisitNewExpression(expression);
+    //    }
 
-        CompiledStruct s = new CompiledStruct(structType);
+    //    internal void RegisterType(Type type)
+    //    {
+    //        foreach (var method in type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
+    //        {
+    //            var attr = method.GetCustomAttribute<InterceptsAttribute>();
+    //            if (attr is null)
+    //                continue;
 
-        foreach (var rule in this.Rules)
-        {
-            rule.CheckStruct(context, s);
-        }
+    //            MethodBase target;
+    //            if (attr.MethodName is InterceptsAttribute.ConstructorName)
+    //            {
+    //                target = attr.MethodType.GetConstructor(method.GetParameters().Select(p => p.ParameterType).ToArray());
+    //            }
+    //            else
+    //            {
+    //                target = attr.MethodType.GetMethod(attr.MethodName, method.GetParameters().Select(p => p.ParameterType).ToArray());
+    //            }
 
-        context.structs.Add(s);
-    }
+    //            interceptions.Add(target, method);
+    //        }
+    //    }
+    //}
 
-    private void CompileShaderType(CompilationContext context, Type shaderType)
-    {
-        foreach (var field in shaderType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
-        {
-            var variable = new ShaderVariable(field);
-            context.uniforms.Add(variable);
+    //internal void CompileStructure(CompilationContextOLD context, Type structType)
+    //{
+    //    if (context.ContainsType(structType))
+    //        return;
 
-            foreach (var rule in Rules)
-            {
-                rule.CheckVariable(context, variable);
-            }
-        }
+    //    if (!structType.IsValueType)
+    //        throw new Exception($"Type '{structType}' may not be used in a shaders because it is not value type!");
 
-        // if (signature is not null)
-        // {
-        //     ArrangeInputs(context, signature);
-        // }
-    }
+    //    if (intrinsicManager.IsIntrinsic(structType))
+    //    {
+    //        foreach (var genericArg in structType.GetGenericArguments())
+    //        {
+    //            if (!intrinsicManager.IsIntrinsic(genericArg))
+    //            {
+    //                context.AddType(genericArg);
+    //            }
+    //        }
+
+    //        return;
+    //    }
+
+    //    ShaderStructure structure = new ShaderStructure(structType);
+    //    context.structs.Add(structure);
+
+    //    dependencyResolver.AddDependencies(context, structure);
+    //}
+
+    //private void CompileShaderType(CompilationContextOLD context, Type shaderType)
+    //{
+    //    foreach (var field in shaderType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+    //    {
+    //        var variable = new ShaderVariable(field);
+    //        context.uniforms.Add(variable);
+
+    //        if (!intrinsicManager.IsIntrinsic(variable.VariableType))
+    //        {
+    //            CompileStructure(context, variable.VariableType);
+    //        }
+    //    }
+    //}
 
     // void ArrangeInputs(CompilationContext context, ShaderSignature signature)
     // {

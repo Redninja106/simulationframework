@@ -1,29 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
+
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-public class InlineSourceExpression : Expression
+public record InlineSourceExpression(string Language, string Source) : Expression
 {
-    public InlineSourceExpression(string source)
-    {
-        Source = source;
-    }
-
-    public override Type Type => typeof(void);
-    public override ExpressionType NodeType => ExpressionType.Extension;
-
-    public string Source { get; private set; }
+    public override Expression Accept(ExpressionVisitor visitor) => visitor.VisitInlineSourceExpression(this);
+    public override Expression VisitChildren(ExpressionVisitor visitor) => this;
 }
-public class InlineSourceExpression<T> : InlineSourceExpression
+
+public record InlineSourceExpression<T> : InlineSourceExpression
 {
-    public InlineSourceExpression(string source) : base(source)
+    public override Type? ExpressionType => typeof(T);
+
+    public InlineSourceExpression(string language, string source) : base(language, source)
     {
     }
-
-    public override Type Type => typeof(T);
-    public override ExpressionType NodeType => ExpressionType.Extension;
 }

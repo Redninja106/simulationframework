@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler;
-
-public abstract class ShaderCompilationVisitor
+internal class ShaderName
 {
-
+    public string OriginalName { get; }
 }

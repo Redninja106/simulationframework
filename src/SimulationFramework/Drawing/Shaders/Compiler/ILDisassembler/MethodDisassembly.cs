@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
 
 /// <summary>
-/// Represents a disassemed method.
+/// Represents a disassembled method.
 /// </summary>
 internal class MethodDisassembly
 {

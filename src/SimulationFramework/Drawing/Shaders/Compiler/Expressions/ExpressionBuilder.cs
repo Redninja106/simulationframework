@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Linq.Expressions;
+
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -17,46 +17,50 @@ internal class ExpressionBuilder
 {
     private MethodDisassembly Disassembly { get; set; }
     private InstructionStream InstructionStream { get; set; }
-    private (ParameterExpression expr, ParamModifier modifier)[] Arguments { get; set; }
-    private ParameterExpression[] Locals { get; set; }
-    private LabelTarget ReturnTarget { get; set; }
+    private LocalVariableExpression[] Locals { get; set; }
+    private MethodParameter[] Arguments { get; set; }
+    // private LabelTarget ReturnTarget { get; set; }
     private Type ReturnType { get; set; }
     private bool IsConstructor { get; set; }
     private ExpressionStack Expressions { get; set; }
 
-    private ExpressionBuilder(MethodDisassembly disassembly)
+    private ExpressionBuilder(MethodDisassembly disassembly, MethodParameter[] arguments)
     {
         Disassembly = disassembly;
+        this.Arguments = arguments;
     }
 
-    public static BlockExpression BuildExpressions(ControlFlowGraph graph, out (ParameterExpression, ParamModifier)[] parameters)
+    public static BlockExpression BuildExpressions(ShaderMethod shaderMethod)
     {
-        var disassembly = graph.Disassembly;
+        var graph = shaderMethod.ControlFlowGraph;
+        var disassembly = shaderMethod.Disassembly;
 
-        ExpressionBuilder builder = new(disassembly);
+        ExpressionBuilder builder = new(disassembly, shaderMethod.Parameters.ToArray());
 
         builder.Expressions = new();
         builder.IsConstructor = disassembly.Method is ConstructorInfo;
 
         builder.InstructionStream = new InstructionStream(disassembly);
 
-        builder.Arguments = GetArguments(disassembly);
         builder.Locals = GetLocals(disassembly);
 
         builder.ReturnType = disassembly.Method is MethodInfo method ? method.ReturnType : typeof(void);
-        builder.ReturnTarget = Expression.Label(builder.ReturnType, "return");
+        // builder.ReturnTarget = Expression.Label(builder.ReturnType, "return");
 
         var exprs = builder.BuildNodeChain(graph.EntryNode, graph.ExitNode);
 
-        parameters = builder.Arguments;
-
-        Expression result = Expression.Block(builder.ReturnType, builder.Locals, exprs);
-        result = builder.SimplifyExpression(result);
-
-        return result is BlockExpression blockExpr ? blockExpr : Expression.Block(builder.Locals, result);
+        Expression result = builder.SimplifyExpression(exprs);
+        if (result is BlockExpression resultBlock)
+        {
+            return resultBlock;
+        }
+        else
+        {
+            return new BlockExpression(new[] { result });
+        }
     }
 
-    Expression BuildBasicBlockExpression(BasicBlockNode basicBlock, bool clearStack = true)
+    Expression? BuildBasicBlockExpression(BasicBlockNode basicBlock, bool clearStack = true)
     {
         if (basicBlock.Instructions.Count is 0)
             return null;
@@ -98,7 +102,7 @@ internal class ExpressionBuilder
             }
         }
 
-        return CreateBlockExpressionIfNeeded(Expressions.Reverse(), Locals);
+        return CreateBlockExpressionIfNeeded(Expressions.Reverse());
     }
 
     bool BuildBranch(Instruction instruction)
@@ -110,70 +114,49 @@ internal class ExpressionBuilder
                 // emit not equal comparison
                 right = Expressions.Pop();
                 left = Expressions.Pop();
-                Expressions.Push(Expression.NotEqual(left, right));
+                Expressions.Push(new BinaryExpression(BinaryOperation.NotEqual, left, right));
                 break;
             case OpCode.Beq or OpCode.Beq_S:
                 right = Expressions.Pop();
                 left = Expressions.Pop();
-                Expressions.Push(Expression.Equal(left, right));
+                Expressions.Push(new BinaryExpression(BinaryOperation.Equal, left, right));
                 break;
             case OpCode.Blt or OpCode.Blt_S or OpCode.Blt_Un or OpCode.Blt_Un_S:
                 // emit less than comparison
                 right = Expressions.Pop();
                 left = Expressions.Pop();
-                Expressions.Push(Expression.LessThan(left, right));
+                Expressions.Push(new BinaryExpression(BinaryOperation.LessThan, left, right));
                 break;
             case OpCode.Ble or OpCode.Ble_S or OpCode.Ble_Un or OpCode.Ble_Un_S:
                 // emit less than or equal comparison
                 right = Expressions.Pop();
                 left = Expressions.Pop();
-                Expressions.Push(Expression.LessThanOrEqual(left, right));
+                Expressions.Push(new BinaryExpression(BinaryOperation.LessThanEqual, left, right));
                 break;
             case OpCode.Bgt or OpCode.Bgt_S or OpCode.Bgt_Un or OpCode.Bgt_Un_S:
-                // emit greater than or equal comparison
+                // emit greater than comparison
                 right = Expressions.Pop();
                 left = Expressions.Pop();
-                Expressions.Push(Expression.GreaterThan(left, right));
+                Expressions.Push(new BinaryExpression(BinaryOperation.GreaterThan, left, right));
                 break;
             case OpCode.Bge or OpCode.Bge_S or OpCode.Bge_Un or OpCode.Bge_Un_S:
                 // emit greater than or equal comparison
                 right = Expressions.Pop();
                 left = Expressions.Pop();
-                Expressions.Push(Expression.GreaterThanOrEqual(left, right));
+                Expressions.Push(new BinaryExpression(BinaryOperation.GreaterThanEqual, left, right));
                 break;
             case OpCode.Brfalse or OpCode.Brfalse_S:
                 // invert condition
                 var expr = Expressions.Pop();
-                Expressions.Push(Expression.Not(expr));
+                Expressions.Push(new UnaryExpression(UnaryOperation.Not, expr));
                 break;
             case OpCode.Br or OpCode.Br_S or OpCode.Brtrue or OpCode.Brtrue_S:
                 break; // do nothing for these
             default:
                 return false; // not a branch instruction
         }
-
+        
         return true;
-
-        bool IsBranchInstruction(OpCode opCode) =>
-            opCode is
-            OpCode.Br or
-            OpCode.Br_S or
-            OpCode.Brfalse or
-            OpCode.Brfalse_S or
-            OpCode.Brtrue or
-            OpCode.Brtrue_S or
-            OpCode.Beq or
-            OpCode.Beq_S or
-            OpCode.Bne_Un or
-            OpCode.Bne_Un_S or
-            OpCode.Bgt or
-            OpCode.Bgt_S or
-            OpCode.Bgt_Un or
-            OpCode.Bgt_Un_S or
-            OpCode.Blt or
-            OpCode.Blt_S or
-            OpCode.Blt_Un or
-            OpCode.Blt_Un_S;
     }
 
     Expression BuildNode(ControlFlowNode node, bool clearStack = true)
@@ -190,21 +173,21 @@ internal class ExpressionBuilder
 
             var trueExpr = BuildNodeChain(conditional.TrueBranch, conditional.Subgraph.ExitNode);
 
-            Expression falseExpr = conditional.FalseBranch is null ? Expression.Default(trueExpr.Type) : BuildNodeChain(conditional.FalseBranch, conditional.Subgraph.ExitNode);
+            Expression? falseExpr = conditional.FalseBranch is null ? null : BuildNodeChain(conditional.FalseBranch, conditional.Subgraph.ExitNode);
 
             bool isTernary = false;
             Expression condExpr;
-            if (trueExpr is not BlockExpression && trueExpr.Type != typeof(void) && falseExpr is not BlockExpression && falseExpr.Type != typeof(void))
+            if (trueExpr is not BlockExpression && /* trueExpr.Type != typeof(void) && */ falseExpr is not BlockExpression)
             {
                 // might be ternary
                 isTernary = true;
-                condExpr = Expression.Condition(condition, ConvertExpressionType(trueExpr, typeof(object)), ConvertExpressionType(falseExpr, typeof(object)));
+                condExpr = new ConditionalExpression(condition, trueExpr, falseExpr);
                 Expressions.Clear();
                 Expressions.Push(condExpr);
             }
             else
             {
-                condExpr = Expression.Condition(condition, ConvertExpressionType(trueExpr, typeof(void)), ConvertExpressionType(falseExpr, typeof(void)));
+                condExpr = new ConditionalExpression(condition, trueExpr, falseExpr);
             }
 
             var endExpr = BuildNode(conditional.Subgraph.ExitNode, !isTernary);
@@ -213,18 +196,15 @@ internal class ExpressionBuilder
         }
         else if (node is LoopNode loop)
         {
-            LabelTarget breakTarget = Expression.Label("break");
-            LabelTarget continueTarget = Expression.Label("continue");
-
             var header = BuildNode(loop.Header);
 
             header = ExtractConditionExpression(header, out var cond);
 
-            var condition = Expression.Condition(cond, Expression.Default(typeof(void)), Expression.Goto(breakTarget));
+            var condition = new ConditionalExpression(cond, null, new BreakExpression());
 
             var body = BuildNodeChain(loop.Tail, loop.Header);
 
-            return Expression.Loop(CreateBlockExpressionIfNeeded(new Expression[] { header, condition, body }), breakTarget, continueTarget);
+            return new LoopExpression(CreateBlockExpressionIfNeeded(new Expression[] { header, condition, body }));
         }
         else if (node is BasicBlockNode basicBlock)
         {
@@ -236,14 +216,14 @@ internal class ExpressionBuilder
         }
     }
 
-    private Expression CreateBlockExpressionIfNeeded(IEnumerable<Expression> expressions, IEnumerable<ParameterExpression> parameters = null)
+    private static Expression CreateBlockExpressionIfNeeded(IEnumerable<Expression> expressions)
     {
         if (expressions.Count() is 1)
             return expressions.Single()!;
 
-        return Expression.Block(
-            parameters ?? Array.Empty<ParameterExpression>(),
-            expressions.Where(x => x is not null).Cast<Expression>()
+        return new BlockExpression(expressions
+            .Where(x => x is not null)
+            .ToArray()
             );
     }
 
@@ -257,7 +237,7 @@ internal class ExpressionBuilder
         }
 
         lastExpr = blockExpr.Expressions.Last();
-        return CreateBlockExpressionIfNeeded(blockExpr.Expressions.SkipLast(1), blockExpr.Variables);
+        return CreateBlockExpressionIfNeeded(blockExpr.Expressions.SkipLast(1));
     }
 
     Expression BuildNodeChain(ControlFlowNode start, ControlFlowNode end)
@@ -280,10 +260,10 @@ internal class ExpressionBuilder
     Expression SimplifyExpression(Expression expression)
     {
         if (expression is ConditionalExpression conditionalExpr)
-            return Expression.Condition(
-                SimplifyExpression(conditionalExpr.Test),
-                ForceVoidType(SimplifyExpression(conditionalExpr.IfTrue)),
-                ForceVoidType(SimplifyExpression(conditionalExpr.IfFalse))
+            return new ConditionalExpression(
+                SimplifyExpression(conditionalExpr.Condition),
+                ForceVoidType(SimplifyExpression(conditionalExpr.Success)),
+                ForceVoidType(SimplifyExpression(conditionalExpr.Failure))
                 );
 
         if (expression is not BlockExpression blockExpr)
@@ -293,20 +273,22 @@ internal class ExpressionBuilder
 
         foreach (var expr in blockExpr.Expressions.Select(SimplifyExpression))
         {
-            expressions = expr is BlockExpression b ?
+            expressions = expr is BlockExpression b ? 
                 expressions.Concat(b.Expressions) :
                 expressions = expressions.Append(expr);
         }
 
-        return CreateBlockExpressionIfNeeded(expressions, blockExpr.Variables);
+        return CreateBlockExpressionIfNeeded(expressions);
     }
 
     Expression ForceVoidType(Expression expression)
     {
-        if (expression.Type == typeof(void))
-            return expression;
+        return expression;
 
-        return Expression.Block(typeof(void), expression);
+        // if (expression.Type == typeof(void))
+        //     return expression;
+        // 
+        // return Expression.Block(typeof(void), expression);
     }
 
     bool BuildDup(Instruction instruction)
@@ -321,39 +303,9 @@ internal class ExpressionBuilder
         return true;
     }
 
-    static (ParameterExpression, ParamModifier)[] GetArguments(MethodDisassembly disassembly)
+    static LocalVariableExpression[] GetLocals(MethodDisassembly disassembly)
     {
-        var infos = disassembly.Method.GetParameters();
-
-        var parameters = infos.Select(p => (Expression.Parameter(p.ParameterType, p.Name), GetModifier(p)));
-
-        if (!disassembly.Method.IsStatic)
-        {
-            parameters = parameters.Prepend((Expression.Parameter(disassembly.Method.DeclaringType!, "self"), ParamModifier.Ref));
-        }
-
-        return parameters.ToArray();
-
-        ParamModifier GetModifier(ParameterInfo paramInfo)
-        {
-            if (paramInfo.IsOut)
-            {
-                if (paramInfo.IsIn)
-                {
-                    return ParamModifier.Ref;
-                }
-
-                return ParamModifier.Out;
-            }
-
-            return ParamModifier.In;
-        }
-    }
-
-    static ParameterExpression[] GetLocals(MethodDisassembly disassembly)
-    {
-        var locals = disassembly.MethodBody.LocalVariables.Select(l => Expression.Variable(l.LocalType, "var" + l.LocalIndex));
-
+        var locals = disassembly.MethodBody.LocalVariables.Select(l => new LocalVariableExpression(l));
         return locals.ToArray();
     }
 
@@ -369,64 +321,57 @@ internal class ExpressionBuilder
 
         var right = Expressions.Pop();
         var left = Expressions.Pop();
-        try
-        {
-            Expressions.Push(Expression.MakeBinary(exprType.Value, left, right));
-        }
-        catch (InvalidOperationException)
-        {
-            Expressions.Push(Expression.MakeBinary(exprType.Value, left, ConvertExpressionType(right, left.Type)));
-        }
+        Expressions.Push(new BinaryExpression(exprType.Value, left, right));
         return true;
 
-        static bool IsBinaryExpression(Instruction instruction, [NotNullWhen(true)] out ExpressionType? type)
+        static bool IsBinaryExpression(Instruction instruction, [NotNullWhen(true)] out BinaryOperation? operation)
         {
-            type = instruction.OpCode switch
+            operation = instruction.OpCode switch
             {
-                OpCode.Add => ExpressionType.Add,
-                OpCode.Sub => ExpressionType.Subtract,
-                OpCode.Mul => ExpressionType.Multiply,
-                OpCode.Div or OpCode.Div_Un => ExpressionType.Divide,
-                OpCode.And => ExpressionType.And,
-                OpCode.Or => ExpressionType.Or,
-                OpCode.Shr => ExpressionType.RightShift,
-                OpCode.Shr_Un => ExpressionType.RightShift,
-                OpCode.Shl => ExpressionType.LeftShift,
-                OpCode.Ceq => ExpressionType.Equal,
-                OpCode.Clt => ExpressionType.LessThan,
-                OpCode.Cgt => ExpressionType.GreaterThan,
-                OpCode.Rem => ExpressionType.Modulo,
-                OpCode.Rem_Un => ExpressionType.Modulo,
+                OpCode.Add => BinaryOperation.Add,
+                OpCode.Sub => BinaryOperation.Subtract,
+                OpCode.Mul => BinaryOperation.Multiply,
+                OpCode.Div or OpCode.Div_Un => BinaryOperation.Divide,
+                OpCode.And => BinaryOperation.And,
+                OpCode.Or => BinaryOperation.Or,
+                OpCode.Shr => BinaryOperation.RightShift,
+                OpCode.Shr_Un => BinaryOperation.RightShift,
+                OpCode.Shl => BinaryOperation.LeftShift,
+                OpCode.Ceq => BinaryOperation.Equal,
+                OpCode.Clt => BinaryOperation.LessThan,
+                OpCode.Cgt => BinaryOperation.GreaterThan,
+                OpCode.Rem => BinaryOperation.Modulus,
+                OpCode.Rem_Un => BinaryOperation.Modulus,
 
                 _ => null
             };
 
-            return type is not null;
+            return operation is not null;
         }
     }
 
-    Expression ConvertExpressionType(Expression expression, Type type)
-    {
-        if (expression.Type == type)
-            return expression;
-
-        // handle true/false
-        if (type == typeof(bool) && expression is ConstantExpression constExpr)
-        {
-            if (constExpr.Value is 0)
-                return Expression.Constant(false);
-
-            if (constExpr.Value is 1)
-                return Expression.Constant(true);
-        }
-
-        if (type == typeof(void))
-        {
-            return Expression.Block(type, expression);
-        }
-
-        return Expression.Convert(expression, type);
-    }
+    // Expression ConvertExpressionType(Expression expression, Type type)
+    // {
+    //     if (expression.Type == type)
+    //         return expression;
+    // 
+    //     // handle true/false
+    //     if (type == typeof(bool) && expression is ConstantExpression constExpr)
+    //     {
+    //         if (constExpr.Value is 0)
+    //             return Expression.Constant(false);
+    // 
+    //         if (constExpr.Value is 1)
+    //             return Expression.Constant(true);
+    //     }
+    // 
+    //     if (type == typeof(void))
+    //     {
+    //         return Expression.Block(type, expression);
+    //     }
+    // 
+    //     return Expression.Convert(expression, type);
+    // }
 
     bool BuildFieldExpr(Instruction instruction)
     {
@@ -441,13 +386,13 @@ internal class ExpressionBuilder
             var value = Expressions.Pop();
             var obj = Expressions.Pop();
 
-            Expressions.Push(Expression.Assign(Expression.Field(obj, fieldInfo), value));
+            Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, new MemberAccessExpression(obj, fieldInfo), value));
         }
         else // OpCode is Ldfld or Ldflda
         {
             var obj = Expressions.Pop();
 
-            Expressions.Push(Expression.Field(obj, fieldInfo));
+            Expressions.Push(new MemberAccessExpression(obj, fieldInfo));
         }
 
         return true;
@@ -455,25 +400,25 @@ internal class ExpressionBuilder
 
     bool BuildUnaryExpr(Instruction instruction)
     {
-        if (!IsUnaryExpression(instruction, out var exprType, out var castType))
+        if (!IsUnaryExpression(instruction, out var operation, out var castType))
             return false;
 
         var operand = Expressions.Pop();
 
-        Expressions.Push(Expression.MakeUnary(exprType.Value, operand, castType!));
+        Expressions.Push(new UnaryExpression(operation.Value, operand));
 
         return true;
 
-        static bool IsUnaryExpression(Instruction instruction, [NotNullWhen(true)] out ExpressionType? exprType, out Type castType)
+        static bool IsUnaryExpression(Instruction instruction, [NotNullWhen(true)] out UnaryOperation? operation, out Type? castType)
         {
-            exprType = instruction.OpCode switch
+            operation = instruction.OpCode switch
             {
-                OpCode.Neg => ExpressionType.Negate,
-                OpCode.Not => ExpressionType.Not,
+                OpCode.Neg => UnaryOperation.Negate,
+                OpCode.Not => UnaryOperation.Not,
                 _ => null
             };
 
-            if (exprType is not null)
+            if (operation is not null)
             {
                 castType = null;
                 return true;
@@ -499,7 +444,7 @@ internal class ExpressionBuilder
 
             if (castType is not null)
             {
-                exprType = ExpressionType.Convert;
+                throw new NotImplementedException("TODO: implement castin");
                 return true;
             }
 
@@ -519,7 +464,7 @@ internal class ExpressionBuilder
         {
             var expr = Expressions.Pop();
             var local = Locals[(int)storeIndex];
-            Expressions.Push(Expression.Assign(local, ConvertExpressionType(expr, local.Type)), false);
+            Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, local, expr));
 
             return true;
         }
@@ -565,17 +510,8 @@ internal class ExpressionBuilder
     {
         if (instruction.OpCode is not OpCode.Ret)
             return false;
-
-        var returnExpr = ReturnType == typeof(void) ? null : Expressions.Pop();
-
-        if (instruction.IsLast)
-        {
-            Expressions.Push(Expression.Label(ReturnTarget, returnExpr));
-        }
-        else
-        {
-            Expressions.Push(Expression.Return(ReturnTarget, returnExpr));
-        }
+        
+        Expressions.Push(new ReturnExpression(ReturnType == typeof(void) ? null : Expressions.Pop()));
 
         return true;
     }
@@ -585,10 +521,10 @@ internal class ExpressionBuilder
         if (!IsConstantExpression(instruction, out var value))
             return false;
 
-        Expressions.Push(Expression.Constant(value));
+        Expressions.Push(new ConstantExpression(value));
         return true;
 
-        static bool IsConstantExpression(Instruction instruction, [NotNullWhen(true)] out object value)
+        static bool IsConstantExpression(Instruction instruction, [NotNullWhen(true)] out object? value)
         {
             value = instruction.OpCode switch
             {
@@ -619,13 +555,13 @@ internal class ExpressionBuilder
     {
         if (IsLoadArgumentExpression(instruction, out uint? loadIndex))
         {
-            Expressions.Push(Arguments[(int)loadIndex].expr);
+            Expressions.Push(new MethodParameterExpression(this.Arguments[(int)loadIndex]));
             return true;
         }
 
         if (IsStoreArgumentExpression(instruction, out uint? storeIndex))
         {
-            Expressions.Push(Expression.Assign(Arguments[(int)storeIndex].expr, Expressions.Pop()), false);
+            Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, new MethodParameterExpression(Arguments[(int)storeIndex]), Expressions.Pop()), false);
             return true;
         }
 
@@ -672,7 +608,7 @@ internal class ExpressionBuilder
 
         var args = PopArgs(ctor);
 
-        Expressions.Push(Expression.New(ctor, args));
+        Expressions.Push(new NewExpression(ctor, args));
 
         return true;
     }
@@ -691,14 +627,14 @@ internal class ExpressionBuilder
 
         if (method is MethodInfo methodInfo)
         {
-            Expressions.Push(Expression.Call(instance, methodInfo, args), methodInfo.ReturnType != typeof(void));
+            Expressions.Push(new CallExpression(instance, methodInfo, args), methodInfo.ReturnType != typeof(void));
         }
         else if (method is ConstructorInfo constructor)
         {
-            var expr = new ConstructorCallExpression(constructor, args);
+            var expr = new NewExpression(constructor, args);
             if (instance is not null)
             {
-                Expressions.Push(Expression.Assign(instance, expr));
+                Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, instance, expr));
             }
             else
             {
@@ -726,8 +662,8 @@ internal class ExpressionBuilder
         if (instruction.OpCode is not OpCode.Ldind_R4)
             return false;
 
-        var refExpr = Expressions.Pop();
-        Expressions.Push(new DereferenceExpression(refExpr));
+        // var refExpr = Expressions.Pop();
+        // Expressions.Push(new DereferenceExpression(refExpr));
 
         return true;
     }
@@ -748,7 +684,7 @@ internal class ExpressionBuilder
                 var value = Expressions.Pop();
                 var reference = Expressions.Pop();
 
-                Expressions.Push(new ReferenceAssignmentExpression(reference, value), false);
+                Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, reference, value), false);
                 return true;
             default:
                 return false;

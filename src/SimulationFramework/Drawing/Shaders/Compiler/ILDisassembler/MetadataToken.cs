@@ -47,6 +47,7 @@ internal struct MetadataToken
             MetadataTokenKind.FieldDef => module.ResolveField(Value),
             MetadataTokenKind.MethodDef => module.ResolveMethod(Value),
             MetadataTokenKind.TypeDef => module.ResolveType(Value),
+            MetadataTokenKind.MethodSpec => module.ResolveMethod(Value),
             _ => throw new Exception(),
         };
     }

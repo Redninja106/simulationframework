@@ -47,37 +47,42 @@ internal sealed class SkiaCanvas : ICanvas
     {
         if (rect.Width <= 0 || rect.Height <= 0)
             return;
-
         
         canvas.DrawRoundRect(rect.AsSKRect(), radius, radius, currentState.Paint);
     }
+
+    private Dictionary<Type, (ShaderCompilation compilation, SKRuntimeEffect effect, SKRuntimeEffectUniforms uniforms)> runtimeEffectCache = new();
+    CanvasShaderCompiler compiler = new CanvasShaderCompiler();
 
     public void DrawRect(Rectangle rectangle)
     {
         if (State.DrawMode == DrawMode.Shader)
         {
-            var shader = State.Shader;
-            var compiler = new CanvasShaderCompiler();
-            var compilation = compiler.Compile(shader);
-            var codeGenerator = new SKSLCodeGenerator(compilation);
-
-            StringWriter writer = new();
-            codeGenerator.Emit(writer);
-            var source = writer.ToString();
-            Console.WriteLine(source);
-            var effect = SKRuntimeEffect.Create(source, out string errors);
-
-            if (errors != null)
-                throw new Exception(errors);
-
-            SKRuntimeEffectUniforms uniforms = new SKRuntimeEffectUniforms(effect);
-
-            foreach (var u in compilation.Uniforms)
+            if (!runtimeEffectCache.TryGetValue(State.Shader.GetType(), out var effect))
             {
-                uniforms[u.Name] = GetUniformValue(shader, u);
+                var shader = State.Shader;
+                effect.compilation = compiler.Compile(shader);
+                var codeGenerator = new SKSLCodeGenerator(effect.compilation);
+
+                StringWriter writer = new();
+                codeGenerator.Emit(writer);
+                var source = writer.ToString();
+                Console.WriteLine(source);
+                effect.effect = SKRuntimeEffect.Create(source, out string errors);
+
+                if (errors != null)
+                    throw new Exception(errors);
+                effect.uniforms = new SKRuntimeEffectUniforms(effect.effect);
+
+                runtimeEffectCache.Add(shader.GetType(), effect);
             }
 
-            var skshader = effect.ToShader(true, uniforms);
+            foreach (var u in effect.compilation.Uniforms)
+            {
+                effect.uniforms[u.Name] = GetUniformValue(State.Shader, u);
+            }
+
+            using var skshader = effect.effect.ToShader(true, effect.uniforms);
             currentState.Paint.Shader = skshader;
             currentState.Paint.Style = SKPaintStyle.Fill;
         }
@@ -85,7 +90,7 @@ internal sealed class SkiaCanvas : ICanvas
         canvas.DrawRect(rectangle.AsSKRect(), currentState.Paint);
     }
 
-    private SKRuntimeEffectUniform GetUniformValue(CanvasShader shader, ShaderVariable uniform)
+    private SKRuntimeEffectUniform GetUniformValue(CanvasShader shader, ShaderUniform uniform)
     {
         var value = uniform.BackingField.GetValue(shader);
 

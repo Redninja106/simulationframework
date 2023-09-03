@@ -32,7 +32,7 @@ class DrawingShapesSimulation : Simulation
         //    Mouse.Position,
         //    new Vector2(500, 10),
         //});
-        
+
         //canvas.Fill(Color.Red);
         //canvas.DrawRect(100, 100, 100, 100);
 
@@ -41,9 +41,9 @@ class DrawingShapesSimulation : Simulation
 
         //canvas.Stroke(Color.Yellow);
         //canvas.DrawRect(500, 100, 100, 100);
-        
+
         //canvas.Stroke(Color.Green);
-        
+
         //canvas.StrokeWidth(10);
         //canvas.DrawLine(500, 500, 1000, 1000);
 
@@ -93,6 +93,6 @@ class MyShader : CanvasShader
 
     public override ColorF GetPixelColor(Vector2 position)
     {
-        return new(brightness, 0, 0, 1);
+        return brightness * new ColorF(position.X / 500f, position.Y / 500f, 0, 1);
     }
 }

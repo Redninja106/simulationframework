@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler;
-
-public abstract class ShaderCompilationVisitor
+public enum MethodParameterModifier
 {
-
+    In,
+    Out,
+    Ref
 }
