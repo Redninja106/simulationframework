@@ -23,11 +23,13 @@ internal sealed class SkiaCanvas : ICanvas
     // do we own this skcanvas object?
     private readonly bool owner;
 
+    private SkiaTexture SkiaTextureTarget => Target as SkiaTexture;
+
     public bool IsDisposed { get; private set; }
 
-    public SkiaCanvas(SkiaGraphicsProvider provider, ITexture texture, SKCanvas canvas, bool owner)
+    public SkiaCanvas(SkiaGraphicsProvider provider, ITexture target, SKCanvas canvas, bool owner)
     {
-        this.Target = texture;
+        this.Target = target;
         this.provider = provider;
         this.canvas = canvas;
         this.owner = owner;
@@ -36,21 +38,30 @@ internal sealed class SkiaCanvas : ICanvas
 
     public SKCanvas GetSKCanvas() => canvas;
 
-    public void Clear(Color color) => canvas.Clear(color.AsSKColor());
+    public void Clear(Color color)
+    {
+        canvas.Clear(color.AsSKColor());
+        SkiaTextureTarget?.InvalidatePixels();
+    }
     public void Flush() => canvas.Flush();
-    public void DrawLine(Vector2 p1, Vector2 p2) => canvas.DrawLine(p1.AsSKPoint(), p2.AsSKPoint(), currentState.Paint);
+    public void DrawLine(Vector2 p1, Vector2 p2)
+    {
+        canvas.DrawLine(p1.AsSKPoint(), p2.AsSKPoint(), currentState.Paint);
+        SkiaTextureTarget?.InvalidatePixels();
+    }
     public void DrawRoundedRect(Rectangle rect, float radius)
     {
         if (rect.Width <= 0 || rect.Height <= 0)
             return;
-
         
         canvas.DrawRoundRect(rect.AsSKRect(), radius, radius, currentState.Paint);
+        SkiaTextureTarget?.InvalidatePixels();
     }
 
     public void DrawRect(Rectangle rectangle)
     {
         canvas.DrawRect(rectangle.AsSKRect(), currentState.Paint);
+        SkiaTextureTarget?.InvalidatePixels();
     }
 
     public void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter)
@@ -71,6 +82,8 @@ internal sealed class SkiaCanvas : ICanvas
         {
             canvas.DrawArc(bounds.AsSKRect(), begin, end - begin, includeCenter, currentState.Paint);
         }
+        
+        SkiaTextureTarget?.InvalidatePixels();
     }
 
     public void DrawTexture(ITexture texture, Rectangle source, Rectangle destination)
@@ -79,6 +92,7 @@ internal sealed class SkiaCanvas : ICanvas
             throw new ArgumentException("texture must be a texture created by the skiasharp renderer!", nameof(texture));
 
         canvas.DrawBitmap(skTexture.GetBitmap(), source.AsSKRect(), destination.AsSKRect());
+        SkiaTextureTarget?.InvalidatePixels();
     }
 
     public unsafe void DrawPolygon(ReadOnlySpan<Vector2> polygon, bool close)
@@ -93,6 +107,7 @@ internal sealed class SkiaCanvas : ICanvas
             SkiaNativeApi.sk_path_add_poly(path.Handle, polygonPtr, polygon.Length, shouldClose);
 
         canvas.DrawPath(path, currentState.Paint);
+        SkiaTextureTarget?.InvalidatePixels();
     }
 
     public void DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft, TextBounds bounds = TextBounds.BestFit)
@@ -136,6 +151,7 @@ internal sealed class SkiaCanvas : ICanvas
 
             canvas.DrawLine(textRect.X, y, textRect.X + textRect.Width, y, strikethrough);
         }
+        SkiaTextureTarget?.InvalidatePixels();
     }
 
     public Vector2 MeasureText(ReadOnlySpan<char> text, float maxWidth, out int charsMeasured, TextBounds origin)
