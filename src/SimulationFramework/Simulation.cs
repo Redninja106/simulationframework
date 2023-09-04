@@ -1,6 +1,7 @@
 ﻿using SimulationFramework.Components;
 using SimulationFramework.Drawing;
 using SimulationFramework.Input;
+using SimulationFramework.Messaging;
 using System;
 
 namespace SimulationFramework;
@@ -133,6 +134,47 @@ public abstract class Simulation
     public static void CreateAndRun(Action? initialize, Action<ICanvas>? render, ISimulationPlatform? platform)
     {
         Create(initialize, render).Run(platform);
+    }
+
+    /// <summary>
+    /// Configures the simulation to render to an fixed-size off-screen texture then render that to fit the window.
+    /// </summary>
+    /// <param name="width">The width of the off-screen texture.</param>
+    /// <param name="height">The height of the off-screen texture.</param>
+    /// <param name="backgroundColor">The color to fill the window area not covered by the texture.</param>
+    /// <param name="transparent">Whether the framebuffer should be rendered to the window with transparency.</param>
+    /// <param name="subpixelInput">Whether resolution dependent input values (such as <see cref="Mouse.Position"/>) should report values more precise than one pixel (when possible).</param>
+    /// <param name="stretchToFit">Whether the off-screen texture should be stretched to fit the window.</param>
+    public void SetFixedResolution(int width, int height, Color backgroundColor, bool transparent = false, bool subpixelInput = false, bool stretchToFit = false)
+    {
+        if (SimulationHost.Current!.IsRendering)
+        {
+            SimulationHost.GetCurrent().Dispatcher.NotifyAfter<AfterRenderMessage>(m =>
+            {
+                SetFixedResolutionCore(width, height, backgroundColor, transparent, subpixelInput, stretchToFit);
+            });
+        }
+        else
+        {
+            SetFixedResolutionCore(width, height, backgroundColor, transparent, subpixelInput, stretchToFit);
+        }
+
+        static void SetFixedResolutionCore(int width, int height, Color backgroundColor, bool transparent, bool subpixelInput, bool stretchToFit)
+        {
+            var interceptor = Application.GetComponentOrDefault<FixedResolutionInterceptor>();
+
+            if (interceptor is null)
+            {
+                Application.RegisterComponent(new FixedResolutionInterceptor(width, height, backgroundColor, transparent, subpixelInput, stretchToFit));
+                return;
+            }
+
+            interceptor.Resize(width, height);
+            interceptor.BackgroundColor = backgroundColor;
+            interceptor.Transparent = transparent;
+            interceptor.SubpixelInput = subpixelInput;
+            interceptor.StretchToFit = stretchToFit;
+        }
     }
 
     private class ActionSimulation : Simulation

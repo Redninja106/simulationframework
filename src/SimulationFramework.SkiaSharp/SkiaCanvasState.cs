@@ -7,7 +7,7 @@ namespace SimulationFramework.SkiaSharp;
 
 internal sealed class SkiaCanvasState : CanvasState, IDisposable
 {
-    private SKCanvas canvas;
+    private readonly SKCanvas canvas;
     private SKPaint paint;
 
     public bool IsActive => canvas is not null;

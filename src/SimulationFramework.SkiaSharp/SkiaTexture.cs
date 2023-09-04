@@ -11,7 +11,7 @@ internal sealed class SkiaTexture : ITexture
     private readonly bool owner;
     private readonly TextureOptions options;
 
-    private Color[] colors;
+    private readonly Color[] colors;
     private SkiaCanvas canvas;
 
     public SkiaTexture(SkiaGraphicsProvider provider, SKBitmap bitmap, bool owner, TextureOptions options)
@@ -55,14 +55,14 @@ internal sealed class SkiaTexture : ITexture
         if (owner)
             bitmap.Dispose();
 
-        this.canvas.Dispose();
+        this.canvas?.Dispose();
     }
 
     public ICanvas GetCanvas()
     {
         if (this.canvas is null || this.canvas.IsDisposed)
         {
-            this.canvas = new SkiaCanvas(this.provider, this, new SKCanvas(bitmap), false);
+            this.canvas = new SkiaCanvas(this.provider, this, new SKCanvas(bitmap), true);
         }
 
         return this.canvas;

@@ -5,7 +5,9 @@ using SimulationFramework.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 
 namespace SimulationFramework;
@@ -19,18 +21,21 @@ public class SimulationHost
     /// The currently running simulation host.
     /// </summary>
     public static SimulationHost? Current { get; private set; }
+    private static readonly List<Func<ISimulationPlatform?>> platformFactories = new();
 
     private Simulation? simulation;
+    private bool initialized = false;
+    private readonly List<ISimulationComponent> components = new();
 
     /// <summary>
     /// The simulation's dispatcher.
     /// </summary>
     public MessageDispatcher Dispatcher { get; set; }
-    private bool initialized = false;
 
-    private readonly List<ISimulationComponent> components = new();
-
-    private static readonly List<Func<ISimulationPlatform?>> platformFactories = new();
+    /// <summary>
+    /// <see langword="true"/> if the simulation currently rendering, preventing some operations like window resizing; otherwise <see langword="false"/>.
+    /// </summary>
+    public bool IsRendering { get; private set; }
 
     /// <summary>
     /// Creates a new <see cref="SimulationHost"/> instance.
@@ -195,12 +200,19 @@ public class SimulationHost
     private void RunFrame()
     {
         Dispatcher.ImmediateDispatch<BeforeRenderMessage>(new());
+        IsRendering = true;
 
-        var canvas = Graphics.GetOutputCanvas();
+        var outputCanvas = Graphics.GetOutputCanvas();
+        outputCanvas.ResetState();
+
+        var interceptor = GetComponent<FixedResolutionInterceptor>();
+        var canvas = interceptor?.FrameBuffer?.GetCanvas() ?? outputCanvas;
         canvas.ResetState();
         Dispatcher.ImmediateDispatch<RenderMessage>(new(canvas));
         simulation?.OnRender(canvas);
         canvas.Flush();
+
+        IsRendering = false;
 
         Dispatcher.ImmediateDispatch<AfterRenderMessage>(new());
     }
@@ -223,5 +235,14 @@ public class SimulationHost
     public T? GetComponent<T>() where T : class, ISimulationComponent
     {
         return components.OfType<T>().FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Removes a component from the simulation.
+    /// </summary>
+    /// <param name="component">The component to remove.</param>
+    public void RemoveComponent(ISimulationComponent component)
+    {
+        components.Remove(component);
     }
 }
