@@ -27,8 +27,9 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
     // do we own this skcanvas object?
     private readonly bool ownsCanvas;
 
+    public SkiaTexture SkiaTextureTarget => Target as SkiaTexture;
 
-    public SkiaCanvas(SkiaGraphicsProvider provider, ITexture target, SKCanvas canvas, bool owner)
+    public SkiaCanvas(SkiaGraphicsProvider provider, ITexture target, SKCanvas canvas, bool ownsCanvas)
     {
         this.Target = target;
         this.provider = provider;
