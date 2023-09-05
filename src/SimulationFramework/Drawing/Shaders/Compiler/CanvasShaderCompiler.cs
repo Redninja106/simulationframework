@@ -123,9 +123,11 @@ public class CanvasShaderCompiler
 
         CompilerPipeline translationPass = new(new CompilerStage[]
         {
-            new RemoveThisOnGlobalsStage(context),
             new CallReplacementsStage(context),
+            new RemoveThisOnGlobalsStage(context),
             new UniformAccessReplacementStage(context),
+            new ConstructorFixStage(context),
+            new DoubleEqualityFixStage(context),
         });
 
         translationPass.Run(compilation);
@@ -134,7 +136,7 @@ public class CanvasShaderCompiler
 
     private void CompileVariables(CompilerContext context, ShaderCompilation compilation)
     {
-        foreach (var field in context.ShaderType.GetFields())
+        foreach (var field in context.ShaderType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
         {
             compilation.AddUniform(field);
         }

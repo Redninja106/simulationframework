@@ -4,7 +4,7 @@ using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
 
-internal sealed class SkiaTexture : ITexture
+internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 {
     private readonly SkiaGraphicsProvider provider;
     private readonly SKBitmap bitmap;
@@ -50,19 +50,20 @@ internal sealed class SkiaTexture : ITexture
         }
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
         if (owner)
             bitmap.Dispose();
 
         this.canvas.Dispose();
+        base.Dispose();
     }
 
     public ICanvas GetCanvas()
     {
         if (this.canvas is null || this.canvas.IsDisposed)
         {
-            this.canvas = new SkiaCanvas(this.provider, this, new SKCanvas(bitmap), false);
+            this.canvas = new SkiaCanvas(this.provider, this, new SKCanvas(bitmap), true);
         }
 
         return this.canvas;

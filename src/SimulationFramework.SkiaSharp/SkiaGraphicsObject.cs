@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace SimulationFramework.SkiaSharp;
 public abstract class SkiaGraphicsObject : IDisposable
 {
+    private bool disposedValue;
+
     public bool IsDisposed { get; private set; }
 
     public SkiaGraphicsObject()
@@ -22,6 +24,7 @@ public abstract class SkiaGraphicsObject : IDisposable
 
     ~SkiaGraphicsObject()
     {
+        Console.WriteLine($"[{DateTime.Now}] [{GetType()}] FINALIZED");
         Dispose();
     }
 }

@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-public record LocalVariableExpression(LocalVariableInfo LocalVariableInfo) : Expression
+public record LocalVariableExpression(LocalVariable LocalVariable) : Expression
 {
     public override Expression Accept(ExpressionVisitor visitor) => visitor.VisitLocalVariableExpression(this);
 
     public override string ToString()
     {
-        return "var" + LocalVariableInfo.LocalIndex;
+        return LocalVariable.Name;
     }
 }

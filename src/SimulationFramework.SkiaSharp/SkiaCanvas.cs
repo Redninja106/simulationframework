@@ -10,7 +10,7 @@ using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
 
-internal sealed class SkiaCanvas : ICanvas
+internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
 {
     public ITexture Target { get; }
 
@@ -25,16 +25,14 @@ internal sealed class SkiaCanvas : ICanvas
     // internal skcanvas
     private readonly SKCanvas canvas;
     // do we own this skcanvas object?
-    private readonly bool owner;
+    private readonly bool ownsCanvas;
 
-    public bool IsDisposed { get; private set; }
-
-    public SkiaCanvas(SkiaGraphicsProvider provider, ITexture texture, SKCanvas canvas, bool owner)
+    public SkiaCanvas(SkiaGraphicsProvider provider, ITexture texture, SKCanvas canvas, bool ownsCanvas)
     {
         this.Target = texture;
         this.provider = provider;
         this.canvas = canvas;
-        this.owner = owner;
+        this.ownsCanvas = ownsCanvas;
         ResetState();
     }
 
@@ -50,54 +48,17 @@ internal sealed class SkiaCanvas : ICanvas
         
         canvas.DrawRoundRect(rect.AsSKRect(), radius, radius, currentState.Paint);
     }
-
-    private Dictionary<Type, (ShaderCompilation compilation, SKRuntimeEffect effect, SKRuntimeEffectUniforms uniforms)> runtimeEffectCache = new();
-    CanvasShaderCompiler compiler = new CanvasShaderCompiler();
-
     public void DrawRect(Rectangle rectangle)
     {
         if (State.DrawMode == DrawMode.Shader)
         {
-            if (!runtimeEffectCache.TryGetValue(State.Shader.GetType(), out var effect))
-            {
-                var shader = State.Shader;
-                effect.compilation = compiler.Compile(shader);
-                var codeGenerator = new SKSLCodeGenerator(effect.compilation);
-
-                StringWriter writer = new();
-                codeGenerator.Emit(writer);
-                var source = writer.ToString();
-                Console.WriteLine(source);
-                effect.effect = SKRuntimeEffect.Create(source, out string errors);
-
-                if (errors != null)
-                    throw new Exception(errors);
-                effect.uniforms = new SKRuntimeEffectUniforms(effect.effect);
-
-                runtimeEffectCache.Add(shader.GetType(), effect);
-            }
-
-            foreach (var u in effect.compilation.Uniforms)
-            {
-                effect.uniforms[u.Name] = GetUniformValue(State.Shader, u);
-            }
-
-            using var skshader = effect.effect.ToShader(true, effect.uniforms);
+            var (effect, uniforms) = RuntimeEffectCache.GetValue(State.Shader);
+            using var skshader = effect.ToShader(true, uniforms);
             currentState.Paint.Shader = skshader;
             currentState.Paint.Style = SKPaintStyle.Fill;
         }
 
         canvas.DrawRect(rectangle.AsSKRect(), currentState.Paint);
-    }
-
-    private SKRuntimeEffectUniform GetUniformValue(CanvasShader shader, ShaderUniform uniform)
-    {
-        var value = uniform.BackingField.GetValue(shader);
-
-        if (value is float f)
-            return f;
-
-        throw new NotImplementedException();
     }
 
     public void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter)
@@ -289,9 +250,9 @@ internal sealed class SkiaCanvas : ICanvas
         currentState = new SkiaCanvasState(this.GetSKCanvas(), null);
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
-        if (owner)
+        if (ownsCanvas)
             canvas.Dispose();
 
         currentState.Dispose();
@@ -301,6 +262,6 @@ internal sealed class SkiaCanvas : ICanvas
             stateStack.Pop().Dispose();
         }
 
-        this.IsDisposed = true;
+        base.Dispose();
     }
 }

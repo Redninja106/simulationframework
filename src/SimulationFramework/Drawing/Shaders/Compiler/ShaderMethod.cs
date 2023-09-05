@@ -14,10 +14,11 @@ public class ShaderMethod
 {
     public MethodBase Method { get; private set; }
     public Type ReturnType { get; set; }
-    public string BaseName { get; private set; }
-    public string FullName { get; private set; }
+    public string BaseName => GetBaseName();
+    public string FullName => GetFullName();
     public List<MethodParameter> Parameters { get; private set; }
-    public List<LocalVariableInfo> Locals { get; private set; }
+    public List<LocalVariable> Locals { get; private set; }
+    public bool IsStatic => Method.IsStatic;
 
     public BlockExpression Body { get; private set; }
     internal MethodDisassembly Disassembly { get; private set; }
@@ -44,7 +45,6 @@ public class ShaderMethod
         // Body = ExpressionBuilder.BuildExpressions(graph);
         // 
         // 
-        BaseName = GetBaseName();
     }
 
     static MethodParameter[] GetParameters(MethodDisassembly disassembly)
@@ -136,7 +136,6 @@ public class ShaderMethod
     {
         this.Disassembly = disassembly;
         Parameters = GetParameters(disassembly).ToList();
-        FullName = GetFullName();
     }
     internal void SetControlFlowGraph(ControlFlowGraph controlFlowGraph)
     {
@@ -151,13 +150,13 @@ public class ShaderMethod
     // finds local variables
     private class VariableVisitor : ExpressionVisitor
     {
-        public List<LocalVariableInfo> LocalVariables { get; } = new();
+        public List<LocalVariable> LocalVariables { get; } = new();
 
         public override Expression VisitLocalVariableExpression(LocalVariableExpression expression)
         {
-            if (!LocalVariables.Contains(expression.LocalVariableInfo))
+            if (!LocalVariables.Contains(expression.LocalVariable))
             {
-                LocalVariables.Add(expression.LocalVariableInfo);
+                LocalVariables.Add(expression.LocalVariable);
             }
             return base.VisitLocalVariableExpression(expression);
         }

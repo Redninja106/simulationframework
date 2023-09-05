@@ -44,7 +44,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSimulation", "templa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFrameworkTemplates", "templates\SimulationFrameworkTemplates\SimulationFrameworkTemplates.csproj", "{54672122-20EA-4887-BDF5-D92E518FE5AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowIcon", "examples\WindowIcon\WindowIcon.csproj", "{BFFC36CA-1F5E-4F8B-89A2-B3C7FC41A175}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WindowIcon", "examples\WindowIcon\WindowIcon.csproj", "{BFFC36CA-1F5E-4F8B-89A2-B3C7FC41A175}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaytracerShader", "examples\RaytracerShader\RaytracerShader.csproj", "{BC9895D2-4D06-4761-9EE7-087020457D52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -224,6 +226,18 @@ Global
 		{BFFC36CA-1F5E-4F8B-89A2-B3C7FC41A175}.Release|arm64.Build.0 = Release|Any CPU
 		{BFFC36CA-1F5E-4F8B-89A2-B3C7FC41A175}.Release|x86.ActiveCfg = Release|Any CPU
 		{BFFC36CA-1F5E-4F8B-89A2-B3C7FC41A175}.Release|x86.Build.0 = Release|Any CPU
+		{BC9895D2-4D06-4761-9EE7-087020457D52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC9895D2-4D06-4761-9EE7-087020457D52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC9895D2-4D06-4761-9EE7-087020457D52}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{BC9895D2-4D06-4761-9EE7-087020457D52}.Debug|arm64.Build.0 = Debug|Any CPU
+		{BC9895D2-4D06-4761-9EE7-087020457D52}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BC9895D2-4D06-4761-9EE7-087020457D52}.Debug|x86.Build.0 = Debug|Any CPU
+		{BC9895D2-4D06-4761-9EE7-087020457D52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC9895D2-4D06-4761-9EE7-087020457D52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC9895D2-4D06-4761-9EE7-087020457D52}.Release|arm64.ActiveCfg = Release|Any CPU
+		{BC9895D2-4D06-4761-9EE7-087020457D52}.Release|arm64.Build.0 = Release|Any CPU
+		{BC9895D2-4D06-4761-9EE7-087020457D52}.Release|x86.ActiveCfg = Release|Any CPU
+		{BC9895D2-4D06-4761-9EE7-087020457D52}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -242,6 +256,7 @@ Global
 		{1306C747-B453-4C71-8469-847C0ABA3D5B} = {E83975CF-C50B-4D94-B0D3-13B8C661C0D6}
 		{54672122-20EA-4887-BDF5-D92E518FE5AB} = {E83975CF-C50B-4D94-B0D3-13B8C661C0D6}
 		{BFFC36CA-1F5E-4F8B-89A2-B3C7FC41A175} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
+		{BC9895D2-4D06-4761-9EE7-087020457D52} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09D3B2BE-AC85-48C2-835F-6B781E265873}

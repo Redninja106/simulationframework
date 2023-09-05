@@ -16,6 +16,7 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     internal GRGlInterface glInterface;
     internal GRContext backendContext;
     internal SkiaCanvas frameCanvas;
+    internal SkiaFrame frame;
     internal Dictionary<(string fontName, FontStyle styles, int size), SKFont> fonts = new();
     internal SkiaFont defaultFont;
 
@@ -44,9 +45,11 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
 
         if (frameCanvas is null || canvas != frameCanvas.GetSKCanvas())
         {
+            frame?.Dispose();
             frameCanvas?.Dispose();
             frameProvider.GetCurrentFrameSize(out int width, out int height);
-            frameCanvas = new SkiaCanvas(this, new SkiaFrame(width, height), canvas, false);
+            frame = new(width, height);
+            frameCanvas = new SkiaCanvas(this, frame, canvas, true);
         }
 
         return frameCanvas;

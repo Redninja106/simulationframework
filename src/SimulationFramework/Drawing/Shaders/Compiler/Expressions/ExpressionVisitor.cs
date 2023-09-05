@@ -21,4 +21,5 @@ public class ExpressionVisitor
     public virtual Expression VisitUnaryExpression(UnaryExpression expression) => expression.VisitChildren(this);
     public virtual Expression VisitShaderCallExpression(ShaderCallExpression expression) => expression.VisitChildren(this);
     public virtual Expression VisitUniformExpression(UniformExpression expression) => expression.VisitChildren(this);
+    public virtual Expression VisitDefaultExpression(DefaultExpression expression) => expression.VisitChildren(this);
 }

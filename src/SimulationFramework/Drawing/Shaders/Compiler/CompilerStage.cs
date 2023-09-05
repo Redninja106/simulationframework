@@ -131,12 +131,13 @@ class InterceptResolverStage : MethodCompilerStage
     {
         foreach (var method in typeof(ShaderIntrinsics).GetMethods(BindingFlags.Static | BindingFlags.Public))
         {
-            var attr = method.GetCustomAttribute<InterceptsAttribute>();
-            if (attr is null) 
-                continue;
+            var attrs = method.GetCustomAttributes<InterceptsAttribute>();
             
             var parameterTypes = method.GetParameters().Select(p => p.ParameterType).ToArray();
-            intercepts.Add(GetInterceptTarget(attr, parameterTypes), method);
+            foreach (var attr in attrs)
+            {
+                intercepts.Add(GetInterceptTarget(attr, parameterTypes), method);
+            }
         }
 
         MethodBase GetInterceptTarget(InterceptsAttribute attribute, Type[] parameterTypes)
@@ -146,11 +147,11 @@ class InterceptResolverStage : MethodCompilerStage
 
             if (name == InterceptsAttribute.ConstructorName)
             {
-                return type.GetConstructor(parameterTypes);
+                return type.GetConstructor(parameterTypes) ?? throw new();
             }
             else
             {
-                return type.GetMethod(name, 0, parameterTypes);
+                return type.GetMethod(name, BindingFlags.Static | BindingFlags.Public, parameterTypes) ?? type.GetMethod(name, BindingFlags.Instance | BindingFlags.Public, parameterTypes.Skip(1).ToArray()) ?? throw new();
             }
         }
     }
@@ -173,8 +174,7 @@ class InterceptResolverStage : MethodCompilerStage
         {
             if (interceptResolver.intercepts.TryGetValue(expression.Callee, out MethodInfo? source))
             {
-                Debug.Assert(expression.Instance is null);
-                return base.VisitCallExpression(new CallExpression(expression.Instance, source, expression.Arguments));
+                return base.VisitCallExpression(new CallExpression(null, source, expression.Instance is null ? expression.Arguments : expression.Arguments.Prepend(expression.Instance).ToList()));
             }
 
             return base.VisitCallExpression(expression);

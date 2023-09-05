@@ -25,6 +25,10 @@ public class MethodParameter
         this.method = method;
         this.parameterInfo = parameterInfo;
         ParameterType = parameterInfo?.ParameterType ?? method.Method.DeclaringType;
+
+        if (ParameterType is not null && ParameterType.IsByRef)
+            ParameterType = ParameterType.GetElementType();
+
         modifier = GetModifier(parameterInfo);
         name = parameterInfo?.Name ?? "self";
     }

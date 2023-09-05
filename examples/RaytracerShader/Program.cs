@@ -1,0 +1,115 @@
+﻿using Silk.NET.OpenGL;
+using SimulationFramework;
+using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Shaders;
+using SimulationFramework.Input;
+using System.Numerics;
+
+Start<Program>();
+
+
+partial class Program : Simulation
+{
+    RayTracerShader shader = new();
+    public float cameraRotX, cameraRotY;
+    public override void OnInitialize()
+    {
+    }
+
+    public override void OnRender(ICanvas canvas)
+    {
+        // set shader width and height
+        shader.width = canvas.Width;
+        shader.height = canvas.Height;
+
+        // 
+        ImGuiNET.ImGui.SliderFloat("vfov", ref shader.vfov, 30, 120);
+
+        if (Mouse.IsButtonDown(MouseButton.Right))
+        {
+            cameraRotX -= Mouse.DeltaPosition.Y * 0.001f * MathF.PI;
+            cameraRotY += Mouse.DeltaPosition.X * 0.001f * MathF.PI;
+            Mouse.Visible = false;
+        }
+        else
+        {
+            Mouse.Visible = true;
+        }
+
+        shader.cameraRotationMatrix = Matrix4x4.CreateRotationX(cameraRotX) * Matrix4x4.CreateRotationY(cameraRotY);
+
+        Vector3 delta = Vector3.Zero;
+        if (Keyboard.IsKeyDown(Key.W))
+            delta.Z += Time.DeltaTime;
+        if (Keyboard.IsKeyDown(Key.S))
+            delta.Z -= Time.DeltaTime;
+        if (Keyboard.IsKeyDown(Key.D))
+            delta.X += Time.DeltaTime;
+        if (Keyboard.IsKeyDown(Key.A))
+            delta.X -= Time.DeltaTime;
+        if (Keyboard.IsKeyDown(Key.Space))
+            delta.Y -= Time.DeltaTime;
+        if (Keyboard.IsKeyDown(Key.C))
+            delta.Y += Time.DeltaTime;
+        shader.cameraPosition += Vector3.Transform(delta, shader.cameraRotationMatrix);
+
+        canvas.Fill(shader);
+        canvas.DrawRect(0, 0, canvas.Width, canvas.Height);
+    }
+}
+
+class RayTracerShader : CanvasShader
+{
+    public float width, height;
+    public Vector3 cameraPosition;
+    public Matrix4x4 cameraRotationMatrix;
+    public float vfov;
+
+    public override ColorF GetPixelColor(Vector2 position)
+    {
+        Vector2 uv = new(position.X / width, position.Y / height);
+        Vector2 vp = new(uv.X * 2f - 1f, uv.Y * 2f - 1f);
+        vp.X *= width / height;
+
+        Vector3 origin = cameraPosition;
+        Vector3 direction = Vector3.Transform(new(vp * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1), cameraRotationMatrix);
+
+        Vector3 normal = new(0);
+        if (RaySphereIntersect(origin, direction, new Vector3(0, 0, 1), .5f, out normal) == 1)
+        {
+            return new ColorF(new Vector3(.1f + MathF.Max(0, .9f * Vector3.Dot(normal, new Vector3(-1, -1, -1).Normalized()))));
+        }
+        else
+        {
+            return ColorF.Black;
+        }
+    }
+
+    private float RaySphereIntersect(Vector3 origin, Vector3 direction, Vector3 position, float radius, out Vector3 normal)
+    {
+        var offset = origin - position;
+        var a = Vector3.Dot(direction, direction);
+        var halfB = Vector3.Dot(offset, direction);
+        var c = Vector3.Dot(offset, offset) - radius * radius;
+
+        var discriminant = halfB * halfB - a * c;
+
+        if (discriminant < 0)
+        {
+            normal = default;
+            return 0;
+        }
+
+        var sqrtD = MathF.Sqrt(discriminant);
+
+        var t = (-halfB - sqrtD) / a;
+
+        if (discriminant is not 0)
+        {
+            t = (-halfB - sqrtD) / a;
+        }
+        normal = (origin + direction * t) - position;
+        normal = normal.Normalized();
+        return 1;// t > 0;// t < ray.tMax && t > ray.tMin;
+    }
+}

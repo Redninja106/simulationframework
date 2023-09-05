@@ -85,10 +85,11 @@ internal class ExpressionBuilder
             BuildCallExpr,
             BuildLoadIndirect,
             BuildStoreIndirect,
+            BuildInitObj,
             BuildDup,
             BuildBranch,
 
-            i => i.OpCode is OpCode.Pop or OpCode.Initobj or OpCode.Ldobj,
+            i => i.OpCode is OpCode.Pop or OpCode.Ldobj,
 
             i => throw new NotSupportedException("Unsupported instruction '" + i.OpCode + "'."),
         };
@@ -103,6 +104,18 @@ internal class ExpressionBuilder
         }
 
         return CreateBlockExpressionIfNeeded(Expressions.Reverse());
+    }
+
+    private bool BuildInitObj(Instruction instruction)
+    {
+        if (instruction.OpCode is not OpCode.Initobj)
+            return false;
+
+        var left = Expressions.Pop();
+        var right = new DefaultExpression(((MetadataToken)instruction.Argument).Resolve() as Type ?? throw new());
+        Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, left, right));
+
+        return true;
     }
 
     bool BuildBranch(Instruction instruction)
@@ -218,8 +231,8 @@ internal class ExpressionBuilder
 
     private static Expression CreateBlockExpressionIfNeeded(IEnumerable<Expression> expressions)
     {
-        if (expressions.Count() is 1)
-            return expressions.Single()!;
+        // if (expressions.Count() is 1)
+        //     return expressions.Single()!;
 
         return new BlockExpression(expressions
             .Where(x => x is not null)
@@ -305,7 +318,7 @@ internal class ExpressionBuilder
 
     static LocalVariableExpression[] GetLocals(MethodDisassembly disassembly)
     {
-        var locals = disassembly.MethodBody.LocalVariables.Select(l => new LocalVariableExpression(l));
+        var locals = disassembly.MethodBody.LocalVariables.Select(l => new LocalVariableExpression(new(l)));
         return locals.ToArray();
     }
 
@@ -375,7 +388,7 @@ internal class ExpressionBuilder
 
     bool BuildFieldExpr(Instruction instruction)
     {
-        if (instruction.OpCode is not (OpCode.Ldfld or OpCode.Ldflda or OpCode.Stfld))
+        if (instruction.OpCode is not (OpCode.Ldfld or OpCode.Ldflda or OpCode.Stfld or OpCode.Ldsfld))
             return false;
 
         var metadataToken = (MetadataToken)instruction.Argument!;
@@ -387,6 +400,13 @@ internal class ExpressionBuilder
             var obj = Expressions.Pop();
 
             Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, new MemberAccessExpression(obj, fieldInfo), value));
+        }
+        else if (instruction.OpCode is OpCode.Ldsfld)
+        {
+            if (!fieldInfo.Attributes.HasFlag(FieldAttributes.InitOnly))
+                throw new Exception("Cannot access a non-readonly static field!");
+
+            Expressions.Push(new ConstantExpression(fieldInfo.GetValue(null)!));
         }
         else // OpCode is Ldfld or Ldflda
         {

@@ -25,6 +25,21 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic, Intercepts(InterceptsAttribute.ConstructorName, typeof(Vector3))]
     public static Vector3 Vec3(float x, float y, float z) => new(x, y, z);
 
+    [ShaderIntrinsic, Intercepts(InterceptsAttribute.ConstructorName, typeof(Vector3))]
+    public static Vector3 Vec3(Vector2 xy, float z) => new(xy, z);
+    [ShaderIntrinsic, Intercepts(InterceptsAttribute.ConstructorName, typeof(Vector3))]
+    public static Vector3 Vec3(float xyz) => new(xyz);
+
+    [ShaderIntrinsic, Intercepts(InterceptsAttribute.ConstructorName, typeof(Vector2))]
+    public static Vector2 Vec2(float x, float y) => new(x, y);
+
+    [ShaderIntrinsic, Intercepts(nameof(Vector2.Length), typeof(Vector2))]
+    public static float Length(Vector2 vector) => vector.Length();
+    [ShaderIntrinsic, Intercepts(nameof(Vector3.Length), typeof(Vector3))]
+    public static float Length(Vector3 vector) => vector.Length();
+    [ShaderIntrinsic, Intercepts(nameof(Vector4.Length), typeof(Vector4))]
+    public static float Length(Vector4 vector) => vector.Length();
+
     [ShaderIntrinsic, Intercepts(nameof(MathF.Sqrt), typeof(MathF))]
     public static float Sqrt(float x) => MathF.Sqrt(x);
 
@@ -34,7 +49,9 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic, Intercepts(nameof(Vector3.Dot), typeof(Vector3))]
     public static float Dot(Vector3 vector1, Vector3 vector2) => Vector3.Dot(vector1, vector2);
 
-    [ShaderIntrinsic, Intercepts(nameof(Vector3.Normalize), typeof(Vector3))]
+    [ShaderIntrinsic]
+    [Intercepts(nameof(Vector3.Normalize), typeof(Vector3))]
+    [Intercepts(nameof(VectorExtensions.Normalized), typeof(VectorExtensions))]
     public static Vector3 Normalize(Vector3 vector) => Vector3.Normalize(vector);
 
     [ShaderIntrinsic, Intercepts(InterceptsAttribute.ConstructorName, typeof(ColorF))]
@@ -58,11 +75,17 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic, Intercepts(InterceptsAttribute.MultiplyOperatorName, typeof(ColorF))]
     public static ColorF Multiply(ColorF left, float right) => left * right;
 
+    [ShaderIntrinsic, Intercepts(InterceptsAttribute.MultiplyOperatorName, typeof(Vector3))]
+    public static Vector3 Multiply(Vector3 left, Vector3 right) => left * right;
+
     [ShaderIntrinsic, Intercepts(nameof(MathF.Sin), typeof(MathF))]
     public static float Sin(float x) => MathF.Sin(x);
 
     [ShaderIntrinsic, Intercepts(nameof(MathF.Cos), typeof(MathF))]
     public static float Cos(float x) => MathF.Cos(x);
+
+    [ShaderIntrinsic, Intercepts(nameof(MathF.Tan), typeof(MathF))]
+    public static float Tan(float x) => MathF.Tan(x);
 
     // inline hlsl, only supported on directx, will be removed
     [ShaderIntrinsic, Intercepts(nameof(Hlsl), typeof(ShaderIntrinsics))]

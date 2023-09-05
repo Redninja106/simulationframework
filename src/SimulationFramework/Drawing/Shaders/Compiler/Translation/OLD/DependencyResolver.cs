@@ -202,7 +202,7 @@ class DependencyVisitor : ExpressionVisitor
     }
     public override Expression VisitLocalVariableExpression(LocalVariableExpression expression)
     {
-        context.AddType(expression.LocalVariableInfo.LocalType);
+        context.AddType(expression.LocalVariable.VariableType);
         return base.VisitLocalVariableExpression(expression);
     }
 }

@@ -20,21 +20,26 @@ internal class SKSLCodeGenerator
 
     private Dictionary<Type, string> typeAliases = new()
     {
-        [typeof(Vector4)] = "vec4",
-        [typeof(Vector3)] = "vec3",
-        [typeof(Vector2)] = "vec2",
-        [typeof(ColorF)] = "vec4",
+        [typeof(Vector4)] = "float4",
+        [typeof(Vector3)] = "float3",
+        [typeof(Vector2)] = "float2",
+        [typeof(ColorF)] = "float4",
         [typeof(float)] = "float",
         [typeof(int)] = "int",
         [typeof(bool)] = "bool",
         [typeof(uint)] = "uint",
         [typeof(void)] = "void",
+        [typeof(Matrix3x2)] = "float3x2",
+        [typeof(Matrix4x4)] = "float4x4",
     };
 
     public Dictionary<string, string> intrinsicAliases = new()
     {
         [nameof(ShaderIntrinsics.Multiply)] = "mul",
-        [nameof(ShaderIntrinsics.ColorF)] = "vec4",
+        [nameof(ShaderIntrinsics.ColorF)] = "float4",
+        [nameof(ShaderIntrinsics.Vec2)] = "float2",
+        [nameof(ShaderIntrinsics.Vec3)] = "float3",
+        [nameof(ShaderIntrinsics.Vec4)] = "float4",
     };
 
     public Dictionary<FieldInfo, string> fieldAliases = new()
@@ -55,7 +60,6 @@ internal class SKSLCodeGenerator
         this.compilation = compilation;
     }
 
-
     public void Emit(TextWriter writer)
     {
         // do some backend-specific transformations
@@ -71,15 +75,15 @@ internal class SKSLCodeGenerator
 
         foreach (var method in compilation.Methods)
         {
-            //EmitMethod(writer, method, false);
+            // EmitMethod(writer, method, false);
         }
 
-        foreach (var method in compilation.Methods)
+        foreach (var method in compilation.Methods.Reverse())
         {
             EmitMethod(writer, method, true);
         }
 
-        writer.Write(@$"vec4 main(vec2 p) {{
+        writer.Write(@$"float4 main(float2 p) {{
     return {compilation.EntryPoint}(p);
 }}
 ");
@@ -106,6 +110,19 @@ internal class SKSLCodeGenerator
         {
             if (param != method.Parameters.First())
                 writer.Write(", ");
+
+            switch (param.Modifier)
+            {
+                case MethodParameterModifier.Out:
+                    writer.Write("out ");
+                    break;
+                case MethodParameterModifier.In:
+                    writer.Write("in ");
+                    break;
+                case MethodParameterModifier.Ref:
+                    writer.Write("inout ");
+                    break;
+            }
 
             EmitType(writer, param.ParameterType);
             writer.Write(" ");
@@ -168,12 +185,19 @@ class MethodBodyEmitter : ExpressionVisitor
 
         if (expression == method.Body)
         {
-            foreach (var group in method.Locals.GroupBy(l => l.LocalType))
+            foreach (var group in method.Locals.GroupBy(l => l.VariableType))
             {
                 generator.EmitType(writer, group.Key);
                 writer.Write(' ');
 
-                generator.EmitIdentifier(writer, string.Join(", ", group.Select(l => "var" + l.LocalIndex)));
+                foreach (var local in group)
+                {
+                    if (local != group.First())
+                        writer.Write(", ");
+
+                    generator.EmitIdentifier(writer, local.Name);
+                }
+
                 writer.WriteLine(";");
             }
         }
@@ -197,7 +221,7 @@ class MethodBodyEmitter : ExpressionVisitor
 
     public override Expression VisitCallExpression(CallExpression expression)
     {
-        writer.Write(generator.intrinsicAliases.TryGetValue(expression.Callee.Name, out var name) ? name : expression.Callee.Name);
+        writer.Write(generator.intrinsicAliases.TryGetValue(expression.Callee.Name, out var name) ? name : expression.Callee.Name.ToLower());
         writer.Write("(");
 
         for (int i = 0; i < expression.Arguments.Count; i++)
@@ -238,8 +262,20 @@ class MethodBodyEmitter : ExpressionVisitor
 
     public override Expression VisitConstantExpression(ConstantExpression expression)
     {
-        writer.Write(expression.Value.ToString());
+        writer.Write(EmitConstant(expression.Value));
         return base.VisitConstantExpression(expression);
+    }
+
+    private string EmitConstant(object constantValue)
+    {
+        if (constantValue is ColorF c)
+        {
+            return $"vec4({c.R}, {c.G}, {c.B}, {c.A})";
+        }
+        else
+        {
+            return constantValue.ToString();
+        }
     }
 
     public override Expression VisitLocalVariableExpression(LocalVariableExpression expression)
@@ -257,6 +293,14 @@ class MethodBodyEmitter : ExpressionVisitor
     public override Expression VisitMemberAccessExpression(MemberAccessExpression expression)
     {
         expression.Instance.Accept(this);
+
+        if (expression.Member.DeclaringType == typeof(Matrix4x4))
+        {
+            var name = expression.Member.Name;
+            writer.Write($"[{(char)(name[1]-1)}][{(char)(name[2]-1)}]");
+            return expression;
+        }
+
         writer.Write(".");
         writer.Write(generator.fieldAliases.TryGetValue(expression.Member as FieldInfo ?? throw new(), out string alias) ? alias : expression.Member.Name);
         return expression;
@@ -279,6 +323,52 @@ class MethodBodyEmitter : ExpressionVisitor
     {
         writer.Write(expression.Uniform.Name);
         return base.VisitUniformExpression(expression);
+    }
+
+    public override Expression VisitConditionalExpression(ConditionalExpression expression)
+    {
+        writer.Write("if (");
+        expression.Condition.Accept(this);
+        writer.Write(")");
+        expression.Success.Accept(this);
+        if (expression.Failure is not null)
+        {
+            writer.Write("else");
+            expression.Failure.Accept(this);
+        }
+
+
+        return expression;
+    }
+
+    public override Expression VisitDefaultExpression(DefaultExpression expression)
+    {
+        if (expression.Type == typeof(bool))
+        {
+            writer.Write("false");
+        }
+        else if (expression.Type == typeof(float))
+        {
+            writer.Write("0");
+        }
+        else if (expression.Type == typeof(Vector2))
+        {
+            writer.Write("float2(0)");
+        }
+        else if (expression.Type == typeof(Vector3))
+        {
+            writer.Write("float3(0)");
+        }
+        else if (expression.Type == typeof(Vector4))
+        {
+            writer.Write("float4(0)");
+        }
+        else
+        {
+            writer.Write("{}");
+        }
+
+        return expression;
     }
 }
 
