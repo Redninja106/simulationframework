@@ -18,13 +18,14 @@ partial class Program : Simulation
 
     public override void OnRender(ICanvas canvas)
     {
+        // fov slider (better then starfield)
+        ImGuiNET.ImGui.SliderFloat("vfov", ref shader.vfov, 30, 120);
+
         // set shader width and height
         shader.width = canvas.Width;
         shader.height = canvas.Height;
 
-        // 
-        ImGuiNET.ImGui.SliderFloat("vfov", ref shader.vfov, 30, 120);
-
+        // hold rmb to look around
         if (Mouse.IsButtonDown(MouseButton.Right))
         {
             cameraRotX -= Mouse.DeltaPosition.Y * 0.001f * MathF.PI;
@@ -53,6 +54,7 @@ partial class Program : Simulation
             delta.Y += Time.DeltaTime;
         shader.cameraPosition += Vector3.Transform(delta, shader.cameraRotationMatrix);
 
+        // draw a fullscreen rect, fill with the shader
         canvas.Fill(shader);
         canvas.DrawRect(0, 0, canvas.Width, canvas.Height);
     }
