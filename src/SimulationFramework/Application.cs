@@ -2,6 +2,7 @@
 using SimulationFramework.Messaging;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace SimulationFramework;
 
@@ -56,6 +57,7 @@ public static class Application
         RegisterComponent(new TComponent());
     }
 
+
     /// <summary>
     /// Adds a new component to the simulation.
     /// </summary>
@@ -64,6 +66,19 @@ public static class Application
     public static void RegisterComponent<TComponent>(TComponent component) where TComponent : class, ISimulationComponent
     {
         SimulationHost.Current?.RegisterComponent(component);
+    }
+
+    /// <summary>
+    /// Removes the component of the provided type from the simulation and replaces it with the one returned by <paramref name="interceptProvider"/>.
+    /// </summary>
+    /// <typeparam name="TComponent">The type of component to intercept.</typeparam>
+    /// <param name="interceptProvider">A delegate which accepts the component being intercepted and returns the new component to be added in it's place.</param>
+    public static void InterceptComponent<TComponent>(Func<TComponent, TComponent> interceptProvider) where TComponent : class, ISimulationComponent
+    {
+        var component = GetComponent<TComponent>();
+        SimulationHost.Current?.RemoveComponent(component);
+        var newComponent = interceptProvider(component);
+        RegisterComponent(newComponent);
     }
 
     /// <summary>

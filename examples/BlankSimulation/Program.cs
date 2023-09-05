@@ -10,7 +10,6 @@ partial class Program : Simulation
 {
     public override void OnInitialize()
     {
-        
     }
 
     public override void OnRender(ICanvas canvas)

@@ -11,7 +11,7 @@ internal class DesktopMouseProvider : IMouseProvider
     private readonly IMouse mouse;
 
     public Vector2 Position { get => mouse.Position; set => mouse.Position = value; }
-    public Vector2 DeltaPosition => mousePosition - lastMousePosition;
+    public Vector2 DeltaPosition => mousePosition - lastMousePosition!.Value;
     public float ScrollWheelDelta => scrollWheel;
     public IEnumerable<MouseButton> HeldButtons => heldButtons;
     public IEnumerable<MouseButton> PressedButtons => pressedButtons;
@@ -31,7 +31,7 @@ internal class DesktopMouseProvider : IMouseProvider
     private readonly List<MouseButton> releasedButtons = new();
 
     private Vector2 mousePosition;
-    private Vector2 lastMousePosition;
+    private Vector2? lastMousePosition;
 
     private float scrollWheel;
     internal bool capturedByImgui;
@@ -87,7 +87,15 @@ internal class DesktopMouseProvider : IMouseProvider
 
     void AfterEvents()
     {
-        lastMousePosition = mousePosition;
+        if (lastMousePosition is not null)
+        {
+            lastMousePosition = mousePosition;
+        }
+        else
+        {
+            lastMousePosition = mouse.Position;
+        }
+
         mousePosition = mouse.Position;
 
         scrollWheel = capturedByImgui ? 0 : mouse.ScrollWheels.FirstOrDefault().Y;

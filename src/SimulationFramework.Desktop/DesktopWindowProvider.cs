@@ -176,9 +176,14 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     {
         fixed (Color* colorsPtr = icon)
         {
-            var memoryManager = new UnsafePinnedMemoryManager<byte>((byte*)colorsPtr, sizeof(Color) * width * height);
-            RawImage image = new(width, height, memoryManager.Memory);
-            window.SetWindowIcon(ref image);
+            Image i = new() 
+            {
+                Pixels = (byte*)colorsPtr,
+                Width = width,
+                Height = height,
+            };
+
+            glfw.SetWindowIcon(WindowHandle, 1, &i);
         }
     }
 }

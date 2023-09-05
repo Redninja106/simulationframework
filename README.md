@@ -110,6 +110,15 @@ Here is what that should look like:
 
 To see more, [go to the wiki](https://github.com/Redninja106/simulationframework/wiki) or [join the discord server](https://discord.gg/V4X2vTvV2G).
 
+## How-To Overview
+
+Most SimulationFramework features are exposed through static classes. Here is a list if the most important ones:
+- `Mouse`: provides mouse input
+- `Gamepad`: provides controller input
+- `Keyboard`: provides keyboard input  
+- `Graphics`: creates textures
+- `Time`: provides simulation timing values like `DeltaTime`
+
 ## Planned Features
 - **C# shaders**: .NET CIL to HLSL/GLSL compilation to write any kind of shader in plain C# (or any other .NET language!).
 - **Dependency Free**: SimulationFramework won't depend on any other nuget packages or have any native dependencies (except imgui, which will be optional).

@@ -50,7 +50,7 @@ public interface ITexture : IDisposable
     ICanvas GetCanvas();
 
     /// <summary>
-    /// Applies any changes made do the bitmap's data using <see cref="Pixels"/> or <see cref="GetPixel(int, int)"/>.
+    /// Applies any cpu-side changes made do the bitmap's data using <see cref="Pixels"/> or <see cref="GetPixel(int, int)"/>.
     /// </summary>
     void ApplyChanges();
 }
