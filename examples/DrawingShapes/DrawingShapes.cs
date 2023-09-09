@@ -22,16 +22,16 @@ class DrawingShapesSimulation : Simulation
 
         //ImGuiNET.ImGui.Text("hello, world!");
 
-        //canvas.Fill(Color.Orange);
+        canvas.Fill(Color.Orange);
         f += Mouse.ScrollWheelDelta;
-        //canvas.DrawPolygon(new[]
-        //{
-        //    new Vector2(500, f),
-        //    new Vector2(10, 10),
-        //    new Vector2(10, 500),
-        //    Mouse.Position,
-        //    new Vector2(500, 10),
-        //});
+        // canvas.DrawPolygon(new[]
+        // {
+        //     new Vector2(500, f),
+        //     new Vector2(10, 10),
+        //     new Vector2(10, 500),
+        //     Mouse.Position,
+        //     new Vector2(500, 10),
+        // });
 
         //canvas.Fill(Color.Red);
         //canvas.DrawRect(100, 100, 100, 100);
@@ -49,17 +49,17 @@ class DrawingShapesSimulation : Simulation
 
         //canvas.DrawLine(100, 100, 500, 500);
 
-        var shader = new MyShader(1f);
-        canvas.Fill(shader);
-        shader.brightness = MathF.Sin(f / 10f) * .5f + .5f;
-        canvas.DrawRect(Mouse.Position, new(500, 500), Alignment.Center);
+        // var shader = new MyShader(1f);
+        // canvas.Fill(shader);
+        // shader.brightness = MathF.Sin(f / 10f) * .5f + .5f;
+        // canvas.DrawRect(Mouse.Position, new(500, 500), Alignment.Center);
 
-        // {
-        //     canvas.PushState();
-        //     canvas.Translate(Mouse.Position);
-        //     canvas.DrawTexture(logo);
-        //     canvas.PopState();
-        // }
+        {
+            canvas.PushState();
+            canvas.Translate(Mouse.Position);
+            canvas.DrawTexture(logo);
+            canvas.PopState();
+        }
         
        // canvas.Font("Verdana");
        // canvas.Fill(Color.Purple);

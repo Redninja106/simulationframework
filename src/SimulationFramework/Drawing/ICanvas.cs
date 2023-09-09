@@ -37,6 +37,8 @@ public interface ICanvas : IDisposable
     /// <param name="color">The color with which to clear the canvas.</param>
     void Clear(Color color);
 
+    void Clear(CanvasShader shader);
+
     /// <summary>
     /// Waits for all drawing commands to finish executing.
     /// </summary>

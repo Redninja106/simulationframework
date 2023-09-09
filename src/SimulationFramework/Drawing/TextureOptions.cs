@@ -15,5 +15,9 @@ public enum TextureOptions
     /// <summary>
     /// The texture's data may not be written to or read from after creation.
     /// </summary>
-    NoAccess = 1 << 0
+    Constant = 1 << 0,
+    /// <summary>
+    /// Specifies the texture will never be a render target.
+    /// </summary>
+    NonRenderTarget = 2 << 0,
 }

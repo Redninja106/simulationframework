@@ -7,29 +7,33 @@ using System.Numerics;
 
 Start<Program>();
 
-
 partial class Program : Simulation
 {
     RayTracerShader shader = new();
     public float cameraRotX, cameraRotY;
+    private float turnSpeed = 5;
     public override void OnInitialize()
     {
+        // SetFixedResolution(200, 200, new Color(25, 25, 25));
     }
 
     public override void OnRender(ICanvas canvas)
     {
-        // fov slider (better then starfield)
+        canvas.Antialias(false);
+
+        // fov slider (better than starfield)
         ImGuiNET.ImGui.SliderFloat("vfov", ref shader.vfov, 30, 120);
+        ImGuiNET.ImGui.SliderFloat("camera speed", ref turnSpeed, 1, 10);
 
         // set shader width and height
         shader.width = canvas.Width;
         shader.height = canvas.Height;
 
         // hold rmb to look around
-        if (Mouse.IsButtonDown(MouseButton.Right))
+        if (Mouse.IsButtonDown(MouseButton.Left))
         {
-            cameraRotX -= Mouse.DeltaPosition.Y * 0.001f * MathF.PI;
-            cameraRotY += Mouse.DeltaPosition.X * 0.001f * MathF.PI;
+            cameraRotX -= Mouse.DeltaPosition.Y * turnSpeed * 0.001f * MathF.PI;
+            cameraRotY += Mouse.DeltaPosition.X * turnSpeed * 0.001f * MathF.PI;
             Mouse.Visible = false;
         }
         else
@@ -55,6 +59,9 @@ partial class Program : Simulation
         shader.cameraPosition += Vector3.Transform(delta, shader.cameraRotationMatrix);
 
         // draw a fullscreen rect, fill with the shader
+
+        // canvas.Clear(shader);
+
         canvas.Fill(shader);
         canvas.DrawRect(0, 0, canvas.Width, canvas.Height);
     }
@@ -65,7 +72,7 @@ class RayTracerShader : CanvasShader
     public float width, height;
     public Vector3 cameraPosition;
     public Matrix4x4 cameraRotationMatrix;
-    public float vfov;
+    public float vfov = 60;
 
     public override ColorF GetPixelColor(Vector2 position)
     {

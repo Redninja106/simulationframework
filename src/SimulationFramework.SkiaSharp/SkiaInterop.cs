@@ -17,14 +17,14 @@ public static class SkiaInterop
         return skiaCanvas.GetSKCanvas();
     }
 
-    public static SKBitmap GetBitmap(ITexture texture)
+    public static SKSurface GetSurface(ITexture texture)
     {
         ArgumentNullException.ThrowIfNull(texture);
 
         if (texture is not SkiaTexture skiaTexture)
             throw new ArgumentException("'texture' must be a texture created using the SkiaSharp graphics backend!");
 
-        return skiaTexture.GetBitmap();
+        return skiaTexture.GetSurface();
     }
 
     public static GRContext GetBackendContext(IGraphicsProvider graphics)
@@ -38,8 +38,13 @@ public static class SkiaInterop
     }
 
     // 
-    public unsafe static int GetGLTextureID(ITexture texture)
+    public unsafe static uint GetGLTextureID(ITexture texture)
     {
+        if (texture is not SkiaTexture skiaTexture)
+            throw new ArgumentException("'texture' must be a texture created using the SkiaSharp graphics backend!");
+
+        return skiaTexture.GetGLTextureID();
+
         // there doesn't seem to be a way to do this with skiasharp...
         throw new NotSupportedException();
     }

@@ -215,6 +215,10 @@ public class SimulationHost
         IsRendering = false;
 
         Dispatcher.ImmediateDispatch<AfterRenderMessage>(new());
+
+        interceptor?.Render();
+
+        Dispatcher.ImmediateDispatch<PresentMessage>(new());
     }
 
     /// <summary>

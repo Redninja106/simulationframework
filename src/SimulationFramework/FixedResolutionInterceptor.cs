@@ -65,7 +65,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         Application.InterceptComponent<IMouseProvider>(mouseProvider => this.mouseProvider = new FixedResolutionMouseProvider(mouseProvider, subpixelInput));
     }
 
-    private void BeforeRender(BeforeRenderMessage message)
+    private void AfterEvents(AfterEventsMessage message)
     {
         var outputCanvas = Graphics.GetOutputCanvas();
 
@@ -76,26 +76,10 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
             .Translate(-FrameBuffer.Width / 2f, -FrameBuffer.Height / 2f);
     }
 
-    private void AfterRender(AfterRenderMessage message)
-    {
-        var outputCanvas = Graphics.GetOutputCanvas();
-        outputCanvas.Clear(this.BackgroundColor);
-        outputCanvas.Translate(outputCanvas.Width / 2f, outputCanvas.Height / 2f);
-        outputCanvas.Scale(GetScale(outputCanvas.Width, outputCanvas.Height));
-        if (!Transparent)
-        {
-            outputCanvas.Fill(Color.Black);
-            outputCanvas.DrawRect(0, 0, FrameBuffer.Width, FrameBuffer.Height, Alignment.Center);
-        }
-        outputCanvas.DrawTexture(FrameBuffer, Alignment.Center);
-        outputCanvas.Flush();
-    }
-
     /// <inheritdoc/>
     public void Initialize(MessageDispatcher dispatcher)
     {
-        dispatcher.Subscribe<BeforeRenderMessage>(BeforeRender);
-        dispatcher.Subscribe<AfterRenderMessage>(AfterRender);
+        dispatcher.Subscribe<AfterEventsMessage>(AfterEvents);
     }
 
     /// <inheritdoc/>
@@ -113,7 +97,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
     public void Resize(int width, int height)
     {
         FrameBuffer?.Dispose();
-        FrameBuffer = Graphics.CreateTexture(width, height);
+        FrameBuffer = Graphics.CreateTexture(width, height, TextureOptions.NonRenderTarget);
         this.Width = width;
         this.Height = height;
     }
@@ -129,6 +113,21 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         }
 
         return scale;
+    }
+
+    internal void Render()
+    {
+        var outputCanvas = Graphics.GetOutputCanvas();
+        outputCanvas.Clear(this.BackgroundColor);
+        outputCanvas.Translate(outputCanvas.Width / 2f, outputCanvas.Height / 2f);
+        outputCanvas.Scale(GetScale(outputCanvas.Width, outputCanvas.Height));
+        if (!Transparent)
+        {
+            outputCanvas.Fill(Color.Black);
+            outputCanvas.DrawRect(0, 0, FrameBuffer.Width, FrameBuffer.Height, Alignment.Center);
+        }
+        outputCanvas.DrawTexture(FrameBuffer, Alignment.Center);
+        outputCanvas.Flush();
     }
 
     // hijacks mouse position to be accurate to fake framebuffer

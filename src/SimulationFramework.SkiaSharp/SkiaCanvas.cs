@@ -45,7 +45,23 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
         canvas.Clear(color.AsSKColor());
         SkiaTextureTarget?.InvalidatePixels();
     }
-    public void Flush() => canvas.Flush();
+    public void Clear(CanvasShader shader)
+    {
+        var (effect, uniforms) = RuntimeEffectCache.GetValue(shader);
+        using var skshader = effect.ToShader(true, uniforms);
+        using var paint = new SKPaint();
+        paint.Shader = skshader;
+        paint.Style = SKPaintStyle.Fill;
+
+        canvas.DrawPaint(currentState.Paint);
+        SkiaTextureTarget?.InvalidatePixels();
+    }
+
+    public void Flush()
+    {
+        canvas.Flush();
+    }
+
     public void DrawLine(Vector2 p1, Vector2 p2)
     {
         canvas.DrawLine(p1.AsSKPoint(), p2.AsSKPoint(), currentState.Paint);
@@ -100,7 +116,7 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
         if (texture is not SkiaTexture skTexture)
             throw new ArgumentException("texture must be a texture created by the skiasharp renderer!", nameof(texture));
 
-        canvas.DrawBitmap(skTexture.GetBitmap(), source.AsSKRect(), destination.AsSKRect());
+        canvas.DrawImage(skTexture.GetImage(), source.AsSKRect(), destination.AsSKRect(), currentState.Paint);
         SkiaTextureTarget?.InvalidatePixels();
     }
 

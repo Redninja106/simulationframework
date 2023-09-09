@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using Silk.NET.Core.Contexts;
+using Silk.NET.OpenGL;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 using SkiaSharp;
@@ -19,13 +23,22 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     internal SkiaFrame frame;
     internal Dictionary<(string fontName, FontStyle styles, int size), SKFont> fonts = new();
     internal SkiaFont defaultFont;
+    internal GL gl;
 
     public IFont DefaultFont => defaultFont;
 
-    public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate getProcAddress)
+    public unsafe SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate getProcAddress)
     {
         this.frameProvider = frameProvider;
         this.getProcAddress = getProcAddress;
+        gl = GL.GetApi(s => getProcAddress(s));
+        gl.DebugMessageCallback((source, type, id, severity, length, messagePtr, userParam) =>
+        {
+            var strBytes = new ReadOnlySpan<byte>((void*)messagePtr, length);
+            var message = Encoding.UTF8.GetString(strBytes);
+
+            Console.WriteLine("message: " + message);
+        }, null);
 
         defaultFont = SkiaFont.FromName("Verdana");
     }
@@ -59,7 +72,8 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     {
         try
         {
-            texture = new SkiaTexture(this, new SKBitmap(width, height), true, options);
+            uint tex = gl.GenTexture();
+            texture = new SkiaTexture(this, tex, width, height, true, options);
 
             if (!pixels.IsEmpty)
             {
@@ -83,7 +97,10 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     {
         try
         {
-            texture = new SkiaTexture(this, SKBitmap.Decode(encodedData), true, options);
+            var bmp = SKBitmap.Decode(encodedData);
+            var tex = (SkiaTexture)Graphics.CreateTexture(bmp.Width, bmp.Height, options);
+            bmp.GetPixelSpan().CopyTo(MemoryMarshal.Cast<Color, byte>(tex.Pixels));
+            texture = tex;
             return true;
         }
         catch
