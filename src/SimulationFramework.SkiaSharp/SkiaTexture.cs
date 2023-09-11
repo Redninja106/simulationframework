@@ -9,28 +9,24 @@ namespace SimulationFramework.SkiaSharp;
 internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 {
     private readonly SkiaGraphicsProvider provider;
-    private readonly SKSurface surface;
-    private SKPixmap pixmap;
-    private readonly bool owner;
-    private readonly TextureOptions options;
+    public int Width { get; }
+    public int Height { get; }
+    public TextureOptions Options { get; }
 
     private readonly Color[] colors;
-    private SkiaCanvas canvas;
     private bool pixelsDirty;
-    private SKImage snapshot;
-    private uint glTexture;
-    private uint fbo;
-    private GRBackendTexture backendTexture;
-    private GRBackendRenderTarget renderTarget;
 
-    public unsafe SkiaTexture(SkiaGraphicsProvider provider, uint glTexture, int width, int height, bool owner, TextureOptions options)
+    private SkiaCanvas canvas;
+    private SKImage snapshot;
+
+    private readonly SKSurface surface;
+
+    public unsafe SkiaTexture(SkiaGraphicsProvider provider, int width, int height, TextureOptions options)
     {
+        this.provider = provider;
         this.Width = width;
         this.Height = height;
-
-        this.provider = provider;
-        this.owner = owner;
-        this.options = options;
+        this.Options = options;
 
         if (!options.HasFlag(TextureOptions.Constant))
         {
@@ -38,56 +34,16 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
             UpdateLocalPixels();
         }
 
-        provider.gl.BindTexture(GLEnum.Texture2D, this.glTexture);
-        
-        if (this.colors is not null)
-        {
-            fixed (void* c = &this.colors[0])
-            {
-                provider.gl.TexImage2D(GLEnum.Texture2D, 0, InternalFormat.Rgba8, (uint)width, (uint)height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, c);
-            }
-        }
-        else
-        {
-            provider.gl.TexImage2D(GLEnum.Texture2D, 0, InternalFormat.Rgba8, (uint)width, (uint)height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, null);
-        }
-
-        if (!options.HasFlag(TextureOptions.NonRenderTarget))
-        {
-            fbo = provider.gl.GenFramebuffer();
-            provider.gl.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
-            provider.gl.FramebufferTexture(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, this.glTexture, 0);
-            renderTarget = new GRBackendRenderTarget(width, height, 1, 0, new(fbo, (uint)SizedInternalFormat.Rgba8));
-            this.surface = SKSurface.Create(provider.backendContext, renderTarget, SKColorType.Rgba8888, new(SKSurfacePropsFlags.None, SKPixelGeometry.Unknown));
-        }
-        else
-        {
-            this.backendTexture = new GRBackendTexture(width, height, false, new((uint)GLEnum.Texture2D, glTexture, (uint)SizedInternalFormat.Rgba8));
-            Debug.Assert(backendTexture is not null);
-            this.surface = SKSurface.Create(provider.backendContext, backendTexture, SKColorType.Rgba8888, new(SKSurfacePropsFlags.None, SKPixelGeometry.Unknown));
-            Debug.Assert(surface is not null);
-        }
+        surface = SKSurface.Create(provider.backendContext, true, new(width, height));
     }
 
-    public int Width { get; private set; }
-    public int Height { get; private set; }
-    
     public unsafe Span<Color> Pixels
     {
         get
         {
             if (colors is null)
                 throw new InvalidOperationException("CPU access is not allowed on this texture!");
-
-            if (pixelsDirty)
-            {
-                fixed (Color* colorPtr = &colors[0])
-                {
-                    surface.ReadPixels(new(Width, Height), (nint)colorPtr, Width * sizeof(Color), 0, 0);
-                }
-                pixelsDirty = false;
-            }
-
+            UpdateLocalPixels();
             return colors;
         }
     }
@@ -99,20 +55,19 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
     public override void Dispose()
     {
-        if (owner)
-            surface.Dispose();
-
+        this.surface.Dispose();
         this.canvas?.Dispose();
+        this.snapshot?.Dispose();
         base.Dispose();
     }
 
-    private void UpdateLocalPixels()
+    private unsafe void UpdateLocalPixels()
     {
-        unsafe
+        if (pixelsDirty)
         {
-            fixed (void* colorsPtr = &colors[0]) 
+            fixed (Color* colorPtr = &colors[0])
             {
-                provider.gl.GetTexImage(GLEnum.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedInt, colorsPtr);
+                surface.ReadPixels(new(Width, Height), (nint)colorPtr, Width * sizeof(Color), 0, 0);
             }
             pixelsDirty = false;
         }
@@ -120,9 +75,9 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
     public ICanvas GetCanvas()
     {
-        if (options.HasFlag(TextureOptions.NonRenderTarget))
+        if (Options.HasFlag(TextureOptions.NonRenderTarget))
         {
-            throw new InvalidOperationException("Can only render to a texture with the TextureOptions.RenderTarget flag.");
+            throw new InvalidOperationException("Cannot render to a texture with the TextureOptions.NonRenderTarget flag.");
         }
 
         if (this.canvas is null || this.canvas.IsDisposed)
@@ -142,7 +97,6 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
         unsafe
         {
-
             var pixmap = surface.PeekPixels();
             var pixels = pixmap.GetPixelSpan<Color>();
             for (int i = 0; i < colors.Length; i++)
@@ -177,10 +131,5 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
         }
 
         return snapshot;
-    }
-
-    internal uint GetGLTextureID()
-    {
-        return glTexture;
     }
 }

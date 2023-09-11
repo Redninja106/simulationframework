@@ -1,25 +1,39 @@
-﻿using SimulationFramework;
+﻿using Silk.NET.OpenGL;
+using SimulationFramework;
+using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
 using SimulationFramework.SkiaSharp;
+using SkiaSharp;
 
 Start<Program>();
 
 partial class Program : Simulation
 {
-    ITexture texture;
+    SKSurface surface;
 
-    public override void OnInitialize()
+    public override unsafe void OnInitialize()
     {
-        texture = Graphics.CreateTexture(100, 100);
-        var canvas = texture.GetCanvas();
-        canvas.Clear(Color.Red);
-        canvas.Flush();
-        
+        var graphics = Application.GetComponent<SkiaGraphicsProvider>();
+        surface = SKSurface.Create(graphics.backendContext, true, new SKImageInfo(100, 100));
     }
 
     public override void OnRender(ICanvas canvas)
     {
-        ImGuiNET.ImGui.Image((nint)SkiaInterop.GetGLTextureID(texture), new(100, 100));
-        canvas.Clear(Color.Black);
+        SKRuntimeEffect effect = SKRuntimeEffect.Create(@"
+float4 main(float2 pos) {
+    return float4(0,1,0,1);
+}
+", out string errors);
+
+        surface.Canvas.Clear(new SKColor(255, 0, 0));
+        surface.Canvas.DrawCircle(50, 50, 50, new()
+        {
+            Shader = effect.ToShader(false),
+        });
+        // gl.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
+        // gl.ClearColor(1, 0, 0, 1);
+        // gl.Clear(ClearBufferMask.ColorBufferBit);
+
+        SkiaInterop.GetCanvas(canvas).DrawImage(surface.Snapshot(), new SKPoint(0, 0));
     }
 }

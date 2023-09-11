@@ -18,7 +18,7 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     internal readonly GRGlGetProcedureAddressDelegate getProcAddress;
 
     internal GRGlInterface glInterface;
-    internal GRContext backendContext;
+    public GRContext backendContext;
     internal SkiaCanvas frameCanvas;
     internal SkiaFrame frame;
     internal Dictionary<(string fontName, FontStyle styles, int size), SKFont> fonts = new();
@@ -72,8 +72,7 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     {
         try
         {
-            uint tex = gl.GenTexture();
-            texture = new SkiaTexture(this, tex, width, height, true, options);
+            texture = new SkiaTexture(this, width, height, options);
 
             if (!pixels.IsEmpty)
             {

@@ -3,6 +3,7 @@ using SimulationFramework.Drawing;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace SimulationFramework;
 
@@ -162,6 +163,12 @@ public abstract class Simulation
         static void SetFixedResolutionCore(int width, int height, Color backgroundColor, bool transparent, bool subpixelInput, bool stretchToFit)
         {
             var interceptor = Application.GetComponentOrDefault<FixedResolutionInterceptor>();
+
+            if (interceptor is not null && (width is 0 || height is 0))
+            {
+                SimulationHost.Current?.RemoveComponent(interceptor);
+                return;
+            }
 
             if (interceptor is null)
             {

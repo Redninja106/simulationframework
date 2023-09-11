@@ -14,7 +14,7 @@ partial class Program : Simulation
     private float turnSpeed = 5;
     public override void OnInitialize()
     {
-        // SetFixedResolution(200, 200, new Color(25, 25, 25));
+        SetFixedResolution(50, 50, new Color(25, 25, 25));
     }
 
     public override void OnRender(ICanvas canvas)
@@ -59,8 +59,6 @@ partial class Program : Simulation
         shader.cameraPosition += Vector3.Transform(delta, shader.cameraRotationMatrix);
 
         // draw a fullscreen rect, fill with the shader
-
-        // canvas.Clear(shader);
 
         canvas.Fill(shader);
         canvas.DrawRect(0, 0, canvas.Width, canvas.Height);

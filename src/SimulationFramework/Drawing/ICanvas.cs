@@ -37,8 +37,6 @@ public interface ICanvas : IDisposable
     /// <param name="color">The color with which to clear the canvas.</param>
     void Clear(Color color);
 
-    void Clear(CanvasShader shader);
-
     /// <summary>
     /// Waits for all drawing commands to finish executing.
     /// </summary>
@@ -91,6 +89,14 @@ public interface ICanvas : IDisposable
         State.UpdateDrawMode(DrawMode.Stroke);
     }
 
+    /// <summary>
+    /// Configures the canvas to fill shapes using the provided shader.
+    /// </summary>
+    /// 
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Shader"/>, 
+    /// meaning that any shapes drawn after this call will be filled with the provided shader. 
+    /// </para>
     sealed void Fill(CanvasShader shader)
     {
         State.UpdateShader(shader);

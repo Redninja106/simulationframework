@@ -43,8 +43,6 @@ public static class SkiaInterop
         if (texture is not SkiaTexture skiaTexture)
             throw new ArgumentException("'texture' must be a texture created using the SkiaSharp graphics backend!");
 
-        return skiaTexture.GetGLTextureID();
-
         // there doesn't seem to be a way to do this with skiasharp...
         throw new NotSupportedException();
     }

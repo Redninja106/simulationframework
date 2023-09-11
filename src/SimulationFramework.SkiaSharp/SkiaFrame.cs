@@ -13,6 +13,7 @@ namespace SimulationFramework.SkiaSharp
 
         public int Width { get; }
         public int Height { get; }
+        public TextureOptions Options => TextureOptions.None;
 
         public Span<Color> Pixels { get => throw new NotSupportedException(); }
 

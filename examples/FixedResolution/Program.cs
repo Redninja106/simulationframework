@@ -30,5 +30,10 @@ partial class Program : Simulation
             canvas.Fill(Color.Black);
             canvas.DrawCircle(Mouse.Position, radius);
         }
+
+        if (Keyboard.IsKeyPressed(Key.Space))
+        {
+            SetFixedResolution(Window.Width + 10, Window.Height + 10, new Color(25, 25, 25));
+        }
     }
 }

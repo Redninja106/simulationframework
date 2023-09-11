@@ -18,6 +18,11 @@ public interface ITexture : IDisposable
     int Height { get; }
      
     /// <summary>
+    /// The configuration this texture was created with.
+    /// </summary>
+    TextureOptions Options { get; }
+
+    /// <summary>
     /// A span of colors making up texture's data
     /// <para>
     /// If changes are made to the texture's data, they may not be applied until <see cref="ApplyChanges"/> is called.

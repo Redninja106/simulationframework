@@ -17,7 +17,7 @@ public enum TextureOptions
     /// </summary>
     Constant = 1 << 0,
     /// <summary>
-    /// Specifies the texture will never be a render target.
+    /// Specifies the texture will never rendered to.
     /// </summary>
-    NonRenderTarget = 2 << 0,
+    NonRenderTarget = 1 << 1,
 }
