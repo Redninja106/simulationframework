@@ -16,7 +16,18 @@ internal class DesktopGamepadProvider : IGamepadProvider
     public IEnumerable<GamepadButton> HeldButtons => heldButtons;
     public IEnumerable<GamepadButton> PressedButtons => pressedButtons;
     public IEnumerable<GamepadButton> ReleasedButtons => releasedButtons;
-    public float VibrationStrength { get; set; }
+    public float VibrationStrength 
+    { 
+        get => vibrationStrength;
+        set
+        {
+            vibrationStrength = value;
+            foreach (var motor in gamepad.VibrationMotors)
+            {
+                motor.Speed = vibrationStrength;
+            }
+        }
+    }
 
     public event GamepadButtonEvent ButtonPressed;
     public event GamepadButtonEvent ButtonReleased;
@@ -24,6 +35,7 @@ internal class DesktopGamepadProvider : IGamepadProvider
     private readonly List<GamepadButton> heldButtons = new();
     private readonly List<GamepadButton> pressedButtons = new();
     private readonly List<GamepadButton> releasedButtons = new();
+    private float vibrationStrength;
 
     public DesktopGamepadProvider(IGamepad gamepad)
     {
