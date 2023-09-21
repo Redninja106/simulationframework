@@ -55,7 +55,7 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     {
         try
         {
-            texture = new SkiaTexture(this, new SKBitmap(width, height), true, options);
+            texture = new SkiaTexture(this, width, height, options);
 
             if (!pixels.IsEmpty)
             {
@@ -79,7 +79,17 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     {
         try
         {
-            texture = new SkiaTexture(this, SKBitmap.Decode(encodedData), true, options);
+            var bitmap = SKBitmap.Decode(encodedData);
+            texture = new SkiaTexture(this, bitmap.Width, bitmap.Height, options);
+            var pixels = bitmap.Pixels;
+
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                var color = pixels[i];
+                texture.Pixels[i] = new(color.Red, color.Green, color.Blue, color.Alpha);
+            }
+            texture.ApplyChanges();
+
             return true;
         }
         catch

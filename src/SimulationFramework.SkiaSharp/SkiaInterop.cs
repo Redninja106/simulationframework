@@ -17,14 +17,14 @@ public static class SkiaInterop
         return skiaCanvas.GetSKCanvas();
     }
 
-    public static SKBitmap GetBitmap(ITexture texture)
+    public static SKImage GetImage(ITexture texture)
     {
         ArgumentNullException.ThrowIfNull(texture);
 
         if (texture is not SkiaTexture skiaTexture)
             throw new ArgumentException("'texture' must be a texture created using the SkiaSharp graphics backend!");
 
-        return skiaTexture.GetBitmap();
+        return skiaTexture.GetImage();
     }
 
     public static GRContext GetBackendContext(IGraphicsProvider graphics)

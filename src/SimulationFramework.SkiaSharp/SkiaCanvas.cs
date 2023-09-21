@@ -91,7 +91,7 @@ internal sealed class SkiaCanvas : ICanvas
         if (texture is not SkiaTexture skTexture)
             throw new ArgumentException("texture must be a texture created by the skiasharp renderer!", nameof(texture));
 
-        canvas.DrawBitmap(skTexture.GetBitmap(), source.AsSKRect(), destination.AsSKRect());
+        canvas.DrawImage(skTexture.GetImage(), source.AsSKRect(), destination.AsSKRect());
         SkiaTextureTarget?.InvalidatePixels();
     }
 

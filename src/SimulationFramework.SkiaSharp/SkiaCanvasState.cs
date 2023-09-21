@@ -124,7 +124,7 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
             if (changed)
             {
                 this.fillTextureShader?.Dispose();
-                this.fillTextureShader = SKShader.CreateBitmap(SkiaInterop.GetBitmap(texture), tileModeX.AsSKShaderTileMode(), tileModeY.AsSKShaderTileMode(), transform.AsSKMatrix());
+                this.fillTextureShader = SKShader.CreateImage(SkiaInterop.GetImage(texture), tileModeX.AsSKShaderTileMode(), tileModeY.AsSKShaderTileMode(), transform.AsSKMatrix());
             }
         }
 

@@ -1,37 +1,40 @@
-﻿using System;
-using System.Diagnostics;
+﻿
 using SimulationFramework.Drawing;
+using SimulationFramework.SkiaSharp;
+using SimulationFramework;
 using SkiaSharp;
+using System;
 
-namespace SimulationFramework.SkiaSharp;
-
-internal sealed class SkiaTexture : ITexture
+internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 {
     private readonly SkiaGraphicsProvider provider;
-    private readonly SKBitmap bitmap;
-    private readonly bool owner;
-    private readonly TextureOptions options;
+    public int Width { get; }
+    public int Height { get; }
+    public TextureOptions Options { get; }
 
     private readonly Color[] colors;
-    private SkiaCanvas canvas;
     private bool pixelsDirty;
 
-    public SkiaTexture(SkiaGraphicsProvider provider, SKBitmap bitmap, bool owner, TextureOptions options)
+    private SkiaCanvas canvas;
+    private SKImage snapshot;
+
+    private readonly SKSurface surface;
+
+    public unsafe SkiaTexture(SkiaGraphicsProvider provider, int width, int height, TextureOptions options)
     {
         this.provider = provider;
-        this.bitmap = bitmap;
-        this.owner = owner;
-        this.options = options;
-        
-        if (!options.HasFlag(TextureOptions.NoAccess))
+        this.Width = width;
+        this.Height = height;
+        this.Options = options;
+
+        if (!options.HasFlag(TextureOptions.Constant))
         {
-            colors = new Color[bitmap.Width * bitmap.Height];
+            this.colors = new Color[width * height];
             UpdateLocalPixels();
         }
-    }
 
-    public int Width => bitmap.Width;
-    public int Height => bitmap.Height;
+        surface = SKSurface.Create(provider.backendContext, true, new(width, height));
+    }
 
     public unsafe Span<Color> Pixels
     {
@@ -39,13 +42,8 @@ internal sealed class SkiaTexture : ITexture
         {
             if (colors is null)
                 throw new InvalidOperationException("CPU access is not allowed on this texture!");
-
-            if (pixelsDirty)
-            {
-                UpdateLocalPixels();
-            }
-
-            return colors.AsSpan();
+            UpdateLocalPixels();
+            return colors;
         }
     }
 
@@ -54,32 +52,43 @@ internal sealed class SkiaTexture : ITexture
         pixelsDirty = true;
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
-        if (owner)
-            bitmap.Dispose();
-
+        this.surface.Dispose();
         this.canvas?.Dispose();
+        this.snapshot?.Dispose();
+        base.Dispose();
     }
 
-    private void UpdateLocalPixels()
+    private unsafe void UpdateLocalPixels()
     {
-        unsafe
+        if (pixelsDirty)
         {
-            var pixels = (int*)bitmap.GetPixels();
-            for (int i = 0; i < colors.Length; i++)
+            fixed (Color* colorPtr = &colors[0])
             {
-                colors[i] = ToColor(pixels[i]);
+                surface.ReadPixels(new(Width, Height), (nint)colorPtr, Width * sizeof(Color), 0, 0);
             }
             pixelsDirty = false;
         }
     }
 
+    public unsafe void Update(ReadOnlySpan<Color> pixels)
+    {
+        var pixmap = surface.PeekPixels();
+        var destPixels = pixmap.GetPixelSpan<Color>();
+        pixels.CopyTo(destPixels);
+    }
+
     public ICanvas GetCanvas()
     {
+        if (Options.HasFlag(TextureOptions.NonRenderTarget))
+        {
+            throw new InvalidOperationException("Cannot render to a texture with the TextureOptions.NonRenderTarget flag.");
+        }
+
         if (this.canvas is null || this.canvas.IsDisposed)
         {
-            this.canvas = new SkiaCanvas(this.provider, this, new SKCanvas(bitmap), true);
+            this.canvas = new SkiaCanvas(this.provider, this, surface.Canvas, false);
         }
 
         return this.canvas;
@@ -92,31 +101,33 @@ internal sealed class SkiaTexture : ITexture
             Log.Warn("Texture was changed on the gpu and then ApplyChanges() was called. This could lead to changes being lost.");
         }
 
-        unsafe
-        {
-            var pixels = (int*)bitmap.GetPixels();
-            for (int i = 0; i < colors.Length; i++)
-            {
-                pixels[i] = ToArgb(colors[i]);
-            }
-
-        }
-
-        bitmap.NotifyPixelsChanged();
+        Update(this.Pixels);
+        
     }
-    
+
     private static int ToArgb(Color color)
     {
         return color.A << 24 | color.R << 16 | color.G << 8 | color.B;
     }
-    
+
     private static Color ToColor(int argb)
     {
         return new Color((byte)(argb >> 16 & 0xFF), (byte)(argb >> 8 & 0xFF), (byte)(argb & 0xFF), (byte)(argb >> 24 & 0xFF));
     }
 
-    public SKBitmap GetBitmap()
+    public SKSurface GetSurface()
     {
-        return bitmap;
+        return surface;
+    }
+
+    public SKImage GetImage()
+    {
+        if (pixelsDirty || snapshot is null)
+        {
+            snapshot?.Dispose();
+            snapshot = surface.Snapshot();
+        }
+
+        return snapshot;
     }
 }
