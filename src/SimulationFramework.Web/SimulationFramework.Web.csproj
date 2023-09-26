@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp" Version="2.88.6" />
+    <PackageReference Include="SkiaSharp.NativeAssets.WebAssembly" Version="2.88.6" />
+    <PackageReference Include="SkiaSharp.Views.Blazor" Version="2.88.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SimulationFramework.SkiaSharp\SimulationFramework.SkiaSharp.csproj" />
+    <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
+  </ItemGroup>
+
+</Project>

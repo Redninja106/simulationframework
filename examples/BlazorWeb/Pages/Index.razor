@@ -1,0 +1,27 @@
+﻿@page "/"
+@using SimulationFramework.Web;
+@using SimulationFramework;
+
+<h1>Hello, world!</h1>
+
+<canvas id="simulation-canvas" width="1280" height="720">
+</canvas>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var plat = new WebPlatform("simulation-canvas");
+            Simulation.Start<TestSimulation>(plat);
+        }
+
+        base.OnAfterRender(firstRender);
+    }
+}

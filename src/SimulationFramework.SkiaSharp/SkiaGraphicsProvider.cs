@@ -11,7 +11,7 @@ namespace SimulationFramework.SkiaSharp;
 public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
 {
     internal readonly ISkiaFrameProvider frameProvider;
-    internal readonly GRGlGetProcedureAddressDelegate getProcAddress;
+    internal readonly GRGlGetProcedureAddressDelegate? getProcAddress;
 
     internal GRGlInterface glInterface;
     internal GRContext backendContext;
@@ -21,20 +21,28 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
 
     public IFont DefaultFont => defaultFont;
 
-    public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate getProcAddress)
+    public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate? getProcAddress)
     {
         this.frameProvider = frameProvider;
         this.getProcAddress = getProcAddress;
-
-        defaultFont = SkiaFont.FromName("Verdana");
     }
 
     public void Initialize(MessageDispatcher application)
     {
-        glInterface = GRGlInterface.CreateOpenGl(getProcAddress);
+        if (getProcAddress is not null)
+        {
+            glInterface = GRGlInterface.CreateOpenGl(getProcAddress);
+        }
+        else
+        {
+            glInterface = GRGlInterface.Create();
+        }
+
         backendContext = GRContext.CreateGl(glInterface);
 
         frameProvider.SetContext(this.backendContext);
+
+        defaultFont = SkiaFont.FromName("Verdana");
     }
 
     public ICanvas GetFrameCanvas()
