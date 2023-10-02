@@ -38,10 +38,12 @@ public static class SkiaInterop
     }
 
     // 
-    public unsafe static int GetGLTextureID(ITexture texture)
+    public unsafe static uint GetGLTextureID(ITexture texture)
     {
-        // there doesn't seem to be a way to do this with skiasharp...
-        throw new NotSupportedException();
+        if (texture is not SkiaTexture skiaTexture)
+            throw new ArgumentException("'texture' must be a texture created using the SkiaSharp graphics backend!");
+
+        return skiaTexture.GetGLTexture();
     }
 
     public static SKPaint GetPaint(CanvasState state)

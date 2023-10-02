@@ -6,6 +6,7 @@ using Silk.NET.Windowing.Glfw;
 using Silk.NET.Input;
 using Silk.NET.Input.Glfw;
 using SimulationFramework.Drawing;
+using Silk.NET.OpenGL;
 
 namespace SimulationFramework.Desktop;
 
@@ -66,7 +67,7 @@ public class DesktopPlatform : ISimulationPlatform
 
     protected virtual IGraphicsProvider CreateGraphicsProvider()
     {
-        return new SkiaGraphicsProvider(frameProvider, name => Window.GLContext.TryGetProcAddress(name, out nint addr) ? addr : 0);
+        return new SkiaGraphicsProvider(frameProvider, Window.CreateOpenGL(), name => Window.GLContext.TryGetProcAddress(name, out nint addr) ? addr : 0);
     }
 
     protected virtual ITimeProvider CreateTimeProvider()
