@@ -39,7 +39,7 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
         backendTexture = new GRBackendTexture(width, height, false, new((uint)GLEnum.Texture2D, glTexture, (uint)SizedInternalFormat.Rgba8));
 
-        surface = SKSurface.Create(provider.backendContext, false, new(width, height));
+        surface = SKSurface.Create(provider.backendContext, backendTexture, SKColorType.Rgba8888);
         canvas = new(provider, this, surface.Canvas, true);
 
         image = SKImage.FromTexture(provider.backendContext, backendTexture, SKColorType.Rgba8888);

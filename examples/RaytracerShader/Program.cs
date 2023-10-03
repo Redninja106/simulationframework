@@ -14,14 +14,14 @@ partial class Program : Simulation
     private float turnSpeed = 5;
     public override void OnInitialize()
     {
-        SetFixedResolution(50, 50, new Color(25, 25, 25));
+        SetFixedResolution(160, 90, new Color(25, 25, 25));
     }
 
     public override void OnRender(ICanvas canvas)
     {
         canvas.Antialias(false);
 
-        // fov slider (better than starfield)
+        // fov slider
         ImGuiNET.ImGui.SliderFloat("vfov", ref shader.vfov, 30, 120);
         ImGuiNET.ImGui.SliderFloat("camera speed", ref turnSpeed, 1, 10);
 
