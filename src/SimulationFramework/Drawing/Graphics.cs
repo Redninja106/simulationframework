@@ -20,6 +20,12 @@ public static class Graphics
     /// <returns></returns>
     public static ICanvas GetOutputCanvas()
     {
+        var interceptor = Application.GetComponentOrDefault<FixedResolutionInterceptor>();
+        if (interceptor is not null)
+        {
+            return interceptor.FrameBuffer.GetCanvas();
+        }
+
         return Provider.GetFrameCanvas();
     }
 
