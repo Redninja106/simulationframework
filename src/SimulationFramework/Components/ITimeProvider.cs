@@ -25,6 +25,12 @@ public interface ITimeProvider : ISimulationComponent
     float GetDeltaTime();
 
     /// <summary>
+    /// Gets the unscaled, unclamped amount of time that has passes since the last frame of the simulation, in seconds.
+    /// </summary>
+    /// <returns></returns>
+    float GetRawDeltaTime();
+
+    /// <summary>
     /// <see langword="true"/> if deltaTime had to be clamped to MaxDeltaTime this frame.
     /// </summary>
     bool IsRunningSlowly();

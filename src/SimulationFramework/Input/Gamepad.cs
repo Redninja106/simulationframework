@@ -50,6 +50,15 @@ public static class Gamepad
     public static float RightTrigger => Provider.RightTrigger;
 
     /// <summary>
+    /// Gets or sets the current strength of the gamepads's haptic feedback, between 0 (no vibration) and 1 (max vibration).
+    /// </summary>
+    public static float VibrationStrength
+    {
+        get => Provider.VibrationStrength;
+        set => Provider.VibrationStrength = value;
+    }
+
+    /// <summary>
     /// A collection of all buttons which are pressed this frame. A button is only considered pressed on the first frame that it is held.
     /// </summary>
     public static IEnumerable<GamepadButton> HeldButtons => Provider.HeldButtons;

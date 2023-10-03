@@ -27,15 +27,11 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
 
     public IFont DefaultFont => defaultFont;
 
-    public unsafe SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate getProcAddress)
+    public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GL gl, GRGlGetProcedureAddressDelegate getProcAddress)
     {
         this.frameProvider = frameProvider;
         this.getProcAddress = getProcAddress;
-        gl = GL.GetApi(s => getProcAddress(s));
-        gl.DebugMessageCallback((source, type, id, severity, length, messagePtr, userParam) =>
-        {
-            var strBytes = new ReadOnlySpan<byte>((void*)messagePtr, length);
-            var message = Encoding.UTF8.GetString(strBytes);
+        this.gl = gl;
 
             Console.WriteLine("message: " + message);
         }, null);
@@ -96,10 +92,18 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     {
         try
         {
-            var bmp = SKBitmap.Decode(encodedData);
-            var tex = (SkiaTexture)Graphics.CreateTexture(bmp.Width, bmp.Height, options);
-            bmp.GetPixelSpan().CopyTo(MemoryMarshal.Cast<Color, byte>(tex.Pixels));
-            texture = tex;
+            var bitmap = SKBitmap.Decode(encodedData);
+            var skiaTexture = new SkiaTexture(this, bitmap.Width, bitmap.Height, options);
+            var pixels = bitmap.Pixels;
+
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                var color = pixels[i];
+                skiaTexture.Pixels[i] = new(color.Red, color.Green, color.Blue, color.Alpha);
+            }
+            skiaTexture.ApplyChanges();
+
+            texture = skiaTexture;
             return true;
         }
         catch

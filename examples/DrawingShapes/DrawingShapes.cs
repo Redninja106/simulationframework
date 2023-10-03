@@ -1,4 +1,5 @@
 ﻿using SimulationFramework;
+using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Input;
@@ -20,7 +21,8 @@ class DrawingShapesSimulation : Simulation
     {
         canvas.Clear(Color.Gray);
 
-        //ImGuiNET.ImGui.Text("hello, world!");
+        ImGuiNET.ImGui.Text("hello, world!");
+        ImGuiNET.ImGui.Image(logo.GetImGuiID(), new(100, 100));
 
         canvas.Fill(Color.Orange);
         f += Mouse.ScrollWheelDelta;

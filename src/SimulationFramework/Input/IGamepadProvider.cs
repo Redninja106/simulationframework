@@ -40,7 +40,7 @@ public interface IGamepadProvider : ISimulationComponent
     float RightTrigger { get; }
 
     /// <summary>
-    /// Controls the strength of the controllers haptic feedback, between 0 (no vibration) and 1 (max vibration).
+    /// Controls the strength of the gamepads's haptic feedback, between 0 (no vibration) and 1 (max vibration).
     /// </summary>
     float VibrationStrength { get; set; }
 
