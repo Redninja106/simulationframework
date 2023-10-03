@@ -11,5 +11,11 @@ public static partial class JSInterop
     [JSImport("globalThis.requestAnimationFrame")]
     public static partial void RequestAnimationFrame([JSMarshalAs<Function<Number>>] Action<double> callback);
 
-    System.Runtime.InteropServices.JavaScript.JSType
+    [JSImport("globalThis._sfcanvas.getContext")]
+    public static partial JSObject GetContext(string type);
+
+    [JSImport("globalThis.GL.makeContextCurrent")]
+    public static partial bool MakeContextCurrent(JSObject context);
+
+    // System.Runtime.InteropServices.JavaScript.JSType
 }

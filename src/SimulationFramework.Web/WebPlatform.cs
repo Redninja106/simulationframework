@@ -25,7 +25,9 @@ public class WebPlatform : ISimulationPlatform
         this.canvas = canvas;
         width = canvas.GetPropertyAsInt32("width");
         height = canvas.GetPropertyAsInt32("height");
-        
+        JSHost.GlobalThis.SetProperty("_sfcanvas", this.canvas);
+        var context = JSInterop.GetContext("webgl2");
+        // JSHost.GlobalThis.SetProperty("GLctx", context);
 
 
         Console.WriteLine($"web platform initialized... [{width}x{height}].");

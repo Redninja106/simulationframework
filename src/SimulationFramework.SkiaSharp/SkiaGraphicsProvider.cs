@@ -24,11 +24,11 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
 
     public IFont DefaultFont => defaultFont;
 
-    public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GL gl, GRGlGetProcedureAddressDelegate getProcAddress)
+    public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate getProcAddress)
     {
         this.frameProvider = frameProvider;
         this.getProcAddress = getProcAddress;
-        this.gl = gl;
+        this.gl = GL.GetApi(s => getProcAddress(s));
 
         defaultFont = SkiaFont.FromName("Verdana");
     }
