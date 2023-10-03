@@ -6,7 +6,7 @@ namespace SimulationFramework.Components;
 /// <summary>
 /// Feeds real time values into a simulation.
 /// </summary>
-public sealed class RealtimeProvider : ITimeProvider
+public sealed class RealTimeProvider : ITimeProvider
 {
     /// <summary>
     /// </summary>
@@ -19,19 +19,21 @@ public sealed class RealtimeProvider : ITimeProvider
     private readonly Stopwatch stopwatch;
 
     private float deltaTime;
+    private float rawDeltaTime;
     private float totalTime;
     private bool isRunningSlowly;
 
     /// <summary>
     /// </summary>
-    public RealtimeProvider()
+    public RealTimeProvider()
     {
         stopwatch = Stopwatch.StartNew();
     }
 
     private void Tick()
     {
-        deltaTime = Scale * (stopwatch.ElapsedTicks / (float)Stopwatch.Frequency);
+        rawDeltaTime = stopwatch.ElapsedTicks / (float)Stopwatch.Frequency;
+        deltaTime = Scale * rawDeltaTime;
         stopwatch.Restart();
 
         if (deltaTime > MaxDeltaTime)
@@ -57,6 +59,12 @@ public sealed class RealtimeProvider : ITimeProvider
     public float GetDeltaTime()
     {
         return deltaTime;
+    }
+
+    /// <inheritdoc/>
+    public float GetRawDeltaTime()
+    {
+        return rawDeltaTime;
     }
 
     /// <inheritdoc/>

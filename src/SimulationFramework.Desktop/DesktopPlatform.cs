@@ -72,7 +72,7 @@ public class DesktopPlatform : ISimulationPlatform
 
     protected virtual ITimeProvider CreateTimeProvider()
     {
-        return new RealtimeProvider();
+        return new RealTimeProvider();
     }
 
     protected virtual ISimulationController CreateSimulationController()
