@@ -33,9 +33,6 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
         this.getProcAddress = getProcAddress;
         this.gl = gl;
 
-            Console.WriteLine("message: " + message);
-        }, null);
-
         defaultFont = SkiaFont.FromName("Verdana");
     }
 
