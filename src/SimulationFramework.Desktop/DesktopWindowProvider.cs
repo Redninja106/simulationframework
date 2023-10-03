@@ -1,6 +1,4 @@
-﻿using ImGuiNET;
-using Silk.NET.Core;
-using Silk.NET.GLFW;
+﻿using Silk.NET.GLFW;
 using Silk.NET.Windowing;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;

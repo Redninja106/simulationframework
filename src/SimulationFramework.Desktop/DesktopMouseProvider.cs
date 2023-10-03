@@ -1,9 +1,7 @@
-﻿using Silk.NET.GLFW;
-using Silk.NET.Input;
+﻿using Silk.NET.Input;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace SimulationFramework.Desktop;
 internal class DesktopMouseProvider : IMouseProvider

@@ -1,5 +1,4 @@
 ﻿using Silk.NET.Input;
-using Silk.NET.Input.Extensions;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
 using System.Numerics;

@@ -1,6 +1,5 @@
 ﻿using SimulationFramework;
 using SimulationFramework.Drawing;
-using SimulationFramework.Input;
 
 Start<Program>();
 

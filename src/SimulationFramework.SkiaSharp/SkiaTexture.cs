@@ -6,6 +6,8 @@ using SkiaSharp;
 using System;
 using Silk.NET.OpenGL;
 
+namespace SimulationFramework.SkiaSharp;
+
 internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 {
     private readonly SkiaGraphicsProvider provider;

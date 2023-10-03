@@ -1,9 +1,7 @@
 ﻿using SimulationFramework;
-using SimulationFramework.Components;
 using SimulationFramework.Drawing;
 using SimulationFramework.Input;
 using System.Numerics;
-using System.Reflection;
 
 namespace BasicInput;
 

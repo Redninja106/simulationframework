@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace SimulationFramework.Drawing;
 
@@ -446,7 +445,7 @@ public interface ICanvas : IDisposable
     /// </summary>
     /// <param name="name">The name of the font to load.</param>
     /// <returns><see langword="true"/> if the font was successfully loaded, otherwise <see langword="false"/>.</returns>
-    sealed void Font(string name) => Font(Graphics.LoadFontByName(name));
+    sealed void Font(string name) => Font(Graphics.LoadSystemFont(name));
 
     /// <summary>
     /// Sets the font used for text rendering.

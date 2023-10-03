@@ -1,5 +1,4 @@
 ﻿using SimulationFramework.Components;
-using SimulationFramework.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
