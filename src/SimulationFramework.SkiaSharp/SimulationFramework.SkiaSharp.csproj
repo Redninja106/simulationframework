@@ -10,7 +10,7 @@
     <PackageIcon>logo-128x128.png</PackageIcon>
     <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
     <AssemblyVersion></AssemblyVersion>
-    <Version>0.2.0</Version>
+    <Version>0.2.1-beta1</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Ryan Andersen</Authors>
@@ -25,7 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SkiaSharp" Version="2.88.6" />
+    <PackageReference Include="Silk.NET.OpenGL" Version="2.17.1" />
+	<PackageReference Include="SkiaSharp" Version="2.88.6" />
   </ItemGroup>
 
   <ItemGroup>

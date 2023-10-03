@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.InteropServices;
+using Silk.NET.OpenGL;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 using SkiaSharp;
@@ -18,13 +20,17 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     internal SkiaCanvas frameCanvas;
     internal Dictionary<(string fontName, FontStyle styles, int size), SKFont> fonts = new();
     internal SkiaFont defaultFont;
+    internal GL gl;
 
     public IFont DefaultFont => defaultFont;
 
-    public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GRGlGetProcedureAddressDelegate? getProcAddress)
+    public SkiaGraphicsProvider(ISkiaFrameProvider frameProvider, GL gl, GRGlGetProcedureAddressDelegate getProcAddress)
     {
         this.frameProvider = frameProvider;
         this.getProcAddress = getProcAddress;
+        this.gl = gl;
+
+        defaultFont = SkiaFont.FromName("Verdana");
     }
 
     public void Initialize(MessageDispatcher application)
@@ -88,16 +94,17 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
         try
         {
             var bitmap = SKBitmap.Decode(encodedData);
-            texture = new SkiaTexture(this, bitmap.Width, bitmap.Height, options);
+            var skiaTexture = new SkiaTexture(this, bitmap.Width, bitmap.Height, options);
             var pixels = bitmap.Pixels;
 
             for (int i = 0; i < pixels.Length; i++)
             {
                 var color = pixels[i];
-                texture.Pixels[i] = new(color.Red, color.Green, color.Blue, color.Alpha);
+                skiaTexture.Pixels[i] = new(color.Red, color.Green, color.Blue, color.Alpha);
             }
-            texture.ApplyChanges();
+            skiaTexture.ApplyChanges();
 
+            texture = skiaTexture;
             return true;
         }
         catch
