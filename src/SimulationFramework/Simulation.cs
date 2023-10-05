@@ -137,7 +137,10 @@ public abstract class Simulation
     }
 
     /// <summary>
-    /// Configures the simulation to render to an fixed-size off-screen texture then render that to fit the window.
+    /// Configures the simulation to render to an fixed-size off-screen texture that will automatically be rendered to fit the window.
+    /// <para>
+    /// This method can be called any time to change the size of a fixed-size simulation, but the changed won't occur until the next frame.
+    /// </para>
     /// </summary>
     /// <param name="width">The width of the off-screen texture.</param>
     /// <param name="height">The height of the off-screen texture.</param>
