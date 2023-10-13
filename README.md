@@ -118,6 +118,7 @@ Most SimulationFramework features are exposed through static classes. Here is a 
 - `Keyboard`: provides keyboard input  
 - `Graphics`: creates textures
 - `Time`: provides simulation timing values like `DeltaTime`
+- `Window`: configures the simulation's window
 
 ## Planned Features
 - **C# shaders**: .NET CIL to HLSL/GLSL compilation to write any kind of shader in plain C# (or any other .NET language!).
