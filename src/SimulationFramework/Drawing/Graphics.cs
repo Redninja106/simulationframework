@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using SimulationFramework.Components;
 
 namespace SimulationFramework.Drawing;
 
@@ -10,11 +11,21 @@ namespace SimulationFramework.Drawing;
 public static class Graphics
 {
     private static IGraphicsProvider Provider => Application.GetComponent<IGraphicsProvider>();
+    private static IFullscreenProvider FullscreenProvider => Application.GetComponent<IFullscreenProvider>();
 
     /// <summary>
     /// The default simulation font.
     /// </summary>
     public static IFont DefaultFont => Provider.DefaultFont;
+
+    /// <summary>
+    /// The swap interval used when presenting frames.
+    /// </summary>
+    public static int SwapInterval 
+    { 
+        get => FullscreenProvider.SwapInterval;
+        set => FullscreenProvider.SwapInterval = value;
+    }
 
     /// <summary>
     /// Gets window canvas for the current frame.

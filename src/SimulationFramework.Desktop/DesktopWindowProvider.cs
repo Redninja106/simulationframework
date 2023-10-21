@@ -10,6 +10,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
 {
     private readonly IWindow window;
     private readonly Glfw glfw = Glfw.GetApi();
+    private int swapInterval;
 
     private string title = "Simulation";
 
@@ -25,8 +26,22 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
             title = value;
         }
     }
+
     public IDisplay Display => GetDisplay();
     
+    public int SwapInterval 
+    {
+        get
+        {
+            return swapInterval;
+        }
+        set 
+        {
+            glfw.SwapInterval(value);
+            swapInterval = value;
+        }
+    }
+
     public bool IsUserResizable
     {
         get => isUserResizable;
@@ -99,6 +114,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     {
         this.window = window;
         window.Title = this.title;
+        SwapInterval = 0;
     }
 
     public void Dispose()

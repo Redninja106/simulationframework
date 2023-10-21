@@ -136,6 +136,7 @@ public class SimulationHost
         initialized = true;
         Current = this;
 
+        RegisterComponent(new PerformanceProvider());
         RegisterComponent(platform);
 
         if (simulation is not null && Application.HasComponent<IMouseProvider>())

@@ -5,7 +5,6 @@ using SimulationFramework.Components;
 using Silk.NET.Windowing.Glfw;
 using Silk.NET.Input;
 using Silk.NET.Input.Glfw;
-using SimulationFramework.Drawing;
 using Silk.NET.OpenGL;
 
 namespace SimulationFramework.Desktop;

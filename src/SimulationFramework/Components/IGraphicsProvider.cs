@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-using SimulationFramework.Components;
+using SimulationFramework.Drawing;
 
-namespace SimulationFramework.Drawing;
+namespace SimulationFramework.Components;
 
 /// <summary>
 /// Interface which provides graphics functionality as a component of a simulation.

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Intrinsics;
 using Silk.NET.OpenGL;
+using SimulationFramework.Components;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 using SkiaSharp;
