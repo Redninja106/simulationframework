@@ -40,7 +40,7 @@ internal class RemoveThisOnGlobalsStage : CompilerStage
 
         public override Expression VisitShaderCallExpression(ShaderCallExpression expression)
         {
-            if (expression.Arguments[0] is MethodParameterExpression paramExpr && paramExpr.Parameter == param)
+            if (!expression.Callee.Method.IsStatic && expression.Arguments[0] is MethodParameterExpression paramExpr && paramExpr.Parameter == param)
             {
                 return base.VisitShaderCallExpression(new(expression.Callee, expression.Arguments.Skip(1).ToList()));
             }

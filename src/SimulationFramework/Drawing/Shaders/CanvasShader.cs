@@ -11,7 +11,7 @@ public abstract class CanvasShader
     public Matrix3x2 TransformMatrix { get; set; }
 
     [ShaderIntrinsic]
-    protected void Discard()
+    protected static void Discard()
     {
         throw new Exception("Shader discarded");
     }

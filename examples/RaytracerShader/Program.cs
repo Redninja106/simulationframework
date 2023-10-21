@@ -81,14 +81,14 @@ class RayTracerShader : CanvasShader
         Vector3 origin = cameraPosition;
         Vector3 direction = Vector3.Transform(new(vp * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1), cameraRotationMatrix);
 
-        Vector3 normal = new(0);
+        Vector3 normal = Vector3.Zero;
         if (RaySphereIntersect(origin, direction, new Vector3(0, 0, 1), .5f, out normal) == 1)
         {
             return new ColorF(new Vector3(.1f + MathF.Max(0, .9f * Vector3.Dot(normal, new Vector3(-1, -1, -1).Normalized()))));
         }
         else
         {
-            return ColorF.Black;
+            return ColorF.Lerp(ColorF.White, ColorF.Blue, direction.Y);
         }
     }
 
