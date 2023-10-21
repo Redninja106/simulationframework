@@ -1,5 +1,4 @@
-﻿
-using SimulationFramework.Drawing;
+﻿using SimulationFramework.Drawing;
 using SimulationFramework.SkiaSharp;
 using SimulationFramework;
 using SkiaSharp;
@@ -80,17 +79,29 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
         provider.gl.DeleteTexture(this.glTexture);
 
-
         base.Dispose();
     }
 
     private unsafe void UpdateLocalPixels()
     {
-        var gl = provider.gl;
-        gl.BindTexture(TextureTarget.Texture2D, glTexture);
-        gl.GetTexImage(TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte, colors.AsSpan());
-        gl.BindTexture(TextureTarget.Texture2D, 0);
-        pixelsDirty = false;
+        Color* buffer = null;
+        try
+        {
+            buffer = (Color*)NativeMemory.Alloc((nuint)colors.Length, (nuint)sizeof(Color));
+
+            var gl = provider.gl;
+            gl.Finish();
+            gl.BindTexture(TextureTarget.Texture2D, glTexture);
+            gl.GetTexImage(TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte, new Span<Color>(buffer, colors.Length));
+            gl.BindTexture(TextureTarget.Texture2D, 0);
+            pixelsDirty = false;
+
+            TextureFlip(new(buffer, colors.Length), colors);
+        }
+        finally
+        {
+            NativeMemory.Free(buffer);
+        }
     }
 
     public unsafe void Update(ReadOnlySpan<Color> pixels)
@@ -101,16 +112,7 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
             // we need to flip the texture (thanks opengl)
             buffer = (Color*)NativeMemory.Alloc((nuint)pixels.Length, (nuint)sizeof(Color));
 
-            for (int y = 0; y < Height; y++)
-            {
-                for (int x = 0; x < Width; x++)
-                {
-                    var srcIndex = y * Width + x;
-                    var dstIndex = (Height - y - 1) * Width + x;
-
-                    buffer[dstIndex] = pixels[srcIndex];
-                }
-            }
+            TextureFlip(pixels, new(buffer, pixels.Length));
 
             var gl = provider.gl;
             gl.BindTexture(TextureTarget.Texture2D, glTexture);
@@ -123,6 +125,20 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
         finally
         {
             NativeMemory.Free(buffer);
+        }
+    }
+
+    private void TextureFlip(ReadOnlySpan<Color> src, Span<Color> dest)
+    {
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                var srcIndex = y * Width + x;
+                var dstIndex = (Height - y - 1) * Width + x;
+
+                dest[dstIndex] = src[srcIndex];
+            }
         }
     }
 
