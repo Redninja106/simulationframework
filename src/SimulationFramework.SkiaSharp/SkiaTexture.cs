@@ -5,6 +5,7 @@ using SimulationFramework;
 using SkiaSharp;
 using System;
 using Silk.NET.OpenGL;
+using System.Runtime.InteropServices;
 
 namespace SimulationFramework.SkiaSharp;
 
@@ -93,12 +94,35 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
     public unsafe void Update(ReadOnlySpan<Color> pixels)
     {
-        var gl = provider.gl;
-        gl.BindTexture(TextureTarget.Texture2D, glTexture);
-        provider.gl.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, (uint)this.Width, (uint)this.Height, PixelFormat.Rgba, PixelType.UnsignedByte, pixels);
-        gl.BindTexture(TextureTarget.Texture2D, 0);
-        image.Dispose();
-        image = SKImage.FromTexture(provider.backendContext, this.backendTexture, SKColorType.Rgba8888);
+        Color* buffer = null;
+        try
+        {
+            // we need to flip the texture (thanks opengl)
+            buffer = (Color*)NativeMemory.Alloc((nuint)pixels.Length, (nuint)sizeof(Color));
+
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    var srcIndex = y * Width + x;
+                    var dstIndex = (Height - y - 1) * Width + x;
+
+                    buffer[dstIndex] = pixels[srcIndex];
+                }
+            }
+
+            var gl = provider.gl;
+            gl.BindTexture(TextureTarget.Texture2D, glTexture);
+            provider.gl.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, (uint)this.Width, (uint)this.Height, PixelFormat.Rgba, PixelType.UnsignedByte, buffer);
+            gl.BindTexture(TextureTarget.Texture2D, 0);
+
+            image.Dispose();
+            image = SKImage.FromTexture(provider.backendContext, this.backendTexture, SKColorType.Rgba8888);
+        }
+        finally
+        {
+            NativeMemory.Free(buffer);
+        }
     }
 
     public ICanvas GetCanvas()
