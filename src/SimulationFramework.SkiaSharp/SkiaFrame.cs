@@ -1,5 +1,6 @@
 ﻿using SimulationFramework.Drawing;
 using System;
+using System.IO;
 
 namespace SimulationFramework.SkiaSharp
 {
@@ -33,6 +34,11 @@ namespace SimulationFramework.SkiaSharp
         public ICanvas GetCanvas()
         {
             return Graphics.GetOutputCanvas();
+        }
+
+        public void Encode(Stream destination, TextureEncoding encoding)
+        {
+            throw new NotSupportedException("This operation is not support on the main frame texture!");
         }
     }
 }

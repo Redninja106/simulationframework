@@ -6,6 +6,7 @@ using SkiaSharp;
 using System;
 using Silk.NET.OpenGL;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace SimulationFramework.SkiaSharp;
 
@@ -47,7 +48,6 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
         if (!options.HasFlag(TextureOptions.Constant))
         {
-            // this.colors = new Color[width * height];
             UpdateLocalPixels();
         }
     }
@@ -79,6 +79,7 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
         this.backendTexture.Dispose();
 
         provider.gl.DeleteTexture(this.glTexture);
+
 
         base.Dispose();
     }
@@ -158,5 +159,16 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
     public uint GetGLTexture()
     {
         return glTexture;
+    }
+
+    public void Encode(Stream destination, TextureEncoding encoding)
+    {
+        var data = image.Encode(encoding switch
+        {
+            TextureEncoding.PNG => SKEncodedImageFormat.Png,
+            _ => throw new Exception("Unsupported or unrecognized encoding!")
+        }, 100);
+
+        data.SaveTo(destination);
     }
 }
