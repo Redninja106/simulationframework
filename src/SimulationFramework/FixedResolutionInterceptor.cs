@@ -60,14 +60,14 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         this.Transparent = transparent;
         this.StretchToFit = stretchToFit;
 
-
         Resize(width, height);
         Application.InterceptComponent<IMouseProvider>(mouseProvider => this.mouseProvider = new FixedResolutionMouseProvider(mouseProvider, subpixelInput));
     }
 
     private void BeforeRender(BeforeRenderMessage message)
     {
-        var outputCanvas = Graphics.GetOutputCanvas();
+        var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
+        outputCanvas.ResetState();
 
         this.mouseProvider!.transform
             .Reset()
@@ -78,7 +78,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
 
     private void AfterRender(AfterRenderMessage message)
     {
-        var outputCanvas = Graphics.GetOutputCanvas();
+        var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
         outputCanvas.Clear(this.BackgroundColor);
         outputCanvas.Translate(outputCanvas.Width / 2f, outputCanvas.Height / 2f);
         outputCanvas.Scale(GetScale(outputCanvas.Width, outputCanvas.Height));
