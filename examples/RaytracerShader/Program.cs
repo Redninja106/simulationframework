@@ -117,6 +117,7 @@ class RayTracerShader : CanvasShader
         }
         normal = (origin + direction * t) - position;
         normal = normal.Normalized();
-        return 1;// t > 0;// t < ray.tMax && t > ray.tMin;
+
+        return 1;
     }
 }

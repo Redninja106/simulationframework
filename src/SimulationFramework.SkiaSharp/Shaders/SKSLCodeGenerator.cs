@@ -55,6 +55,15 @@ internal class SKSLCodeGenerator
         [typeof(Vector2).GetField("Y")] = "y",
     };
 
+    public Dictionary<PropertyInfo, string> propertyAliases = new()
+    {
+        [typeof(ColorF).GetProperty("R")] = "r",
+        [typeof(ColorF).GetProperty("G")] = "g",
+        [typeof(ColorF).GetProperty("B")] = "b",
+        [typeof(ColorF).GetProperty("A")] = "a",
+    };
+
+
     public SKSLCodeGenerator(ShaderCompilation compilation)
     {
         this.compilation = compilation;
@@ -296,13 +305,27 @@ class MethodBodyEmitter : ExpressionVisitor
 
         if (expression.Member.DeclaringType == typeof(Matrix4x4))
         {
-            var name = expression.Member.Name;
-            writer.Write($"[{(char)(name[1]-1)}][{(char)(name[2]-1)}]");
+            var memName = expression.Member.Name;
+            writer.Write($"[{(char)(memName[1]-1)}][{(char)(memName[2]-1)}]");
             return expression;
         }
 
         writer.Write(".");
-        writer.Write(generator.fieldAliases.TryGetValue(expression.Member as FieldInfo ?? throw new(), out string alias) ? alias : expression.Member.Name);
+        string name = expression.Member.Name;
+        if (generator.fieldAliases.TryGetValue(expression.Member as FieldInfo ?? throw new(), out string alias))
+        {
+            name = alias;
+        }
+        if (name.StartsWith("<"))
+        {
+            name = name[(name.IndexOf('<') + 1)..name.IndexOf('>')];
+        }
+        var prop = expression.Member.DeclaringType.GetProperty(name);
+        if (prop is not null && generator.propertyAliases.TryGetValue(prop, out string alias2))
+        {
+            name = alias2;
+        }
+        writer.Write(name);
         return expression;
     }
 

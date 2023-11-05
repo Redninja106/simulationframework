@@ -80,12 +80,12 @@ public class ShaderMethod
     {
         if (Method is MethodInfo methodInfo)
         {
-            return methodInfo.Name;
+            return $"{methodInfo.DeclaringType!.Name}_{methodInfo.Name}";
         }
 
-        if (Method is ConstructorInfo)
+        if (Method is ConstructorInfo ctorInfo)
         {
-            return "_ctor" ?? throw new Exception();
+            return $"{ctorInfo.DeclaringType!.Name}_ctor" ?? throw new Exception();
         }
 
         throw new Exception();

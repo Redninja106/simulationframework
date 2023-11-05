@@ -87,5 +87,4 @@ internal static class RuntimeEffectCache
 
         throw new NotImplementedException();
     }
-
 }
