@@ -49,13 +49,22 @@ public class DesktopPlatform : ISimulationPlatform
 
         frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
         Application.RegisterComponent(new DesktopApplicationProvider());
-        Application.RegisterComponent(CreateGraphicsProvider());
+        var graphics = CreateGraphicsProvider();
+
+        if (graphics != null)
+        {
+            Application.RegisterComponent(graphics);
+        }
+
         Application.RegisterComponent(CreateTimeProvider());
         Application.RegisterComponent(CreateSimulationController());
         Application.RegisterComponent(CreateWindowProvider());
 
         RegisterInputProviders();
-        Application.RegisterComponent(CreateImGuiProvider());
+        if (graphics != null)
+        {
+            Application.RegisterComponent(CreateImGuiProvider());
+        }
     }
 
 

@@ -201,16 +201,22 @@ public class SimulationHost
         Dispatcher.ImmediateDispatch<BeforeRenderMessage>(new());
         IsRendering = true;
 
-        var outputCanvas = Graphics.GetOutputCanvas();
-        outputCanvas.ResetState();
+        if (Application.HasComponent<IGraphicsProvider>())
+        {
+            var outputCanvas = Graphics.GetOutputCanvas();
+            outputCanvas.ResetState();
 
-        var interceptor = GetComponent<FixedResolutionInterceptor>();
-        var canvas = interceptor?.FrameBuffer?.GetCanvas() ?? outputCanvas;
-        canvas.ResetState();
-        Dispatcher.ImmediateDispatch<RenderMessage>(new(canvas));
-        simulation?.OnRender(canvas);
-        canvas.Flush();
-
+            var interceptor = GetComponent<FixedResolutionInterceptor>();
+            var canvas = interceptor?.FrameBuffer?.GetCanvas() ?? outputCanvas;
+            canvas.ResetState();
+            Dispatcher.ImmediateDispatch<RenderMessage>(new(canvas));
+            simulation?.OnRender(canvas);
+            canvas.Flush();
+        }
+        else 
+        {
+            simulation?.OnRender(null!);
+        }
         IsRendering = false;
 
         Dispatcher.ImmediateDispatch<AfterRenderMessage>(new());
