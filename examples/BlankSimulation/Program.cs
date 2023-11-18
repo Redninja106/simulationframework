@@ -4,15 +4,7 @@ using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
 using SimulationFramework.Input;
 
-Start<Program>(new CustomDesktopPlatform());
-
-class CustomDesktopPlatform : DesktopPlatform
-{
-    protected override IGraphicsProvider? CreateGraphicsProvider()
-    {
-        return null;
-    }
-}
+Start<Program>(new DesktopPlatform());
 
 partial class Program : Simulation
 {
