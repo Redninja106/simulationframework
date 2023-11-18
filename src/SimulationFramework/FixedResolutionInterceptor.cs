@@ -64,7 +64,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         Application.InterceptComponent<IMouseProvider>(mouseProvider => this.mouseProvider = new FixedResolutionMouseProvider(mouseProvider, subpixelInput));
     }
 
-    private void BeforeRender(BeforeRenderMessage message)
+    public void BeforeRender()
     {
         var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
         outputCanvas.ResetState();
@@ -76,7 +76,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
             .Translate(-FrameBuffer.Width / 2f, -FrameBuffer.Height / 2f);
     }
 
-    private void AfterRender(AfterRenderMessage message)
+    public void AfterRender()
     {
         var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
         outputCanvas.Clear(this.BackgroundColor);
@@ -94,8 +94,6 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
     /// <inheritdoc/>
     public void Initialize(MessageDispatcher dispatcher)
     {
-        dispatcher.Subscribe<BeforeRenderMessage>(BeforeRender);
-        dispatcher.Subscribe<AfterRenderMessage>(AfterRender);
     }
 
     /// <inheritdoc/>

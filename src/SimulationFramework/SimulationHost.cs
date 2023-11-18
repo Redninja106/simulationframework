@@ -209,9 +209,11 @@ public class SimulationHost
             var interceptor = GetComponent<FixedResolutionInterceptor>();
             var canvas = interceptor?.FrameBuffer?.GetCanvas() ?? outputCanvas;
             canvas.ResetState();
+            interceptor?.BeforeRender();
             Dispatcher.ImmediateDispatch<RenderMessage>(new(canvas));
             simulation?.OnRender(canvas);
             canvas.Flush();
+            interceptor?.AfterRender();
         }
         else 
         {
