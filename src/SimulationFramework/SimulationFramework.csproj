@@ -10,7 +10,7 @@
     <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
     <Description> SimulationFramework is a framework for writing small graphical apps, with emphasis on simplicity and usability. </Description>
     <AssemblyVersion></AssemblyVersion>
-    <Version>0.2.1-beta.4</Version>
+    <Version>0.2.1-beta.5</Version>
     <Authors>Ryan Andersen</Authors>
     <PackageIcon>logo-128x128.png</PackageIcon>
     <Copyright></Copyright>
