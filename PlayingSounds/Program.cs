@@ -18,6 +18,8 @@ partial class Program : Simulation
         ambiancePlayback = ambiance.Play();
 
         pop = Audio.LoadSound("pop.wav");
+
+        SetFixedResolution(100, 100, Color.Black);
     }
 
     public override void OnRender(ICanvas canvas)
@@ -31,5 +33,8 @@ partial class Program : Simulation
         {
             pop.Play();
         }
+
+        Console.WriteLine(Window.Width);
+        Console.WriteLine(Window.Height);
     }
 }

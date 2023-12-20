@@ -49,7 +49,10 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
     /// </summary>
     public ITexture FrameBuffer { get; private set; }
 
+
     private FixedResolutionMouseProvider? mouseProvider;
+    private FixedResolutionWindowProvider? windowProvider;
+
 
     /// <summary>
     /// Creates a new instance of the <see cref="FixedResolutionInterceptor"/> class.
@@ -62,6 +65,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
 
         Resize(width, height);
         Application.InterceptComponent<IMouseProvider>(mouseProvider => this.mouseProvider = new FixedResolutionMouseProvider(mouseProvider, subpixelInput));
+        Application.InterceptComponent<IWindowProvider>(windowProvider => this.windowProvider = new FixedResolutionWindowProvider(windowProvider, new(width, height)));
     }
 
     public void BeforeRender()
@@ -114,6 +118,11 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         FrameBuffer = Graphics.CreateTexture(width, height);
         this.Width = width;
         this.Height = height;
+
+        if (windowProvider is not null)
+        {
+            windowProvider.fixedSize = new(width, height);
+        }
     }
 
     private Vector2 GetScale(int outputWidth, int outputHeight)
@@ -217,6 +226,73 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         public void SetCursor(SystemCursor cursor)
         {
             original.SetCursor(cursor);
+        }
+    }
+
+    // hijacks mouse position to be accurate to fake framebuffer
+    private class FixedResolutionWindowProvider : IWindowProvider
+    {
+        public string Title { get => baseProvider.Title; set => baseProvider.Title = value; }
+        public IDisplay Display { get => baseProvider.Display; }
+        public Vector2 Size { get => fixedSize; }
+        public Vector2 Position { get => baseProvider.Position; }
+        public bool IsUserResizable { get => baseProvider.IsUserResizable; set => baseProvider.IsUserResizable = value; }
+        public bool ShowSystemMenu { get => baseProvider.ShowSystemMenu; set => baseProvider.ShowSystemMenu = false; }
+        public bool IsMinimized => baseProvider.IsMinimized;
+        public bool IsMaximized => baseProvider.IsMaximized;
+
+        private IWindowProvider baseProvider;
+        internal Vector2 fixedSize;
+
+        public FixedResolutionWindowProvider(IWindowProvider baseProvider, Vector2 fixedSize)
+        {
+            this.baseProvider = baseProvider;
+            this.fixedSize = fixedSize;
+        }
+
+        public void Dispose()
+        {
+            baseProvider.Dispose();
+        }
+
+        public ITexture GetBackBuffer()
+        {
+            return baseProvider.GetBackBuffer();
+        }
+
+        public void Initialize(MessageDispatcher dispatcher)
+        {
+            baseProvider.Initialize(dispatcher);
+        }
+
+        public void Maximize()
+        {
+            baseProvider.Maximize();
+        }
+
+        public void Minimize()
+        {
+            baseProvider.Minimize();
+        }
+
+        public void Resize(Vector2 size)
+        {
+            baseProvider.Resize(size);
+        }
+
+        public void Restore()
+        {
+            baseProvider.Restore();
+        }
+
+        public void SetIcon(ReadOnlySpan<Color> icon, int width, int height)
+        {
+            baseProvider.SetIcon(icon, width, height);
+        }
+
+        public void SetPosition(Vector2 position)
+        {
+            baseProvider.SetPosition(position);
         }
     }
 }
