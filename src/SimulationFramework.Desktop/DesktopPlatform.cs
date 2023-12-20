@@ -6,6 +6,7 @@ using Silk.NET.Windowing.Glfw;
 using Silk.NET.Input;
 using Silk.NET.Input.Glfw;
 using Silk.NET.OpenGL;
+using SimulationFramework.Desktop.Audio;
 
 namespace SimulationFramework.Desktop;
 
@@ -59,6 +60,7 @@ public class DesktopPlatform : ISimulationPlatform
         Application.RegisterComponent(CreateTimeProvider());
         Application.RegisterComponent(CreateSimulationController());
         Application.RegisterComponent(CreateWindowProvider());
+        Application.RegisterComponent(new DesktopAudioProvider());
 
         RegisterInputProviders();
         if (graphics != null)
