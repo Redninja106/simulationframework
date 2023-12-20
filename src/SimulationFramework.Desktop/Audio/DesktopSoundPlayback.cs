@@ -12,6 +12,21 @@ internal unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
     uint source;
     DesktopAudioProvider provider;
 
+    public float Volume
+    {
+        get
+        {
+            provider.al.GetSourceProperty(source, SourceFloat.Gain, out float gain);
+            return gain;
+        }
+        set
+        {
+            if (value is < 0 or > 1)
+                throw new ArgumentOutOfRangeException(nameof(Volume), "Volume must be between 0 and 1!");
+            provider.al.SetSourceProperty(source, SourceFloat.Pitch, value);
+        }
+    }
+
     public override bool IsStopped
     {
         get
@@ -60,5 +75,11 @@ internal unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
     public override void Stop()
     {
         provider.al.SourceStop(source);
+    }
+
+    public override void Restart()
+    {
+        provider.al.SourceRewind(source);
+        provider.al.SourcePlay(source);
     }
 }
