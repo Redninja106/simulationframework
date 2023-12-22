@@ -182,10 +182,7 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
     public SKImage GetImage()
     {
         if (IsDisposed)
-
-            if (IsDisposed)
-                throw new InvalidOperationException("Cannot use disposed texture!");
-        throw new InvalidOperationException("Cannot use disposed texture!");
+            throw new InvalidOperationException("Cannot use disposed texture!");
 
         return image;
     }
@@ -200,9 +197,6 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
     public void Encode(Stream destination, TextureEncoding encoding)
     {
-        if (IsDisposed)
-            throw new InvalidOperationException("Cannot use disposed texture!");
-
         var data = image.Encode(encoding switch
         {
             TextureEncoding.PNG => SKEncodedImageFormat.Png,
