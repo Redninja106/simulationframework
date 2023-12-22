@@ -72,8 +72,9 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
 
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Error($"Error creating texture: " + ex);
             texture = null;
             return false;
         }

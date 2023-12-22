@@ -113,7 +113,7 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
 
     protected override void UpdateFillTexture(ITexture texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
     {
-        if (texture is not null)
+        if (texture is SkiaTexture skTexture)
         {
             bool changed = false;
             changed |= this.FillTexture != texture;
@@ -124,7 +124,7 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
             if (changed)
             {
                 this.fillTextureShader?.Dispose();
-                this.fillTextureShader = SKShader.CreateImage(SkiaInterop.GetImage(texture), tileModeX.AsSKShaderTileMode(), tileModeY.AsSKShaderTileMode(), transform.AsSKMatrix());
+                this.fillTextureShader = SKShader.CreateImage(skTexture.GetImage(), tileModeX.AsSKShaderTileMode(), tileModeY.AsSKShaderTileMode(), transform.AsSKMatrix());
             }
         }
 

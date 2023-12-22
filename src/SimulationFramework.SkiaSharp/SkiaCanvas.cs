@@ -6,7 +6,7 @@ using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
 
-internal sealed class SkiaCanvas : ICanvas
+internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
 {
     public ITexture Target { get; }
 
@@ -24,8 +24,6 @@ internal sealed class SkiaCanvas : ICanvas
     private readonly bool owner;
 
     private SkiaTexture SkiaTextureTarget => Target as SkiaTexture;
-
-    public bool IsDisposed { get; private set; }
 
     public SkiaCanvas(SkiaGraphicsProvider provider, ITexture target, SKCanvas canvas, bool owner)
     {
@@ -258,8 +256,11 @@ internal sealed class SkiaCanvas : ICanvas
         currentState = new SkiaCanvasState(this.GetSKCanvas(), null);
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
+        if (IsDisposed)
+            return;
+
         if (owner)
             canvas.Dispose();
 
@@ -269,7 +270,5 @@ internal sealed class SkiaCanvas : ICanvas
         {
             stateStack.Pop().Dispose();
         }
-
-        this.IsDisposed = true;
     }
 }

@@ -62,6 +62,9 @@ class SkiaSystemFont : SkiaFont
 
     public override void Dispose()
     {
+        if (IsDisposed)
+            return;
+
         regular.Dispose();
         bold?.Dispose();
         italic?.Dispose();

@@ -28,6 +28,8 @@ class SkiaFileFont : SkiaFont
 
     public override void Dispose()
     {
+        if (IsDisposed)
+            return;
         typeface.Dispose();
         base.Dispose();
     }

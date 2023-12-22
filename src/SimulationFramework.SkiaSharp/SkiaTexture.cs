@@ -72,6 +72,9 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
     public override void Dispose()
     {
+        if (IsDisposed)
+            return;
+
         this.canvas.Dispose();
         this.surface.Dispose();
         this.image.Dispose();
@@ -106,6 +109,9 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
     public unsafe void Update(ReadOnlySpan<Color> pixels)
     {
+        if (IsDisposed)
+            throw new InvalidOperationException("Cannot use disposed texture!");
+
         Color* buffer = null;
         try
         {
@@ -144,6 +150,9 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
     public ICanvas GetCanvas()
     {
+        if (IsDisposed)
+            throw new InvalidOperationException("Cannot use disposed texture!");
+
         if (Options.HasFlag(TextureOptions.NonRenderTarget))
         {
             throw new InvalidOperationException("Cannot render to a texture with the TextureOptions.NonRenderTarget flag.");
@@ -164,21 +173,36 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
     public SKSurface GetSurface()
     {
+        if (IsDisposed)
+            throw new InvalidOperationException("Cannot use disposed texture!");
+
         return surface;
     }
 
     public SKImage GetImage()
     {
+        if (IsDisposed)
+
+            if (IsDisposed)
+                throw new InvalidOperationException("Cannot use disposed texture!");
+        throw new InvalidOperationException("Cannot use disposed texture!");
+
         return image;
     }
 
     public uint GetGLTexture()
     {
+        if (IsDisposed)
+            throw new InvalidOperationException("Cannot use disposed texture!");
+
         return glTexture;
     }
 
     public void Encode(Stream destination, TextureEncoding encoding)
     {
+        if (IsDisposed)
+            throw new InvalidOperationException("Cannot use disposed texture!");
+
         var data = image.Encode(encoding switch
         {
             TextureEncoding.PNG => SKEncodedImageFormat.Png,
