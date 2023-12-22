@@ -33,8 +33,5 @@ partial class Program : Simulation
         {
             pop.Play();
         }
-
-        Console.WriteLine(Window.Width);
-        Console.WriteLine(Window.Height);
     }
 }
