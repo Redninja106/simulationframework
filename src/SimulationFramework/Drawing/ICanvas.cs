@@ -113,7 +113,20 @@ public interface ICanvas : IDisposable
     /// meaning that any shapes drawn after this call will be filled with the provided texture. 
     /// </para>
     /// </summary>
-    sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX = TileMode.Clamp, TileMode tileModeY = TileMode.Clamp)
+    sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileMode = TileMode.Repeat)
+    {
+        State.UpdateFillTexture(texture, transform, tileMode, tileMode);
+        State.UpdateDrawMode(DrawMode.Textured);
+    }
+
+    /// <summary>
+    /// Fills any drawn shapes with the provided texture.
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Textured"/>, 
+    /// meaning that any shapes drawn after this call will be filled with the provided texture. 
+    /// </para>
+    /// </summary>
+    sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
     {
         State.UpdateFillTexture(texture, transform, tileModeX, tileModeY);
         State.UpdateDrawMode(DrawMode.Textured);
