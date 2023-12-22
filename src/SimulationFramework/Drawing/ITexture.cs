@@ -27,7 +27,7 @@ public interface ITexture : IDisposable
     Span<Color> Pixels { get; }
 
     /// <summary>
-    /// Gets a reference to the element of <see cref="Pixels"/> at the provided <paramref name="x"/> and <paramref name="y"/> coordinates.
+    /// Gets a reference to the element of <see cref="Pixels"/> at the provided <paramref name="x"/> and <paramref name="y"/> coordinates (index calculated as <c>y * Width + x</c>).
     /// <para>
     /// If changes are made to the texture's data, they may not be applied until <see cref="ApplyChanges"/> is called.
     /// </para>
@@ -39,10 +39,30 @@ public interface ITexture : IDisposable
         if (x < 0 || x >= Width)
             throw new ArgumentOutOfRangeException(nameof(x));
         
-           if (y < 0 || y >= Height)
+        if (y < 0 || y >= Height)
             throw new ArgumentOutOfRangeException(nameof(y));
         
         return ref Pixels[y * Width + x];
+    }
+
+    /// <summary>
+    /// Sets the element of <see cref="Pixels"/> at the provided <paramref name="x"/> and <paramref name="y"/> coordinates (index calculated as <c>y * Width + x</c>).
+    /// <para>
+    /// Any changes are made to the texture's data, they may not be applied until <see cref="ApplyChanges"/> is called.
+    /// </para>
+    /// </summary>
+    /// <param name="x">The x-coordinate of the pixel.</param>
+    /// <param name="y">The y-coordinate of the pixel.</param>
+    /// <param name="color">The color the set the pixel to.</param>
+    sealed void SetPixel(int x, int y, Color color)
+    {
+        if (x < 0 || x >= Width)
+            throw new ArgumentOutOfRangeException(nameof(x));
+
+        if (y < 0 || y >= Height)
+            throw new ArgumentOutOfRangeException(nameof(y));
+
+        Pixels[y * Width + x] = color;
     }
 
     /// <summary>
