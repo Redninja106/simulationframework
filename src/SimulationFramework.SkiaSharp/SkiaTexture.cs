@@ -76,8 +76,8 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
             return;
 
         this.canvas.Dispose();
-        this.surface.Dispose();
         this.image.Dispose();
+        this.surface.Dispose();
         this.backendTexture.Dispose();
 
         provider.gl.DeleteTexture(this.glTexture);
