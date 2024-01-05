@@ -1,8 +1,5 @@
 ﻿using SimulationFramework.Drawing;
-using SimulationFramework.SkiaSharp;
-using SimulationFramework;
 using SkiaSharp;
-using System;
 using Silk.NET.OpenGL;
 using System.Runtime.InteropServices;
 using System.IO;

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimulationFramework;
+﻿namespace SimulationFramework;
 internal static class Exceptions
 {
     public static Exception ComponentNotFound(Type? componentType = null) => new($"Missing component of type {componentType}.");

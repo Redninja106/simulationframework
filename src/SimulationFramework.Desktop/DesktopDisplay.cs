@@ -14,8 +14,8 @@ internal unsafe class DesktopDisplay : IDisplay
     public float Scaling { get; }
     public float RefreshRate { get; }
 
-    private static GlfwCallbacks.MonitorCallback monitorCallback;
-    private static List<DesktopDisplay> displays;
+    private static GlfwCallbacks.MonitorCallback? monitorCallback;
+    private static List<DesktopDisplay>? displays;
 
     private DesktopDisplay(Monitor* monitor)
     {
@@ -68,13 +68,13 @@ internal unsafe class DesktopDisplay : IDisplay
         {
             case ConnectedState.Connected:
                 display = new(monitor);
-                displays.Add(display);
-                SimulationHost.Current.Dispatcher.ImmediateDispatch(new DisplayAddedMessage(display));
+                displays!.Add(display);
+                SimulationHost.Current!.Dispatcher.ImmediateDispatch(new DisplayAddedMessage(display));
                 break;
             case ConnectedState.Disconnected:
-                display = displays.Single(d => d.monitor == monitor);
-                displays.Remove(display);
-                SimulationHost.Current.Dispatcher.ImmediateDispatch(new DisplayRemovedMessage(display));
+                display = displays!.Single(d => d.monitor == monitor);
+                displays!.Remove(display);
+                SimulationHost.Current!.Dispatcher.ImmediateDispatch(new DisplayRemovedMessage(display));
                 break;
             default:
                 throw new();

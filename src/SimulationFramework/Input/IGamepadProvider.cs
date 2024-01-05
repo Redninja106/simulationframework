@@ -1,5 +1,4 @@
 ﻿using SimulationFramework.Components;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace SimulationFramework.Input;

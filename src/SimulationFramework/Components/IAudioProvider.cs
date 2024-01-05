@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SimulationFramework.Components;
+﻿namespace SimulationFramework.Components;
 
 /// <summary>
 /// Provides audio functionality to the application
 /// </summary>
 public interface IAudioProvider : ISimulationComponent
 {
+    /// <summary>
+    /// Controls the volume of all sounds.
+    /// </summary>
     float MasterVolume { get; set; }
+
+    /// <summary>
+    /// Loads a sound file from its raw data.
+    /// </summary>
     ISound LoadSound(ReadOnlySpan<byte> encodedData, SoundFileKind kind);
 }

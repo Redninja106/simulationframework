@@ -5,7 +5,7 @@ Start<Program>();
 
 partial class Program : Simulation
 {
-    string[] words = new[]
+    readonly string[] words = new[]
     {
         "Say",
         "Hello",

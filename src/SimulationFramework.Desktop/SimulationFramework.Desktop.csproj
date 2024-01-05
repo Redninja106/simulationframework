@@ -1,19 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Copyright></Copyright>
-    <Description>The desktop environment for SimulationFramework.</Description>
-    <PackageIcon>logo-128x128.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
-    <Version>0.2.1-beta.8</Version>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Authors>Ryan Andersen</Authors>
-    <Company />
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	<Authors>Ryan Andersen</Authors>
+	<Description>The desktop environment for SimulationFramework.</Description>
+	<PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<PackageIcon>logo-128x128.png</PackageIcon>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

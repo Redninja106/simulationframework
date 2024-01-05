@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimulationFramework.SkiaSharp;
+﻿namespace SimulationFramework.SkiaSharp;
 public abstract class SkiaGraphicsObject : IDisposable
 {
     public bool IsDisposed { get; private set; }

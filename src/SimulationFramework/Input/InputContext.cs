@@ -1,6 +1,5 @@
 ﻿using SimulationFramework.Components;
 using SimulationFramework.Messaging;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace SimulationFramework.Input;

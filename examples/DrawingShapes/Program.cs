@@ -4,7 +4,7 @@ namespace DrawingShapes;
 
 internal class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
         Simulation.Start<DrawingShapesSimulation>(new DesktopPlatform());
     }

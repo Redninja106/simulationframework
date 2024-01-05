@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SimulationFramework.Components;
+﻿namespace SimulationFramework.Components;
 
 /// <summary>
 /// Provides the simulation with access to certain system functionalities.

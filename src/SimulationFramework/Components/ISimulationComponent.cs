@@ -1,5 +1,4 @@
 ﻿using SimulationFramework.Messaging;
-using System;
 
 namespace SimulationFramework.Components;
 

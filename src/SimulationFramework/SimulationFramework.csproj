@@ -1,19 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Company></Company>
-    <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
-    <Description> SimulationFramework is a framework for writing small graphical apps, with emphasis on simplicity and usability. </Description>
-    <AssemblyVersion></AssemblyVersion>
-    <Version>0.2.1-beta.8</Version>
-    <Authors>Ryan Andersen</Authors>
-    <PackageIcon>logo-128x128.png</PackageIcon>
-    <Copyright></Copyright>
+	<Authors>Ryan Andersen</Authors>
+	<Description> SimulationFramework is a framework for writing small graphical apps, with emphasis on simplicity and usability. </Description>
+	<PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<PackageIcon>logo-128x128.png</PackageIcon>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

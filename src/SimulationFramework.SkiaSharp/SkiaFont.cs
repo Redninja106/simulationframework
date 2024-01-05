@@ -1,6 +1,5 @@
 ﻿using SimulationFramework.Drawing;
 using SkiaSharp;
-using System;
 
 namespace SimulationFramework.SkiaSharp;
 internal abstract class SkiaFont : SkiaGraphicsObject, IFont

@@ -2,7 +2,6 @@
 using SimulationFramework.Drawing;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
-using System;
 
 namespace SimulationFramework;
 

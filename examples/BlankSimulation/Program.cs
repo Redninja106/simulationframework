@@ -1,8 +1,6 @@
 ﻿using SimulationFramework;
-using SimulationFramework.Components;
 using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
-using SimulationFramework.Input;
 using System.Numerics;
 
 Start<Program>(new DesktopPlatform());

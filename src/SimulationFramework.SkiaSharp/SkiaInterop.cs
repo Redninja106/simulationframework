@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;
 using SkiaSharp;

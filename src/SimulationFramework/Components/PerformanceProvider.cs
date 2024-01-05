@@ -1,7 +1,4 @@
 ﻿using SimulationFramework.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SimulationFramework.Components;
 internal class PerformanceProvider : ISimulationComponent

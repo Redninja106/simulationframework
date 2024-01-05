@@ -2,8 +2,6 @@
 using SimulationFramework.Drawing;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
@@ -68,7 +66,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         Application.InterceptComponent<IWindowProvider>(windowProvider => this.windowProvider = new FixedResolutionWindowProvider(windowProvider, new(width, height)));
     }
 
-    public void BeforeRender()
+    internal void BeforeRender()
     {
         var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
         outputCanvas.ResetState();
@@ -80,7 +78,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
             .Translate(-FrameBuffer.Width / 2f, -FrameBuffer.Height / 2f);
     }
 
-    public void AfterRender()
+    internal void AfterRender()
     {
         var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
         outputCanvas.Clear(this.BackgroundColor);
@@ -241,7 +239,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         public bool IsMinimized => baseProvider.IsMinimized;
         public bool IsMaximized => baseProvider.IsMaximized;
 
-        private IWindowProvider baseProvider;
+        private readonly IWindowProvider baseProvider;
         internal Vector2 fixedSize;
 
         public FixedResolutionWindowProvider(IWindowProvider baseProvider, Vector2 fixedSize)

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimulationFramework.Drawing;
+﻿namespace SimulationFramework.Drawing;
 
 /// <summary>
 /// Represents a font. Fonts can be loaded using <see cref="Graphics.LoadFont(string)"/>.

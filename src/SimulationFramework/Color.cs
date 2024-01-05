@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
@@ -94,6 +94,7 @@ public readonly partial struct Color : IEquatable<Color>
     /// Creates a new color from the provided RGB values.
     /// </summary>
     /// <param name="values">The RGB values of the color. The value of each component should be between 0 and 1.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("Float constructors will be removed. Create a ColorF and call ToColor() instead.")]
     public Color(Vector3 values) : this(values.X, values.Y, values.Z)
     {
@@ -103,6 +104,7 @@ public readonly partial struct Color : IEquatable<Color>
     /// Creates a new color from the provided RGBA values.
     /// </summary>
     /// <param name="values">The RGBA values of the color. The value of each component should be between 0 and 1.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("Float constructors will be removed. Create a ColorF and call ToColor() instead.")]
     public Color(Vector4 values) : this(values.X, values.Y, values.Z, values.W)
     {
@@ -114,6 +116,7 @@ public readonly partial struct Color : IEquatable<Color>
     /// <param name="r">The red component of the color. This value should be between 0 and 1.</param>
     /// <param name="g">The green component of the color. This value should be between 0 and 1.</param>
     /// <param name="b">The blue component of the color. This value should be between 0 and 1.</param>
+    [EditorBrowsable(EditorBrowsableState.Never)]
     [Obsolete("Float constructors will be removed. Create a ColorF and call ToColor() instead.")]
     public Color(float r, float g, float b) : this(r, g, b, 1.0f)
     {
@@ -348,7 +351,7 @@ public readonly partial struct Color : IEquatable<Color>
         float r = Channel(5);
         float g = Channel(3);
         float b = Channel(1);
-        return new Color(r, g, b, alpha);
+        return new ColorF(r, g, b, alpha).ToColor();
     }
 
     /// <summary>

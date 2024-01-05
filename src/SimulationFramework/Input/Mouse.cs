@@ -1,7 +1,4 @@
 ﻿using SimulationFramework.Drawing;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 
 namespace SimulationFramework.Input;

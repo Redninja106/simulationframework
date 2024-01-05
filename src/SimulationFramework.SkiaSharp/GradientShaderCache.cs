@@ -1,7 +1,5 @@
 ﻿using SimulationFramework.Drawing;
 using SkiaSharp;
-using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace SimulationFramework.SkiaSharp;
@@ -15,7 +13,9 @@ internal static class GradientShaderCache
 
     public static SKShader GetShader(Gradient gradient)
     {
-        Entry result = null;
+        ArgumentNullException.ThrowIfNull(gradient);
+
+        Entry? result = null;
 
         // iterate over entire list to invalid entries
         for (int i = 0; i < cache.Count; i++)
@@ -59,9 +59,6 @@ internal static class GradientShaderCache
 
     private static SKShader CreateShader(Gradient gradient)
     {
-        if (gradient is null)
-            return null;
-
         DecomposeStops(gradient.Stops, out var colors, out var positions);
         return gradient switch
         {
@@ -104,7 +101,7 @@ internal static class GradientShaderCache
         private readonly GCHandle gradientHandle;
 
         public bool IsValid => gradientHandle.IsAllocated;
-        public Gradient Gradient => gradientHandle.Target as Gradient;
+        public Gradient Gradient => (gradientHandle.Target as Gradient)!;
         public SKShader Shader => shader;
 
         public Entry(Gradient gradient, SKShader shader)

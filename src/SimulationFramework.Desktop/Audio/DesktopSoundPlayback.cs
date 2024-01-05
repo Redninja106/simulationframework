@@ -1,16 +1,10 @@
 ﻿using Silk.NET.OpenAL;
-using SimulationFramework.Desktop.Audio;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework.Desktop.Audio;
 internal sealed unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
 {
-    uint source;
-    DesktopAudioProvider provider;
+    private readonly uint source;
+    private readonly DesktopAudioProvider provider;
 
     public float Volume
     {
@@ -23,7 +17,7 @@ internal sealed unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
         {
             if (value is < 0 or > 1)
                 throw new ArgumentOutOfRangeException(nameof(Volume), "Volume must be between 0 and 1!");
-            provider.al.SetSourceProperty(source, SourceFloat.Pitch, value);
+            provider.al.SetSourceProperty(source, SourceFloat.Gain, value);
         }
     }
 

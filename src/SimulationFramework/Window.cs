@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Numerics;
+﻿using System.Numerics;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
@@ -272,15 +270,29 @@ public static class Window
         });
     }
 
+    /// <summary>
+    /// Sets the window icon to the provided texture.
+    /// </summary>
+    /// <param name="icon">The texture to set the window icon to.</param>
     public static void SetIcon(ITexture icon)
     {
         SetIcon(icon.Pixels, icon.Width, icon.Height);
     }
 
+    /// <summary>
+    /// Sets the window icon the provided image.
+    /// </summary>
+    /// <param name="icon">A 2D array of colors to set the icon to. The top-left corner of the image is index [0, 0].</param>
     public static unsafe void SetIcon(Color[,] icon)
     {
         int width = icon.GetLength(0);
         int height = icon.GetLength(1);
+
+        if (width <= 0)
+            throw new ArgumentException("Icon width must be greater than zero!", nameof(icon));
+
+        if (height <= 0)
+            throw new ArgumentException("Icon height must be greater than zero!", nameof(icon));
 
         fixed (Color* colorsPtr = &icon[0, 0])
         {
@@ -288,6 +300,12 @@ public static class Window
         }
     }
 
+    /// <summary>
+    /// Sets the window icon the provided image.
+    /// </summary>
+    /// <param name="icon">An row-major span of colors to set the icon to. The top-left corner of the image is index [0, 0].</param>
+    /// <param name="width">The width of the icon image.</param>
+    /// <param name="height">The height of the icon image.</param>
     public static void SetIcon(ReadOnlySpan<Color> icon, int width, int height)
     {
         Provider.SetIcon(icon, width, height);

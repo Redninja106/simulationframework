@@ -20,7 +20,7 @@ internal class DesktopApplicationProvider : IApplicationProvider
     public void Exit(bool cancellable)
     {
         isExiting = true;
-        SimulationHost.Current.Dispatcher.ImmediateDispatch<ExitMessage>(new(cancellable));
+        SimulationHost.Current!.Dispatcher.ImmediateDispatch<ExitMessage>(new(cancellable));
         isExiting = false;
 
         if (cancellable && exitCancelled)

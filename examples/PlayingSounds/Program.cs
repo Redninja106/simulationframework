@@ -1,6 +1,9 @@
-﻿using SimulationFramework;
+﻿using ImGuiNET;
+using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Input;
+
+#nullable disable
 
 Start<Program>();
 
@@ -28,7 +31,11 @@ partial class Program : Simulation
         {
             ambiancePlayback = ambiance.Play();
         }
-    
+
+        float v = Audio.MasterVolume;
+        ImGui.SliderFloat("Volume", ref v, 0, 1);
+        Audio.MasterVolume = v;
+
         if (Keyboard.IsKeyPressed(Key.Space) || Mouse.ScrollWheelDelta != 0)
         {
             pop.Play();

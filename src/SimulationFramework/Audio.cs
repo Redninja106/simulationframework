@@ -1,20 +1,18 @@
 ﻿using SimulationFramework.Components;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework;
 
 /// <summary>
-/// 
+/// Provides audio functionality to the simulation.
 /// </summary>
 public static class Audio
 {
     private static IAudioProvider Provider => Application.GetComponent<IAudioProvider>();
 
+    /// <summary>
+    /// Controls the volume of all sounds.
+    /// </summary>
     public static float MasterVolume
     {
         get => Provider.MasterVolume;
@@ -27,7 +25,9 @@ public static class Audio
         }
     }
 
-
+    /// <summary>
+    /// Loads a sound from a file. Supported file formats are: <c>.wav</c>,<c>.mp3</c>, and <c>.ogg</c>.
+    /// </summary>
     public static ISound LoadSound(string file)
     {
         SoundFileKind kind;
@@ -51,22 +51,20 @@ public static class Audio
         return LoadSound(file, kind);
     }
 
+    /// <summary>
+    /// Loads a sound from a file.
+    /// </summary>
     public static ISound LoadSound(string file, SoundFileKind kind)
     {
         var data = File.ReadAllBytes(file);
         return LoadSound(data, kind);
     }
 
-
+    /// <summary>
+    /// Loads a sound file from its raw data.
+    /// </summary>
     public static ISound LoadSound(ReadOnlySpan<byte> encodedData, SoundFileKind kind)
     {
         return Provider.LoadSound(encodedData, kind);
     }
-}
-
-public enum SoundFileKind
-{
-    Ogg,
-    Mp3,
-    Wav
 }

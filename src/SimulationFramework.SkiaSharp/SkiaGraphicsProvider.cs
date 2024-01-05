@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Intrinsics;
+﻿using System.Diagnostics.CodeAnalysis;
 using Silk.NET.OpenGL;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;

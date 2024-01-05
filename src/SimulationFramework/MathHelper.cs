@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimulationFramework;
+﻿namespace SimulationFramework;
 
 /// <summary>
 /// Contains various useful math-related methods.
