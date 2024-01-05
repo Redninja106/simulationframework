@@ -12,10 +12,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Desktop.Audio;
-internal class DesktopSound : ISound
+internal sealed class DesktopSound : ISound
 {
     private readonly DesktopAudioProvider provider;
-    internal readonly List<DesktopSoundPlayback> activePlaybacks;
+    // internal readonly List<DesktopSoundPlayback> activePlaybacks;
     internal readonly uint buffer;
 
     public int SampleRate { get; }
@@ -26,7 +26,6 @@ internal class DesktopSound : ISound
     public unsafe DesktopSound(DesktopAudioProvider provider, ReadOnlySpan<byte> encodedData, SoundFileKind fileKind)
     {
         this.provider = provider;
-        activePlaybacks = new();
 
         fixed (byte* encodedDataPtr = encodedData)
         {
@@ -53,9 +52,19 @@ internal class DesktopSound : ISound
             reader.Read(data.AsSpan());
 
             buffer = provider.al.GenBuffer();
+
+            if (buffer == 0)
+            {
+                throw new Exception($"alGenBuffer returned null! error: {provider.al.GetError()}");
+            }
+
             fixed (byte* dataPtr = &data[0])
             {
                 provider.al.BufferData(buffer, GetBufferFormat(reader.WaveFormat), dataPtr, data.Length, reader.WaveFormat.SampleRate);
+                if (provider.al.GetError() != AudioError.NoError)
+                {
+                    throw new Exception($"error on alBufferData! {provider.al.GetError()}");
+                }
             }
 
             var format = reader.WaveFormat;
@@ -106,25 +115,17 @@ internal class DesktopSound : ISound
 
     public SoundPlayback Play()
     {
-        foreach (var playback in activePlaybacks)
-        {
-            if (playback.IsStopped)
-            {
-                // activePlaybacks.Remove(playback);
-            }
-        }
-
         var newPlayback = new DesktopSoundPlayback(provider, this);
-        activePlaybacks.Add(newPlayback);
         return newPlayback;
     }
 
     public void Dispose()
     {
+        provider.al.DeleteBuffer(this.buffer);
     }
 }
 
-public class Wave24To16Stream : WaveStream
+internal sealed class Wave24To16Stream : WaveStream
 {
     public override WaveFormat WaveFormat { get; }
     

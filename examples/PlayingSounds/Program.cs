@@ -13,7 +13,7 @@ partial class Program : Simulation
 
     public override void OnInitialize()
     {
-        Audio.MasterVolume = 1f;
+        Audio.MasterVolume = 0.1f;
         ambiance = Audio.LoadSound("ambiance.wav");
         ambiancePlayback = ambiance.Play();
 
@@ -29,7 +29,7 @@ partial class Program : Simulation
             ambiancePlayback = ambiance.Play();
         }
     
-        if (Keyboard.IsKeyPressed(Key.Space))
+        if (Keyboard.IsKeyPressed(Key.Space) || Mouse.ScrollWheelDelta != 0)
         {
             pop.Play();
         }

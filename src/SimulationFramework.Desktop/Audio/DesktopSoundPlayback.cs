@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Desktop.Audio;
-internal unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
+internal sealed unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
 {
     uint source;
     DesktopAudioProvider provider;
@@ -49,6 +49,10 @@ internal unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
     {
         this.provider = provider;
         source = provider.al.GenSource();
+        if (source == 0)
+        {
+            throw new Exception($"alGenSource() returned 0! (error: {provider.al.GetError()})");
+        }
         fixed (uint* bufferPtr = &sound.buffer)
         {
             provider.al.SourceQueueBuffers(source, 1, bufferPtr);
@@ -56,9 +60,9 @@ internal unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
         provider.al.SourcePlay(source);
     }
 
-
     public override void Dispose()
     {
+        GC.SuppressFinalize(this);
         provider.al.DeleteSource(source);
     }
 
@@ -81,5 +85,10 @@ internal unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
     {
         provider.al.SourceRewind(source);
         provider.al.SourcePlay(source);
+    }
+
+    ~DesktopSoundPlayback()
+    {
+        this.Dispose();
     }
 }
