@@ -67,6 +67,7 @@ public class DesktopPlatform : ISimulationPlatform
 
     protected virtual IGraphicsProvider CreateGraphicsProvider()
     {
+        return new SimulationFramework.Drawing.WebGPU.WebGPUGraphicsProvider();
         return new SkiaGraphicsProvider(frameProvider, Window.CreateOpenGL(), name => Window.GLContext.TryGetProcAddress(name, out nint addr) ? addr : 0);
     }
 
