@@ -50,7 +50,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaytracerShader", "examples
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.Drawing.WebGPU", "SimulationFramework.Drawing.WebGPU\SimulationFramework.Drawing.WebGPU.csproj", "{FB5B40F7-268B-450A-98CE-C773DE95056A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deps", "Deps", "{94B11825-482A-4E3B-916C-4858835B8505}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C7AAFC7-D032-4F8F-9DB5-B11CF6E4B7FC}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.build.props = Directory.build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebGPU", "..\..\source\repos\WebGPUExperiments\WebGPU\WebGPU.csproj", "{020268F6-AFC5-4DB6-B9FF-8E64BD4D55FF}"
 EndProject
