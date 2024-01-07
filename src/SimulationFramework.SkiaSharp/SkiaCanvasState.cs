@@ -1,6 +1,6 @@
 ﻿using SimulationFramework.Drawing;
 using SkiaSharp;
-using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 namespace SimulationFramework.SkiaSharp;
@@ -13,29 +13,34 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
     public bool IsActive => canvas is not null;
     public SKPaint Paint => paint;
 
-    private SKShader fillTextureShader;
-    private SKShader gradientShader;
+    private SKShader? fillTextureShader;
+    private SKShader? gradientShader;
 
-    private SkiaFont currentFont;
+    private SkiaFont? currentFont;
 
-
-    public SkiaCanvasState(SKCanvas canvas, SkiaCanvasState other = null)
+    public SkiaCanvasState(SKCanvas canvas, SkiaCanvasState? other = null)
     {
         this.canvas = canvas;
         this.Initialize(other);
     }
 
-    protected override void Initialize(CanvasState other)
+    [MemberNotNull(nameof(paint))]
+    protected override void Initialize(CanvasState? other)
     {
         if (other is null)
         {
-            this.paint = new SKPaint();
-            this.paint.FilterQuality = SKFilterQuality.High;
+            this.paint = new SKPaint
+            {
+                FilterQuality = SKFilterQuality.High
+            };
         }
         else
         {
             this.paint = ((SkiaCanvasState)other).paint.Clone();
-            this.gradientShader = GradientShaderCache.GetShader(other.Gradient);
+            if (other.Gradient != null)
+            {
+                this.gradientShader = GradientShaderCache.GetShader(other.Gradient);
+            }
         }
 
         base.Initialize(other);
@@ -64,9 +69,13 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
         base.UpdateFillColor(fillColor);
     }
 
-    protected override void UpdateGradient(Gradient fillGradient)
+    protected override void UpdateGradient(Gradient? fillGradient)
     {
-        this.gradientShader = GradientShaderCache.GetShader(fillGradient);
+        if (fillGradient is not null)
+        {
+            this.gradientShader = GradientShaderCache.GetShader(fillGradient);
+        }
+
         base.UpdateGradient(fillGradient);
     }
 
@@ -111,9 +120,9 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
         base.UpdateStrokeWidth(strokeWidth);
     }
 
-    protected override void UpdateFillTexture(ITexture texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
+    protected override void UpdateFillTexture(ITexture? texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
     {
-        if (texture is not null)
+        if (texture is SkiaTexture skTexture)
         {
             bool changed = false;
             changed |= this.FillTexture != texture;
@@ -124,7 +133,7 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
             if (changed)
             {
                 this.fillTextureShader?.Dispose();
-                this.fillTextureShader = SKShader.CreateImage(SkiaInterop.GetImage(texture), tileModeX.AsSKShaderTileMode(), tileModeY.AsSKShaderTileMode(), transform.AsSKMatrix());
+                this.fillTextureShader = SKShader.CreateImage(skTexture.GetImage(), tileModeX.AsSKShaderTileMode(), tileModeY.AsSKShaderTileMode(), transform.AsSKMatrix());
             }
         }
 
@@ -133,7 +142,7 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
 
     protected override void UpdateFontStyle(FontStyle style)
     {
-        paint.Typeface = currentFont.GetTypeface(style);
+        paint.Typeface = currentFont?.GetTypeface(style);
         base.UpdateFontStyle(style);
     }
 
@@ -143,10 +152,13 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
         base.UpdateFontSize(fontSize);
     }
 
-    protected override void UpdateFont(IFont font)
+    protected override void UpdateFont(IFont? font)
     {
-        currentFont = (SkiaFont)font;
-        paint.Typeface = currentFont.GetTypeface(FontStyle);
+        if (font != null)
+        {
+            currentFont = (SkiaFont)font;
+            paint.Typeface = currentFont.GetTypeface(FontStyle);
+        }
         base.UpdateFont(font);
     }
 

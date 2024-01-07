@@ -2,38 +2,24 @@
 using SimulationFramework;
 using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
-using SimulationFramework.SkiaSharp;
-using SkiaSharp;
+using System.Numerics;
 
-Start<Program>();
+Start<Program>(new DesktopPlatform());
 
 partial class Program : Simulation
 {
-    SKSurface surface;
+    private ITexture texture;
 
-    public override unsafe void OnInitialize()
+    public override void OnInitialize()
     {
-        var graphics = Application.GetComponent<SkiaGraphicsProvider>();
-        surface = SKSurface.Create(graphics.backendContext, true, new SKImageInfo(100, 100));
+        texture = Graphics.CreateTexture(256, 256);
+        texture.GetCanvas().Clear(Color.Black);
     }
 
     public override void OnRender(ICanvas canvas)
     {
-        SKRuntimeEffect effect = SKRuntimeEffect.Create(@"
-float4 main(float2 pos) {
-    return float4(0,1,0,1);
-}
-", out string errors);
-
-        surface.Canvas.Clear(new SKColor(255, 0, 0));
-        surface.Canvas.DrawCircle(50, 50, 50, new()
-        {
-            Shader = effect.ToShader(false),
-        });
-        // gl.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
-        // gl.ClearColor(1, 0, 0, 1);
-        // gl.Clear(ClearBufferMask.ColorBufferBit);
-
-        SkiaInterop.GetCanvas(canvas).DrawImage(surface.Snapshot(), new SKPoint(0, 0));
+        canvas.Clear(Color.White);
+        canvas.Fill(texture);
+        canvas.DrawRoundedRect(new Vector2(canvas.Width / 2, canvas.Height / 2), Vector2.One * 256, 10, Alignment.Center);
     }
 }

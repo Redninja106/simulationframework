@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimulationFramework.Components;
+﻿namespace SimulationFramework.Components;
 
 /// <summary>
 /// Handles the simulation's event loop.

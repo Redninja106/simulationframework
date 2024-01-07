@@ -1,5 +1,3 @@
-using System;
-
 namespace SimulationFramework.Drawing;
 
 /// <summary>

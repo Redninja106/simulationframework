@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-
-namespace SimulationFramework;
+﻿namespace SimulationFramework;
 
 /// <summary>
 /// Contains various useful math-related methods.

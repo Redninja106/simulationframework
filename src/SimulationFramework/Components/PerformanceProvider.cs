@@ -1,25 +1,24 @@
 ﻿using SimulationFramework.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SimulationFramework.Components;
 internal class PerformanceProvider : ISimulationComponent
 {
     private static Queue<float> framerates = new();
 
-    private int framerateAverageCount = Performance.DefaultFramerateAverageCount;
+    private float framerateAverageDuration = Performance.DefaultFramerateAverageDuration;
 
-    public int FramerateAverageCount {
-        get => framerateAverageCount;
+    public float FramerateAverageDuration 
+    {
+        get
+        {
+            return framerateAverageDuration;
+        }
         set
         {
-            if (value < 1)
+            if (value < 0)
                 throw new ArgumentException(null, nameof(value));
 
-            framerateAverageCount = value;
+            framerateAverageDuration = value;
         }
     }
 
@@ -28,13 +27,22 @@ internal class PerformanceProvider : ISimulationComponent
 
     public void Initialize(MessageDispatcher dispatcher)
     {
-        dispatcher.Subscribe<BeforeRenderMessage>(m => {
-            framerates.Enqueue(RawFramerate);
-            while (framerates.Count > FramerateAverageCount)
+        dispatcher.Subscribe<BeforeRenderMessage>(m => 
+        {
+            if (RawFramerate != float.PositiveInfinity)
+            {
+                framerates.Enqueue(RawFramerate);
+            }
+
+            while (framerates.Count > MathF.Max(1, RawFramerate * FramerateAverageDuration))
             {
                 framerates.Dequeue();
             }
-            Framerate = framerates.Average();
+
+            if (framerates.Any())
+            {
+                Framerate = framerates.Average();
+            }
         });
     }
 

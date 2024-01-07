@@ -1,20 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Description>The SkiaSharp graphics backend for SimulationFramework.</Description>
-    <Copyright></Copyright>
-    <PackageIcon>logo-128x128.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
-    <AssemblyVersion></AssemblyVersion>
-    <Version>0.2.1-beta1</Version>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Authors>Ryan Andersen</Authors>
-    <Company />
+	<Authors>Ryan Andersen</Authors>
+	<Description>The SkiaSharp graphics backend for SimulationFramework.</Description>
+	<PackageProjectUrl>https://github.com/Redninja106/simulationframework</PackageProjectUrl>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<PackageIcon>logo-128x128.png</PackageIcon>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

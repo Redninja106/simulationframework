@@ -1,5 +1,4 @@
 ﻿using SimulationFramework.Drawing;
-using System;
 using System.Numerics;
 
 namespace SimulationFramework.Components;

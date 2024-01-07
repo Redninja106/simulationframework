@@ -1,9 +1,7 @@
 ﻿using Silk.NET.GLFW;
-using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using SimulationFramework.Components;
-using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 
 namespace SimulationFramework.Desktop;
@@ -35,16 +33,16 @@ internal class DesktopSimulationController : ISimulationController
     
     public unsafe void Start(Action runFrame)
     {
-        var dispatcher = SimulationHost.Current.Dispatcher;
+        var dispatcher = SimulationHost.Current!.Dispatcher;
 
         window.IsVisible = true;
         isRunning = true;
         var lastHeight = Window.Height;
 
-        glfw.SetWindowRefreshCallback((WindowHandle*)window.Native.Glfw.Value, (window) =>
+        glfw.SetWindowRefreshCallback((WindowHandle*)window.Native!.Glfw!.Value, (window) =>
         {
             runFrame();
-            this.window.GLContext.SwapBuffers();
+            this.window.GLContext!.SwapBuffers();
         });
 
         window.Resize += size =>
@@ -66,7 +64,7 @@ internal class DesktopSimulationController : ISimulationController
             gl.ClientWaitSync(fence, SyncObjectMask.Bit, 1_000_000_000);
             gl.DeleteSync(fence);
 
-            window.GLContext.SwapBuffers();
+            window.GLContext!.SwapBuffers();
             gl.Finish();
         }
     }

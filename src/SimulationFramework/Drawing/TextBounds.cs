@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SimulationFramework.Drawing;
+﻿namespace SimulationFramework.Drawing;
 
 /// <summary>
 /// Determines how the bounding box of text is calculated when rendering.

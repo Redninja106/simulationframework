@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Numerics;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;

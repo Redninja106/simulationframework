@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using Silk.NET.Core.Contexts;
+﻿using System.Diagnostics.CodeAnalysis;
 using Silk.NET.OpenGL;
+using SimulationFramework.Components;
 using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 using SkiaSharp;
@@ -78,8 +73,9 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
 
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Error($"Error creating texture: " + ex);
             texture = null;
             return false;
         }
@@ -92,12 +88,16 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
             var bitmap = SKBitmap.Decode(encodedData);
             var skiaTexture = new SkiaTexture(this, bitmap.Width, bitmap.Height, options);
             var pixels = bitmap.Pixels;
-
-            for (int i = 0; i < pixels.Length; i++)
+            for (int y = 0; y < bitmap.Height; y++)
             {
-                var color = pixels[i];
-                skiaTexture.Pixels[i] = new(color.Red, color.Green, color.Blue, color.Alpha);
+                for (int x = 0; x < bitmap.Width; x++)
+                {
+                    int index = y * bitmap.Width + x;
+                    var color = pixels[index];
+                    skiaTexture.Pixels[index] = new(color.Red, color.Green, color.Blue, color.Alpha);
+                }
             }
+
             skiaTexture.ApplyChanges();
 
             texture = skiaTexture;

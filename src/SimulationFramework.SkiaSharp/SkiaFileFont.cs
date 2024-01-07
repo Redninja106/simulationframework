@@ -1,6 +1,5 @@
 ﻿using SimulationFramework.Drawing;
 using SkiaSharp;
-using System;
 
 namespace SimulationFramework.SkiaSharp;
 
@@ -28,6 +27,8 @@ class SkiaFileFont : SkiaFont
 
     public override void Dispose()
     {
+        if (IsDisposed)
+            return;
         typeface.Dispose();
         base.Dispose();
     }

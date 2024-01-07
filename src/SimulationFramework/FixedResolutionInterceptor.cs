@@ -2,8 +2,6 @@
 using SimulationFramework.Drawing;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
@@ -49,8 +47,10 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
     /// </summary>
     public ITexture FrameBuffer { get; private set; }
 
+
     private FixedResolutionMouseProvider? mouseProvider;
     private FixedResolutionWindowProvider? windowProvider;
+
 
     /// <summary>
     /// Creates a new instance of the <see cref="FixedResolutionInterceptor"/> class.
@@ -61,15 +61,15 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         this.Transparent = transparent;
         this.StretchToFit = stretchToFit;
 
-
         Resize(width, height);
         Application.InterceptComponent<IMouseProvider>(mouseProvider => this.mouseProvider = new FixedResolutionMouseProvider(mouseProvider, subpixelInput));
         Application.InterceptComponent<IWindowProvider>(windowProvider => this.windowProvider = new FixedResolutionWindowProvider(windowProvider, new(width, height)));
     }
 
-    private void AfterEvents(AfterEventsMessage message)
+    internal void BeforeRender()
     {
-        var outputCanvas = Graphics.GetOutputCanvas();
+        var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
+        outputCanvas.ResetState();
 
         this.mouseProvider!.transform
             .Reset()
@@ -78,10 +78,25 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
             .Translate(-FrameBuffer.Width / 2f, -FrameBuffer.Height / 2f);
     }
 
+    internal void AfterRender()
+    {
+        var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
+        outputCanvas.Clear(this.BackgroundColor);
+        outputCanvas.Translate(outputCanvas.Width / 2f, outputCanvas.Height / 2f);
+        outputCanvas.Scale(GetScale(outputCanvas.Width, outputCanvas.Height));
+        if (!Transparent)
+        {
+            outputCanvas.Fill(Color.Black);
+            outputCanvas.DrawRect(0, 0, FrameBuffer.Width, FrameBuffer.Height, Alignment.Center);
+        }
+        outputCanvas.DrawTexture(FrameBuffer, Alignment.Center);
+        outputCanvas.Flush();
+    }
+
     /// <inheritdoc/>
     public void Initialize(MessageDispatcher dispatcher)
     {
-        dispatcher.Subscribe<AfterEventsMessage>(AfterEvents);
+        dispatcher.Subscribe<AfterRenderMessage>(AfterRender);
     }
 
     /// <inheritdoc/>
@@ -101,11 +116,12 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         FrameBuffer?.Dispose();
         FrameBuffer = Graphics.CreateTexture(width, height);
         this.Width = width;
-        this.Height = height;
-        if (this.windowProvider is not null)
+
+        if (windowProvider is not null)
         {
-            this.windowProvider.FixedSize = new(width, height);
+            windowProvider.fixedSize = new(width, height);
         }
+    }
     }
 
     private Vector2 GetScale(int outputWidth, int outputHeight)
@@ -224,73 +240,73 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         public void SetCursor(SystemCursor cursor)
         {
             original.SetCursor(cursor);
-        }
     }
 
+    // hijacks mouse position to be accurate to fake framebuffer
     private class FixedResolutionWindowProvider : IWindowProvider
     {
-        private readonly IWindowProvider original;
-        public Vector2 FixedSize { get; set; }
+        public string Title { get => baseProvider.Title; set => baseProvider.Title = value; }
+        public IDisplay Display { get => baseProvider.Display; }
+        public Vector2 Size { get => fixedSize; }
+        public Vector2 Position { get => baseProvider.Position; }
+        public bool IsUserResizable { get => baseProvider.IsUserResizable; set => baseProvider.IsUserResizable = value; }
+        public bool ShowSystemMenu { get => baseProvider.ShowSystemMenu; set => baseProvider.ShowSystemMenu = false; }
+        public bool IsMinimized => baseProvider.IsMinimized;
+        public bool IsMaximized => baseProvider.IsMaximized;
 
-        public string Title { get => original.Title; set => original.Title = value; }
-        public IDisplay Display => original.Display;
-        public Vector2 Size => FixedSize;
-        public Vector2 Position => original.Position;
-        public bool IsUserResizable { get => original.IsUserResizable; set => original.IsUserResizable = value; }
-        public bool ShowSystemMenu { get => original.ShowSystemMenu; set => original.ShowSystemMenu = value; }
-        public bool IsMinimized => original.IsMinimized;
-        public bool IsMaximized => original.IsMaximized;
+        private readonly IWindowProvider baseProvider;
+        internal Vector2 fixedSize;
 
-        public FixedResolutionWindowProvider(IWindowProvider original, Vector2 fixedSize)
+        public FixedResolutionWindowProvider(IWindowProvider baseProvider, Vector2 fixedSize)
         {
-            this.original = original;
-            this.FixedSize = fixedSize;
+            this.baseProvider = baseProvider;
+            this.fixedSize = fixedSize;
         }
 
         public void Dispose()
         {
-            original.Dispose();
+            baseProvider.Dispose();
         }
 
         public ITexture GetBackBuffer()
         {
-            return original.GetBackBuffer();
+            return baseProvider.GetBackBuffer();
         }
 
         public void Initialize(MessageDispatcher dispatcher)
         {
-            
+            baseProvider.Initialize(dispatcher);
         }
 
         public void Maximize()
         {
-            original.Maximize();
+            baseProvider.Maximize();
         }
 
         public void Minimize()
         {
-            original.Minimize();
+            baseProvider.Minimize();
         }
 
         public void Resize(Vector2 size)
         {
-            throw new InvalidOperationException("Fixed resolution windows cannot be resized!");
+            baseProvider.Resize(size);
         }
 
         public void Restore()
         {
-            original.Restore();
+            baseProvider.Restore();
         }
 
         public void SetIcon(ReadOnlySpan<Color> icon, int width, int height)
         {
-            original.SetIcon(icon, width, height);
+            baseProvider.SetIcon(icon, width, height);
         }
 
         public void SetPosition(Vector2 position)
         {
-            original.SetPosition(position);
+            baseProvider.SetPosition(position);
         }
     }
-
+    }
 }

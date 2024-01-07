@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using Silk.NET.OpenGL;
 using SimulationFramework.Drawing;
-using SimulationFramework.SkiaSharp;
-using SimulationFramework;
 using SkiaSharp;
+using System;
+using Silk.NET.OpenGL;
 
 namespace SimulationFramework.SkiaSharp;
 
@@ -72,9 +72,12 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
     public override void Dispose()
     {
+        if (IsDisposed)
+            return;
+
         this.canvas.Dispose();
-        this.surface.Dispose();
         this.image.Dispose();
+        this.surface.Dispose();
         this.backendTexture.Dispose();
 
         provider.gl.DeleteTexture(this.glTexture);
@@ -84,25 +87,72 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
     private unsafe void UpdateLocalPixels()
     {
-        var gl = provider.gl;
-        gl.BindTexture(TextureTarget.Texture2D, glTexture);
-        gl.GetTexImage(TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte, colors.AsSpan());
-        gl.BindTexture(TextureTarget.Texture2D, 0);
-        pixelsDirty = false;
+        Color* buffer = null;
+        try
+        {
+            buffer = (Color*)NativeMemory.Alloc((nuint)colors.Length, (nuint)sizeof(Color));
+
+            var gl = provider.gl;
+            gl.Finish();
+            gl.BindTexture(TextureTarget.Texture2D, glTexture);
+            gl.GetTexImage(TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte, new Span<Color>(buffer, colors.Length));
+            gl.BindTexture(TextureTarget.Texture2D, 0);
+            pixelsDirty = false;
+
+            TextureFlip(new(buffer, colors.Length), colors);
+        }
+        finally
+        {
+            NativeMemory.Free(buffer);
+        }
     }
 
     public unsafe void Update(ReadOnlySpan<Color> pixels)
     {
-        var gl = provider.gl;
-        gl.BindTexture(TextureTarget.Texture2D, glTexture);
-        provider.gl.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, (uint)this.Width, (uint)this.Height, PixelFormat.Rgba, PixelType.UnsignedByte, pixels);
-        gl.BindTexture(TextureTarget.Texture2D, 0);
-        image.Dispose();
-        image = SKImage.FromTexture(provider.backendContext, this.backendTexture, SKColorType.Rgba8888);
+        if (IsDisposed)
+            throw new InvalidOperationException("Cannot use disposed texture!");
+
+        Color* buffer = null;
+        try
+        {
+            // we need to flip the texture (thanks opengl)
+            buffer = (Color*)NativeMemory.Alloc((nuint)pixels.Length, (nuint)sizeof(Color));
+
+            TextureFlip(pixels, new(buffer, pixels.Length));
+
+            var gl = provider.gl;
+            gl.BindTexture(TextureTarget.Texture2D, glTexture);
+            provider.gl.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, (uint)this.Width, (uint)this.Height, PixelFormat.Rgba, PixelType.UnsignedByte, buffer);
+            gl.BindTexture(TextureTarget.Texture2D, 0);
+
+            image.Dispose();
+            image = SKImage.FromTexture(provider.backendContext, this.backendTexture, SKColorType.Rgba8888);
+        }
+        finally
+        {
+            NativeMemory.Free(buffer);
+        }
+    }
+
+    private void TextureFlip(ReadOnlySpan<Color> src, Span<Color> dest)
+    {
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                var srcIndex = y * Width + x;
+                var dstIndex = (Height - y - 1) * Width + x;
+
+                dest[dstIndex] = src[srcIndex];
+            }
+        }
     }
 
     public ICanvas GetCanvas()
     {
+        if (IsDisposed)
+            throw new InvalidOperationException("Cannot use disposed texture!");
+
         if (Options.HasFlag(TextureOptions.NonRenderTarget))
         {
             throw new InvalidOperationException("Cannot render to a texture with the TextureOptions.NonRenderTarget flag.");
@@ -123,16 +173,36 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
     public SKSurface GetSurface()
     {
+        if (IsDisposed)
+            throw new InvalidOperationException("Cannot use disposed texture!");
+
         return surface;
     }
 
     public SKImage GetImage()
     {
+        if (IsDisposed)
+            throw new InvalidOperationException("Cannot use disposed texture!");
+
         return image;
     }
 
     public uint GetGLTexture()
     {
+        if (IsDisposed)
+            throw new InvalidOperationException("Cannot use disposed texture!");
+
         return glTexture;
+    }
+
+    public void Encode(Stream destination, TextureEncoding encoding)
+    {
+        var data = image.Encode(encoding switch
+        {
+            TextureEncoding.PNG => SKEncodedImageFormat.Png,
+            _ => throw new Exception("Unsupported or unrecognized encoding!")
+        }, 100);
+
+        data.SaveTo(destination);
     }
 }
