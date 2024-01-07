@@ -50,7 +50,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixedResolution", "examples
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayingSounds", "examples\PlayingSounds\PlayingSounds.csproj", "{99D048A2-CFED-45D6-B28E-CB4C1F45F9FF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{36815EBB-AC7E-49D0-ADA4-101A75CC0C29}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6C7AAFC7-D032-4F8F-9DB5-B11CF6E4B7FC}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.build.props = Directory.build.props
 	EndProjectSection
