@@ -5,6 +5,8 @@ using SimulationFramework.Drawing;
 using SkiaSharp;
 using System;
 using Silk.NET.OpenGL;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace SimulationFramework.SkiaSharp;
 

@@ -96,7 +96,6 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
     /// <inheritdoc/>
     public void Initialize(MessageDispatcher dispatcher)
     {
-        dispatcher.Subscribe<AfterRenderMessage>(AfterRender);
     }
 
     /// <inheritdoc/>
@@ -122,7 +121,6 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
             windowProvider.fixedSize = new(width, height);
         }
     }
-    }
 
     private Vector2 GetScale(int outputWidth, int outputHeight)
     {
@@ -135,21 +133,6 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         }
 
         return scale;
-    }
-
-    internal void Render()
-    {
-        var outputCanvas = Graphics.GetOutputCanvas();
-        outputCanvas.Clear(this.BackgroundColor);
-        outputCanvas.Translate(outputCanvas.Width / 2f, outputCanvas.Height / 2f);
-        outputCanvas.Scale(GetScale(outputCanvas.Width, outputCanvas.Height));
-        if (!Transparent)
-        {
-            outputCanvas.Fill(Color.Black);
-            outputCanvas.DrawRect(0, 0, FrameBuffer.Width, FrameBuffer.Height, Alignment.Center);
-        }
-        outputCanvas.DrawTexture(FrameBuffer, Alignment.Center);
-        outputCanvas.Flush();
     }
 
     // hijacks mouse position to be accurate to fake framebuffer
@@ -240,6 +223,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         public void SetCursor(SystemCursor cursor)
         {
             original.SetCursor(cursor);
+        }
     }
 
     // hijacks mouse position to be accurate to fake framebuffer
@@ -307,6 +291,5 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         {
             baseProvider.SetPosition(position);
         }
-    }
     }
 }

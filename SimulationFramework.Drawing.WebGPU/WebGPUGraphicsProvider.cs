@@ -1,4 +1,5 @@
-﻿using SimulationFramework.Messaging;
+﻿using SimulationFramework.Components;
+using SimulationFramework.Messaging;
 using System.Diagnostics.CodeAnalysis;
 using WebGPU;
 
