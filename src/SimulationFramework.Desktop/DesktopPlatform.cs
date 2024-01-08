@@ -7,6 +7,7 @@ using Silk.NET.Input;
 using Silk.NET.Input.Glfw;
 using Silk.NET.OpenGL;
 using SimulationFramework.Desktop.Audio;
+using SimulationFramework.Drawing.WebGPU;
 
 namespace SimulationFramework.Desktop;
 
@@ -25,12 +26,18 @@ public class DesktopPlatform : ISimulationPlatform
     {
         windowOptions ??= WindowOptions.Default;
 
+        windowOptions = windowOptions.Value with
+        {
+            API = GraphicsAPI.Default,
+            IsVisible = false,
+        };
+
         GlfwWindowing.RegisterPlatform();
         GlfwInput.RegisterPlatform();
 
         GlfwWindowing.Use();
 
-        Window = Silk.NET.Windowing.Window.Create(windowOptions.Value with { IsVisible = false });
+        Window = Silk.NET.Windowing.Window.Create(windowOptions.Value);
         Window.Initialize();
 
         inputContext = Window.CreateInput();
@@ -43,12 +50,6 @@ public class DesktopPlatform : ISimulationPlatform
 
     public virtual void Initialize(MessageDispatcher dispatcher)
     {
-        dispatcher.Subscribe<ResizeMessage>(m =>
-        {
-            frameProvider?.Resize(m.Width, m.Height);
-        });
-
-        frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
         Application.RegisterComponent(new DesktopApplicationProvider());
         var graphics = CreateGraphicsProvider();
 
@@ -65,7 +66,7 @@ public class DesktopPlatform : ISimulationPlatform
         RegisterInputProviders();
         if (graphics != null)
         {
-            Application.RegisterComponent(CreateImGuiProvider());
+            // Application.RegisterComponent(CreateImGuiProvider());
         }
     }
 
@@ -77,8 +78,14 @@ public class DesktopPlatform : ISimulationPlatform
 
     protected virtual IGraphicsProvider CreateGraphicsProvider()
     {
-        return new SimulationFramework.Drawing.WebGPU.WebGPUGraphicsProvider();
-        return new SkiaGraphicsProvider(frameProvider, Window.CreateOpenGL(), name => Window.GLContext.TryGetProcAddress(name, out nint addr) ? addr : 0);
+        WebGPU.SurfaceDescriptorFromWindowsHWND surfaceDesc = new()
+        {
+            Hwnd = Window.Native?.Win32?.Hwnd ?? 0,
+            Hinstance = Window.Native?.Win32?.HInstance ?? 0,
+        }; 
+
+        return new WebGPUGraphicsProvider(Window.Size.X, Window.Size.Y, surfaceDesc);
+        // return new SkiaGraphicsProvider(frameProvider, Window.CreateOpenGL(), name => Window.GLContext.TryGetProcAddress(name, out nint addr) ? addr : 0);
     }
 
     protected virtual ITimeProvider CreateTimeProvider()

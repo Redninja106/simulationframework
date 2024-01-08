@@ -4,6 +4,7 @@ using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
 using SimulationFramework.Components;
+using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 
 namespace SimulationFramework.Desktop;
@@ -44,7 +45,7 @@ internal class DesktopImGuiComponent : ISimulationComponent
 
     void AfterRender(AfterRenderMessage message)
     {
-        var canvas = Graphics.GetOutputCanvas();
+        var canvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
         gl.Viewport(0, 0, (uint)canvas.Width, (uint)canvas.Height);
         imGuiController.Render();
     }

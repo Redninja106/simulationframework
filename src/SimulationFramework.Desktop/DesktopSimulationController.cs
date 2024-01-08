@@ -41,8 +41,7 @@ internal class DesktopSimulationController : ISimulationController
 
         glfw.SetWindowRefreshCallback((WindowHandle*)window.Native!.Glfw!.Value, (window) =>
         {
-            runFrame();
-            this.window.GLContext!.SwapBuffers();
+            // runFrame();
         });
 
         window.Resize += size =>
@@ -50,22 +49,12 @@ internal class DesktopSimulationController : ISimulationController
             dispatcher.ImmediateDispatch(new ResizeMessage(size.X, size.Y));
         };
 
-        var gl = GL.GetApi(window.GLContext);
-
         while (isRunning)
         {
             dispatcher.ImmediateDispatch<BeforeEventsMessage>(new());
             window.DoEvents();
             dispatcher.ImmediateDispatch<AfterEventsMessage>(new());
             runFrame();
-
-            var fence = gl.FenceSync(GLEnum.SyncGpuCommandsComplete, (uint)0);
-            gl.Flush();
-            gl.ClientWaitSync(fence, SyncObjectMask.Bit, 1_000_000_000);
-            gl.DeleteSync(fence);
-
-            window.GLContext!.SwapBuffers();
-            gl.Finish();
         }
     }
 

@@ -7,42 +7,45 @@ namespace SimulationFramework.Drawing.WebGPU;
 
 public sealed class WebGPUGraphicsProvider : IGraphicsProvider
 {
-    public IFont DefaultFont => throw new NotImplementedException();
+    public IFont DefaultFont => null!;
 
-    internal Instance Instance { get; }
-    internal Surface Surface { get; }
-    internal Adapter Adapter { get; }
-    internal Device Device { get; }
+    private WebGPUCanvas frameCanvas;
+    private WebGPUResources resources;
+    private SurfaceTextureViewProvider frameViewProvider;
 
     public void Dispose()
     {
+        resources.Dispose();
     }
 
-    public WebGPUGraphicsProvider(nint hinstnace, nint hwnd)
+    public WebGPUGraphicsProvider(int width, int height, IChainable surfaceDescriptor)
     {
-        Instance = Instance.Create();
-        Adapter = Instance.RequestAdapter(new() { PowerPreference = PowerPreference.HighPerformance });
-        Device = Adapter.RequestDevice(default);
-
-        Surface = Instance.CreateSurface(new()
-        {
-            NextInChain = new SurfaceDescriptorFromWindowsHWND()
-            {
-                Hinstance = hinstnace,
-                Hwnd = hwnd
-            }
-        });
-
-
+        resources = new(width, height, surfaceDescriptor);
+        frameViewProvider = new(resources);
+        frameCanvas = new(resources, frameViewProvider);
     }
 
     public ICanvas GetFrameCanvas()
     {
-        throw new NotImplementedException();
+        return frameCanvas;
     }
 
     public void Initialize(MessageDispatcher dispatcher)
     {
+        dispatcher.Subscribe<BeforeRenderMessage>(m =>
+        {
+            frameViewProvider.NewFrame();
+            resources.Queue.Submit([]);
+        });
+
+        dispatcher.Subscribe<AfterRenderMessage>(m =>
+        {
+        });
+
+        dispatcher.Subscribe<PresentMessage>(m =>
+        {
+            resources.Surface.Present();
+        });
     }
 
     public bool TryCreateTexture(int width, int height, ReadOnlySpan<Color> pixels, TextureOptions options, [NotNullWhen(true)] out ITexture texture)

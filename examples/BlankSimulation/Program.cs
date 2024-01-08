@@ -8,18 +8,20 @@ Start<Program>(new DesktopPlatform());
 
 partial class Program : Simulation
 {
-    private ITexture texture;
 
     public override void OnInitialize()
     {
-        texture = Graphics.CreateTexture(256, 256);
-        texture.GetCanvas().Clear(Color.Black);
     }
 
     public override void OnRender(ICanvas canvas)
     {
-        canvas.Clear(Color.White);
-        canvas.Fill(texture);
-        canvas.DrawRoundedRect(new Vector2(canvas.Width / 2, canvas.Height / 2), Vector2.One * 256, 10, Alignment.Center);
+        // problem: vertex/index buffers being overwriten before command buffer is submitted to queue
+
+        canvas.Clear(Color.FromHSV(0, 0, .1f));
+        canvas.Translate(canvas.Width / 2f, canvas.Height / 2f);
+        canvas.DrawRect(+.5f, +.5f, .1f, .1f, Alignment.Center);
+        canvas.DrawRect(-.5f, +.5f, .1f, .1f, Alignment.Center);
+        canvas.DrawRect(+.5f, -.5f, .1f, .1f, Alignment.Center);
+        canvas.DrawRect(-.5f, -.5f, .1f, .1f, Alignment.Center);
     }
 }
