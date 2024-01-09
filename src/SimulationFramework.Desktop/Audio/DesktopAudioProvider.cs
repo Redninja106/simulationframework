@@ -10,8 +10,8 @@ using Silk.NET.OpenAL;
 namespace SimulationFramework.Desktop.Audio;
 internal unsafe class DesktopAudioProvider : IAudioProvider
 {
-    public ALContext alc = ALContext.GetApi();
-    public AL al = AL.GetApi();
+    public ALContext alc = ALContext.GetApi(true);
+    public AL al = AL.GetApi(true);
 
     Device* device;
     Context* context;

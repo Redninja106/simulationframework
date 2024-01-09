@@ -33,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SimulationFramework.OpenGL\SimulationFramework.OpenGL.csproj" />
     <ProjectReference Include="..\SimulationFramework.SkiaSharp\SimulationFramework.SkiaSharp.csproj" />
     <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
   </ItemGroup>

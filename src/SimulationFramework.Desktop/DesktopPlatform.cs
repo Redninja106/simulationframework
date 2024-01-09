@@ -7,6 +7,7 @@ using Silk.NET.Input;
 using Silk.NET.Input.Glfw;
 using Silk.NET.OpenGL;
 using SimulationFramework.Desktop.Audio;
+using SimulationFramework.OpenGL;
 
 namespace SimulationFramework.Desktop;
 
@@ -48,7 +49,7 @@ public class DesktopPlatform : ISimulationPlatform
             frameProvider?.Resize(m.Width, m.Height);
         });
 
-        frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
+        // frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
         Application.RegisterComponent(new DesktopApplicationProvider());
         var graphics = CreateGraphicsProvider();
 
@@ -60,7 +61,14 @@ public class DesktopPlatform : ISimulationPlatform
         Application.RegisterComponent(CreateTimeProvider());
         Application.RegisterComponent(CreateSimulationController());
         Application.RegisterComponent(CreateWindowProvider());
-        Application.RegisterComponent(new DesktopAudioProvider());
+        try
+        {
+            Application.RegisterComponent(new DesktopAudioProvider());
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Could not initialize audio: " + ex.Message);
+        }
 
         RegisterInputProviders();
         if (graphics != null)
@@ -77,6 +85,7 @@ public class DesktopPlatform : ISimulationPlatform
 
     protected virtual IGraphicsProvider CreateGraphicsProvider()
     {
+        return new OpenGLGraphicsProvider(Window.CreateOpenGL());
         return new SkiaGraphicsProvider(frameProvider, Window.CreateOpenGL(), name => Window.GLContext.TryGetProcAddress(name, out nint addr) ? addr : 0);
     }
 
