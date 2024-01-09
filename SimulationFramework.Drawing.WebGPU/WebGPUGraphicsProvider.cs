@@ -10,7 +10,7 @@ public sealed class WebGPUGraphicsProvider : IGraphicsProvider
     public IFont DefaultFont => null!;
 
     private WebGPUCanvas frameCanvas;
-    private WebGPUResources resources;
+    private GraphicsResources resources;
     private SurfaceTextureViewProvider frameViewProvider;
 
     public void Dispose()

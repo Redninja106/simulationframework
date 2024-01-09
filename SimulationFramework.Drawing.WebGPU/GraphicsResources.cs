@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using WebGPU;
 
 namespace SimulationFramework.Drawing.WebGPU;
-internal class WebGPUResources : IDisposable
+internal class GraphicsResources : IDisposable
 {
     public Instance Instance { get; }
     public Surface Surface { get; }
@@ -15,7 +15,7 @@ internal class WebGPUResources : IDisposable
     public Device Device { get; }
     public Queue Queue { get; }
 
-    public WebGPUResources(int width, int height, IChainable surfaceDescriptor)
+    public GraphicsResources(int width, int height, IChainable surfaceDescriptor)
     {
         Instance = Instance.Create();
         Adapter = Instance.RequestAdapter(new() { PowerPreference = PowerPreference.HighPerformance });

@@ -8,7 +8,7 @@ using WebGPU;
 namespace SimulationFramework.Drawing.WebGPU;
 internal class SurfaceTextureViewProvider : ITextureViewProvider
 {
-    WebGPUResources resources;
+    GraphicsResources resources;
     TextureView? view;
     Texture? texture;
 
@@ -17,7 +17,7 @@ internal class SurfaceTextureViewProvider : ITextureViewProvider
     public TextureOptions Options => TextureOptions.None;
     public Span<Color> Pixels => throw new NotSupportedException("Cannot read/write the pixels of the frame buffer!");
 
-    public SurfaceTextureViewProvider(WebGPUResources resources)
+    public SurfaceTextureViewProvider(GraphicsResources resources)
     {
         this.resources = resources;
     }
