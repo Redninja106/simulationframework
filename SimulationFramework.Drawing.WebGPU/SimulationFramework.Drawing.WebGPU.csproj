@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\WebGPUExperiments\WebGPU\WebGPU.csproj" />
+    <ProjectReference Include="..\..\..\source\repos\WebGPUExperiments\WebGPU\WebGPU.csproj" />
     <ProjectReference Include="..\src\SimulationFramework\SimulationFramework.csproj" />
   </ItemGroup>
 

@@ -26,6 +26,8 @@ internal class WebGPUCanvas : ICanvas
     private Renderer? currentRenderer;
     private RenderPassEncoder? renderPassEncoder;
 
+    private ShaderPart FrameConstShaderPart;
+
     internal struct FrameConstUniforms
     {
         public Matrix4x4 viewportMatrix;
@@ -105,8 +107,17 @@ internal class WebGPUCanvas : ICanvas
             new(rect.X, rect.Y + rect.Height),
             ];
 
+        Span<Color> colors = [
+            State.FillColor,
+            State.FillColor,
+            State.FillColor,
+            State.FillColor,
+            State.FillColor,
+            State.FillColor,
+        ];
+
         MakeRendererCurrent(triangleRenderer);
-        triangleRenderer.RenderTriangles(vertices);
+        triangleRenderer.RenderTriangles(vertices, colors);
     }
 
     public void DrawRoundedRect(Rectangle rect, float radius)

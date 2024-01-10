@@ -114,7 +114,7 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
     {
         if (texture is not SkiaTexture skTexture)
             throw new ArgumentException("texture must be a texture created by the skiasharp renderer!", nameof(texture));
-
+        
         using var paint = currentState.Paint.Clone();
         paint.Color = Color.Red.AsSKColor();
         paint.FilterQuality = SKFilterQuality.None;
@@ -127,9 +127,8 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
         bool alreadyClosed = Polygon.IsClosed(polygon);
         bool isFill = (this.State.DrawMode == DrawMode.Fill || this.State.DrawMode == DrawMode.Gradient);
         bool shouldClose = !alreadyClosed && (close || isFill);
-
         using var path = new SKPath();
-        path.FillType = SKPathFillType.EvenOdd;
+        
         fixed (Vector2* polygonPtr = polygon)
             SkiaNativeApi.sk_path_add_poly(path.Handle, polygonPtr, polygon.Length, shouldClose);
 

@@ -21,7 +21,6 @@ internal class TriangleRenderer : Renderer
     private RenderPipeline pipeline;
     private ShaderModule shaderModule;
     private BindGroup bindGroup;
-   
 
     private GraphicsResources resources;
 
@@ -43,22 +42,29 @@ internal class TriangleRenderer : Renderer
                 Code = @"
 struct UniformData {
     viewportMatrix: mat4x4f
-};
+}
 
 @group(0) @binding(0) var<uniform> uniforms : UniformData;
 
+struct VsOut {
+    @builtin(position) position : vec4f,
+    @location(0) color : vec4f
+}
+
 @vertex
-fn vs_main(@location(0) position : vec2f) -> @builtin(position) vec4f {
+fn vs_main(@location(0) position : vec2f, @location(1) color : vec4f) -> VsOut {
+    var out: VsOut;
     var pos = vec4f(position.xy, 0f, 1f);
-
     pos = uniforms.viewportMatrix * pos;
+    out.position = pos;
+    out.color = color;
 
-    return pos;
+    return out;
 }
 
 @fragment
-fn fs_main() -> @location(0) vec4f {
-    return vec4f(1.0, 0.0, 0.0, 1.0);
+fn fs_main(vsOut: VsOut) -> @location(0) vec4f {
+    return vsOut.color;
 }
 "
             }
@@ -73,7 +79,11 @@ fn fs_main() -> @location(0) vec4f {
                     // position
                     new VertexBufferLayout((uint)Unsafe.SizeOf<Vector2>(), VertexStepMode.Vertex, [
                             new VertexAttribute(VertexFormat.Float32x2, 0, 0)
-                    ])
+                    ]),
+                    // color
+                    new VertexBufferLayout((uint)Unsafe.SizeOf<Color>(), VertexStepMode.Vertex, [
+                            new VertexAttribute(VertexFormat.Unorm8x4, 0, 1)
+                    ]),
                 ],
                 EntryPoint = "vs_main",
                 Module = shaderModule,
@@ -114,29 +124,31 @@ fn fs_main() -> @location(0) vec4f {
         });
 
         positionWriter = new(resources, BufferUsage.Vertex, 1024 * 64);
+        colorWriter = new(resources, BufferUsage.Vertex, 1024 * 64);
     }
 
-    public void RenderTriangles(ReadOnlySpan<Vector2> polygon)
+    public void RenderTriangles(ReadOnlySpan<Vector2> polygon, ReadOnlySpan<Color> colors)
     {
         if (!positionWriter.HasCapacity(polygon.Length))
         {
             canvas.Flush();
         }
 
-        var baseIndex = positionWriter.Count;
         positionWriter.Write(polygon);
+        colorWriter.Write(colors);
     }
 
-    private int submitCount;
 
     public override void Submit(RenderPassEncoder renderPass)
     {
         var positionBuffer = positionWriter.GetBuffer();
+        var colorBuffer = colorWriter.GetBuffer();
 
         renderPass.SetBindGroup(0, bindGroup, []);
         renderPass.SetViewport(0, 0, canvas.Target.Width, canvas.Target.Height, 0, 1);
         renderPass.SetPipeline(pipeline);
         renderPass.SetVertexBuffer(0, positionBuffer, 0, positionBuffer.Size);
+        renderPass.SetVertexBuffer(1, colorBuffer, 0, colorBuffer.Size);
         renderPass.Draw((uint)positionWriter.Count, 1, (uint)submittedIndex, 0);
         submittedIndex = positionWriter.Count;
     }
@@ -147,5 +159,8 @@ fn fs_main() -> @location(0) vec4f {
 
         positionWriter.Upload();
         positionWriter.Reset();
+
+        colorWriter.Upload();
+        colorWriter.Reset();
     }
 }
