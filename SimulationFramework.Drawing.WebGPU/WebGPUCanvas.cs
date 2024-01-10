@@ -17,19 +17,30 @@ internal class WebGPUCanvas : ICanvas
     private ITextureViewProvider target;
 
     private CommandEncoder commandEncoder;
-    private RenderPassEncoder renderPassEncoder;
     private readonly Stack<WebGPUCanvasState> states = new();
     private WebGPUCanvasState? defaultState;
 
     private TriangleRenderer triangleRenderer;
+    private ArcRenderer arcRenderer;
 
     private Renderer? currentRenderer;
+    private RenderPassEncoder? renderPassEncoder;
+
+    internal struct FrameConstUniforms
+    {
+        public Matrix4x4 viewportMatrix;
+    }
+
+    internal FrameConstUniforms uniformData;
+    internal Buffer uniformBuffer;
 
     public WebGPUCanvas(GraphicsResources resources, ITextureViewProvider target)
     {
         this.resources = resources;
         this.target = target;
         commandEncoder = resources.Device.CreateCommandEncoder(default);
+
+        triangleRenderer = new(resources, this);
     }
 
     private WebGPUCanvasState GetCurrentState()
@@ -40,6 +51,8 @@ internal class WebGPUCanvas : ICanvas
 
     public void Clear(Color color)
     {
+        MakeRendererCurrent(null);
+
         RenderPassColorAttachment colorAttachment = new()
         {
             View = target.GetView(),
@@ -54,12 +67,10 @@ internal class WebGPUCanvas : ICanvas
             StoreOp = StoreOp.Store,
         };
 
-        RenderPassEncoder renderPassEncoder = commandEncoder.BeginRenderPass(new()
+        renderPassEncoder = commandEncoder.BeginRenderPass(new()
         {
             ColorAttachments = [colorAttachment],
         });
-
-        renderPassEncoder.End();
     }
 
     public void Dispose()
@@ -69,7 +80,8 @@ internal class WebGPUCanvas : ICanvas
 
     public void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter)
     {
-        throw new NotImplementedException();
+        MakeRendererCurrent(arcRenderer);
+        arcRenderer.RenderArc(bounds, begin, end, includeCenter);
     }
 
     public void DrawLine(Vector2 p1, Vector2 p2)
@@ -88,17 +100,13 @@ internal class WebGPUCanvas : ICanvas
             new(rect.X, rect.Y),
             new(rect.X + rect.Width, rect.Y),
             new(rect.X, rect.Y + rect.Height),
+            new(rect.X + rect.Width, rect.Y),
             new(rect.X + rect.Width, rect.Y + rect.Height),
+            new(rect.X, rect.Y + rect.Height),
             ];
 
-        Span<ushort> indices = [0, 1, 2, 1, 3, 2];
-        var e = resources.Device.CreateRenderBundleEncoder(new()
-        {
-
-        });
-        e.
         MakeRendererCurrent(triangleRenderer);
-        triangleRenderer.RenderTriangles(vertices, indices);
+        triangleRenderer.RenderTriangles(vertices);
     }
 
     public void DrawRoundedRect(Rectangle rect, float radius)
@@ -118,6 +126,13 @@ internal class WebGPUCanvas : ICanvas
 
     public void Flush()
     {
+        MakeRendererCurrent(null);
+
+        triangleRenderer.OnFlush();
+
+        uniformData.viewportMatrix = Matrix4x4.CreateTranslation(-Target.Width / 2f, -Target.Height / 2f, 0) * Matrix4x4.CreateOrthographic(Target.Width, -Target.Height, 0, 1);
+        resources.Queue.WriteBuffer(uniformBuffer, 0, [uniformData]);
+
         using var commandBuffer = commandEncoder.Finish(default);
         resources.Queue.Submit([commandBuffer]);
         commandEncoder.Dispose();
@@ -148,10 +163,31 @@ internal class WebGPUCanvas : ICanvas
         GetCurrentState().Reset();
     }
 
-    private void MakeRendererCurrent(Renderer renderer)
+    private void MakeRendererCurrent(Renderer? renderer)
     {
-        currentRenderer?.FinishPass();
+        if (currentRenderer != null)
+        {
+            renderPassEncoder ??= commandEncoder.BeginRenderPass(new RenderPassDescriptor()
+            {
+                ColorAttachments =
+                [
+                    new RenderPassColorAttachment(target.GetView(), null!, LoadOp.Load, StoreOp.Store, default)
+                ]
+            });
+
+            if (currentRenderer != renderer)
+            {
+                currentRenderer.Submit(this.renderPassEncoder);
+            }
+
+            if (renderer == null)
+            {
+                renderPassEncoder?.End();
+                renderPassEncoder?.Dispose();
+                renderPassEncoder = null;
+            }
+        }
+
         currentRenderer = renderer;
-        currentRenderer.StartPass(this.commandEncoder);
     }
 }

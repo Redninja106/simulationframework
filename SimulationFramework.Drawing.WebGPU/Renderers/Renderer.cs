@@ -8,9 +8,6 @@ using WebGPU;
 namespace SimulationFramework.Drawing.WebGPU.Renderers;
 internal abstract class Renderer
 {
-    public abstract bool RequiresFlush();
     public abstract void OnFlush();
-
-    public abstract void StartPass(RenderPassEncoder encoder);
-    public abstract void FinishPass(RenderPassEncoder encoder);
+    public abstract void Submit(RenderPassEncoder encoder);
 }

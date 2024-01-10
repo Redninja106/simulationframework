@@ -38,6 +38,11 @@ class BufferWriter<T> where T : unmanaged
         Count += elements.Length;
     }
 
+    public Buffer GetBuffer()
+    {
+        return buffer;
+    }
+
     public Span<T> GetWritableSpan(int length)
     {
         var result = bufferData.AsSpan(Count, length);
@@ -45,10 +50,9 @@ class BufferWriter<T> where T : unmanaged
         return result;
     }
 
-    public Buffer Upload()
+    public void Upload()
     {
         resources.Queue.WriteBuffer(buffer, 0, bufferData);
-        return buffer;
     }
 
     public void Reset()

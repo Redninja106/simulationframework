@@ -11,29 +11,28 @@ using WebGPU;
 namespace SimulationFramework.Drawing.WebGPU.Renderers;
 internal class TriangleRenderer : Renderer
 {
+    private WebGPUCanvas canvas;
+    
     private BufferWriter<Vector2> positionWriter;
-    private BufferWriter<ushort> indexWriter;
+    private BufferWriter<Color> colorWriter;
+
+    private int submittedIndex;
 
     private RenderPipeline pipeline;
     private ShaderModule shaderModule;
     private BindGroup bindGroup;
-    struct UniformData
-    {
-        public Matrix4x4 viewportMatrix;
-    }
-
-    private UniformData uniformData;
-    private Buffer uniformBuffer;
+   
 
     private GraphicsResources resources;
 
-    public TriangleRenderer(GraphicsResources resources)
+    public TriangleRenderer(GraphicsResources resources, WebGPUCanvas canvas)
     {
+        this.canvas = canvas;
         this.resources = resources;
 
-        uniformBuffer = resources.Device.CreateBuffer(new()
+        canvas.uniformBuffer = resources.Device.CreateBuffer(new()
         {
-            Size = (ulong)Unsafe.SizeOf<UniformData>(),
+            Size = (ulong)Unsafe.SizeOf<WebGPUCanvas.FrameConstUniforms>(),
             Usage = BufferUsage.Uniform | BufferUsage.CopyDst,
         });
 
@@ -107,68 +106,46 @@ fn fs_main() -> @location(0) vec4f {
                 new BindGroupEntry()
                 {
                     Binding = 0,
-                    Buffer = uniformBuffer,
+                    Buffer = canvas.uniformBuffer,
                     Offset = 0,
-                    Size = uniformBuffer.Size
+                    Size = canvas.uniformBuffer.Size
                 },
             ]
         });
 
-        positionWriter = new(resources, BufferUsage.Vertex, 1024);
-        indexWriter = new(resources, BufferUsage.Index, 2048);
+        positionWriter = new(resources, BufferUsage.Vertex, 1024 * 64);
     }
 
-    public override bool RequiresFlush()
+    public void RenderTriangles(ReadOnlySpan<Vector2> polygon)
     {
-        return indexWriter.Count == indexWriter.Capacity;
-    }
-
-    public void RenderTriangles(ReadOnlySpan<Vector2> polygon, ReadOnlySpan<ushort> indices)
-    {
-        if (!(positionWriter.HasCapacity(polygon.Length) && indexWriter.HasCapacity(indices.Length)))
+        if (!positionWriter.HasCapacity(polygon.Length))
         {
-            FinishPass();
+            canvas.Flush();
         }
 
         var baseIndex = positionWriter.Count;
         positionWriter.Write(polygon);
-
-        var indexSpan = indexWriter.GetWritableSpan(indices.Length);
-        for (int i = 0; i < indexSpan.Length; i++)
-        {
-            indexSpan[i] = (ushort)(indices[i] + baseIndex);
-        }
     }
 
-    public override void FinishPass()
+    private int submitCount;
+
+    public override void Submit(RenderPassEncoder renderPass)
     {
-        uniformData.viewportMatrix = Matrix4x4.CreateTranslation(-Target.Width / 2f, -Target.Height / 2f, 0) * Matrix4x4.CreateOrthographic(Target.Width, -Target.Height, 0, 1);
-        resources.Queue.WriteBuffer(uniformBuffer, 0, [uniformData]);
+        var positionBuffer = positionWriter.GetBuffer();
 
-        var positionBuffer = positionWriter.Upload();
-        var indexBuffer = indexWriter.Upload();
+        renderPass.SetBindGroup(0, bindGroup, []);
+        renderPass.SetViewport(0, 0, canvas.Target.Width, canvas.Target.Height, 0, 1);
+        renderPass.SetPipeline(pipeline);
+        renderPass.SetVertexBuffer(0, positionBuffer, 0, positionBuffer.Size);
+        renderPass.Draw((uint)positionWriter.Count, 1, (uint)submittedIndex, 0);
+        submittedIndex = positionWriter.Count;
+    }
 
-        var rpEncoder = commandEncoder.BeginRenderPass(new()
-        {
-            ColorAttachments = [new RenderPassColorAttachment()
-            {
-                LoadOp = LoadOp.Load,
-                StoreOp = StoreOp.Store,
-                View = target.GetView(),
-            }],
-        });
+    public override void OnFlush()
+    {
+        submittedIndex = 0;
 
-        rpEncoder.SetBindGroup(0, bindGroup, []);
-        rpEncoder.SetViewport(0, 0, target.Width, target.Height, 0, 1);
-        rpEncoder.SetPipeline(pipeline);
-        rpEncoder.SetVertexBuffer(0, positionBuffer, 0, positionBuffer.Size);
-        rpEncoder.SetIndexBuffer(indexBuffer, IndexFormat.Uint16, 0, indexBuffer.Size);
-        rpEncoder.DrawIndexed((uint)indexWriter.Count, 1, 0, 0, 0);
-
-        rpEncoder.End();
-        rpEncoder.Dispose();
-
+        positionWriter.Upload();
         positionWriter.Reset();
-        indexWriter.Reset();
     }
 }

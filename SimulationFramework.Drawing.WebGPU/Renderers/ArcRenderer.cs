@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using WebGPU;
 
 namespace SimulationFramework.Drawing.WebGPU.Renderers;
-internal class ArcRenderer
+internal class ArcRenderer : Renderer 
 {
     BufferWriter<Arc> arcs;
 
@@ -72,14 +72,18 @@ fn fs_main(@builtin(position) position: vec4f, @location(0) arc: Arc) -> @locati
     public void RenderArc(Rectangle bounds, float begin, float end, bool includeCenter)
     {
         if (!arcs.HasCapacity(1))
-            Flush();
+            OnFlush();
 
         arcs.Write([new(bounds, begin, end)]);
     }
 
-    void Flush()
+    public override void Submit(RenderPassEncoder encoder)
     {
+        encoder.Draw(6, (uint)arcs.Count, 0, 0);
+    }
 
+    public override void OnFlush()
+    {
     }
 
     struct Arc
