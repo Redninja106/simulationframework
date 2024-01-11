@@ -15,6 +15,69 @@ internal class ShaderAssembler
 
     public ShaderSnippet[] Snippets { get; }
 
+    public string GetSource()
+    {
+        StringWriter writer = new();
+
+        foreach (var snippets in Snippets)
+        {
+            foreach (var binding in snippets.BindingDeclarations)
+            {
+                writer.WriteLine(binding);
+            }
+        }
+
+        return $$"""
+struct VsIn
+{
+{{GetVsInDeclarations()}}   
+}
+
+struct VsOut 
+{
+{{GetVsOutDeclarations()}}
+}
+
+struct PsOut 
+{
+{{GetPsOutDeclarations()}}
+}
+
+@vertex
+fn vs_main(in : VsIn) -> VsOut 
+{
+    var out : VsOut;
+
+    return out;
+}
+
+@fragment
+fn fs_main(in : VsOut) -> PsOut
+{
+    var out : PsOut;
+
+    
+
+    return out;
+}
+""";
+    }
+
+    private string GetVsInDeclarations()
+    {
+
+    }
+
+    private string GetVsOutDeclarations()
+    {
+
+    }
+
+    private string GetPsOutDeclarations()
+    {
+
+    }
+
     private string GetSource()
     {
         return $@"
@@ -45,14 +108,5 @@ fn fs_main(vsOut: VsOut) -> @location(0) vec4f {{
     return vsOut.color;
 }}
 ";
-
-        var x = new ShaderSnippet()
-        {
-            VertexShaderCode = @"
-
-
-
-"
-        }
     }
 }

@@ -13,18 +13,35 @@ internal class ShaderSnippet
         ShaderSnippet s = new()
         {
             VertexShaderArgs = [
-                ("pos : vec2f", new VertexAttribute(VertexFormat.Float32x2, 0, 0)),
-                ("col: vec4f", new()),
-            ]
-        };
+                new("pos : vec2f", VertexFormat.Float32x2),
+                new("col : vec4f", VertexFormat.Float32x4),
+            ],
 
+            InterstageArgs = [
+                new("color : vec4f")
+            ],
+
+            VertexShaderCode = @"
+out.pos = 
+",
+
+        };
     }
 
-    public string Functions { get; }
-    public (string, VertexAttribute)[] VertexShaderArgs { get; init; }
-    public string VertexShaderCode { get; }
-    public string[] FragmentShaderArgs { get; }
-    public string FragmentShaderCode { get; }
+    public string Functions { get; init; }
+    public VertexShaderArg[] VertexShaderArgs { get; init; }
+    public string VertexShaderCode { get; init; }
+    public string[] FragmentShaderArgs { get; init; }
+    public string FragmentShaderCode { get; init; }
 
-    public string[] InterstageVariables { get; }
+    public string[] BindingDeclarations { get; init; } 
+
+    public InterstageArg[] InterstageArgs { get; init; }
+
 }
+
+record VertexShaderArg(string Declaration, VertexFormat Format, int Offset = -1)
+{
+}
+
+record InterstageArg(string Declaration, string? SpecialAttribute = null);
