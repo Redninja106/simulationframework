@@ -26,7 +26,7 @@ internal class WebGPUCanvas : ICanvas
     private Renderer? currentRenderer;
     private RenderPassEncoder? renderPassEncoder;
 
-    private ShaderPart FrameConstShaderPart;
+    private ShaderSnippet FrameConstShaderPart;
 
     internal struct FrameConstUniforms
     {

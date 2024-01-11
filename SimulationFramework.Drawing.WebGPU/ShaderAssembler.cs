@@ -13,10 +13,7 @@ internal class ShaderAssembler
         throw new NotImplementedException();
     }
 
-
-
-    public ShaderPart? MaskFunc { get; }
-
+    public ShaderSnippet[] Snippets { get; }
 
     private string GetSource()
     {
@@ -48,5 +45,14 @@ fn fs_main(vsOut: VsOut) -> @location(0) vec4f {{
     return vsOut.color;
 }}
 ";
+
+        var x = new ShaderSnippet()
+        {
+            VertexShaderCode = @"
+
+
+
+"
+        }
     }
 }
