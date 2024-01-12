@@ -22,6 +22,9 @@ internal class WebGPUCanvas : ICanvas
 
     private TriangleRenderer triangleRenderer;
     private ArcRenderer arcRenderer;
+    private RectangleRenderer rectangleRenderer;
+    private ColoredRectangleRenderer coloredRectangleRenderer;
+
 
     private Renderer? currentRenderer;
     private RenderPassEncoder? renderPassEncoder;
@@ -42,7 +45,8 @@ internal class WebGPUCanvas : ICanvas
         this.target = target;
         commandEncoder = resources.Device.CreateCommandEncoder(default);
 
-        triangleRenderer = new(resources, this);
+        // triangleRenderer = new(resources, this);
+        coloredRectangleRenderer = new(resources, this);
     }
 
     private WebGPUCanvasState GetCurrentState()
@@ -83,7 +87,7 @@ internal class WebGPUCanvas : ICanvas
     public void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter)
     {
         MakeRendererCurrent(arcRenderer);
-        arcRenderer.RenderArc(bounds, begin, end, includeCenter);
+        arcRenderer.RenderArc(bounds, begin, end, GetCurrentState().FillColor);
     }
 
     public void DrawLine(Vector2 p1, Vector2 p2)
@@ -98,6 +102,22 @@ internal class WebGPUCanvas : ICanvas
 
     public void DrawRect(Rectangle rect)
     {
+        var state = GetCurrentState();
+        if (state.DrawMode == DrawMode.Fill)
+        {
+            MakeRendererCurrent(coloredRectangleRenderer);
+            coloredRectangleRenderer.RenderRectangle(rect, state.FillColor);
+        }
+        else
+        {
+            MakeRendererCurrent(rectangleRenderer);
+            rectangleRenderer.RenderRectangle(rect);
+        }
+
+        return;
+
+        MakeRendererCurrent(rectangleRenderer);
+
         Span<Vector2> vertices = [
             new(rect.X, rect.Y),
             new(rect.X + rect.Width, rect.Y),

@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using WebGPU;
 
 namespace SimulationFramework.Drawing.WebGPU.Renderers;
-internal class ArcRenderer : Renderer 
+internal class ArcRenderer : Renderer
 {
+    RectangleRenderer rectRenderer;
     BufferWriter<Arc> arcs;
 
-    public ArcRenderer(GraphicsResources resources)
+    public ArcRenderer(GraphicsResources resources, WebGPUCanvas canvas) : base(resources, canvas)
     {
         var shaderModule = resources.Device.CreateShaderModule(new()
         {
@@ -56,20 +57,9 @@ fn fs_main(@builtin(position) position: vec4f, @location(0) arc: Arc) -> @locati
 }
 ")
         });
-
-
-        var pipeline = resources.Device.CreateRenderPipeline(new()
-        {
-            Vertex = new VertexState()
-            {
-                Buffers = []
-            }
-        });
-
-
     }
 
-    public void RenderArc(Rectangle bounds, float begin, float end, bool includeCenter)
+    public void RenderArc(Rectangle bounds, float begin, float end, Color color)
     {
         if (!arcs.HasCapacity(1))
             OnFlush();
@@ -84,6 +74,11 @@ fn fs_main(@builtin(position) position: vec4f, @location(0) arc: Arc) -> @locati
 
     public override void OnFlush()
     {
+    }
+
+    protected override RenderPipelineDescriptor GetRenderPipelineDescriptor()
+    {
+        throw new NotImplementedException();
     }
 
     struct Arc

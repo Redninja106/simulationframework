@@ -22,12 +22,10 @@ internal class TriangleRenderer : Renderer
     private ShaderModule shaderModule;
     private BindGroup bindGroup;
 
-    private GraphicsResources resources;
-
     public TriangleRenderer(GraphicsResources resources, WebGPUCanvas canvas)
+        : base(resources, canvas)
     {
         this.canvas = canvas;
-        this.resources = resources;
 
         canvas.uniformBuffer = resources.Device.CreateBuffer(new()
         {
@@ -70,7 +68,27 @@ fn fs_main(vsOut: VsOut) -> @location(0) vec4f {
             }
         });
 
-        pipeline = resources.Device.CreateRenderPipeline(new()
+        bindGroup = resources.Device.CreateBindGroup(new()
+        {
+            Layout = pipeline.GetBindGroupLayout(0),
+            Entries = [
+                new BindGroupEntry()
+                {
+                    Binding = 0,
+                    Buffer = canvas.uniformBuffer,
+                    Offset = 0,
+                    Size = canvas.uniformBuffer.Size
+                },
+            ]
+        });
+
+        positionWriter = new(resources, BufferUsage.Vertex, 1024 * 64);
+        colorWriter = new(resources, BufferUsage.Vertex, 1024 * 64);
+    }
+
+    protected override RenderPipelineDescriptor GetRenderPipelineDescriptor()
+    {
+        return new()
         {
             Primitive = new PrimitiveState(PrimitiveTopology.TriangleList, IndexFormat.Undefined, FrontFace.CW, CullMode.None),
             Vertex = new()
@@ -95,7 +113,7 @@ fn fs_main(vsOut: VsOut) -> @location(0) vec4f {
                 Targets = [
                     new ColorTargetState()
                     {
-                        Format = resources.Surface.GetPreferredFormat(resources.Adapter),
+                        Format = Resources.Surface.GetPreferredFormat(Resources.Adapter),
                         Blend = new()
                         {
                             Color = new BlendComponent(BlendOperation.Add, BlendFactor.One, BlendFactor.Zero),
@@ -107,26 +125,8 @@ fn fs_main(vsOut: VsOut) -> @location(0) vec4f {
             },
             Multisample = new MultisampleState(1, ~0u, false),
             DepthStencil = null,
-        });
-
-        bindGroup = resources.Device.CreateBindGroup(new()
-        {
-            Layout = pipeline.GetBindGroupLayout(0),
-            Entries = [
-                new BindGroupEntry()
-                {
-                    Binding = 0,
-                    Buffer = canvas.uniformBuffer,
-                    Offset = 0,
-                    Size = canvas.uniformBuffer.Size
-                },
-            ]
-        });
-
-        positionWriter = new(resources, BufferUsage.Vertex, 1024 * 64);
-        colorWriter = new(resources, BufferUsage.Vertex, 1024 * 64);
+        };
     }
-
     public void RenderTriangles(ReadOnlySpan<Vector2> polygon, ReadOnlySpan<Color> colors)
     {
         if (!positionWriter.HasCapacity(polygon.Length))
