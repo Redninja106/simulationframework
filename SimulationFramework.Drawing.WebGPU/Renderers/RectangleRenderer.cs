@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
@@ -89,11 +90,11 @@ fn fs_main(out : VsOut) -> @location(0) vec4f {
                         ArrayStride = (ulong)Unsafe.SizeOf<Rectangle>(),
                         StepMode = VertexStepMode.Instance,
                         Attributes = [
-                            new VertexAttribute(VertexFormat.Float32x4, 0, 0)
+                            new global::WebGPU.VertexAttribute(VertexFormat.Float32x4, 0, 0)
                         ]
                     },
                 ],
-                Module = module,
+                Module = this.module,
                 EntryPoint = "vs_main",
             },
             Multisample = new(1, ~0u, false),
@@ -111,7 +112,7 @@ fn fs_main(out : VsOut) -> @location(0) vec4f {
                         }
                     }
                 ],
-                Module = module,
+                Module = this.module,
                 EntryPoint = "fs_main",
             }
         };

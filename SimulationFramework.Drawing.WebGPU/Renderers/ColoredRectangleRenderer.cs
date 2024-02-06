@@ -46,7 +46,7 @@ internal class ColoredRectangleRenderer : RectangleRenderer
             new VertexBufferLayout()
             {
                 ArrayStride = (ulong)Unsafe.SizeOf<Color>(),
-                Attributes = [new VertexAttribute(VertexFormat.Unorm8x4, 0, 1)],
+                Attributes = [new global::WebGPU.VertexAttribute(VertexFormat.Unorm8x4, 0, 1)],
                 StepMode = VertexStepMode.Instance,
             }];
         return descriptor;

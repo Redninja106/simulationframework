@@ -96,20 +96,20 @@ fn fs_main(vsOut: VsOut) -> @location(0) vec4f {
                 Buffers = [
                     // position
                     new VertexBufferLayout((uint)Unsafe.SizeOf<Vector2>(), VertexStepMode.Vertex, [
-                            new VertexAttribute(VertexFormat.Float32x2, 0, 0)
+                            new global::WebGPU.VertexAttribute(VertexFormat.Float32x2, 0, 0)
                     ]),
                     // color
                     new VertexBufferLayout((uint)Unsafe.SizeOf<Color>(), VertexStepMode.Vertex, [
-                            new VertexAttribute(VertexFormat.Unorm8x4, 0, 1)
+                            new global::WebGPU.VertexAttribute(VertexFormat.Unorm8x4, 0, 1)
                     ]),
                 ],
                 EntryPoint = "vs_main",
-                Module = shaderModule,
+                Module = this.shaderModule,
             },
             Fragment = new()
             {
                 EntryPoint = "fs_main",
-                Module = shaderModule,
+                Module = this.shaderModule,
                 Targets = [
                     new ColorTargetState()
                     {

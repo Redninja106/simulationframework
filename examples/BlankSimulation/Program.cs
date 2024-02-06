@@ -8,7 +8,6 @@ Start<Program>(new DesktopPlatform());
 
 partial class Program : Simulation
 {
-
     List<Vector2> positions = new();
 
     public override void OnInitialize()
