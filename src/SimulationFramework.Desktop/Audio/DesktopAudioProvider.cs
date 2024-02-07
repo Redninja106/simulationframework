@@ -1,6 +1,7 @@
 ﻿using SimulationFramework.Components;
 using SimulationFramework.Messaging;
 using Silk.NET.OpenAL;
+using System;
 
 namespace SimulationFramework.Desktop.Audio;
 internal unsafe class DesktopAudioProvider : IAudioProvider

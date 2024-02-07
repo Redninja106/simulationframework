@@ -1,6 +1,7 @@
 ﻿using NAudio.Vorbis;
 using NAudio.Wave;
 using Silk.NET.OpenAL;
+using System;
 using System.IO;
 
 namespace SimulationFramework.Desktop.Audio;
