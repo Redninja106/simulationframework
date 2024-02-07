@@ -1,8 +1,15 @@
-﻿using SimulationFramework.Drawing;
+using SimulationFramework.Drawing;
 using SkiaSharp;
 using Silk.NET.OpenGL;
 using System.Runtime.InteropServices;
 using System.IO;
+using System;
+using System.Diagnostics;
+using Silk.NET.OpenGL;
+using SimulationFramework.Drawing;
+using SimulationFramework.SkiaSharp;
+using SimulationFramework;
+using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
 
@@ -44,6 +51,7 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
 
         if (!options.HasFlag(TextureOptions.Constant))
         {
+            this.colors = new Color[width * height];
             UpdateLocalPixels();
         }
     }

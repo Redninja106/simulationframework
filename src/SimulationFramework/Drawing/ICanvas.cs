@@ -1,4 +1,9 @@
-﻿using System.Numerics;
+using System.Numerics;
+using System;
+using System.Collections.Generic;
+using System.Numerics;
+using System.Runtime.CompilerServices;
+using SimulationFramework.Drawing.Shaders;
 
 namespace SimulationFramework.Drawing;
 
@@ -83,6 +88,20 @@ public interface ICanvas : IDisposable
     {
         State.UpdateStrokeColor(color);
         State.UpdateDrawMode(DrawMode.Stroke);
+    }
+
+    /// <summary>
+    /// Configures the canvas to fill shapes using the provided shader.
+    /// </summary>
+    /// 
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Shader"/>, 
+    /// meaning that any shapes drawn after this call will be filled with the provided shader. 
+    /// </para>
+    sealed void Fill(CanvasShader shader)
+    {
+        State.UpdateShader(shader);
+        State.UpdateDrawMode(DrawMode.Shader);
     }
 
     /// <summary>

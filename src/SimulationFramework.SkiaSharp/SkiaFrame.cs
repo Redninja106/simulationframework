@@ -3,7 +3,7 @@ using System.IO;
 
 namespace SimulationFramework.SkiaSharp
 {
-    internal class SkiaFrame : ITexture
+    internal class SkiaFrame : SkiaGraphicsObject, ITexture
     {
         public SkiaFrame(int width, int height)
         {
@@ -13,6 +13,7 @@ namespace SimulationFramework.SkiaSharp
 
         public int Width { get; }
         public int Height { get; }
+        public TextureOptions Options => TextureOptions.None;
 
         public Span<Color> Pixels { get => throw new NotSupportedException(); }
 
@@ -21,8 +22,9 @@ namespace SimulationFramework.SkiaSharp
             throw new NotSupportedException();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
         }
 
         public ref Color GetPixel(int x, int y)

@@ -1,5 +1,11 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Numerics;
 using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Shaders;
+using SimulationFramework.Drawing.Shaders.Compiler;
+using SimulationFramework.SkiaSharp.Shaders;
 using SkiaSharp;
 
 namespace SimulationFramework.SkiaSharp;
@@ -19,16 +25,16 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
     // internal skcanvas
     private readonly SKCanvas canvas;
     // do we own this skcanvas object?
-    private readonly bool owner;
+    private readonly bool ownsCanvas;
 
-    private SkiaTexture SkiaTextureTarget => Target as SkiaTexture;
+    public SkiaTexture SkiaTextureTarget => Target as SkiaTexture;
 
-    public SkiaCanvas(SkiaGraphicsProvider provider, ITexture target, SKCanvas canvas, bool owner)
+    public SkiaCanvas(SkiaGraphicsProvider provider, ITexture target, SKCanvas canvas, bool ownsCanvas)
     {
         this.Target = target;
         this.provider = provider;
         this.canvas = canvas;
-        this.owner = owner;
+        this.ownsCanvas = ownsCanvas;
         ResetState();
     }
 
@@ -39,7 +45,23 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
         canvas.Clear(color.AsSKColor());
         SkiaTextureTarget?.InvalidatePixels();
     }
-    public void Flush() => canvas.Flush();
+    public void Clear(CanvasShader shader)
+    {
+        var (effect, uniforms) = RuntimeEffectCache.GetValue(shader);
+        using var skshader = effect.ToShader(true, uniforms);
+        using var paint = new SKPaint();
+        paint.Shader = skshader;
+        paint.Style = SKPaintStyle.Fill;
+
+        canvas.DrawPaint(currentState.Paint);
+        SkiaTextureTarget?.InvalidatePixels();
+    }
+
+    public void Flush()
+    {
+        canvas.Flush();
+    }
+
     public void DrawLine(Vector2 p1, Vector2 p2)
     {
         canvas.DrawLine(p1.AsSKPoint(), p2.AsSKPoint(), currentState.Paint);
@@ -53,9 +75,16 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
         canvas.DrawRoundRect(rect.AsSKRect(), radius, radius, currentState.Paint);
         SkiaTextureTarget?.InvalidatePixels();
     }
-
     public void DrawRect(Rectangle rectangle)
     {
+        if (State.DrawMode == DrawMode.Shader)
+        {
+            var (effect, uniforms) = RuntimeEffectCache.GetValue(State.Shader);
+            using var skshader = effect.ToShader(true, uniforms);
+            currentState.Paint.Shader = skshader;
+            currentState.Paint.Style = SKPaintStyle.Fill;
+        }
+
         canvas.DrawRect(rectangle.AsSKRect(), currentState.Paint);
         SkiaTextureTarget?.InvalidatePixels();
     }
@@ -87,7 +116,10 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
         if (texture is not SkiaTexture skTexture)
             throw new ArgumentException("texture must be a texture created by the skiasharp renderer!", nameof(texture));
 
-        canvas.DrawImage(skTexture.GetImage(), source.AsSKRect(), destination.AsSKRect());
+        using var paint = currentState.Paint.Clone();
+        paint.Color = Color.Red.AsSKColor();
+        paint.FilterQuality = SKFilterQuality.None;
+        canvas.DrawImage(skTexture.GetImage(), source.AsSKRect(), destination.AsSKRect(), paint);
         SkiaTextureTarget?.InvalidatePixels();
     }
 
@@ -259,7 +291,7 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
         if (IsDisposed)
             return;
 
-        if (owner)
+        if (ownsCanvas)
             canvas.Dispose();
 
         currentState.Dispose();
@@ -268,5 +300,7 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
         {
             stateStack.Pop().Dispose();
         }
+
+        base.Dispose();
     }
 }

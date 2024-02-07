@@ -1,4 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using Silk.NET.Core.Contexts;
 using Silk.NET.OpenGL;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;
@@ -13,8 +19,9 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     internal readonly GRGlGetProcedureAddressDelegate getProcAddress;
 
     internal GRGlInterface glInterface;
-    internal GRContext backendContext;
+    public GRContext backendContext;
     internal SkiaCanvas frameCanvas;
+    internal SkiaFrame frame;
     internal Dictionary<(string fontName, FontStyle styles, int size), SKFont> fonts = new();
     internal SkiaFont defaultFont;
     internal GL gl;
@@ -34,6 +41,7 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
     {
         glInterface = GRGlInterface.CreateOpenGl(getProcAddress);
         backendContext = GRContext.CreateGl(glInterface);
+        
 
         frameProvider.SetContext(this.backendContext);
     }
@@ -44,9 +52,11 @@ public sealed class SkiaGraphicsProvider : SkiaGraphicsObject, IGraphicsProvider
 
         if (frameCanvas is null || canvas != frameCanvas.GetSKCanvas())
         {
+            frame?.Dispose();
             frameCanvas?.Dispose();
             frameProvider.GetCurrentFrameSize(out int width, out int height);
-            frameCanvas = new SkiaCanvas(this, new SkiaFrame(width, height), canvas, false);
+            frame = new(width, height);
+            frameCanvas = new SkiaCanvas(this, frame, canvas, true);
         }
 
         return frameCanvas;

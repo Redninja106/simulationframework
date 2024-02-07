@@ -20,5 +20,6 @@ public enum DrawMode
     /// <summary>
     /// Shapes should be filled with a texture. 
     /// </summary>
-    Textured
+    Textured,
+    Shader
 }

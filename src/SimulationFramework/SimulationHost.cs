@@ -218,7 +218,11 @@ public class SimulationHost
         }
         IsRendering = false;
 
+        interceptor?.Render();
         Dispatcher.ImmediateDispatch<AfterRenderMessage>(new());
+
+
+        Dispatcher.ImmediateDispatch<PresentMessage>(new());
     }
 
     /// <summary>

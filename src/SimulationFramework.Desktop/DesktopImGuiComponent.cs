@@ -28,10 +28,10 @@ internal class DesktopImGuiComponent : ISimulationComponent
     public void Initialize(MessageDispatcher dispatcher)
     {
         dispatcher.Subscribe<BeforeRenderMessage>(PreRender);
-        dispatcher.Subscribe<AfterRenderMessage>(PostRender);
+        dispatcher.Subscribe<AfterRenderMessage>(AfterRender);
     }
 
-    void PreRender(BeforeRenderMessage renderMessage)
+    void PreRender(BeforeRenderMessage message)
     {
         var canvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
         gl.Viewport(0, 0, (uint)canvas.Width, (uint)canvas.Height);
@@ -42,8 +42,10 @@ internal class DesktopImGuiComponent : ISimulationComponent
         mouseProvider.capturedByImgui = io.WantCaptureMouse;
     }
 
-    void PostRender(AfterRenderMessage renderMessage)
+    void AfterRender(AfterRenderMessage message)
     {
+        var canvas = Graphics.GetOutputCanvas();
+        gl.Viewport(0, 0, (uint)canvas.Width, (uint)canvas.Height);
         imGuiController.Render();
     }
 

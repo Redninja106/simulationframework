@@ -1,4 +1,6 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
+using SimulationFramework.Drawing.Shaders;
 
 namespace SimulationFramework.Drawing;
 
@@ -85,6 +87,8 @@ public abstract class CanvasState
     /// If the canvas should render using antialiasing.
     /// </summary>
     public bool Antialias { get; private set; }
+
+    public CanvasShader Shader { get; private set; }
 
     /// <summary>
     /// Initializes this <see cref="CanvasState"/> instance, optionally based off another instance.
@@ -249,5 +253,10 @@ public abstract class CanvasState
     internal protected virtual void UpdateAntialias(bool antialias)
     {
         Antialias = antialias;
+    }
+
+    internal void UpdateShader(CanvasShader shader)
+    {
+        Shader = shader;
     }
 }
