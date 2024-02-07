@@ -65,7 +65,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         Application.InterceptComponent<IWindowProvider>(windowProvider => this.windowProvider = new FixedResolutionWindowProvider(windowProvider, new(width, height)));
     }
 
-    private void AfterEvents(AfterEventsMessage message)
+    internal void BeforeRender()
     {
         var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
         outputCanvas.ResetState();
@@ -95,7 +95,6 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
     /// <inheritdoc/>
     public void Initialize(MessageDispatcher dispatcher)
     {
-        dispatcher.Subscribe<AfterEventsMessage>(AfterEvents);
     }
 
     /// <inheritdoc/>
@@ -118,7 +117,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         this.Height = height;
         if (this.windowProvider is not null)
         {
-            this.windowProvider.FixedSize = new(width, height);
+            this.windowProvider.fixedSize = new(width, height);
         }
     }
 
@@ -260,6 +259,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         {
             this.baseProvider = baseProvider;
             this.fixedSize = fixedSize;
+        }
 
         public void Dispose()
         {

@@ -4,6 +4,7 @@ using Silk.NET.OpenGL;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
 using SimulationFramework.Components;
+using SimulationFramework.Drawing;
 using SimulationFramework.Messaging;
 
 namespace SimulationFramework.Desktop;
