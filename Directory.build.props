@@ -2,8 +2,8 @@
 	<PropertyGroup>
 		<Deterministic>true</Deterministic>
 		<Version>0.2.1-beta.8</Version>
-		<Nullable>enable</Nullable>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 </Project>
