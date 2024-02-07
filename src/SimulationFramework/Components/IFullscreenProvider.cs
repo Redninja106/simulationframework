@@ -9,6 +9,11 @@ public interface IFullscreenProvider : ISimulationComponent
     // this interface exists in order to not force the window provider into handling fullscreen, and leave it to the backend how to implement fullscreen.
 
     /// <summary>
+    /// The swap interval used when presenting frames.
+    /// </summary>
+    int SwapInterval { get; set; }
+
+    /// <summary>
     /// Whether to prefer exclusive or borderless fullscreen.
     /// </summary>
     bool PreferExclusive { get; set; }

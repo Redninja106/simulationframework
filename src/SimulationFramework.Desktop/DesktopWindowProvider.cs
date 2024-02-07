@@ -1,6 +1,4 @@
-﻿using ImGuiNET;
-using Silk.NET.Core;
-using Silk.NET.GLFW;
+﻿using Silk.NET.GLFW;
 using Silk.NET.Windowing;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;
@@ -12,6 +10,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
 {
     private readonly IWindow window;
     private readonly Glfw glfw = Glfw.GetApi();
+    private int swapInterval;
 
     private string title = "Simulation";
 
@@ -27,8 +26,22 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
             title = value;
         }
     }
+
     public IDisplay Display => GetDisplay();
     
+    public int SwapInterval 
+    {
+        get
+        {
+            return swapInterval;
+        }
+        set 
+        {
+            glfw.SwapInterval(value);
+            swapInterval = value;
+        }
+    }
+
     public bool IsUserResizable
     {
         get => isUserResizable;
@@ -72,7 +85,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     public bool IsMaximized => window.WindowState == WindowState.Maximized;
     public bool IsFullscreen => window.WindowState == WindowState.Fullscreen;
 
-    private unsafe WindowHandle* WindowHandle => (WindowHandle*)window.Native.Glfw!.Value;
+    private unsafe WindowHandle* WindowHandle => (WindowHandle*)window.Native!.Glfw!.Value;
 
     public bool PreferExclusive { get; set; }
 
@@ -101,6 +114,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     {
         this.window = window;
         window.Title = this.title;
+        SwapInterval = 0;
     }
 
     public void Dispose()
@@ -110,7 +124,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
     unsafe IDisplay GetDisplay()
     {
         var displays = DesktopDisplay.GetDisplayList();
-        DesktopDisplay fullscreenDisplay = displays.SingleOrDefault(display => display.monitor == glfw.GetWindowMonitor(WindowHandle));
+        DesktopDisplay? fullscreenDisplay = displays.SingleOrDefault(display => display.monitor == glfw.GetWindowMonitor(WindowHandle));
 
         Rectangle clientArea = new((int)Position.X, (int)Position.Y, Size.X, Size.Y);
 
@@ -125,7 +139,7 @@ internal class DesktopWindowProvider : IWindowProvider, IFullscreenProvider
         throw new Exception("Error Finding Display");
     }
 
-    public unsafe void EnterFullscreen(IDisplay display)
+    public unsafe void EnterFullscreen(IDisplay? display)
     {
         if (display is not DesktopDisplay)
             throw new ArgumentException("display must be a desktop display.");

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 namespace SimulationFramework;
@@ -167,7 +166,12 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// <returns>The converted <see cref="Color"/>.</returns>
     public Color ToColor()
     {
-        return new(AsVector4());
+        return new Color(
+            (byte)(this.R * 255f),
+            (byte)(this.G * 255f),
+            (byte)(this.B * 255f),
+            (byte)(this.A * 255f)
+            );
     }
 
     /// <summary>

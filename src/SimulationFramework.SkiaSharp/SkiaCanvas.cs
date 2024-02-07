@@ -288,6 +288,9 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
 
     public override void Dispose()
     {
+        if (IsDisposed)
+            return;
+
         if (ownsCanvas)
             canvas.Dispose();
 

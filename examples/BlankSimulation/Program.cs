@@ -1,11 +1,11 @@
-﻿using Silk.NET.OpenGL;
+using Silk.NET.OpenGL;
 using SimulationFramework;
 using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
 using SimulationFramework.SkiaSharp;
 using SkiaSharp;
 
-Start<Program>();
+Start<Program>(new DesktopPlatform());
 
 partial class Program : Simulation
 {

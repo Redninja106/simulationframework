@@ -1,4 +1,5 @@
-﻿using System;
+using System.Numerics;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -129,7 +130,20 @@ public interface ICanvas : IDisposable
     /// meaning that any shapes drawn after this call will be filled with the provided texture. 
     /// </para>
     /// </summary>
-    sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX = TileMode.Clamp, TileMode tileModeY = TileMode.Clamp)
+    sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileMode = TileMode.Repeat)
+    {
+        State.UpdateFillTexture(texture, transform, tileMode, tileMode);
+        State.UpdateDrawMode(DrawMode.Textured);
+    }
+
+    /// <summary>
+    /// Fills any drawn shapes with the provided texture.
+    /// <para>
+    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Textured"/>, 
+    /// meaning that any shapes drawn after this call will be filled with the provided texture. 
+    /// </para>
+    /// </summary>
+    sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
     {
         State.UpdateFillTexture(texture, transform, tileModeX, tileModeY);
         State.UpdateDrawMode(DrawMode.Textured);
@@ -461,7 +475,7 @@ public interface ICanvas : IDisposable
     /// </summary>
     /// <param name="name">The name of the font to load.</param>
     /// <returns><see langword="true"/> if the font was successfully loaded, otherwise <see langword="false"/>.</returns>
-    sealed void Font(string name) => Font(Graphics.LoadFontByName(name));
+    sealed void Font(string name) => Font(Graphics.LoadSystemFont(name));
 
     /// <summary>
     /// Sets the font used for text rendering.

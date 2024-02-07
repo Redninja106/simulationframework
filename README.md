@@ -10,7 +10,7 @@
 </div>
 
 
-SimulationFramework is a cross-platform library for creative coding, game development, and graphical apps built on .NET 6. Designed with simplicity and ease of use in mind, it cuts down on development time for quick and easy prototyping. 
+SimulationFramework is a cross-platform library for creative coding, game development, and graphical apps built on .NET 7. Designed with simplicity and ease of use in mind, it cuts down on development time for quick and easy prototyping. 
 
 > [Join the discord server!](https://discord.gg/V4X2vTvV2G)
 >
@@ -118,6 +118,7 @@ Most SimulationFramework features are exposed through static classes. Here is a 
 - `Keyboard`: provides keyboard input  
 - `Graphics`: creates textures
 - `Time`: provides simulation timing values like `DeltaTime`
+- `Window`: configures the simulation's window
 
 ## Planned Features
 - **C# shaders**: .NET CIL to HLSL/GLSL compilation to write any kind of shader in plain C# (or any other .NET language!).

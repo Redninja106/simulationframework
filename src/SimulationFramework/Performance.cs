@@ -1,5 +1,4 @@
 ﻿using SimulationFramework.Components;
-using System.Collections.Generic;
 
 namespace SimulationFramework;
 
@@ -11,18 +10,18 @@ public static class Performance
     private static PerformanceProvider Provider => Application.GetComponent<PerformanceProvider>();
 
     /// <summary>
-    /// The default value of <see cref="FramerateAverageCount"/>.
+    /// The default value of <see cref="FramerateAverageDuration"/>.
     /// </summary>
 
-    public const int DefaultFramerateAverageCount = 60;
+    public const int DefaultFramerateAverageDuration = 5;
 
     /// <summary>
     /// The number of frames that the value of <see cref="Framerate"/> should be averaged over.
     /// </summary>
-    public static int FramerateAverageCount { get => Provider.FramerateAverageCount; set => Provider.FramerateAverageCount = value; }
+    public static float FramerateAverageDuration { get => Provider.FramerateAverageDuration; set => Provider.FramerateAverageDuration = value; }
 
     /// <summary>
-    /// The simulation's current framerate, averaged over a number a frames (determined by <see cref="FramerateAverageCount"/>).
+    /// The simulation's current framerate, averaged over a number a frames (determined by <see cref="FramerateAverageDuration"/>).
     /// </summary>
     public static float Framerate => Provider.Framerate;
 

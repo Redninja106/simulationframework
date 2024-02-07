@@ -1,8 +1,5 @@
 ﻿using SimulationFramework.Components;
 using SimulationFramework.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 namespace SimulationFramework;
 
@@ -65,6 +62,7 @@ public static class Application
     /// <param name="component">The component to add.</param>
     public static void RegisterComponent<TComponent>(TComponent component) where TComponent : class, ISimulationComponent
     {
+        ArgumentNullException.ThrowIfNull(component);
         SimulationHost.Current?.RegisterComponent(component);
     }
 
@@ -88,7 +86,7 @@ public static class Application
     /// <returns><see langword="true"/> if the simulation has a component of type <typeparamref name="TComponent"/>; otherwise <see langword="false"/>.</returns>
     public static bool HasComponent<TComponent>() where TComponent : class, ISimulationComponent
     {
-        return GetComponent<TComponent>() is not null;
+        return GetComponentOrDefault<TComponent>() is not null;
     }
 
     /// <summary>

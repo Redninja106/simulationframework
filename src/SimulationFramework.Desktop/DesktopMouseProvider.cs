@@ -1,9 +1,7 @@
-﻿using Silk.NET.GLFW;
-using Silk.NET.Input;
+﻿using Silk.NET.Input;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace SimulationFramework.Desktop;
 internal class DesktopMouseProvider : IMouseProvider
@@ -23,8 +21,8 @@ internal class DesktopMouseProvider : IMouseProvider
         set => mouse.Cursor.CursorMode = value ? CursorMode.Normal : CursorMode.Hidden;
     }
 
-    public event MouseButtonEvent ButtonPressed;
-    public event MouseButtonEvent ButtonReleased;
+    public event MouseButtonEvent? ButtonPressed;
+    public event MouseButtonEvent? ButtonReleased;
 
     private readonly List<MouseButton> heldButtons = new();
     private readonly List<MouseButton> pressedButtons = new();
@@ -76,7 +74,6 @@ internal class DesktopMouseProvider : IMouseProvider
     {
         dispatcher.Subscribe<BeforeEventsMessage>(m => BeforeEvents());
         dispatcher.Subscribe<AfterEventsMessage>(m => AfterEvents());
-        dispatcher.Subscribe<AfterRenderMessage>(m => AfterRender());
     }
 
     void BeforeEvents()
@@ -98,11 +95,18 @@ internal class DesktopMouseProvider : IMouseProvider
 
         mousePosition = mouse.Position;
 
-        scrollWheel = capturedByImgui ? 0 : mouse.ScrollWheels.FirstOrDefault().Y;
+        scrollWheel = GetScrollWheelValue();
     }
 
-    void AfterRender()
+    private float GetScrollWheelValue()
     {
+        if (capturedByImgui)
+            return 0;
+
+        if (mouse.ScrollWheels.Count > 0)
+            return mouse.ScrollWheels[0].Y;
+
+        return 0;
     }
 
     public void Dispose()

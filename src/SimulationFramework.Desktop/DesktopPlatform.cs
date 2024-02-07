@@ -5,8 +5,8 @@ using SimulationFramework.Components;
 using Silk.NET.Windowing.Glfw;
 using Silk.NET.Input;
 using Silk.NET.Input.Glfw;
-using SimulationFramework.Drawing;
 using Silk.NET.OpenGL;
+using SimulationFramework.Desktop.Audio;
 
 namespace SimulationFramework.Desktop;
 
@@ -50,13 +50,23 @@ public class DesktopPlatform : ISimulationPlatform
 
         frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
         Application.RegisterComponent(new DesktopApplicationProvider());
-        Application.RegisterComponent(CreateGraphicsProvider());
+        var graphics = CreateGraphicsProvider();
+
+        if (graphics != null)
+        {
+            Application.RegisterComponent(graphics);
+        }
+
         Application.RegisterComponent(CreateTimeProvider());
         Application.RegisterComponent(CreateSimulationController());
         Application.RegisterComponent(CreateWindowProvider());
+        Application.RegisterComponent(new DesktopAudioProvider());
 
         RegisterInputProviders();
-        Application.RegisterComponent(CreateImGuiProvider());
+        if (graphics != null)
+        {
+            Application.RegisterComponent(CreateImGuiProvider());
+        }
     }
 
 

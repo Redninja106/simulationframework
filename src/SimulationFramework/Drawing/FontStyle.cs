@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SimulationFramework.Drawing;
+﻿namespace SimulationFramework.Drawing;
 
 /// <summary>
 /// Options for drawing text. Multiple values can be combined using the "<c>|</c>" (bitwise or) operator.

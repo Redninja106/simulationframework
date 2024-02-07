@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace SimulationFramework.Input;
+﻿namespace SimulationFramework.Input;
 
 /// <summary>
 /// Provides keyboard input to the simulation.

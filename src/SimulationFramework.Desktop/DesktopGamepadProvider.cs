@@ -1,5 +1,4 @@
 ﻿using Silk.NET.Input;
-using Silk.NET.Input.Extensions;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
 using System.Numerics;
@@ -29,8 +28,8 @@ internal class DesktopGamepadProvider : IGamepadProvider
         }
     }
 
-    public event GamepadButtonEvent ButtonPressed;
-    public event GamepadButtonEvent ButtonReleased;
+    public event GamepadButtonEvent? ButtonPressed;
+    public event GamepadButtonEvent? ButtonReleased;
 
     private readonly List<GamepadButton> heldButtons = new();
     private readonly List<GamepadButton> pressedButtons = new();
@@ -52,7 +51,7 @@ internal class DesktopGamepadProvider : IGamepadProvider
         heldButtons.Remove(button);
         releasedButtons.Add(button);
 
-        ButtonReleased(button);
+        ButtonReleased?.Invoke(button);
     }
 
     private void Gamepad_ButtonDown(IGamepad arg1, Button arg2)
@@ -64,7 +63,7 @@ internal class DesktopGamepadProvider : IGamepadProvider
         
         pressedButtons.Add(button);
 
-        ButtonPressed(button);
+        ButtonPressed?.Invoke(button);
     }
 
     public void Initialize(MessageDispatcher dispatcher)
@@ -80,7 +79,7 @@ internal class DesktopGamepadProvider : IGamepadProvider
     {
     }
 
-    private GamepadButton ConvertButton(ButtonName button) => button switch
+    private static GamepadButton ConvertButton(ButtonName button) => button switch
     {
         ButtonName.A => GamepadButton.A,
         ButtonName.B => GamepadButton.B,

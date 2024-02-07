@@ -5,7 +5,7 @@ Start<Program>();
 
 partial class Program : Simulation
 {
-    IFont font = Graphics.LoadFont("Borel-Regular.ttf");
+    readonly IFont font = Graphics.LoadFont("Borel-Regular.ttf");
 
     public override void OnInitialize()
     {

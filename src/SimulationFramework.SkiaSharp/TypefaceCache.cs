@@ -1,6 +1,5 @@
 ﻿using SimulationFramework.Drawing;
 using SkiaSharp;
-using System.Collections.Generic;
 
 namespace SimulationFramework.SkiaSharp;
 
