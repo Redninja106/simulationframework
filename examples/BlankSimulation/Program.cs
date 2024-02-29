@@ -13,6 +13,6 @@ partial class Program : Simulation
 
     public override void OnRender(ICanvas canvas)
     {
-        canvas.Clear(Color.White);
+        canvas.Clear(Color.Black);
     }
 }
