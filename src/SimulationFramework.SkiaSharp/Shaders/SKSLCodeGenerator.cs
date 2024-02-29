@@ -77,14 +77,14 @@ internal class SKSLCodeGenerator
             method.VisitBody(new IntrinsicOperatorReplacementVisitor());
         }
 
+        foreach (var structure in compilation.Structures)
+        {
+            EmitStructure(writer, structure);
+        }
+
         foreach (var uniform in compilation.Uniforms)
         {
             EmitUniform(writer, uniform);
-        }
-
-        foreach (var method in compilation.Methods)
-        {
-            // EmitMethod(writer, method, false);
         }
 
         foreach (var method in compilation.Methods.Reverse())
@@ -96,6 +96,25 @@ internal class SKSLCodeGenerator
     return {compilation.EntryPoint}(p);
 }}
 ");
+    }
+
+    private void EmitStructure(TextWriter writer, ShaderStructure structure)
+    {
+        writer.Write("struct ");
+        EmitType(writer, structure.StructType);
+        writer.WriteLine();
+        writer.WriteLine("{");
+
+        foreach (var field in structure.Fields)
+        {
+            writer.Write("    ");
+            EmitType(writer, field.FieldType);
+            writer.Write(" ");
+            EmitIdentifier(writer, field.Name);
+            writer.Write(";");
+        }
+
+        writer.WriteLine("}");
     }
 
     private void EmitUniform(TextWriter writer, ShaderUniform uniform)

@@ -41,6 +41,11 @@ partial class Program : Simulation
             Mouse.Visible = true;
         }
 
+        if (Mouse.IsButtonDown(MouseButton.Right))
+        {
+            shader.GetPixelColor(Mouse.Position);
+        }
+
         shader.cameraRotationMatrix = Matrix4x4.CreateRotationX(cameraRotX) * Matrix4x4.CreateRotationY(cameraRotY);
 
         Vector3 delta = Vector3.Zero;
@@ -58,8 +63,8 @@ partial class Program : Simulation
             delta.Y += Time.DeltaTime;
         shader.cameraPosition += Vector3.Transform(delta, shader.cameraRotationMatrix);
 
+        shader.cameraRotationMatrix = Matrix4x4.Transpose(shader.cameraRotationMatrix);
         // draw a fullscreen rect, fill with the shader
-
         canvas.Fill(shader);
         canvas.DrawRect(0, 0, canvas.Width, canvas.Height);
     }
@@ -79,7 +84,8 @@ class RayTracerShader : CanvasShader
         vp.X *= width / height;
 
         Vector3 origin = cameraPosition;
-        Vector3 direction = Vector3.Transform(new(vp * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1), cameraRotationMatrix);
+        Vector4 direction4 = ShaderIntrinsics.Transform(new(vp * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1), cameraRotationMatrix);
+        Vector3 direction = new(direction4.X, direction4.Y, direction4.Z);
 
         Vector3 normal = Vector3.Zero;
         if (RaySphereIntersect(origin, direction, new Vector3(0, 0, 1), .5f, out normal) == 1)

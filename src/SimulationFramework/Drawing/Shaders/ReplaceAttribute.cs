@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders;
 
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-internal class InterceptsAttribute : Attribute
+internal class ReplaceAttribute : Attribute
 {
     public const string ConstructorName = ".ctor";
     public const string MultiplyOperatorName = "op_Multiply";
@@ -16,7 +16,7 @@ internal class InterceptsAttribute : Attribute
     public string MethodName { get; }
     public Type MethodType { get; }
 
-    public InterceptsAttribute(string methodName, Type methodType)
+    public ReplaceAttribute(string methodName, Type methodType)
     {
         MethodName = methodName;
         MethodType = methodType;

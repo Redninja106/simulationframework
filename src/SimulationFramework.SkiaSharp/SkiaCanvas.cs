@@ -48,7 +48,7 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
     public void Clear(CanvasShader shader)
     {
         var (effect, uniforms) = RuntimeEffectCache.GetValue(shader);
-        using var skshader = effect.ToShader(true, uniforms);
+        using var skshader = effect.ToShader(uniforms);
         using var paint = new SKPaint();
         paint.Shader = skshader;
         paint.Style = SKPaintStyle.Fill;
@@ -77,14 +77,6 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
     }
     public void DrawRect(Rectangle rectangle)
     {
-        if (State.DrawMode == DrawMode.Shader)
-        {
-            var (effect, uniforms) = RuntimeEffectCache.GetValue(State.Shader);
-            using var skshader = effect.ToShader(true, uniforms);
-            currentState.Paint.Shader = skshader;
-            currentState.Paint.Style = SKPaintStyle.Fill;
-        }
-
         canvas.DrawRect(rectangle.AsSKRect(), currentState.Paint);
         SkiaTextureTarget?.InvalidatePixels();
     }
@@ -116,10 +108,8 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
         if (texture is not SkiaTexture skTexture)
             throw new ArgumentException("texture must be a texture created by the skiasharp renderer!", nameof(texture));
 
-        using var paint = currentState.Paint.Clone();
-        paint.Color = Color.Red.AsSKColor();
-        paint.FilterQuality = SKFilterQuality.None;
-        canvas.DrawImage(skTexture.GetImage(), source.AsSKRect(), destination.AsSKRect(), paint);
+        canvas.DrawImage(skTexture.GetImage(), source.AsSKRect(), destination.AsSKRect(), currentState.Paint);
+        
         SkiaTextureTarget?.InvalidatePixels();
     }
 

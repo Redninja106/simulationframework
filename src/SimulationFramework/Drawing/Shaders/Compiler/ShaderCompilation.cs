@@ -17,9 +17,11 @@ public class ShaderCompilation
 {
     private readonly List<ShaderMethod> methods = new();
     private readonly List<ShaderUniform> uniforms = new();
+    private readonly List<ShaderStructure> structures = new();
 
     public IReadOnlyList<ShaderMethod> Methods => methods;
     public IReadOnlyList<ShaderUniform> Uniforms => uniforms;
+    public IReadOnlyList<ShaderStructure> Structures => structures;
 
     public ShaderMethod EntryPoint { get; internal set; }
 

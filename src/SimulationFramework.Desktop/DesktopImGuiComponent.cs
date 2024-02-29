@@ -34,8 +34,6 @@ internal class DesktopImGuiComponent : ISimulationComponent
 
     void PreRender(BeforeRenderMessage message)
     {
-        var canvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
-        gl.Viewport(0, 0, (uint)canvas.Width, (uint)canvas.Height);
         imGuiController.Update(Time.DeltaTime);
 
         var io = ImGui.GetIO();
@@ -45,7 +43,7 @@ internal class DesktopImGuiComponent : ISimulationComponent
 
     void AfterRender(AfterRenderMessage message)
     {
-        var canvas = Graphics.GetOutputCanvas();
+        var canvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
         gl.Viewport(0, 0, (uint)canvas.Width, (uint)canvas.Height);
         imGuiController.Render();
     }

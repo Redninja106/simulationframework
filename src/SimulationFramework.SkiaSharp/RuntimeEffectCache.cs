@@ -27,7 +27,7 @@ internal static class RuntimeEffectCache
             codeGenerator.Emit(writer);
             var source = writer.ToString();
             Console.WriteLine(source);
-            effect.effect = SKRuntimeEffect.Create(source, out string errors);
+            effect.effect = SKRuntimeEffect.CreateShader(source, out string errors);
 
             if (errors != null)
                 throw new Exception(errors);

@@ -13,7 +13,7 @@ public abstract class CanvasShader
     [ShaderIntrinsic]
     protected static void Discard()
     {
-        throw new Exception("Shader discarded");
+        throw new Exception("invocation discarded");
     }
 
     public abstract ColorF GetPixelColor(Vector2 position);

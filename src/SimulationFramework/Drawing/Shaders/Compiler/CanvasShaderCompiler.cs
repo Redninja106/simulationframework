@@ -2,7 +2,6 @@
 using SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 using SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
 using SimulationFramework.Drawing.Shaders.Compiler.Translation;
-using SimulationFramework.Drawing.Shaders.Compiler.Translation.OLD;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -118,6 +117,7 @@ public class CanvasShaderCompiler
         CompilerContext context = new(shader.GetType());
         ShaderCompilation compilation = new();
 
+        CompileStructs(context, compilation);
         CompileVariables(context, compilation);
         CompileMethods(context, compilation);
 
@@ -134,6 +134,10 @@ public class CanvasShaderCompiler
         return compilation; // .GetResult() ?
     }
 
+    private void AddStructs(CompilerContext context, ShaderCompilation compilation)
+    {
+    }
+
     private void CompileVariables(CompilerContext context, ShaderCompilation compilation)
     {
         foreach (var field in context.ShaderType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
@@ -144,7 +148,7 @@ public class CanvasShaderCompiler
 
     private MethodInfo GetShaderEntryPoint(CompilerContext context)
     {
-        return context.ShaderType.GetMethod(nameof(CanvasShader.GetPixelColor), new Type[] { typeof(Vector2) });
+        return context.ShaderType.GetMethod(nameof(CanvasShader.GetPixelColor), [typeof(Vector2)]) ?? throw new();
     }
 
     private void CompileMethods(CompilerContext context, ShaderCompilation compilation)

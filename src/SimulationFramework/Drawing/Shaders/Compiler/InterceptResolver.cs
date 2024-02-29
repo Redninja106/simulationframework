@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler;
 internal class InterceptResolver
 {
-    private readonly CompilationContextOLD context;
+    private readonly CompilerContext context;
     private readonly ShaderIntrinsicsManager intrinsicManager;
 
-    public InterceptResolver(CompilationContextOLD context, ShaderIntrinsicsManager intrinsicManager)
+    public InterceptResolver(CompilerContext context, ShaderIntrinsicsManager intrinsicManager)
     {
         this.context = context;
         this.intrinsicManager = intrinsicManager;

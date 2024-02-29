@@ -2,38 +2,47 @@ using Silk.NET.OpenGL;
 using SimulationFramework;
 using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.SkiaSharp;
 using SkiaSharp;
+using System.Numerics;
 
 Start<Program>(new DesktopPlatform());
 
 partial class Program : Simulation
 {
-    SKSurface surface;
-
     public override unsafe void OnInitialize()
     {
-        var graphics = Application.GetComponent<SkiaGraphicsProvider>();
-        surface = SKSurface.Create(graphics.backendContext, true, new SKImageInfo(100, 100));
     }
+
+    MyShader shader = new MyShader()
+    {
+        data = new()
+        {
+            xyzw = new(1, 2, 4, 5),
+        },
+    };
 
     public override void OnRender(ICanvas canvas)
     {
-        SKRuntimeEffect effect = SKRuntimeEffect.Create(@"
-float4 main(float2 pos) {
-    return float4(0,1,0,1);
-}
-", out string errors);
-
-        surface.Canvas.Clear(new SKColor(255, 0, 0));
-        surface.Canvas.DrawCircle(50, 50, 50, new()
-        {
-            Shader = effect.ToShader(false),
-        });
-        // gl.BindFramebuffer(FramebufferTarget.Framebuffer, fbo);
-        // gl.ClearColor(1, 0, 0, 1);
-        // gl.Clear(ClearBufferMask.ColorBufferBit);
-
-        SkiaInterop.GetCanvas(canvas).DrawImage(surface.Snapshot(), new SKPoint(0, 0));
+        canvas.Clear(Color.Black);
+        canvas.Fill(shader);
+        canvas.Translate(canvas.Width / 2f, canvas.Height / 2f);
+        canvas.DrawRect(0, 0, 100, 100, Alignment.Center);
     }
+}
+
+class MyShader : CanvasShader
+{
+    public SomeData data;
+
+    public override ColorF GetPixelColor(Vector2 position)
+    {
+        return ColorF.Red;
+    }
+}
+
+struct SomeData
+{
+    public Vector4 xyzw;
 }

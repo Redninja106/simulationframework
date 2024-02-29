@@ -45,7 +45,7 @@ public static class DgmlBuilder
             foreach (var successor in node.Successors)
             {
                 var successorId = GetNodeID(successor);
-                links.Add(new(id, successorId, "Successor", "Edge"));
+                links.Add(new(id, successorId, "", "Edge"));
             }
 
             if (node is ISubgraphContainer container)

@@ -27,9 +27,6 @@ internal class ShaderIntrinsicsManager
         typeof(Matrix3x2),
     };
 
-    private CompilationContextOLD context;
-
-
     public bool IsIntrinsic(MethodBase method) => method.GetCustomAttribute<ShaderIntrinsicAttribute>() is not null || PropertyFromAccessor(method)?.GetCustomAttribute<ShaderIntrinsicAttribute>() is not null;
     public bool IsIntrinsic(Type type) => intrinsicTypes.Contains(type) || type.GetCustomAttribute<ShaderIntrinsicAttribute>() is not null;
 

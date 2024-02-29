@@ -107,6 +107,14 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
                 paint.Shader = fillTextureShader;
                 paint.Style = SKPaintStyle.Fill;
                 break;
+            case DrawMode.Shader:
+                {
+                    var (effect, uniforms) = RuntimeEffectCache.GetValue(Shader);
+                    using var skshader = effect.ToShader(uniforms);
+                    Paint.Shader = skshader;
+                    Paint.Style = SKPaintStyle.Fill;
+                }
+                break;
             default:
                 break;
         }
