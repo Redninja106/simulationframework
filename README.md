@@ -40,9 +40,9 @@ With more on the way! See [Planned Features](https://github.com/Redninja106/simu
 
 ## Getting Started
 
-> SimulationFramework requires .NET 6 and Visual Studio 2022.
+> SimulationFramework requires .NET 7 and Visual Studio 2022.
 
-Create a new Console App using .NET 6. Add the [SimulationFramework Nuget Package](https://www.nuget.org/packages/SimulationFramework/) (and it's desktop environment) using Visual Studio or the .NET CLI via the following commands:
+Create a new Console App using .NET7. Add the [SimulationFramework Nuget Package](https://www.nuget.org/packages/SimulationFramework/) (and it's desktop environment) using Visual Studio or the .NET CLI via the following commands:
 
 ```
 dotnet add package SimulationFramework
@@ -58,7 +58,7 @@ using SimulationFramework.Drawing;
 Simulation mySimulation = Simulation.Create(OnInitialize, OnRender);
 mySimulation.Run();
 
-void OnInitialize(AppConfig config)
+void OnInitialize()
 {
     // called when the simulation starts
 }
