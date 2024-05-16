@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SimulationFramework.Drawing.WebGPU\SimulationFramework.Drawing.WebGPU.csproj" />
     <ProjectReference Include="..\SimulationFramework.SkiaSharp\SimulationFramework.SkiaSharp.csproj" />
     <ProjectReference Include="..\SimulationFramework\SimulationFramework.csproj" />
   </ItemGroup>

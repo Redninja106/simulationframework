@@ -47,7 +47,7 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
     public void Clear(CanvasShader shader)
     {
         var (effect, uniforms) = RuntimeEffectCache.GetValue(shader);
-        using var skshader = effect.ToShader(true, uniforms);
+        using var skshader = effect.ToShader();
         using var paint = new SKPaint();
         paint.Shader = skshader;
         paint.Style = SKPaintStyle.Fill;
@@ -79,7 +79,7 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
         if (State.DrawMode == DrawMode.Shader)
         {
             var (effect, uniforms) = RuntimeEffectCache.GetValue(State.Shader);
-            using var skshader = effect.ToShader(true, uniforms);
+            using var skshader = effect.ToShader();
             currentState.Paint.Shader = skshader;
             currentState.Paint.Style = SKPaintStyle.Fill;
         }
