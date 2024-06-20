@@ -116,11 +116,6 @@ public class DesktopPlatform : ISimulationPlatform
             Application.RegisterComponent(new DesktopKeyboardProvider(keyboard));
         }
 
-        var gamepad = inputContext.Gamepads.FirstOrDefault();
-        
-        if (gamepad is not null)
-        {
-            Application.RegisterComponent(new DesktopGamepadProvider(gamepad));
-        }
+        Application.RegisterComponent(new DesktopGamepadProvider(inputContext));
     }
 }

@@ -6,12 +6,12 @@ using System.Numerics;
 namespace SimulationFramework.Desktop;
 internal class DesktopGamepadProvider : IGamepadProvider
 {
-    private readonly IGamepad gamepad;
+    private IGamepad? gamepad;
 
-    public Vector2 LeftJoystick => new(gamepad.Thumbsticks[0].X, gamepad.Thumbsticks[0].X);
-    public Vector2 RightJoystick => new(gamepad.Thumbsticks[1].X, gamepad.Thumbsticks[1].X);
-    public float LeftTrigger => gamepad.Triggers[0].Position;
-    public float RightTrigger => gamepad.Triggers[1].Position;
+    public Vector2 LeftJoystick => gamepad is null ? Vector2.Zero : new(gamepad.Thumbsticks[0].X, gamepad.Thumbsticks[0].Y);
+    public Vector2 RightJoystick => gamepad is null ? Vector2.Zero : new(gamepad.Thumbsticks[1].X, gamepad.Thumbsticks[1].Y);
+    public float LeftTrigger => gamepad is null ? 0 : gamepad.Triggers[0].Position;
+    public float RightTrigger => gamepad is null ? 0 : gamepad.Triggers[1].Position;
     public IEnumerable<GamepadButton> HeldButtons => heldButtons;
     public IEnumerable<GamepadButton> PressedButtons => pressedButtons;
     public IEnumerable<GamepadButton> ReleasedButtons => releasedButtons;
@@ -20,10 +20,13 @@ internal class DesktopGamepadProvider : IGamepadProvider
         get => vibrationStrength;
         set
         {
-            vibrationStrength = value;
-            foreach (var motor in gamepad.VibrationMotors)
+            if (gamepad is not null)
             {
-                motor.Speed = vibrationStrength;
+                vibrationStrength = value;
+                foreach (var motor in gamepad.VibrationMotors)
+                {
+                    motor.Speed = vibrationStrength;
+                }
             }
         }
     }
@@ -35,13 +38,56 @@ internal class DesktopGamepadProvider : IGamepadProvider
     private readonly List<GamepadButton> pressedButtons = new();
     private readonly List<GamepadButton> releasedButtons = new();
     private float vibrationStrength;
+    private IInputContext context;
 
-    public DesktopGamepadProvider(IGamepad gamepad)
+    public DesktopGamepadProvider(IInputContext context)
     {
-        this.gamepad = gamepad;
+        this.context = context;
+        context.ConnectionChanged += Context_ConnectionChanged;
 
-        gamepad.ButtonDown += Gamepad_ButtonDown;
-        gamepad.ButtonUp += Gamepad_ButtonUp;
+        var gp = context.Gamepads.FirstOrDefault();
+        if (gp != null)
+        {
+            OnGamepadAdded(gp);
+        }
+    }
+
+    private void Context_ConnectionChanged(IInputDevice device, bool added)
+    {
+        if (device is IGamepad gamepad)
+        {
+            if (added)
+            {
+                OnGamepadAdded(gamepad);
+            }
+            else
+            {
+                OnGamepadRemoved(gamepad);
+            }
+        }
+    }
+
+    private void OnGamepadAdded(IGamepad gamepad)
+    {
+        if (this.gamepad is null)
+        {
+            this.gamepad = gamepad;
+            this.gamepad.ButtonDown += Gamepad_ButtonDown;
+            this.gamepad.ButtonUp += Gamepad_ButtonUp;
+        }
+    }
+
+    private void OnGamepadRemoved(IGamepad gamepad)
+    {
+        if (gamepad == this.gamepad)
+        {
+            this.gamepad = null;
+        }
+
+        if (context.Gamepads.Count > 0)
+        {
+            OnGamepadAdded(context.Gamepads.First());
+        }
     }
 
     private void Gamepad_ButtonUp(IGamepad arg1, Button arg2)
