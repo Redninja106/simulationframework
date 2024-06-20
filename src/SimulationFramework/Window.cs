@@ -83,13 +83,33 @@ public static class Window
     public static bool IsFullscreen => FullscreenProvider.IsFullscreen;
 
     /// <summary>
+    /// If the window is in fullscreen mode, this method calls <see cref="ExitFullscreen"/>; otherwise, this method calls <see cref="EnterFullscreen(IDisplay?)"/>.
+    /// <para>
+    /// This method does not have any immediate effects, as any window state changes are made
+    /// after the current frame.
+    /// </para>
+    /// </summary>
+    /// <param name="display">The display to enter fullscreen on. <see cref="Display"/> is used if this value is <see langword="null"/>.</param>
+    public static void ToggleFullscreen(IDisplay? display = null)
+    {
+        if (IsFullscreen)
+        {
+            ExitFullscreen();
+        }
+        else
+        {
+            EnterFullscreen(display);
+        }
+    }
+
+    /// <summary>
     /// Attempts to enter fullscreen mode. This method does not have any immediate effects, as any window state changes are made
     /// after the current frame. To check if the transition succeeded, use <see cref="IsFullscreen"/> during the next frame.
     /// <para>
     /// If the window is already in requested fullscreen state, this method has no effect.
     /// </para>
     /// </summary>
-    /// <param name="display">The monitor to enter fullscreen on. <see cref="Display"/> is used if this value is <see langword="null"/>.</param>
+    /// <param name="display">The display to enter fullscreen on. <see cref="Display"/> is used if this value is <see langword="null"/>.</param>
     /// <returns><see langword="true"/> if the window successfully transitioned to fullscreen; otherwise <see langword="false"/>.</returns>
     public static void EnterFullscreen(IDisplay? display = null)
     {

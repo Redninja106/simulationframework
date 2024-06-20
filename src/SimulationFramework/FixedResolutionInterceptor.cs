@@ -50,6 +50,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
 
     private FixedResolutionMouseProvider? mouseProvider;
     private FixedResolutionWindowProvider? windowProvider;
+    private FixedResolutionFullscreenProvider? fullscreenProvider;
 
     /// <summary>
     /// Creates a new instance of the <see cref="FixedResolutionInterceptor"/> class.
@@ -62,7 +63,22 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
 
         Resize(width, height);
         Application.InterceptComponent<IMouseProvider>(mouseProvider => this.mouseProvider = new FixedResolutionMouseProvider(mouseProvider, subpixelInput));
-        Application.InterceptComponent<IWindowProvider>(windowProvider => this.windowProvider = new FixedResolutionWindowProvider(windowProvider, new(width, height)));
+        Application.InterceptComponent<IWindowProvider>(windowProvider => 
+        {
+            if (windowProvider is IFullscreenProvider fs)
+            {
+                this.fullscreenProvider = new(fs);
+                Application.RegisterComponent(this.fullscreenProvider);
+            }
+
+            return this.windowProvider = new FixedResolutionWindowProvider(windowProvider, new(width, height));
+        }
+        );
+
+        if (fullscreenProvider is null && Application.HasComponent<IFullscreenProvider>()) 
+        {
+            Application.InterceptComponent<IFullscreenProvider>(fs => this.fullscreenProvider = new FixedResolutionFullscreenProvider(fs));
+        }
     }
 
     internal void BeforeRender()
@@ -304,6 +320,33 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         public void SetPosition(Vector2 position)
         {
             baseProvider.SetPosition(position);
+        }
+    }
+
+    private class FixedResolutionFullscreenProvider(IFullscreenProvider baseProvider) : ISimulationComponent, IFullscreenProvider
+    {
+        public int SwapInterval { get => baseProvider.SwapInterval; set => baseProvider.SwapInterval = value; }
+        public bool PreferExclusive { get => baseProvider.PreferExclusive; set => baseProvider.PreferExclusive = value; }
+        public bool IsFullscreen { get => baseProvider.IsFullscreen; }
+
+        public void Dispose()
+        {
+            baseProvider.Dispose();
+        }
+
+        public void EnterFullscreen(IDisplay? display)
+        {
+            baseProvider.EnterFullscreen(display);
+        }
+
+        public void ExitFullscreen()
+        {
+            baseProvider.ExitFullscreen();
+        }
+
+        public void Initialize(MessageDispatcher dispatcher)
+        {
+            baseProvider.Initialize(dispatcher);
         }
     }
 }

@@ -58,7 +58,7 @@ internal class BasicInputSimulation : Simulation
 
             Mouse.SetCursor(colors, Alignment.CenterLeft);
         }
-
+        
         if (Keyboard.IsKeyPressed(Key.R))
         {
             if (!Window.IsMaximized)
