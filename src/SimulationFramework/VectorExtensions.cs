@@ -106,4 +106,16 @@ public static class VectorExtensions
         z = vector.Z;
         w = vector.W;
     }
+
+
+    /// <summary>
+    /// Rotates a vector around the origin by the specified angle.
+    /// </summary>
+    public static Vector2 Rotated(this Vector2 vector, float angle)
+    {
+        var (sin, cos) = MathF.SinCos(angle);
+        float x = vector.X * cos - vector.Y * sin;
+        float y = vector.X * sin + vector.Y * cos;
+        return new(x, y);
+    }
 }

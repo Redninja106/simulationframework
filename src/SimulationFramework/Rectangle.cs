@@ -256,4 +256,17 @@ public struct Rectangle : IEquatable<Rectangle>
 
         return new(min, size);
     }
+
+    /// <summary>
+    /// Creates a polygon one vertex at each of the rectangle's corners.
+    /// </summary>
+    public readonly Vector2[] ToPolygon()
+    {
+        return [
+            new Vector2(X, Y),
+            new Vector2(X + Width, Y),
+            new Vector2(X + Width, Y + Height),
+            new Vector2(X, Y + Height),
+        ];
+    }
 }
