@@ -21,6 +21,11 @@ public abstract class SoundPlayback : IDisposable
     public bool IsPlaying => !IsPaused && !IsStopped;
 
     /// <summary>
+    /// The volume of the sound. Value range from 0 to 1, where 0 is no sound and 1 is full volume.
+    /// </summary>
+    public abstract float Volume { get; set; }
+
+    /// <summary>
     /// Pauses the playback. To resume, use <see cref="Resume"/>.
     /// </summary>
     public abstract void Pause();

@@ -106,10 +106,14 @@ internal sealed class DesktopSound : ISound
         throw new Exception("Audio format not supported!");
     }
 
-    public SoundPlayback Play()
+    public SoundPlayback Play(float volume = 1)
     {
-        var newPlayback = new DesktopSoundPlayback(provider, this);
-        return newPlayback;
+        return new DesktopSoundPlayback(provider, this, volume, false);
+    }
+
+    public SoundPlayback Loop(float volume = 1)
+    {
+        return new DesktopSoundPlayback(provider, this, volume, true);
     }
 
     public void Dispose()

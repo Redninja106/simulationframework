@@ -30,8 +30,14 @@ public interface ISound : IDisposable
     bool Is16Bit { get; }
 
     /// <summary>
-    /// Begins to play the sound.
+    /// Begins to play the sound. The playback will stop once the sound has been fully played.
     /// </summary>
     /// <returns>A <see cref="SoundPlayback"/> instance representing the started playback.</returns>
-    SoundPlayback Play();
+    SoundPlayback Play(float volume = 1);
+
+    /// <summary>
+    /// Begins to loop the sound. A looped sound plays repeatedly until stopped.
+    /// </summary>
+    /// <returns>A <see cref="SoundPlayback"/> instance representing the started playback.</returns>
+    SoundPlayback Loop(float volume = 1);
 }
