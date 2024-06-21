@@ -14,7 +14,7 @@ partial class Program : Simulation
     private float turnSpeed = 5;
     public override void OnInitialize()
     {
-        SetFixedResolution(160, 90, new Color(25, 25, 25));
+        SetFixedResolution(1600, 900, new Color(25, 25, 25));
     }
 
     public override void OnRender(ICanvas canvas)
@@ -84,7 +84,7 @@ class RayTracerShader : CanvasShader
         vp.X *= width / height;
 
         Vector3 origin = cameraPosition;
-        Vector4 direction4 = ShaderIntrinsics.Transform(new(vp * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1), cameraRotationMatrix);
+        Vector4 direction4 = ShaderIntrinsics.Multiply(new(vp * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1), cameraRotationMatrix);
         Vector3 direction = new(direction4.X, direction4.Y, direction4.Z);
 
         Vector3 normal = Vector3.Zero;

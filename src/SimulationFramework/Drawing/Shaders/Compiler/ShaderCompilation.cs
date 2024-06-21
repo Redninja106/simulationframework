@@ -75,4 +75,9 @@ public class ShaderCompilation
     {
         return uniforms.Single(u => u.BackingField == fieldInfo);
     }
+
+    public void AddStruct(Type type)
+    {
+        structures.Add(new(type));
+    }
 }

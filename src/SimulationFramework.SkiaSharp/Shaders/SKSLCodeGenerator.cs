@@ -44,23 +44,23 @@ internal class SKSLCodeGenerator
 
     public Dictionary<FieldInfo, string> fieldAliases = new()
     {
-        [typeof(Vector4).GetField("X")] = "x",
-        [typeof(Vector4).GetField("Y")] = "y",
-        [typeof(Vector4).GetField("Z")] = "z",
-        [typeof(Vector4).GetField("W")] = "w",
-        [typeof(Vector3).GetField("X")] = "x",
-        [typeof(Vector3).GetField("Y")] = "y",
-        [typeof(Vector3).GetField("Z")] = "z",
-        [typeof(Vector2).GetField("X")] = "x",
-        [typeof(Vector2).GetField("Y")] = "y",
+        [typeof(Vector4).GetField("X")!] = "x",
+        [typeof(Vector4).GetField("Y")!] = "y",
+        [typeof(Vector4).GetField("Z")!] = "z",
+        [typeof(Vector4).GetField("W")!] = "w",
+        [typeof(Vector3).GetField("X")!] = "x",
+        [typeof(Vector3).GetField("Y")!] = "y",
+        [typeof(Vector3).GetField("Z")!] = "z",
+        [typeof(Vector2).GetField("X")!] = "x",
+        [typeof(Vector2).GetField("Y")!] = "y",
     };
 
     public Dictionary<PropertyInfo, string> propertyAliases = new()
     {
-        [typeof(ColorF).GetProperty("R")] = "r",
-        [typeof(ColorF).GetProperty("G")] = "g",
-        [typeof(ColorF).GetProperty("B")] = "b",
-        [typeof(ColorF).GetProperty("A")] = "a",
+        [typeof(ColorF).GetProperty("R")!] = "r",
+        [typeof(ColorF).GetProperty("G")!] = "g",
+        [typeof(ColorF).GetProperty("B")!] = "b",
+        [typeof(ColorF).GetProperty("A")!] = "a",
     };
 
 
@@ -114,7 +114,7 @@ internal class SKSLCodeGenerator
             writer.Write(";");
         }
 
-        writer.WriteLine("}");
+        writer.WriteLine("\n};");
     }
 
     private void EmitUniform(TextWriter writer, ShaderUniform uniform)

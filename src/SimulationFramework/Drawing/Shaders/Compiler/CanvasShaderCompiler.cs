@@ -46,19 +46,6 @@ public class CanvasShaderCompiler
      * - shader ast to final shader source
      */
 
-    //private List<CompilerPass> Rules = new()
-    //{
-    //    new ConstructorPass(),
-    //    new VariableAccessReplacements(),
-    //    new ShaderTypeParameterPass(),
-    //    new ShaderTypeRestrictions(),
-    //    new ShaderIntrinsicSubstitutions(),
-    //    new IntrinsicTypeVariableInlines(),
-    //    new CallSubstitutions(),
-    //    new GlobalMethodCall(),
-    //    new InlineSourceInsertion(),
-    //};
-
     public CanvasShaderCompiler()
     {
     }
@@ -117,7 +104,7 @@ public class CanvasShaderCompiler
         CompilerContext context = new(shader.GetType());
         ShaderCompilation compilation = new();
 
-        CompileStructs(context, compilation);
+        // CompileStructs(context, compilation);
         CompileVariables(context, compilation);
         CompileMethods(context, compilation);
 
@@ -134,15 +121,20 @@ public class CanvasShaderCompiler
         return compilation; // .GetResult() ?
     }
 
-    private void AddStructs(CompilerContext context, ShaderCompilation compilation)
-    {
-    }
-
     private void CompileVariables(CompilerContext context, ShaderCompilation compilation)
     {
         foreach (var field in context.ShaderType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
         {
             compilation.AddUniform(field);
+            CheckType(compilation, field.FieldType);
+        }
+    }
+
+    private void CheckType(ShaderCompilation compilation, Type type)
+    {
+        if (!IntrinsicTypes.IsIntrinsic(type))
+        {
+            throw new Exception($"type {type} is not supported!");
         }
     }
 

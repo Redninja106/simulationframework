@@ -36,7 +36,7 @@ internal class ControlFlowGraph
         EntryNode.AddSuccessor(GetBasicBlock(disassembly.instructions[0]));
 
         RecomputeDominators();
-        DgmlBuilder.WriteDGML(disassembly.Method.DeclaringType.Name + "_" + disassembly.Method.Name, this);
+        //DgmlBuilder.WriteDGML(disassembly.Method.DeclaringType.Name + "_" + disassembly.Method.Name, this);
         ReplaceLoops();
         ReplaceConditionals();
     }

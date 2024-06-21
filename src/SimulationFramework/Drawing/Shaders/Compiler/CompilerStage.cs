@@ -131,7 +131,7 @@ class InterceptResolverStage : MethodCompilerStage
     {
         foreach (var method in typeof(ShaderIntrinsics).GetMethods(BindingFlags.Static | BindingFlags.Public))
         {
-            var attrs = method.GetCustomAttributes<ReplaceAttribute>();
+            var attrs = method.GetCustomAttributes<ShaderInterceptAttribute>();
             
             var parameterTypes = method.GetParameters().Select(p => p.ParameterType).ToArray();
             foreach (var attr in attrs)
@@ -140,12 +140,12 @@ class InterceptResolverStage : MethodCompilerStage
             }
         }
 
-        MethodBase GetInterceptTarget(ReplaceAttribute attribute, Type[] parameterTypes)
+        MethodBase GetInterceptTarget(ShaderInterceptAttribute attribute, Type[] parameterTypes)
         {
             var type = attribute.MethodType;
             var name = attribute.MethodName;
 
-            if (name == ReplaceAttribute.ConstructorName)
+            if (name == ShaderInterceptAttribute.ConstructorName)
             {
                 return type.GetConstructor(parameterTypes) ?? throw new();
             }

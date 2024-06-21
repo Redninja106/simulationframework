@@ -17,10 +17,7 @@ partial class Program : Simulation
 
     MyShader shader = new MyShader()
     {
-        data = new()
-        {
-            xyzw = new(1, 2, 4, 5),
-        },
+        data = new(1, 2, 4, 5),
     };
 
     public override void OnRender(ICanvas canvas)
@@ -34,15 +31,10 @@ partial class Program : Simulation
 
 class MyShader : CanvasShader
 {
-    public SomeData data;
+    public Vector4 data;
 
     public override ColorF GetPixelColor(Vector2 position)
     {
         return ColorF.Red;
     }
-}
-
-struct SomeData
-{
-    public Vector4 xyzw;
 }
