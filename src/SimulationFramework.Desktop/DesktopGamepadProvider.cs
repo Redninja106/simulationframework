@@ -10,8 +10,8 @@ internal class DesktopGamepadProvider : IGamepadProvider
 
     public Vector2 LeftJoystick => gamepad is null ? Vector2.Zero : new(gamepad.Thumbsticks[0].X, gamepad.Thumbsticks[0].Y);
     public Vector2 RightJoystick => gamepad is null ? Vector2.Zero : new(gamepad.Thumbsticks[1].X, gamepad.Thumbsticks[1].Y);
-    public float LeftTrigger => gamepad is null ? 0 : gamepad.Triggers[0].Position;
-    public float RightTrigger => gamepad is null ? 0 : gamepad.Triggers[1].Position;
+    public float LeftTrigger => gamepad is null ? 0 : gamepad.Triggers[0].Position * .5f + .5f;
+    public float RightTrigger => gamepad is null ? 0 : gamepad.Triggers[1].Position * .5f + .5f;
     public IEnumerable<GamepadButton> HeldButtons => heldButtons;
     public IEnumerable<GamepadButton> PressedButtons => pressedButtons;
     public IEnumerable<GamepadButton> ReleasedButtons => releasedButtons;
@@ -82,9 +82,12 @@ internal class DesktopGamepadProvider : IGamepadProvider
         if (gamepad == this.gamepad)
         {
             this.gamepad = null;
+            pressedButtons.Clear();
+            heldButtons.Clear();
+            releasedButtons.Clear();
         }
 
-        if (context.Gamepads.Count > 0)
+        if (context.Gamepads.Count() > 0)
         {
             OnGamepadAdded(context.Gamepads.First());
         }
