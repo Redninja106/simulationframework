@@ -168,4 +168,19 @@ public struct Circle : IEquatable<Circle>
     {
         return !(left == right);
     }
+
+    public Vector2[] ToPolygon(int vertices)
+    {
+        if (vertices < 3)
+            throw new ArgumentException("vertices must be >= 3!");
+
+        var result = new Vector2[vertices];
+
+        for (int i = 0; i < result.Length; i++)
+        {
+            result[i] = this.Position + this.Radius * Angle.ToVector(i / result.Length * MathF.Tau);
+        }
+
+        return result;
+    }
 }

@@ -94,13 +94,49 @@ public static class Polygon
     /// Determines if a polygon contains a point.
     /// </summary>
     /// <param name="polygon">The polygon. May be convex or concave, but not self-intersecting.</param>
-    /// <param name="point">The point.</param>
+    /// <param name="point">The point to test against the polygon.</param>
     /// <returns><see langword="true"/> when <paramref name="point"/> is inside of <paramref name="polygon"/>; otherwise <see langword="false"/>.</returns>
-    /// <exception cref="NotImplementedException"></exception>
     public static bool ContainsPoint(Span<Vector2> polygon, Vector2 point)
     {
-        // TODO: IMPLEMENT RAYCASTS FIRST https://stackoverflow.com/questions/217578/how-can-i-determine-whether-a-2d-point-is-within-a-polygon
-        throw new NotImplementedException();
+        int intersections = 0;
+        for (int i = 0; i < polygon.Length; i++)
+        {
+            Vector2 from = polygon[i];
+            Vector2 to = polygon[i + 1 >= polygon.Length ? 0 : (i + 1)];
+
+            if (RayLineIntersect(point, Vector2.UnitX, from, to, out float _))
+            {
+                intersections++;
+            }
+        }
+
+        return intersections % 2 is 1;
+    }
+
+    private static bool RayLineIntersect(Vector2 position, Vector2 direction, Vector2 from, Vector2 to, out float t)
+    {
+        var v1 = position - from;
+        var v2 = to - from;
+        var v3 = new Vector2(-direction.Y, direction.X);
+
+        var dot = Vector2.Dot(v2, v3);
+        if (Math.Abs(dot) < 0.00001f)
+        {
+            t = float.PositiveInfinity;
+            return false;
+        }
+
+        var t1 = MathHelper.Cross(v2, v1) / dot;
+        var t2 = Vector2.Dot(v1, v3) / dot;
+
+        if (t1 >= 0.0f && (t2 >= 0.0f && t2 < 1.0f))
+        {
+            t = t1;
+            return true;
+        }
+
+        t = float.PositiveInfinity;
+        return false;
     }
 
     /// <summary>
@@ -253,7 +289,7 @@ public static class Polygon
     /// </summary>
     /// <param name="polygon">The polygon to find the bounds of.</param>
     /// <returns>The smallest possible rectangle that contains all the points in <paramref name="polygon"/>.</returns>
-    public static Rectangle GetBoundingBox(ReadOnlySpan<Vector2> polygon)
+    public static Rectangle GetBoundingRectangle(ReadOnlySpan<Vector2> polygon)
     {
         Vector2 min = new(float.PositiveInfinity, float.PositiveInfinity);
         Vector2 max = new(float.NegativeInfinity, float.NegativeInfinity);
@@ -266,5 +302,27 @@ public static class Polygon
         }
 
         return Rectangle.FromPoints(min, max);
+    }
+
+    public static Circle GetBoundingCircle(ReadOnlySpan<Vector2> polygon)
+    {
+        Vector2 vertexAverage = Vector2.Zero;
+        for (int i = 0; i < polygon.Length; i++)
+        {
+            vertexAverage += polygon[i];
+        }
+        vertexAverage /= polygon.Length;
+
+        float furthestDistance = float.PositiveInfinity;
+        for (int i = 0; i < polygon.Length; i++)
+        {
+            float distSq = Vector2.DistanceSquared(polygon[i], vertexAverage);
+            if (distSq < furthestDistance * furthestDistance)
+            {
+                furthestDistance = MathF.Sqrt(distSq);
+            }
+        }
+
+        return new(vertexAverage, furthestDistance);
     }
 }

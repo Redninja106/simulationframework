@@ -62,16 +62,26 @@ public static class Angle
     /// <summary>
     /// Finds the smallest positive angle which is equivalent to the given angle.
     /// </summary>
-    /// <param name="radians">The angle to normalize, in radians.</param>
-    /// <returns>The normalized angle. This value will within the range <c>[0, 2pi)</c></returns>
-    public static float Normalize(float radians)
+    /// <param name="a">The angle to normalize, in radians.</param>
+    /// <returns>The normalized angle. Ranges from 0 (inclusive) to <see cref="MathF.Tau"/> (exclusive).</returns>
+    public static float Normalize(float a)
     {
-        radians %= MathF.Tau;
+        a %= MathF.Tau;
 
-        if (radians < 0)
-            radians += MathF.Tau;
+        if (a < 0)
+            a += MathF.Tau;
         
-        return radians;
+        return a;
+    }
+
+    /// <summary>
+    /// Finds the smallest positive angle which is equivalent to the given angle.
+    /// </summary>
+    /// <param name="a">The angle to normalize, in degrees.</param>
+    /// <returns>The normalized angle. Ranges from 0 (inclusive) to 360 (exclusive).</returns>
+    public static float NormalizeDegrees(float a)
+    {
+        return Normalize(a * DegreesToRadians) * RadiansToDegrees;
     }
 
     /// <summary>
@@ -124,14 +134,20 @@ public static class Angle
     }
 
     /// <summary>
-    /// Finds the distance between two angles along the unit circle.
+    /// Finds the distance between two angles.
     /// </summary>
     public static float Distance(float a, float b)
     {
         return MathF.Abs(SignedDistance(a, b));
     }
 
-    internal static float SignedDistance(float a, float b)
+    /// <summary>
+    /// Finds the signed distance between two angles. 
+    /// </summary>
+    /// <param name="a">The first angle.</param>
+    /// <param name="b">The second angle.</param>
+    /// <returns>The signed distance between the two angles.</returns>
+    public static float SignedDistance(float a, float b)
     {
         a = Normalize(a);
         b = Normalize(b);

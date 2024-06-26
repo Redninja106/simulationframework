@@ -115,6 +115,9 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
 
     public unsafe void DrawPolygon(ReadOnlySpan<Vector2> polygon, bool close)
     {
+        if (polygon.Length < 3)
+            return;
+
         bool alreadyClosed = Polygon.IsClosed(polygon);
         bool isFill = (this.State.DrawMode == DrawMode.Fill || this.State.DrawMode == DrawMode.Gradient);
         bool shouldClose = !alreadyClosed && (close || isFill);

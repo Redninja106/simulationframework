@@ -6,7 +6,7 @@ internal sealed unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
     private readonly uint source;
     private readonly DesktopAudioProvider provider;
 
-    public float Volume
+    public override float Volume
     {
         get
         {
@@ -39,14 +39,24 @@ internal sealed unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
         }
     }
 
-    public DesktopSoundPlayback(DesktopAudioProvider provider, DesktopSound sound)
+    public DesktopSoundPlayback(DesktopAudioProvider provider, DesktopSound sound, float volume, bool loop)
     {
         this.provider = provider;
+
         source = provider.al.GenSource();
         if (source == 0)
         {
             throw new Exception($"alGenSource() returned 0! (error: {provider.al.GetError()})");
         }
+
+
+        if (loop)
+        {
+            provider.al.SetSourceProperty(source, SourceBoolean.Looping, loop);
+        }
+
+        this.Volume = volume;
+
         fixed (uint* bufferPtr = &sound.buffer)
         {
             provider.al.SourceQueueBuffers(source, 1, bufferPtr);

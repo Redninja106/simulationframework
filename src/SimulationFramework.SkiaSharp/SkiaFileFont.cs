@@ -6,6 +6,7 @@ namespace SimulationFramework.SkiaSharp;
 class SkiaFileFont : SkiaFont
 {
     private readonly SKTypeface typeface;
+    private byte[] data;
 
     public override string Name => typeface.FamilyName;
     public override bool SupportsBold => typeface.IsBold;
@@ -13,10 +14,11 @@ class SkiaFileFont : SkiaFont
 
     public unsafe SkiaFileFont(ReadOnlySpan<byte> encodedBytes)
     {
-        fixed (byte* encodedBytesPtr = encodedBytes)
+        data = encodedBytes.ToArray();
+        fixed (byte* encodedBytesPtr = data)
         {
-            using var data = SKData.Create((nint)encodedBytesPtr, encodedBytes.Length);
-            typeface = SKTypeface.FromData(data);
+            using var skdata = SKData.Create((nint)encodedBytesPtr, encodedBytes.Length);
+            typeface = SKTypeface.FromData(skdata);
         }
     }
 
