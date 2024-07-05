@@ -71,7 +71,7 @@ public static class Graphics
     /// <returns>The texture loaded from the encoded image.</returns>
     public static ITexture LoadTexture(ReadOnlySpan<byte> encodedData, TextureOptions options = TextureOptions.None)
     {
-        return Provider.TryLoadTexture(encodedData, options, out ITexture? texture) ? texture : throw new("Error loading texture!");
+        return Provider.LoadTexture(encodedData, options);
     }
 
     /// <summary>
@@ -109,7 +109,7 @@ public static class Graphics
     /// <returns>The newly created texture.</returns>
     public static ITexture CreateTexture(int width, int height, ReadOnlySpan<Color> colors, TextureOptions options = TextureOptions.None)
     {
-        return Provider.TryCreateTexture(width, height, colors, options, out ITexture? texture) ? texture : throw new("Error creating texture!");
+        return Provider.CreateTexture(width, height, colors, options); ;
     }
 
     /// <summary>

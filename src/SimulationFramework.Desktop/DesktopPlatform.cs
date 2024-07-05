@@ -1,5 +1,4 @@
 ﻿using Silk.NET.Windowing;
-using SimulationFramework.SkiaSharp;
 using SimulationFramework.Messaging;
 using SimulationFramework.Components;
 using Silk.NET.Windowing.Glfw;
@@ -7,6 +6,7 @@ using Silk.NET.Input;
 using Silk.NET.Input.Glfw;
 using Silk.NET.OpenGL;
 using SimulationFramework.Desktop.Audio;
+using SimulationFramework.OpenGL;
 
 namespace SimulationFramework.Desktop;
 
@@ -18,12 +18,19 @@ public class DesktopPlatform : ISimulationPlatform
     public IWindow Window { get; }
 
     private readonly IInputContext inputContext;
-
-    private DesktopSkiaFrameProvider frameProvider;
+    private GLFrame frame;
 
     public DesktopPlatform(WindowOptions? windowOptions = null)
     {
-        windowOptions ??= WindowOptions.Default;
+        windowOptions ??= WindowOptions.Default with
+        {
+            API = GraphicsAPI.Default with
+            {
+                Version = new APIVersion(4, 5),
+                Flags = ContextFlags.Debug
+            },
+            Samples = 8,
+        };
 
         GlfwWindowing.RegisterPlatform();
         GlfwInput.RegisterPlatform();
@@ -45,10 +52,12 @@ public class DesktopPlatform : ISimulationPlatform
     {
         dispatcher.Subscribe<ResizeMessage>(m =>
         {
-            frameProvider?.Resize(m.Width, m.Height);
+            frame.Resize(m.Width, m.Height);
+            //frameProvider?.Resize(m.Width, m.Height);
         });
 
-        frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
+        frame = new(Window.Size.X, Window.Size.Y);
+        // frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
         Application.RegisterComponent(new DesktopApplicationProvider());
         var graphics = CreateGraphicsProvider();
 
@@ -77,7 +86,7 @@ public class DesktopPlatform : ISimulationPlatform
 
     protected virtual IGraphicsProvider CreateGraphicsProvider()
     {
-        return new SkiaGraphicsProvider(frameProvider, Window.CreateOpenGL(), name => Window.GLContext.TryGetProcAddress(name, out nint addr) ? addr : 0);
+        return new GLGraphicsProvider(frame, name => Window.GLContext!.TryGetProcAddress(name, out nint addr) ? addr : 0);
     }
 
     protected virtual ITimeProvider CreateTimeProvider()

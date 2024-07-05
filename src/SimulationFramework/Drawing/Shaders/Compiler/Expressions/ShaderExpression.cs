@@ -11,10 +11,10 @@ namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 /// <summary>
 /// Base type for expressions/statements in a method body during compilation.
 /// </summary>
-public abstract record Expression
+public abstract record ShaderExpression
 {
     public virtual Type? ExpressionType => null;
 
-    public virtual Expression VisitChildren(ExpressionVisitor visitor) => this;
-    public abstract Expression Accept(ExpressionVisitor visitor);
+    public virtual ShaderExpression VisitChildren(ExpressionVisitor visitor) => this;
+    public abstract ShaderExpression Accept(ExpressionVisitor visitor);
 }

@@ -9,7 +9,7 @@ class NumberHandler(string name) : TypeHandler
         return name;
     }
 
-    public override string HandleArrayAccess(Expression expression)
+    public override string HandleArrayAccess(ShaderExpression expression)
     {
         throw new NotImplementedException();
     }

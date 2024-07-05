@@ -6,18 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-public record MemberAccessExpression(Expression? Instance, MemberInfo Member) : Expression
+public record MemberAccess(ShaderExpression? Instance, MemberInfo Member) : ShaderExpression
 {
     public override Type? ExpressionType => (Member as FieldInfo)?.FieldType ?? (Member as PropertyInfo)?.PropertyType ?? null;
 
-    public override Expression Accept(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ExpressionVisitor visitor)
     {
-        return visitor.VisitMemberAccessExpression(this);
+        return visitor.VisitMemberAccess(this);
     }
 
-    public override Expression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
     {
-        return new MemberAccessExpression(Instance.Accept(visitor), Member);
+        return new MemberAccess(Instance.Accept(visitor), Member);
     }
 
     public override string ToString()

@@ -17,6 +17,7 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
     private SKShader? gradientShader;
 
     private SkiaFont? currentFont;
+    private SKFont? skfont;
 
     public SkiaCanvasState(SKCanvas canvas, SkiaCanvasState? other = null)
     {
@@ -24,19 +25,19 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
         this.Initialize(other);
     }
 
-    [MemberNotNull(nameof(paint))]
+    [MemberNotNull(nameof(paint), nameof(skfont))]
     protected override void Initialize(CanvasState? other)
     {
         if (other is null)
         {
-            this.paint = new SKPaint
-            {
-                FilterQuality = SKFilterQuality.High
-            };
+            this.paint = new SKPaint();
+            this.skfont = new SKFont();
         }
         else
         {
-            this.paint = ((SkiaCanvasState)other).paint.Clone();
+            var o = ((SkiaCanvasState)other);
+            this.paint = o.paint.Clone();
+            this.skfont = new(o.skfont.Typeface, o.skfont.Size);
             if (other.Gradient != null)
             {
                 this.gradientShader = GradientShaderCache.GetShader(other.Gradient);
@@ -54,7 +55,8 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
     public void Dispose()
     {
         fillTextureShader?.Dispose();
-        paint.Dispose();
+        skfont.Dispose();
+        // paint.Dispose();
     }
 
     protected override void UpdateTransform(Matrix3x2 transform)
@@ -150,13 +152,13 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
 
     protected override void UpdateFontStyle(FontStyle style)
     {
-        paint.Typeface = currentFont?.GetTypeface(style);
+        skfont.Typeface = currentFont?.GetTypeface(style);
         base.UpdateFontStyle(style);
     }
 
     protected override void UpdateFontSize(float fontSize)
     {
-        this.paint.TextSize = fontSize;
+        this.skfont.Size = fontSize;
         base.UpdateFontSize(fontSize);
     }
 
@@ -165,7 +167,7 @@ internal sealed class SkiaCanvasState : CanvasState, IDisposable
         if (font != null)
         {
             currentFont = (SkiaFont)font;
-            paint.Typeface = currentFont.GetTypeface(FontStyle);
+            skfont.Typeface = currentFont.GetTypeface(FontStyle);
         }
         base.UpdateFont(font);
     }

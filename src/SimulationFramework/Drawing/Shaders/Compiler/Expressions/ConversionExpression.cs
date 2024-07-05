@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-public record ConversionExpression : Expression
+public record ConversionExpression : ShaderExpression
 {
-    public override Expression Accept(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ExpressionVisitor visitor)
     {
         throw new NotImplementedException();
     }
 
-    public override Expression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
     {
         throw new NotImplementedException();
     }

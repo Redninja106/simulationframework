@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.Translation;
 internal class VectorHandler(int dimensions) : TypeHandler
 {
-    public override string HandleArrayAccess(Expression expression)
+    public override string HandleArrayAccess(ShaderExpression expression)
     {
         throw new NotImplementedException();
     }

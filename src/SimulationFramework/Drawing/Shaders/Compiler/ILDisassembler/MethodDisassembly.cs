@@ -67,7 +67,7 @@ internal class MethodDisassembly
         return op;
     }
 
-    private object ReadArgument(Stream stream, Type argumentType)
+    private object? ReadArgument(Stream stream, Type argumentType)
     {
         return argumentType switch
         {
@@ -82,8 +82,20 @@ internal class MethodDisassembly
             _ when argumentType == typeof(float) => stream.Read<float>(),
             _ when argumentType == typeof(double) => stream.Read<double>(),
             _ when argumentType == typeof(MetadataToken) => new MetadataToken(this.Method.Module, stream.Read<int>()),
+            _ when argumentType == typeof(int[]) => ReadSwitchTable(stream),
             _ => null,
         };
+
+        int[] ReadSwitchTable(Stream stream)
+        {
+            uint n = stream.Read<uint>();
+            int[] result = new int[n];
+            for (int i = 0; i < n; i++)
+            {
+                result[i] = stream.Read<int>();
+            }
+            return result;
+        }
     }
 
     public Instruction GetInstructionAt(int ilOffset)

@@ -6,14 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-public record NewExpression(ConstructorInfo Constructor, IReadOnlyList<Expression> Arguments) : Expression
+public record NewExpression(ConstructorInfo Constructor, IReadOnlyList<ShaderExpression> Arguments) : ShaderExpression
 {
-    public override Expression Accept(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ExpressionVisitor visitor)
     {
         return visitor.VisitNewExpression(this);
     }
 
-    public override Expression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
     {
         return new NewExpression(Constructor, Arguments.Select(e => e.Accept(visitor)).ToArray());
     }

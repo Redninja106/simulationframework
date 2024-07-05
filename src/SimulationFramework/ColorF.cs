@@ -202,15 +202,15 @@ public readonly partial struct ColorF : IEquatable<ColorF>
         alpha = MathHelper.Normalize(alpha);
 
         // https://en.wikipedia.org/wiki/HSL_and_HSV#HSV_to_RGB_alternative
-        float Channel(float n)
+        static float Channel(float n, float hue, float saturation, float value)
         {
             float k = (n + hue * 6f) % 6f;
             return value - (value * saturation * MathF.Max(0, MathF.Min(k, MathF.Min(4 - k, 1))));
         }
 
-        float r = Channel(5);
-        float g = Channel(3);
-        float b = Channel(1);
+        float r = Channel(5, hue, saturation, value);
+        float g = Channel(3, hue, saturation, value);
+        float b = Channel(1, hue, saturation, value);
         return new ColorF(r, g, b, alpha);
     }
 

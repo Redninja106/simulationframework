@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.Translation;
 internal class ColorFHandler : TypeHandler
 {
-    public override string HandleArrayAccess(Expression expression)
+    public override string HandleArrayAccess(ShaderExpression expression)
     {
         throw new NotImplementedException();
     }

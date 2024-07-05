@@ -104,7 +104,7 @@ public static class DgmlBuilder
 
     private static string GetNodeID(ControlFlowNode node)
     {
-        return node.ToString().ToString();
+        return node.ToString();
     }
 
     public record struct Node(

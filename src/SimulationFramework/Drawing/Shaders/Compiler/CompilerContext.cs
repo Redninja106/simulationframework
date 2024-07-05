@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -8,50 +9,131 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler;
 
-
 internal class CompilerContext
 {
-    public MethodBase? CurrentMethod { get; private set; }
-    public CompilationQueue CompilationQueue { get; }
+    private readonly Dictionary<Type, ShaderPrimitive> primitiveTypeMap;
+
+    public ShaderCompilation Compilation { get; }
+    public Queue<MethodBase> MethodQueue { get; } = [];
+    public Dictionary<MethodBase, ShaderMethod> Methods { get; } = [];
+    public Dictionary<Type, ShaderStructureType> Structs { get; } = [];
+
+    public HashSet<MethodInfo> IntrinsicMethods { get; } = [];
+    public Dictionary<MethodBase, MethodInfo> IntrinsicIntercepts { get; } = [];
+
+    public Dictionary<FieldInfo, ShaderVariable> Uniforms { get; } = [];
+
     public Type ShaderType { get; }
-    internal ShaderIntrinsicsManager Intrinsics { get; }
+    public MethodInfo EntryPoint { get; }
 
-    public CompilerContext(Type shaderType)
+    public CompilerContext(Type shaderType, MethodInfo entryPoint, Dictionary<Type, ShaderPrimitive> primitiveTypeMap)
     {
-        CompilationQueue = new(this);
-        Intrinsics = new();
         ShaderType = shaderType;
+        EntryPoint = entryPoint;
+        this.primitiveTypeMap = primitiveTypeMap;
+        MethodQueue = [];
+        
+        Compilation = new();
+
+        foreach (var method in typeof(ShaderIntrinsics).GetMethods(BindingFlags.Public | BindingFlags.Static))
+        {
+            if (method.GetCustomAttribute<ShaderIntrinsicAttribute>() is null)
+                continue;
+
+            IntrinsicMethods.Add(method);
+
+            foreach (var interceptAttr in method.GetCustomAttributes<ShaderInterceptAttribute>())
+            {
+                var interceptedMethod = interceptAttr.GetMethod(method.GetParameters().Select(p => p.ParameterType).ToArray());
+                if (interceptedMethod != null)
+                {
+                    IntrinsicIntercepts.Add(interceptedMethod, method);
+                }
+            }
+        }
     }
 
-    public void SetCurrentMethod(MethodBase method)
+    public ShaderMethod EnqueueMethod(MethodBase method)
     {
-        this.CurrentMethod = method;
-    }
-}
+        if (Methods.TryGetValue(method, out ShaderMethod? compiled))
+        {
+            return compiled;
+        }
 
-internal class CompilationQueue
-{
-    private readonly Queue<MethodBase> queue = new();
-    private readonly CompilerContext context;
+        MethodQueue.Enqueue(method);
 
-    public CompilationQueue(CompilerContext context)
-    {
-        this.context = context;
+        ShaderMethod shaderMethod = new();
+        Methods.Add(method, shaderMethod);
+        return shaderMethod;
     }
 
-    public void EnqueueMethod(MethodBase method)
+    public MethodInfo? ResolveMethodToIntrinsic(MethodBase method)
     {
-        Debug.Assert(!ContainsMethod(method));
-        queue.Enqueue(method);
+        if (IntrinsicMethods.Contains(method))
+        {
+            return (MethodInfo)method;
+        }
+
+        if (IntrinsicIntercepts.TryGetValue(method, out MethodInfo? intrinsic))
+        {
+            return intrinsic;
+        }
+
+        return null;
+    }
+    public ShaderType CompileType(Type type)
+    {
+        if (type == ShaderType)
+        {
+            return new ShaderGlobalType(type);
+        }
+
+        if (Structs.TryGetValue(type, out var result))
+        {
+            return result;
+        }
+
+        if (type.IsByRef)
+        {
+            return new ReferenceType(CompileType(type.GetElementType()));
+        }
+
+        if (this.primitiveTypeMap.TryGetValue(type, out ShaderPrimitive primitive))
+        {
+            return ShaderPrimitiveType.Get(primitive);
+        }
+
+
+        if (type.IsValueType)
+        {
+            var shaderStruct = CompileStruct(type);
+            var shaderType = new ShaderStructureType(shaderStruct);
+            Structs.Add(type, shaderType);
+            Compilation.Structures.Add(shaderType.structure);
+            return shaderType;
+        }
+
+        throw new Exception($"type {type} is not supported!");
     }
 
-    public bool ContainsMethod(MethodBase method)
+    private ShaderStructure CompileStruct(Type structType)
     {
-        return queue.Contains(method);
-    }
+        FieldInfo[] fieldInfos = structType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        ShaderVariable[] fields = new ShaderVariable[fieldInfos.Length];
+        for (int i = 0; i < fieldInfos.Length; i++)
+        {
+            var fieldInfo = fieldInfos[i];
+            fields[i] = new ShaderVariable(
+                CompileType(fieldInfo.FieldType),
+                new(fieldInfo.Name),
+                fieldInfo
+                );
+        }
 
-    public bool TryDequeueMethod(out MethodBase method)
-    {
-        return queue.TryDequeue(out method);
+        return new()
+        {
+            fields = fields,
+            name = new(structType.Name),
+        };
     }
 }

@@ -10,7 +10,7 @@ namespace SimulationFramework.Drawing;
 /// <summary>
 /// Enables the rendering shapes to a texture.
 /// </summary>
-public interface ICanvas : IDisposable
+public interface ICanvas
 {
     /// <summary>
     /// Gets the width of the canvas, in pixels.
@@ -36,7 +36,8 @@ public interface ICanvas : IDisposable
     /// Clears the canvas.
     /// </summary>
     /// <param name="color">The color with which to clear the canvas.</param>
-    void Clear(Color color);
+    void Clear(ColorF color);
+    sealed void Clear(Color color) => Clear(color.ToColorF());
 
     /// <summary>
     /// Waits for all drawing commands to finish executing.
@@ -46,10 +47,7 @@ public interface ICanvas : IDisposable
     /// <summary>
     /// Sets whether the canvas should use antialiasing when rendering or not.
     /// </summary>
-    sealed void Antialias(bool antialias)
-    {
-        State.UpdateAntialias(antialias);
-    }
+    void Antialias(bool antialias);
 
     /// <summary>
     /// Configures the canvas to fill shapes with the provided color.
@@ -58,11 +56,9 @@ public interface ICanvas : IDisposable
     /// meaning that any shapes drawn after this call will be filled with the provided color. 
     /// </para>
     /// </summary>
-    sealed void Fill(Color color)
-    {
-        State.UpdateFillColor(color);
-        State.UpdateDrawMode(DrawMode.Fill);
-    }
+    void Fill(Color color) => Fill(color.ToColorF());
+
+    void Fill(ColorF color);
 
     /// <summary>
     /// Configures the canvas to fill shapes using the provided gradient.
@@ -71,10 +67,9 @@ public interface ICanvas : IDisposable
     /// meaning that any shapes drawn after this call will be filled with the provided gradient. 
     /// </para>
     /// </summary>
-    sealed void Fill(Gradient gradient)
+    void Fill(Gradient gradient)
     {
-        State.UpdateGradient(gradient);
-        State.UpdateDrawMode(DrawMode.Gradient);
+        throw new NotImplementedException("add shader");
     }
 
     /// <summary>
@@ -84,11 +79,7 @@ public interface ICanvas : IDisposable
     /// meaning that any shapes drawn after this call will be outlined with the provided color. 
     /// </para>
     /// </summary>
-    sealed void Stroke(Color color)
-    {
-        State.UpdateStrokeColor(color);
-        State.UpdateDrawMode(DrawMode.Stroke);
-    }
+    void Stroke(Color color);
 
     /// <summary>
     /// Configures the canvas to fill shapes using the provided shader.
@@ -98,21 +89,17 @@ public interface ICanvas : IDisposable
     /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Shader"/>, 
     /// meaning that any shapes drawn after this call will be filled with the provided shader. 
     /// </para>
-    sealed void Fill(CanvasShader shader)
-    {
-        State.UpdateShader(shader);
-        State.UpdateDrawMode(DrawMode.Shader);
-    }
+    void Fill(CanvasShader shader);
 
     /// <summary>
     /// Sets the stroke width of the canvas.
     /// </summary>
-    sealed void StrokeWidth(float width) => State.UpdateStrokeWidth(width);
+    void StrokeWidth(float width);
 
     /// <summary>
     /// Sets the clipping rectangle of the canvas.
     /// </summary>
-    sealed void Clip(Rectangle? rectangle) => State.UpdateClipRegion(rectangle);
+    void Clip(Rectangle? rectangle);
 
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
@@ -130,11 +117,12 @@ public interface ICanvas : IDisposable
     /// meaning that any shapes drawn after this call will be filled with the provided texture. 
     /// </para>
     /// </summary>
-    sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileMode = TileMode.Repeat)
+    void Fill(ITexture texture, Matrix3x2 transform, TileMode tileMode = TileMode.Repeat)
     {
-        State.UpdateFillTexture(texture, transform, tileMode, tileMode);
-        State.UpdateDrawMode(DrawMode.Textured);
+        throw new Exception("use a shader");
     }
+
+    void DrawTriangles(ReadOnlySpan<Vector2> triangles);
 
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
@@ -145,8 +133,7 @@ public interface ICanvas : IDisposable
     /// </summary>
     sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
     {
-        State.UpdateFillTexture(texture, transform, tileModeX, tileModeY);
-        State.UpdateDrawMode(DrawMode.Textured);
+        throw new Exception("use a shader");
     }
 
     /// <summary>
@@ -481,19 +468,19 @@ public interface ICanvas : IDisposable
     /// Sets the font used for text rendering.
     /// </summary>
     /// <param name="font">The font to use when drawing text.</param>
-    sealed void Font(IFont font) => State.UpdateFont(font);
+    void Font(IFont font);
 
     /// <summary>
     /// Configures the style of the current font.
     /// </summary>
     /// <param name="style">The style of the font.</param>
-    sealed void FontStyle(FontStyle style) => State.UpdateFontStyle(style);
+    void FontStyle(FontStyle style);
 
     /// <summary>
     /// Configures the size of the current font.
     /// </summary>
     /// <param name="size">The size of the font.</param>
-    sealed void FontSize(float size) => State.UpdateFontSize(size);
+    void FontSize(float size);
 
     /// <summary>
     /// Pushes the current transformation matrix, clipping rectangle, and drawing state onto the stack.
@@ -513,7 +500,7 @@ public interface ICanvas : IDisposable
     /// <summary>
     /// Sets the canvas' transformation matrix.
     /// </summary>
-    sealed void SetTransform(Matrix3x2 transform) => State.UpdateTransform(transform);
+    void SetTransform(Matrix3x2 transform);
 
     /// <summary>
     /// Composes the provided transformation with the canvas' current transform.

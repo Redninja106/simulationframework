@@ -8,7 +8,7 @@ public abstract class TypeHandler
 
     public abstract string HandleName();
     public abstract string? HandleField(string fieldName);
-    public abstract string HandleArrayAccess(Expression expression);
+    public abstract string HandleArrayAccess(ShaderExpression expression);
 
     public static void Get(Type type, LanguageTarget language)
     {

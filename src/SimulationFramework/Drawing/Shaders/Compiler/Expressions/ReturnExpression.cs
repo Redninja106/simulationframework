@@ -1,13 +1,13 @@
 ﻿namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 
-public record ReturnExpression(Expression? ReturnValue) : Expression
+public record ReturnExpression(ShaderExpression? ReturnValue) : ShaderExpression
 {
-    public override Expression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
     {
         return new ReturnExpression(ReturnValue?.Accept(visitor));
     }
 
-    public override Expression Accept(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ExpressionVisitor visitor)
     {
         return visitor.VisitReturnExpression(this);
     }

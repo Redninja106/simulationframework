@@ -93,4 +93,20 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic]
     public static bool AsBool(int value) => value > 0;
 
+    [ShaderIntrinsic]
+    [ShaderIntercept(nameof(MathF.Abs), typeof(MathF))]
+    public static void Abs(float value) => MathF.Abs(value);
+    
+    [ShaderIntrinsic]
+    public static ColorF Sample(this ITexture texture, Vector2 uv)
+    {
+        throw new NotImplementedException();
+    }
+
+    [ShaderIntrinsic]
+    public static ColorF Load(this ITexture texture, int x, int y)
+    {
+        throw new NotImplementedException();
+    }
+
 }

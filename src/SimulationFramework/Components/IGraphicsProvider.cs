@@ -24,12 +24,12 @@ public interface IGraphicsProvider : ISimulationComponent
     /// <summary>
     /// Creates a new bitmap with the provided data.
     /// </summary>
-    bool TryCreateTexture(int width, int height, ReadOnlySpan<Color> pixels, TextureOptions options, [NotNullWhen(true)] out ITexture texture);
+    ITexture CreateTexture(int width, int height, ReadOnlySpan<Color> pixels, TextureOptions options);
 
     /// <summary>
     /// Loads a bitmap from a image file.
     /// </summary>
-    bool TryLoadTexture(ReadOnlySpan<byte> encodedData, TextureOptions options, [NotNullWhen(true)] out ITexture? texture);
+    ITexture LoadTexture(ReadOnlySpan<byte> encodedData, TextureOptions options);
 
     /// <summary>
     /// Loads a font from a font file.

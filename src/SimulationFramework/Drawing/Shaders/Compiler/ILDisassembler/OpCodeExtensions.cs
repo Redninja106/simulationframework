@@ -76,6 +76,9 @@ internal static class OpCodeExtensions
             OpCode.Ldloca,
             OpCode.Stloc,
         },
+        [typeof(int[])] = [
+            OpCode.Switch,
+        ],
         [typeof(MetadataToken)] = new[]
         {
             OpCode.Jmp,

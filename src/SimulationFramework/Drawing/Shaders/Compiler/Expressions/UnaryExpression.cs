@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-public record UnaryExpression(UnaryOperation Operation, Expression Operand) : Expression
+public record UnaryExpression(UnaryOperation Operation, ShaderExpression Operand) : ShaderExpression
 {
-    public override Expression Accept(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ExpressionVisitor visitor)
     {
         return visitor.VisitUnaryExpression(this);
     }
 
-    public override Expression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
     {
         return new UnaryExpression(Operation, Operand.Accept(visitor));
     }

@@ -7,20 +7,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-internal class ExpressionStack : IEnumerable<Expression>
+internal class ExpressionStack : IEnumerable<ShaderExpression>
 {
-    private Stack<(Expression expr, bool isOnIlStack)> values = new();
+    private Stack<(ShaderExpression expr, bool isOnIlStack)> values = new();
 
-    public void Push(Expression expression, bool isOnStack = true)
+    public void Push(ShaderExpression expression, bool isOnStack = true)
     {
         values.Push((expression, isOnStack));
     }
 
-    public Expression Pop()
+    public ShaderExpression Pop()
     {
-        List<Expression> notOnStackValues = new();
+        List<ShaderExpression> notOnStackValues = new();
 
-        Expression expr;
+        ShaderExpression expr;
         bool isOnStack;
         while (true)
         {
@@ -51,7 +51,7 @@ internal class ExpressionStack : IEnumerable<Expression>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-    public IEnumerator<Expression> GetEnumerator()
+    public IEnumerator<ShaderExpression> GetEnumerator()
     {
         return values.Select(e => e.expr).GetEnumerator();
     }

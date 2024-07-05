@@ -5,7 +5,7 @@ using System.Numerics;
 namespace SimulationFramework.Drawing.Shaders.Compiler;
 internal class MatrixHandler(int rows, int columns) : TypeHandler
 {
-    public override string HandleArrayAccess(Expression expression)
+    public override string HandleArrayAccess(ShaderExpression expression)
     {
         throw new NotImplementedException();
     }

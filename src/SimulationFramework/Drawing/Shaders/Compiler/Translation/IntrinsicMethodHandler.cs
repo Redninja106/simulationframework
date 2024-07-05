@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.Translation;
 internal abstract class IntrinsicMethodHandler
 {
-    public abstract Expression Handle(CallExpression expression);
+    public abstract ShaderExpression Handle(CallExpression expression);
 }
 
 class OperatorMethodHandler(BinaryOperation op) : IntrinsicMethodHandler
 {
-    public override Expression Handle(CallExpression expression)
+    public override ShaderExpression Handle(CallExpression expression)
     {
         return new BinaryExpression(op, expression.Arguments[0], expression.Arguments[1]);
     }

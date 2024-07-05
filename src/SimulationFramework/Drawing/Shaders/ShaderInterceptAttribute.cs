@@ -21,4 +21,13 @@ internal class ShaderInterceptAttribute : Attribute
         MethodName = methodName;
         MethodType = methodType;
     }
+
+    public MethodBase? GetMethod(Type[] types)
+    {
+        return MethodName switch
+        {
+            ConstructorName => MethodType.GetConstructor(types),
+            _ => MethodType.GetMethod(MethodName, types),
+        };
+    }
 }

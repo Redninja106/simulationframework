@@ -15,41 +15,43 @@ namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 
 internal class ExpressionBuilder
 {
-    private MethodDisassembly Disassembly { get; set; }
-    private InstructionStream InstructionStream { get; set; }
-    private LocalVariableExpression[] Locals { get; set; }
-    private MethodParameter[] Arguments { get; set; }
+    public MethodDisassembly Disassembly { get; set; }
+    //public LocalVariableExpression[] Locals { get; set; }
+    //public ParameterInfo[] Parameters { get; set; }
     // private LabelTarget ReturnTarget { get; set; }
-    private Type ReturnType { get; set; }
-    private bool IsConstructor { get; set; }
-    private ExpressionStack Expressions { get; set; }
+    public Type ReturnType { get; set; }
+    public ExpressionStack Expressions { get; set; }
 
-    private ExpressionBuilder(MethodDisassembly disassembly, MethodParameter[] arguments)
+    private readonly CompilerContext context;
+    public ControlFlowGraph controlFlowGraph;
+    private readonly ShaderVariable[] parameters;
+    private readonly ShaderVariable[] locals;
+
+    public ExpressionBuilder(CompilerContext context, ControlFlowGraph controlFlowGraph, MethodDisassembly disassembly, ShaderVariable[] parameters, ShaderVariable[] locals)
     {
-        Disassembly = disassembly;
-        this.Arguments = arguments;
+        this.context = context;
+        this.controlFlowGraph = controlFlowGraph;
+        this.Disassembly = disassembly;
+        this.parameters = parameters;
+        this.locals = locals;
+        //this.Parameters = disassembly.Method.GetParameters();
     }
 
-    public static BlockExpression BuildExpressions(ShaderMethod shaderMethod)
+    public BlockExpression BuildExpressions()
     {
-        var graph = shaderMethod.ControlFlowGraph;
-        var disassembly = shaderMethod.Disassembly;
+        Expressions = new();
+        // IsConstructor = Disassembly.Method is ConstructorInfo;
 
-        ExpressionBuilder builder = new(disassembly, shaderMethod.Parameters.ToArray());
+        // InstructionStream = new InstructionStream(Disassembly);
 
-        builder.Expressions = new();
-        builder.IsConstructor = disassembly.Method is ConstructorInfo;
+        // Locals = GetLocals(Disassembly);
 
-        builder.InstructionStream = new InstructionStream(disassembly);
-
-        builder.Locals = GetLocals(disassembly);
-
-        builder.ReturnType = disassembly.Method is MethodInfo method ? method.ReturnType : typeof(void);
+        ReturnType = Disassembly.Method is MethodInfo method ? method.ReturnType : ((ConstructorInfo)Disassembly.Method).DeclaringType!;
         // builder.ReturnTarget = Expression.Label(builder.ReturnType, "return");
 
-        var exprs = builder.BuildNodeChain(graph.EntryNode, graph.ExitNode);
+        var exprs = BuildNodeChain(controlFlowGraph.EntryNode, controlFlowGraph.ExitNode);
 
-        Expression result = builder.SimplifyExpression(exprs);
+        ShaderExpression result = SimplifyExpression(exprs);
         if (result is BlockExpression resultBlock)
         {
             return resultBlock;
@@ -60,7 +62,7 @@ internal class ExpressionBuilder
         }
     }
 
-    Expression? BuildBasicBlockExpression(BasicBlockNode basicBlock, bool clearStack = true)
+    ShaderExpression? BuildBasicBlockExpression(BasicBlockNode basicBlock, bool clearStack = true)
     {
         if (basicBlock.Instructions.Count is 0)
             return null;
@@ -110,9 +112,9 @@ internal class ExpressionBuilder
     {
         if (instruction.OpCode is not OpCode.Initobj)
             return false;
-
+        var type = ((MetadataToken)instruction.Argument).Resolve() as Type ?? throw new();
         var left = Expressions.Pop();
-        var right = new DefaultExpression(((MetadataToken)instruction.Argument).Resolve() as Type ?? throw new());
+        var right = new DefaultExpression(context.CompileType(type));
         Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, left, right));
 
         return true;
@@ -120,7 +122,7 @@ internal class ExpressionBuilder
 
     bool BuildBranch(Instruction instruction)
     {
-        Expression left, right;
+        ShaderExpression left, right;
         switch (instruction.OpCode)
         {
             case OpCode.Bne_Un or OpCode.Bne_Un_S:
@@ -172,7 +174,7 @@ internal class ExpressionBuilder
         return true;
     }
 
-    Expression BuildNode(ControlFlowNode node, bool clearStack = true)
+    ShaderExpression BuildNode(ControlFlowNode node, bool clearStack = true)
     {
         if (node is ConditionalNode conditional)
         {
@@ -186,10 +188,10 @@ internal class ExpressionBuilder
 
             var trueExpr = BuildNodeChain(conditional.TrueBranch, conditional.Subgraph.ExitNode);
 
-            Expression? falseExpr = conditional.FalseBranch is null ? null : BuildNodeChain(conditional.FalseBranch, conditional.Subgraph.ExitNode);
+            ShaderExpression? falseExpr = conditional.FalseBranch is null ? null : BuildNodeChain(conditional.FalseBranch, conditional.Subgraph.ExitNode);
 
             bool isTernary = false;
-            Expression condExpr;
+            ShaderExpression condExpr;
             if (trueExpr is not BlockExpression && /* trueExpr.Type != typeof(void) && */ falseExpr is not BlockExpression)
             {
                 // might be ternary
@@ -205,7 +207,7 @@ internal class ExpressionBuilder
 
             var endExpr = BuildNode(conditional.Subgraph.ExitNode, !isTernary);
 
-            return CreateBlockExpressionIfNeeded(new Expression[] { beginExpr, isTernary ? null : condExpr, endExpr }.Where(ex => ex is not null).Cast<Expression>());
+            return CreateBlockExpressionIfNeeded(new ShaderExpression[] { beginExpr, isTernary ? null : condExpr, endExpr }.Where(ex => ex is not null).Cast<ShaderExpression>());
         }
         else if (node is LoopNode loop)
         {
@@ -217,7 +219,7 @@ internal class ExpressionBuilder
 
             var body = BuildNodeChain(loop.Tail, loop.Header);
 
-            return new LoopExpression(CreateBlockExpressionIfNeeded(new Expression[] { header, condition, body }));
+            return new LoopExpression(CreateBlockExpressionIfNeeded(new ShaderExpression[] { header, condition, body }));
         }
         else if (node is BasicBlockNode basicBlock)
         {
@@ -229,7 +231,7 @@ internal class ExpressionBuilder
         }
     }
 
-    private static Expression CreateBlockExpressionIfNeeded(IEnumerable<Expression> expressions)
+    private static ShaderExpression CreateBlockExpressionIfNeeded(IEnumerable<ShaderExpression> expressions)
     {
         // if (expressions.Count() is 1)
         //     return expressions.Single()!;
@@ -241,7 +243,7 @@ internal class ExpressionBuilder
     }
 
     // trims the last expr from a block used for grabbing head statements for ifs and loops
-    private Expression ExtractConditionExpression(Expression expr, out Expression lastExpr)
+    private ShaderExpression ExtractConditionExpression(ShaderExpression expr, out ShaderExpression lastExpr)
     {
         if (expr is not BlockExpression blockExpr)
         {
@@ -253,12 +255,12 @@ internal class ExpressionBuilder
         return CreateBlockExpressionIfNeeded(blockExpr.Expressions.SkipLast(1));
     }
 
-    Expression BuildNodeChain(ControlFlowNode start, ControlFlowNode end)
+    ShaderExpression BuildNodeChain(ControlFlowNode start, ControlFlowNode end)
     {
         Debug.Assert(start.Graph == end.Graph);
 
         var graph = start.Graph;
-        List<Expression> exprs = new();
+        List<ShaderExpression> exprs = new();
 
         var node = start;
         while (node != end)
@@ -267,10 +269,10 @@ internal class ExpressionBuilder
             node = node.Successors.Single();
         }
 
-        return CreateBlockExpressionIfNeeded(exprs.Where(ex => ex is not null).Cast<Expression>());
+        return CreateBlockExpressionIfNeeded(exprs.Where(ex => ex is not null).Cast<ShaderExpression>());
     }
 
-    Expression SimplifyExpression(Expression expression)
+    ShaderExpression SimplifyExpression(ShaderExpression expression)
     {
         if (expression is ConditionalExpression conditionalExpr)
             return new ConditionalExpression(
@@ -282,7 +284,7 @@ internal class ExpressionBuilder
         if (expression is not BlockExpression blockExpr)
             return expression;
 
-        IEnumerable<Expression> expressions = Enumerable.Empty<Expression>();
+        IEnumerable<ShaderExpression> expressions = Enumerable.Empty<ShaderExpression>();
 
         foreach (var expr in blockExpr.Expressions.Select(SimplifyExpression))
         {
@@ -294,7 +296,7 @@ internal class ExpressionBuilder
         return CreateBlockExpressionIfNeeded(expressions);
     }
 
-    Expression ForceVoidType(Expression expression)
+    ShaderExpression ForceVoidType(ShaderExpression expression)
     {
         return expression;
 
@@ -334,6 +336,13 @@ internal class ExpressionBuilder
 
         var right = Expressions.Pop();
         var left = Expressions.Pop();
+
+        if (left is BinaryExpression bin && bin.GetOperator() is "==" or "!=" or ">=" or ">" or "<" or "<=" && right is ConstantExpression constExpr && constExpr.Value is 0)
+        {
+            Expressions.Push(new UnaryExpression(UnaryOperation.Not, left));
+            return true;
+        }
+
         Expressions.Push(new BinaryExpression(exprType.Value, left, right));
         return true;
 
@@ -351,8 +360,8 @@ internal class ExpressionBuilder
                 OpCode.Shr_Un => BinaryOperation.RightShift,
                 OpCode.Shl => BinaryOperation.LeftShift,
                 OpCode.Ceq => BinaryOperation.Equal,
-                OpCode.Clt => BinaryOperation.LessThan,
-                OpCode.Cgt => BinaryOperation.GreaterThan,
+                OpCode.Clt or OpCode.Clt_Un => BinaryOperation.LessThan,
+                OpCode.Cgt or OpCode.Cgt_Un => BinaryOperation.GreaterThan,
                 OpCode.Rem => BinaryOperation.Modulus,
                 OpCode.Rem_Un => BinaryOperation.Modulus,
 
@@ -394,12 +403,20 @@ internal class ExpressionBuilder
         var metadataToken = (MetadataToken)instruction.Argument!;
         var fieldInfo = (FieldInfo)metadataToken.Resolve()!;
 
+        if (fieldInfo.DeclaringType == context.ShaderType)
+        {
+            // uniform!
+            Expressions.Pop(); // pop the 'self'
+            Expressions.Push(new ShaderVariableExpression(context.Uniforms[fieldInfo]));
+            return true;    
+        }
+
         if (instruction.OpCode is OpCode.Stfld)
         {
             var value = Expressions.Pop();
             var obj = Expressions.Pop();
 
-            Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, new MemberAccessExpression(obj, fieldInfo), value));
+            Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, new MemberAccess(obj, fieldInfo), value));
         }
         else if (instruction.OpCode is OpCode.Ldsfld)
         {
@@ -412,7 +429,7 @@ internal class ExpressionBuilder
         {
             var obj = Expressions.Pop();
 
-            Expressions.Push(new MemberAccessExpression(obj, fieldInfo));
+            Expressions.Push(new MemberAccess(obj, fieldInfo));
         }
 
         return true;
@@ -476,15 +493,15 @@ internal class ExpressionBuilder
     {
         if (IsLoadLocalExpression(instruction, out uint? loadIndex))
         {
-            Expressions.Push(Locals[(int)loadIndex]);
+            Expressions.Push(new ShaderVariableExpression(this.locals[(int)loadIndex]));
             return true;
         }
 
         if (IsStoreLocalExpression(instruction, out uint? storeIndex))
         {
             var expr = Expressions.Pop();
-            var local = Locals[(int)storeIndex];
-            Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, local, expr));
+            var local = locals[(int)storeIndex];
+            Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, new ShaderVariableExpression(local), expr));
 
             return true;
         }
@@ -575,13 +592,13 @@ internal class ExpressionBuilder
     {
         if (IsLoadArgumentExpression(instruction, out uint? loadIndex))
         {
-            Expressions.Push(new MethodParameterExpression(this.Arguments[(int)loadIndex]));
+            Expressions.Push(new ShaderVariableExpression(this.parameters[(int)loadIndex]));
             return true;
         }
 
         if (IsStoreArgumentExpression(instruction, out uint? storeIndex))
         {
-            Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, new MethodParameterExpression(Arguments[(int)storeIndex]), Expressions.Pop()), false);
+            Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, new ShaderVariableExpression(parameters[(int)storeIndex]), Expressions.Pop()), false);
             return true;
         }
 
@@ -610,7 +627,7 @@ internal class ExpressionBuilder
             value = instruction.OpCode switch
             {
                 OpCode.Starg => (uint)instruction.Argument!,
-                OpCode.Starg_S => (uint)(sbyte)instruction.Argument!,
+                OpCode.Starg_S => (byte)instruction.Argument!,
                 _ => null
             };
 
@@ -628,7 +645,16 @@ internal class ExpressionBuilder
 
         var args = PopArgs(ctor);
 
-        Expressions.Push(new NewExpression(ctor, args));
+        var intrinsic = context.ResolveMethodToIntrinsic(ctor);
+        if (intrinsic != null)
+        {
+            Expressions.Push(new ShaderIntrinsicCall(intrinsic, args));
+        }
+        else
+        {
+            var shaderMethod = context.EnqueueMethod(ctor);
+            Expressions.Push(new ShaderMethodCall(shaderMethod, args));
+        }
 
         return true;
     }
@@ -644,30 +670,40 @@ internal class ExpressionBuilder
         var args = PopArgs(method);
 
         var instance = method.IsStatic ? null : Expressions.Pop();
-
-        if (method is MethodInfo methodInfo)
+        if (method is ConstructorInfo || method.DeclaringType == context.ShaderType)
         {
-            Expressions.Push(new CallExpression(instance, methodInfo, args), methodInfo.ReturnType != typeof(void));
         }
-        else if (method is ConstructorInfo constructor)
+        else
         {
-            var expr = new NewExpression(constructor, args);
-            if (instance is not null)
+            if (instance != null)
             {
-                Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, instance, expr));
+                args = [instance, .. args];
             }
-            else
-            {
-                Expressions.Push(expr);
-            }
+        }
+
+        var intrinsic = context.ResolveMethodToIntrinsic(method);
+        if (intrinsic != null)
+        {
+            Expressions.Push(new ShaderIntrinsicCall(intrinsic, args));
+        }
+        else
+        {
+            var shaderMethod = context.EnqueueMethod(method);
+            Expressions.Push(new ShaderMethodCall(shaderMethod, args));
+        }
+
+        if (method is ConstructorInfo)
+        {
+            var value = Expressions.Pop();
+            Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, instance, value));
         }
 
         return true;
     }
 
-    Expression[] PopArgs(MethodBase method)
+    ShaderExpression[] PopArgs(MethodBase method)
     {
-        var args = new Expression[method.GetParameters().Length];
+        var args = new ShaderExpression[method.GetParameters().Length];
 
         for (int i = args.Length - 1; i >= 0; i--)
         {

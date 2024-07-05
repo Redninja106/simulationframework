@@ -53,22 +53,6 @@ internal class ControlFlowNode
         successor.predecessors.Remove(this);
     }
 
-    //public bool Dominates(ControlFlowNode node)
-    //{
-    //    if (node == this)
-    //        return true;
-
-    //    var dominator = node.ImmediateDominator;
-    //    do
-    //    {
-    //        if (this == dominator)
-    //            return true;
-    //    }
-    //    while (dominator != Graph.Entry);
-
-    //    return false;
-    //}
-
     public override string ToString()
     {
         return $"{GetType().Name} {DebugID}";

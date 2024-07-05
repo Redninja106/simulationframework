@@ -108,6 +108,20 @@ internal class Instruction
         {
             result.Append(GetBranchTarget()?.GetLabel());
         }
+        else if (Argument is int[] array)
+        {
+            result.Append("<");
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (i != 0)
+                {
+                    result.Append(", ");
+                }
+
+                result.Append(Method.GetInstructionAt(Location + Size + array[i])?.GetLabel());
+            }
+            result.Append(">");
+        }
         else
         {
             result.Append(Argument?.ToString());

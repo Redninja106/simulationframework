@@ -117,7 +117,7 @@ internal class SKSLCodeGenerator
         writer.WriteLine("\n};");
     }
 
-    private void EmitUniform(TextWriter writer, ShaderUniform uniform)
+    private void EmitUniform(TextWriter writer, ShaderVariable uniform)
     {
         writer.Write("uniform ");
         EmitType(writer, uniform.UniformType);
@@ -193,7 +193,7 @@ class MethodBodyEmitter : ExpressionVisitor
         this.method = method;
     }
 
-    public override Expression VisitBinaryExpression(BinaryExpression expression)
+    public override ShaderExpression VisitBinaryExpression(BinaryExpression expression)
     {
         writer.Write("(");
         expression.LeftOperand.Accept(this);
@@ -205,7 +205,7 @@ class MethodBodyEmitter : ExpressionVisitor
         return expression;
     }
 
-    public override Expression VisitBlockExpression(BlockExpression expression)
+    public override ShaderExpression VisitBlockExpression(BlockExpression expression)
     {
         writer.WriteLine();
         writer.WriteLine("{");
@@ -241,13 +241,13 @@ class MethodBodyEmitter : ExpressionVisitor
         return expression;
     }
 
-    public override Expression VisitBreakExpression(BreakExpression expression)
+    public override ShaderExpression VisitBreakExpression(BreakExpression expression)
     {
         writer.Write("break");
         return base.VisitBreakExpression(expression);
     }
 
-    public override Expression VisitCallExpression(CallExpression expression)
+    public override ShaderExpression VisitCallExpression(CallExpression expression)
     {
         writer.Write(generator.intrinsicAliases.TryGetValue(expression.Callee.Name, out var name) ? name : expression.Callee.Name.ToLower());
         writer.Write("(");
@@ -264,7 +264,7 @@ class MethodBodyEmitter : ExpressionVisitor
         return expression;
     }
 
-    public override Expression VisitShaderCallExpression(ShaderCallExpression expression)
+    public override ShaderExpression VisitShaderMethodCall(ShaderMethodCall expression)
     {
         writer.Write(expression.Callee.FullName);
         writer.Write("(");
@@ -281,14 +281,14 @@ class MethodBodyEmitter : ExpressionVisitor
         return expression;
     }
 
-    public override Expression VisitNewExpression(NewExpression expression)
+    public override ShaderExpression VisitNewExpression(NewExpression expression)
     {
         // shader ASTs should not have new expressions
         Debug.Assert(false);
         return base.VisitNewExpression(expression);
     }
 
-    public override Expression VisitConstantExpression(ConstantExpression expression)
+    public override ShaderExpression VisitConstantExpression(ConstantExpression expression)
     {
         writer.Write(EmitConstant(expression.Value));
         return base.VisitConstantExpression(expression);
@@ -306,19 +306,19 @@ class MethodBodyEmitter : ExpressionVisitor
         }
     }
 
-    public override Expression VisitLocalVariableExpression(LocalVariableExpression expression)
+    public override ShaderExpression VisitLocalVariableExpression(LocalVariableExpression expression)
     {
         writer.Write(expression.ToString());
         return base.VisitLocalVariableExpression(expression);
     }
 
-    public override Expression VisitMethodParameterExpression(MethodParameterExpression expression)
+    public override ShaderExpression VisitMethodParameterExpression(MethodParameterExpression expression)
     {
         writer.Write(expression.Parameter.Name);
         return base.VisitMethodParameterExpression(expression);
     }
 
-    public override Expression VisitMemberAccessExpression(MemberAccessExpression expression)
+    public override ShaderExpression VisitMemberAccess(MemberAccess expression)
     {
         expression.Instance.Accept(this);
 
@@ -348,26 +348,26 @@ class MethodBodyEmitter : ExpressionVisitor
         return expression;
     }
 
-    public override Expression VisitReturnExpression(ReturnExpression expression)
+    public override ShaderExpression VisitReturnExpression(ReturnExpression expression)
     {
         writer.Write("return" + (expression.ReturnValue is not null ? " " : ""));
         expression.ReturnValue?.Accept(this);
         return expression;
     }
 
-    public override Expression VisitUnaryExpression(UnaryExpression expression)
+    public override ShaderExpression VisitUnaryExpression(UnaryExpression expression)
     {
         writer.Write(expression.GetOperator());
         return base.VisitUnaryExpression(expression);
     }
 
-    public override Expression VisitUniformExpression(UniformExpression expression)
+    public override ShaderExpression VisitUniformExpression(UniformExpression expression)
     {
         writer.Write(expression.Uniform.Name);
         return base.VisitUniformExpression(expression);
     }
 
-    public override Expression VisitConditionalExpression(ConditionalExpression expression)
+    public override ShaderExpression VisitConditionalExpression(ConditionalExpression expression)
     {
         writer.Write("if (");
         expression.Condition.Accept(this);
@@ -383,7 +383,7 @@ class MethodBodyEmitter : ExpressionVisitor
         return expression;
     }
 
-    public override Expression VisitDefaultExpression(DefaultExpression expression)
+    public override ShaderExpression VisitDefaultExpression(DefaultExpression expression)
     {
         if (expression.Type == typeof(bool))
         {
@@ -416,7 +416,7 @@ class MethodBodyEmitter : ExpressionVisitor
 
 class IntrinsicOperatorReplacementVisitor : ExpressionVisitor
 {
-    public override Expression VisitCallExpression(CallExpression expression)
+    public override ShaderExpression VisitCallExpression(CallExpression expression)
     {
         if (expression.Callee.Name is nameof(ShaderIntrinsics.Multiply) && expression.Callee.DeclaringType == typeof(ShaderIntrinsics))
         {

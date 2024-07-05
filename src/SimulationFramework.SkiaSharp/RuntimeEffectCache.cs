@@ -43,7 +43,7 @@ internal static class RuntimeEffectCache
 
         return (effect.effect, effect.uniforms);
     }
-    private static SKRuntimeEffectUniform GetUniformValue(CanvasShader shader, ShaderUniform uniform)
+    private static SKRuntimeEffectUniform GetUniformValue(CanvasShader shader, ShaderVariable uniform)
     {
         var value = uniform.BackingField.GetValue(shader);
 

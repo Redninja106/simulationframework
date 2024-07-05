@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-public record LocalVariableExpression(LocalVariable LocalVariable) : Expression
+public record LocalVariableExpression(LocalVariable LocalVariable) : ShaderExpression
 {
-    public override Expression Accept(ExpressionVisitor visitor) => visitor.VisitLocalVariableExpression(this);
+    public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitLocalVariableExpression(this);
 
     public override string ToString()
     {

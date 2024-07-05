@@ -20,6 +20,6 @@ internal static class IntrinsicTypes
 
     public static bool IsIntrinsic(Type type)
     {
-        return intrinsicTypeHandlers.ContainsKey(type);
+        return intrinsicTypeHandlers.Contains(type);
     }
 }

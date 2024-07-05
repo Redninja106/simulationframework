@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-public record BinaryExpression(BinaryOperation Operation, Expression LeftOperand, Expression RightOperand) : Expression
+public record BinaryExpression(BinaryOperation Operation, ShaderExpression LeftOperand, ShaderExpression RightOperand) : ShaderExpression
 {
-    public override Expression Accept(ExpressionVisitor visitor) => visitor.VisitBinaryExpression(this);
-    public override Expression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitBinaryExpression(this);
+    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
     {
         return new BinaryExpression(this.Operation, LeftOperand.Accept(visitor), RightOperand.Accept(visitor));
     }

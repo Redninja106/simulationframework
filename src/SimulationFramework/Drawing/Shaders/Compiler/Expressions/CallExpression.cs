@@ -6,17 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-public record CallExpression(Expression? Instance, MethodInfo Callee, IReadOnlyList<Expression> Arguments) : Expression
+public record CallExpression(ShaderExpression? Instance, MethodInfo Callee, IReadOnlyList<ShaderExpression> Arguments) : ShaderExpression
 {
     public override Type? ExpressionType => Callee.ReturnType;
 
 
-    public override Expression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
     {
         return new CallExpression(Instance?.Accept(visitor), Callee, Arguments.Select(e => e.Accept(visitor)).ToArray());
     }
 
-    public override Expression Accept(ExpressionVisitor visitor) => visitor.VisitCallExpression(this);
+    public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitCallExpression(this);
 
     public override string ToString()
     {

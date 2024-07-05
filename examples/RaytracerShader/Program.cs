@@ -14,7 +14,7 @@ partial class Program : Simulation
     private float turnSpeed = 5;
     public override void OnInitialize()
     {
-        SetFixedResolution(1600, 900, new Color(25, 25, 25));
+        // SetFixedResolution(1600, 900, new Color(25, 25, 25));
     }
 
     public override void OnRender(ICanvas canvas)
@@ -46,8 +46,8 @@ partial class Program : Simulation
             shader.GetPixelColor(Mouse.Position);
         }
 
-        shader.cameraRotationMatrix = Matrix4x4.CreateRotationX(cameraRotX) * Matrix4x4.CreateRotationY(cameraRotY);
-
+        shader.cameraRotationMatrix = Matrix4x4.CreateRotationY(cameraRotY) * Matrix4x4.CreateRotationX(cameraRotX);
+        
         Vector3 delta = Vector3.Zero;
         if (Keyboard.IsKeyDown(Key.W))
             delta.Z += Time.DeltaTime;
@@ -63,7 +63,7 @@ partial class Program : Simulation
             delta.Y += Time.DeltaTime;
         shader.cameraPosition += Vector3.Transform(delta, shader.cameraRotationMatrix);
 
-        shader.cameraRotationMatrix = Matrix4x4.Transpose(shader.cameraRotationMatrix);
+        // shader.cameraRotationMatrix = Matrix4x4.Transpose(shader.cameraRotationMatrix);
         // draw a fullscreen rect, fill with the shader
         canvas.Fill(shader);
         canvas.DrawRect(0, 0, canvas.Width, canvas.Height);
@@ -87,8 +87,7 @@ class RayTracerShader : CanvasShader
         Vector4 direction4 = ShaderIntrinsics.Multiply(new(vp * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1), cameraRotationMatrix);
         Vector3 direction = new(direction4.X, direction4.Y, direction4.Z);
 
-        Vector3 normal = Vector3.Zero;
-        if (RaySphereIntersect(origin, direction, new Vector3(0, 0, 1), .5f, out normal) == 1)
+        if (RaySphereIntersect(origin, direction, new Vector3(0, 0, 1), .5f, out Vector3 normal) == 1)
         {
             return new ColorF(new Vector3(.1f + MathF.Max(0, .9f * Vector3.Dot(normal, new Vector3(-1, -1, -1).Normalized()))));
         }
@@ -117,10 +116,16 @@ class RayTracerShader : CanvasShader
 
         var t = (-halfB - sqrtD) / a;
 
-        if (discriminant is not 0)
+        if (t < 0)
         {
-            t = (-halfB - sqrtD) / a;
+            t = (-halfB + sqrtD) / a;
         }
+        if (t < 0)
+        {
+            normal = default;
+            return 0;
+        }
+
         normal = (origin + direction * t) - position;
         normal = normal.Normalized();
 

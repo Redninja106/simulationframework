@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Drawing.Shaders;
+using SimulationFramework.Drawing.Shaders.Compiler.ControlFlow;
 using SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 using SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
 using SimulationFramework.Drawing.Shaders.Compiler.Translation;
@@ -20,34 +21,31 @@ namespace SimulationFramework.Drawing.Shaders.Compiler;
 public class CanvasShaderCompiler
 {
     /*
-     *             |------------------------------------------------------------------
-     * stages:     V                                                                 |
-     * decompilation -> control flow -> expression builder -> dependency resolver -> intercept resolver -> translation passes -> shader code emitter 
-     *             ^                                          |      ^                           ^
-     *             |-------------------------------------------       \                         /
-     *                                                                 \-- intrinsic manager --/
-     *             
-     * decompilation:
-     * turns byte[] into MethodDecompilation
-     * 
-     * control flow:
-     * MethodDecompilation to control flow graph with basicBlockNodes
-     * 
-     * expression builder:
-     * cfg of basicblocks into expression tree
-     * 
-     * dependency resolver:
-     * - figures out what else needs to be compiled and restarts the process for those (recursively)
-     * 
-     * translation passes:
-     * - translate C# ast into language agnostic shader ast  
-     * 
-     * shader code emitter:
-     * - shader ast to final shader source
+     * TODO:
+     * - arrays (buffers)
+     * - blending
+     * - texture load/stores
+     * - switches
+     * - fix if bug
+     * - text rendering
      */
+
+
+    private Dictionary<Type, ShaderPrimitive> primitiveTypeMap = [];
 
     public CanvasShaderCompiler()
     {
+        primitiveTypeMap[typeof(void)] = ShaderPrimitive.Void;
+        primitiveTypeMap[typeof(bool)] = ShaderPrimitive.Bool;
+        primitiveTypeMap[typeof(int)] = ShaderPrimitive.Int;
+        primitiveTypeMap[typeof(float)] = ShaderPrimitive.Float;
+        primitiveTypeMap[typeof(Vector2)] = ShaderPrimitive.Float2;
+        primitiveTypeMap[typeof(Vector3)] = ShaderPrimitive.Float3;
+        primitiveTypeMap[typeof(Vector4)] = ShaderPrimitive.Float4;
+        primitiveTypeMap[typeof(ColorF)] = ShaderPrimitive.Float4;
+        primitiveTypeMap[typeof(Matrix4x4)] = ShaderPrimitive.Matrix4x4;
+        primitiveTypeMap[typeof(Matrix3x2)] = ShaderPrimitive.Matrix3x2;
+        primitiveTypeMap[typeof(ITexture)] = ShaderPrimitive.Texture;
     }
 
     public ShaderCompilation Compile(CanvasShader shader)
@@ -92,7 +90,6 @@ public class CanvasShaderCompiler
          *
          */
 
-
         /*
          * Two phases:
          *      method discovery (decomp->intercepts)
@@ -101,71 +98,95 @@ public class CanvasShaderCompiler
          * 
          */
 
-        CompilerContext context = new(shader.GetType());
-        ShaderCompilation compilation = new();
+        var shaderType = shader.GetType();
+        var entryPoint = shaderType.GetMethod(
+            nameof(CanvasShader.GetPixelColor),
+            [typeof(Vector2)]
+            ) ?? throw new();
 
-        // CompileStructs(context, compilation);
-        CompileVariables(context, compilation);
-        CompileMethods(context, compilation);
+        CompilerContext context = new(shaderType, entryPoint, primitiveTypeMap);
 
-        CompilerPipeline translationPass = new(new CompilerStage[]
+        foreach (var field in shaderType.GetFields())
         {
-            new CallReplacementsStage(context),
-            new RemoveThisOnGlobalsStage(context),
-            new UniformAccessReplacementStage(context),
-            new ConstructorFixStage(context),
-            new DoubleEqualityFixStage(context),
-        });
-
-        translationPass.Run(compilation);
-        return compilation; // .GetResult() ?
-    }
-
-    private void CompileVariables(CompilerContext context, ShaderCompilation compilation)
-    {
-        foreach (var field in context.ShaderType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-        {
-            compilation.AddUniform(field);
-            CheckType(compilation, field.FieldType);
-        }
-    }
-
-    private void CheckType(ShaderCompilation compilation, Type type)
-    {
-        if (!IntrinsicTypes.IsIntrinsic(type))
-        {
-            throw new Exception($"type {type} is not supported!");
-        }
-    }
-
-    private MethodInfo GetShaderEntryPoint(CompilerContext context)
-    {
-        return context.ShaderType.GetMethod(nameof(CanvasShader.GetPixelColor), [typeof(Vector2)]) ?? throw new();
-    }
-
-    private void CompileMethods(CompilerContext context, ShaderCompilation compilation)
-    {
-        var entryPoint = GetShaderEntryPoint(context);
-        context.CompilationQueue.EnqueueMethod(entryPoint);
-
-        CompilerPipeline methodPass = new(new MethodCompilerStage[]
-        {
-            new DisassemblyStage(context),
-            new CFGStage(context),
-            new ExpressionBuilderStage(context),
-            new InterceptResolverStage(context),
-            new DependencyResolverStage(context),
-        });
-
-        while (context.CompilationQueue.TryDequeueMethod(out MethodBase method))
-        {
-            context.SetCurrentMethod(method);
-            compilation.AddMethod(method);
-            methodPass.Run(compilation);
+            ShaderVariable variable = new(context.CompileType(field.FieldType), new(field.Name), field);
+            context.Uniforms.Add(field, variable);
+            context.Compilation.Uniforms.Add(variable);
         }
 
-        compilation.EntryPoint = compilation.GetMethod(entryPoint);
+        context.EnqueueMethod(entryPoint);
+
+        while (context.MethodQueue.TryDequeue(out MethodBase? method))
+        {
+            var shaderMethod = context.Methods[method];
+            CompileMethod(shaderMethod, context, method);
+            context.Compilation.Methods.Add(shaderMethod);
+        }
+
+        return context.Compilation;
     }
+
+
+    private void CompileMethod(ShaderMethod shaderMethod, CompilerContext context, MethodBase method)
+    {
+        MethodDisassembly disassembly = new(method);
+        ControlFlowGraph graph = new ControlFlowGraph(disassembly);
+
+        var locals = disassembly.MethodBody.LocalVariables.Select(l => new ShaderVariable(context.CompileType(l.LocalType), new("var" + l.LocalIndex), null)).ToArray();
+        var parameters = method.GetParameters().Select(p => new ShaderVariable(context.CompileType(p.ParameterType), new(p.Name!), null)).ToArray();
+
+        var parametersWithThis = parameters;
+
+        ShaderVariable? self = null;
+        if (!method.IsStatic) 
+        {
+            self = new ShaderVariable(context.CompileType(method.DeclaringType!), new("self"), null);
+            
+            parametersWithThis = parameters.Prepend(self).ToArray();
+        }
+
+        var expressionBuilder = new ExpressionBuilder(context, graph, disassembly, parametersWithThis, locals);
+        var expression = expressionBuilder.BuildExpressions();
+        
+        if (!method.IsStatic && method is ConstructorInfo)
+        {
+            locals = locals.Append(self).ToArray();
+        }
+
+        ShaderName name;
+        if (method.DeclaringType == context.ShaderType)
+        {
+            name = new(method.Name);
+        }
+        else
+        {
+            name = new(method.DeclaringType!.FullName + "_" + method.Name);
+
+            if (method is not ConstructorInfo)
+            {
+                parameters = parametersWithThis;
+            }
+        }
+
+        shaderMethod.Body = expression;
+        shaderMethod.Name = name;
+        shaderMethod.Locals =  locals;
+        shaderMethod.Parameters = parameters;
+        shaderMethod.ReturnType = context.CompileType(expressionBuilder.ReturnType);
+    }
+
+    // private void CompileMethods(CompilerContext context, ShaderCompilation compilation)
+    // {
+
+        // CompilerPipeline methodPass = new(new MethodCompilerStage[]
+        // {
+        //     new DisassemblyStage(context),
+        //     new CFGStage(context),
+        //     new ExpressionBuilderStage(context),
+        //     new InterceptResolverStage(context),
+        //     new DependencyResolverStage(context),
+        // });
+
+    // }
 
     //internal void CompileMethod(CompilationContextOLD context, MethodBase method, bool isEntryPoint = false)
     //{

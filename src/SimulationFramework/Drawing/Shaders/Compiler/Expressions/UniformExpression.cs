@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-public record UniformExpression(ShaderUniform Uniform) : Expression
+public record UniformExpression(ShaderVariable Uniform) : ShaderExpression
 {
-    public override Expression Accept(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ExpressionVisitor visitor)
     {
         return visitor.VisitUniformExpression(this);
     }

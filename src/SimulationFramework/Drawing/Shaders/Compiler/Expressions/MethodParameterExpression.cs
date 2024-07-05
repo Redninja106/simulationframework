@@ -1,13 +1,22 @@
-﻿using System;
+﻿using SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-public record MethodParameterExpression(MethodParameter Parameter) : Expression
+public record MethodParameterExpression : ShaderExpression
 {
-    public override Expression Accept(ExpressionVisitor visitor)
+    MethodParameter Parameter { get; }
+
+    internal MethodParameterExpression(MethodDisassembly method, ParameterInfo info)
+    {
+        Parameter = new(method, info);
+    }
+
+    public override ShaderExpression Accept(ExpressionVisitor visitor)
     {
         return visitor.VisitMethodParameterExpression(this);
     }
