@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
+namespace SimulationFramework.Drawing.Shaders.Compiler.Disassembler;
 
 /// <summary>
 /// Represents a disassembled method.
@@ -17,6 +17,8 @@ internal class MethodDisassembly
     public Instruction[] instructions;
     public MethodBody MethodBody;
     public MethodBase Method;
+
+    public bool IsConstructor => Method is ConstructorInfo;
 
     public MethodDisassembly(MethodBase method)
     {

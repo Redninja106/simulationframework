@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 public record ShaderMethodCall(ShaderMethod Callee, IReadOnlyList<ShaderExpression> Arguments) : ShaderExpression
 {
+    public override ShaderType? ExpressionType => Callee.ReturnType;
+
     public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitShaderMethodCall(this);
 
     public override ShaderExpression VisitChildren(ExpressionVisitor visitor)

@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-public record UnaryExpression(UnaryOperation Operation, ShaderExpression Operand) : ShaderExpression
+public record UnaryExpression(UnaryOperation Operation, ShaderExpression Operand, ShaderType? CastType) : ShaderExpression
 {
+    public override ShaderType? ExpressionType => CastType ?? Operand.ExpressionType;
+
     public override ShaderExpression Accept(ExpressionVisitor visitor)
     {
         return visitor.VisitUnaryExpression(this);
@@ -14,7 +16,7 @@ public record UnaryExpression(UnaryOperation Operation, ShaderExpression Operand
 
     public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
     {
-        return new UnaryExpression(Operation, Operand.Accept(visitor));
+        return new UnaryExpression(Operation, Operand.Accept(visitor), CastType);
     }
 
     public string GetOperator()

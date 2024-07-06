@@ -7,7 +7,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
+namespace SimulationFramework.Drawing.Shaders.Compiler.Disassembler;
 
 /// <summary>
 /// Wraps a int32 metadata token.

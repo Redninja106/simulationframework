@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
+namespace SimulationFramework.Drawing.Shaders.Compiler.Disassembler;
 internal static class OpCodeExtensions
 {
     private static readonly Dictionary<Type, OpCode[]> argTypes = new()
@@ -96,6 +96,8 @@ internal static class OpCodeExtensions
             OpCode.Stfld,
             OpCode.Newobj,
             OpCode.Initobj,
+            OpCode.Ldelem,
+            OpCode.Ldelema,
         },
     };
 

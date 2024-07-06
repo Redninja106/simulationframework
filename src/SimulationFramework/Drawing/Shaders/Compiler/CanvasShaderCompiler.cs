@@ -1,7 +1,7 @@
 ﻿using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Drawing.Shaders.Compiler.ControlFlow;
+using SimulationFramework.Drawing.Shaders.Compiler.Disassembler;
 using SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-using SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
 using SimulationFramework.Drawing.Shaders.Compiler.Translation;
 using System;
 using System.Collections.Generic;
@@ -106,7 +106,7 @@ public class CanvasShaderCompiler
 
         CompilerContext context = new(shaderType, entryPoint, primitiveTypeMap);
 
-        foreach (var field in shaderType.GetFields())
+        foreach (var field in shaderType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
         {
             ShaderVariable variable = new(context.CompileType(field.FieldType), new(field.Name), field);
             context.Uniforms.Add(field, variable);

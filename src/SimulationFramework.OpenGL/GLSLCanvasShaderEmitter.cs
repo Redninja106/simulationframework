@@ -5,6 +5,7 @@ using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -17,11 +18,12 @@ internal class GLSLCanvasShaderEmitter
 {
     IndentedTextWriter writer;
     GLSLExpressionEmitter expressionEmitter;
+    private int nextBufferSlot = 0;
 
     public GLSLCanvasShaderEmitter(TextWriter writer)
     {
         this.writer = new(writer);
-        this.expressionEmitter = new(this.writer);
+        this.expressionEmitter = new(this.writer, this);
     }
 
     public void Emit(ShaderCompilation compilation)
@@ -146,6 +148,26 @@ internal class GLSLCanvasShaderEmitter
 
     private void EmitUniform(ShaderVariable uniform)
     {
+        if (uniform.Type is ShaderArrayType bufferType)
+        {
+            writer.Write("layout(std430, binding=");
+            writer.Write(nextBufferSlot);
+            writer.Write(") buffer _buf_");
+            writer.Write(nextBufferSlot);
+            writer.WriteLine(" {");
+            writer.Indent++;
+
+            EmitType(bufferType.ElementType);
+            writer.Write(' ');
+            EmitName(uniform.Name);
+            writer.WriteLine("[];");
+
+            writer.Indent--;
+            writer.WriteLine("};");
+
+            return;
+        }
+
         writer.Write("uniform ");
         EmitType(uniform.Type);
         writer.Write(' ');
@@ -174,7 +196,7 @@ internal class GLSLCanvasShaderEmitter
 
 }
 
-class GLSLExpressionEmitter(IndentedTextWriter writer) : ExpressionVisitor
+class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter emitter) : ExpressionVisitor
 {
     public override ShaderExpression VisitBlockExpression(BlockExpression expression)
     {
@@ -261,6 +283,7 @@ class GLSLExpressionEmitter(IndentedTextWriter writer) : ExpressionVisitor
     {
         writer.Write(expression.Value switch
         {
+            bool b => b ? "true" : "false",
             int i => i.ToString(),
             float f => f.ToString("G9"),
             Vector2 v2 => $"vec2({v2.X:G9}, {v2.Y:G9})",
@@ -343,13 +366,29 @@ class GLSLExpressionEmitter(IndentedTextWriter writer) : ExpressionVisitor
         if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.Sample))
         {
             // writer.Write("texture");
-            
+        }
+
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.BufferLength))
+        {
+            expression.Arguments.Single().Accept(this);
+            writer.Write(".length()");
+            return expression;
+        }
+
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.BufferLoad))
+        {
+            expression.Arguments[0].Accept(this);
+            writer.Write('[');
+            expression.Arguments[1].Accept(this);
+            writer.Write(']');
+            return expression;
         }
 
         writer.Write(expression.Intrinsic.Name switch
         {
             nameof(ShaderIntrinsics.ColorF) => "vec4",
             nameof(ShaderIntrinsics.Sample) => "texture",
+            nameof(ShaderIntrinsics.BufferLength) => "length",
             _ => expression.Intrinsic.Name.ToLower()
         });
         WriteArgList(expression.Arguments);
@@ -400,11 +439,21 @@ class GLSLExpressionEmitter(IndentedTextWriter writer) : ExpressionVisitor
 
     public override ShaderExpression VisitUnaryExpression(UnaryExpression expression)
     {
-        writer.Write(expression.Operation switch
+        switch (expression.Operation)
         {
-            UnaryOperation.Not => "!",
-            UnaryOperation.Negate => "-",
-        });
+            case UnaryOperation.Not:
+                writer.Write('!');
+                break;
+            case UnaryOperation.Negate:
+                writer.Write('-');
+                break;
+            case UnaryOperation.Cast:
+                emitter.EmitType(expression.CastType!);
+                break;
+            default:
+                throw new UnreachableException();
+        }
+
         writer.Write('(');
         expression.Operand.Accept(this);
         writer.Write(')');

@@ -1,5 +1,5 @@
 ﻿using ImGuiNET;
-using SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
+using SimulationFramework.Drawing.Shaders.Compiler.Disassembler;
 using System;
 using System.Collections.Generic;
 using System.Linq;

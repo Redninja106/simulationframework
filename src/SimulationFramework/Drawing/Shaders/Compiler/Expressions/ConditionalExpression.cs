@@ -8,6 +8,8 @@ namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 
 public record ConditionalExpression(ShaderExpression Condition, ShaderExpression? Success, ShaderExpression? Failure) : ShaderExpression
 {
+    public override ShaderType? ExpressionType => null;
+
     public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitConditionalExpression(this);
     public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
     {

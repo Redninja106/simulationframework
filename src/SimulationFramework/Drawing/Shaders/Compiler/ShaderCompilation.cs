@@ -64,7 +64,18 @@ public enum ShaderPrimitive
     Matrix4x4,
     Matrix3x2,
     Texture,
-    Buffer,
+}
+
+public class ShaderArrayType : ShaderType
+{
+    public ShaderArrayType(ShaderType elementType)
+    {
+        ElementType = elementType;
+    }
+
+    public ShaderType ElementType { get; set; }
+
+
 }
 
 public class ShaderMethod

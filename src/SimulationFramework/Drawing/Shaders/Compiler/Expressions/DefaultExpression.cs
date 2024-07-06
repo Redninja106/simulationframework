@@ -7,5 +7,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 public record DefaultExpression(ShaderType Type) : ShaderExpression
 {
+    public override ShaderType? ExpressionType => Type;
+
     public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitDefaultExpression(this);
 }

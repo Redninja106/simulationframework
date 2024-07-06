@@ -17,7 +17,8 @@ internal class ShaderGeometryEffect : GeometryEffect
     public CanvasShader? Shader { get; internal set; }
     private ShaderCompilation compilation;
     private Dictionary<ShaderVariable, int> uniformLocations = [];
-    private int textureSlot;
+    private int textureSlot, bufferSlot;
+    private List<uint> buffers = [];
 
     private const string vert = @"
 #version 330 core
@@ -71,6 +72,7 @@ void main() {
         glUniformMatrix4fv(loc2, 1, 0, (float*)&invTransform);
 
         textureSlot = 0;
+        bufferSlot = 1;
         foreach (var uniform in compilation.Uniforms)
         {
             SetUniform(uniform, Shader, null);
@@ -104,7 +106,36 @@ void main() {
                     SetUniform(member, value, name + ".");
                 } 
                 break;
+            case ShaderArrayType arrayType:
+                SetArrayUniform(arrayType, value);
+                break;
         }
+    }
+
+    private unsafe void SetArrayUniform(ShaderArrayType arrayType, object value)
+    {
+        uint buffer;
+        if (buffers.Count <= bufferSlot)
+        {
+            glGenBuffers(1, &buffer);
+            buffers.Add(buffer);
+        }
+        else
+        {
+            buffer = buffers[bufferSlot];
+        }
+
+        // TODO: pin array
+
+        Array array = (Array)value;
+        
+        void* ptr = Unsafe.AsPointer(ref MemoryMarshal.GetArrayDataReference(array));
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, array.Length * Marshal.SizeOf(array.GetType().GetElementType()), ptr, GL_DYNAMIC_READ);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, (uint)bufferSlot, buffer);
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+        bufferSlot++;
     }
 
     private void SetTextureUniform(GLTexture? texture, int location)

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 public record ShaderVariableExpression(ShaderVariable Variable) : ShaderExpression
 {
+    public override ShaderType? ExpressionType => Variable.Type;
+
     public override ShaderExpression Accept(ExpressionVisitor visitor)
     {
         return visitor.VisitShaderVariableExpression(this);

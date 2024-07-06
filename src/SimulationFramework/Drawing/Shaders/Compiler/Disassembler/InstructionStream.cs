@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
+namespace SimulationFramework.Drawing.Shaders.Compiler.Disassembler;
 
 class InstructionStream
 {

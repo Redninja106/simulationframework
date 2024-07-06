@@ -74,8 +74,7 @@ partial class Program : Simulation
         {
             ImGui.PushID(i);
             ImGui.Separator();
-            ImGui.DragFloat3("sphere pos", ref shader.spheres[i].position);
-            ImGui.DragFloat("sphere rad", ref shader.spheres[i].radius);
+            ImGui.DragFloat4("sphere", ref shader.spheres[i].data);
             if (ImGui.Button("remove"))
             {
                 shader.spheres = [..shader.spheres[..i], ..shader.spheres[(i+1)..]];
@@ -98,6 +97,7 @@ class RayTracerShader : CanvasShader
     public Matrix4x4 cameraTransform;
     public float vfov = 60;
     public Sphere[] spheres = [];
+    int count = 1;
 
     public override ColorF GetPixelColor(Vector2 position)
     {
@@ -111,9 +111,9 @@ class RayTracerShader : CanvasShader
 
         bool hit = false;
         Vector3 normal = default;
-        for (int i = 0; i < spheres.Length; i++)
+        for (int i = 0; i < count; i++)
         {
-            if (RaySphereIntersect(origin, direction, spheres[i], out normal) == 1)
+            if (RaySphereIntersect(origin, direction, new(new(0,0,0,1)), out normal) == 1)
             {
                 hit = true;
             }
@@ -168,8 +168,15 @@ class RayTracerShader : CanvasShader
 
 struct Sphere
 {
-    public Vector3 position;
-    public float radius;
+    public Vector4 data;
+
+    public Sphere(Vector4 data)
+    {
+        this.data = data;
+    }
+
+    public Vector3 position => new(data.X, data.Y, data.Z);
+    public float radius => data.W;
 }
 
 struct Ray

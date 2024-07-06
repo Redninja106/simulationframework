@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 public record LoopExpression(ShaderExpression Body) : ShaderExpression
 {
+    public override ShaderType? ExpressionType => null;
+
     public override ShaderExpression Accept(ExpressionVisitor visitor)
     {
         return visitor.VisitLoopExpression(this);

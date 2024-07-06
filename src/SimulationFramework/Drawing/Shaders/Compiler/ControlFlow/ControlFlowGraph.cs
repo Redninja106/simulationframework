@@ -1,4 +1,4 @@
-﻿using SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
+﻿using SimulationFramework.Drawing.Shaders.Compiler.Disassembler;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -534,8 +534,15 @@ internal class ControlFlowGraph : ControlFlowNode
             var convergence = node.immediatePostDominator;
             var nodes = GetNodesBetween(node, convergence);
 
-            var subgraph = InsertSubgraph(nodes, ControlFlow.SubgraphKind.Conditional);
-            subgraph.ReplaceConditionals();
+            InsertSubgraph(nodes, ControlFlow.SubgraphKind.Conditional);
+        }
+
+        foreach (var node in Nodes)
+        {
+            if (node is ControlFlowGraph subgraph)
+            {
+                subgraph.ReplaceConditionals();
+            }
         }
     }
 }

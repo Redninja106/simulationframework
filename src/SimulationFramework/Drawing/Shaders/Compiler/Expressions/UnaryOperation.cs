@@ -3,5 +3,6 @@
 public enum UnaryOperation
 {
     Negate,
-    Not
+    Not,
+    Cast
 }

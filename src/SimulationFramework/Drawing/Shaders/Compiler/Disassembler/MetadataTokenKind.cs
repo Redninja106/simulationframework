@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
+namespace SimulationFramework.Drawing.Shaders.Compiler.Disassembler;
 
 // https://source.dot.net/#System.Private.CoreLib/src/System/Reflection/MdImport.cs,8570c9fc391730c5
 internal enum MetadataTokenKind

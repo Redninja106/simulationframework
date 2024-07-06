@@ -2,6 +2,8 @@
 
 public record ReturnExpression(ShaderExpression? ReturnValue) : ShaderExpression
 {
+    public override ShaderType? ExpressionType => null;
+
     public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
     {
         return new ReturnExpression(ReturnValue?.Accept(visitor));

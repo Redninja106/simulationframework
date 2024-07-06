@@ -1,4 +1,4 @@
-﻿namespace SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
+﻿namespace SimulationFramework.Drawing.Shaders.Compiler.Disassembler;
 
 /// <summary>
 /// Specifies the branching behavior of an instruction.

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 public record BlockExpression(IReadOnlyList<ShaderExpression> Expressions) : ShaderExpression
 {
-    public override Type? ExpressionType => Expressions.Last().ExpressionType;
+    public override ShaderType? ExpressionType => null;
 
     public override ShaderExpression Accept(ExpressionVisitor visitor)
     {

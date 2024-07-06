@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 public record BinaryExpression(BinaryOperation Operation, ShaderExpression LeftOperand, ShaderExpression RightOperand) : ShaderExpression
 {
+    public override ShaderType ExpressionType => IsBooleanOperator(Operation) ? ShaderPrimitiveType.Get(ShaderPrimitive.Bool) : LeftOperand.ExpressionType;
+
+
     public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitBinaryExpression(this);
     public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
     {
@@ -41,5 +44,16 @@ public record BinaryExpression(BinaryOperation Operation, ShaderExpression LeftO
     {
         var op = GetOperator();
         return $"({LeftOperand} {op} {RightOperand})";
+    }
+
+    public static bool IsBooleanOperator(BinaryOperation operation)
+    {
+        return operation is
+            BinaryOperation.NotEqual or
+            BinaryOperation.Equal or
+            BinaryOperation.LessThan or
+            BinaryOperation.LessThanEqual or
+            BinaryOperation.GreaterThan or
+            BinaryOperation.GreaterThanEqual;
     }
 }

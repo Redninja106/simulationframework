@@ -109,4 +109,22 @@ public static class ShaderIntrinsics
         throw new NotImplementedException();
     }
 
+    [ShaderIntrinsic]
+    public static int BufferLength(object buffer)
+    {
+        if (buffer is Array arr)
+            return arr.Length;
+
+        throw new ArgumentException(null, nameof(buffer));
+    }
+
+    [ShaderIntrinsic]
+    public static T BufferLoad<T>(object buffer, int element)
+    {
+        if (buffer is T[] arr)
+            return arr[element];
+
+        throw new ArgumentException(null, nameof(buffer));
+    }
+
 }

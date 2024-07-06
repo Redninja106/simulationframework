@@ -114,7 +114,7 @@ internal class CompilerContext
 
         if (type.IsArray && type.GetElementType()!.IsValueType)
         {
-            return ShaderPrimitiveType.Get(ShaderPrimitive.Buffer);
+            return new ShaderArrayType(CompileType(type.GetElementType()!));
         }
 
         throw new Exception($"type {type} is not supported!");
