@@ -372,10 +372,19 @@ class GLSLExpressionEmitter(IndentedTextWriter writer) : ExpressionVisitor
         writer.Write("if (");
         expression.Condition.Accept(this);
         writer.Write(")");
-        expression.Success.Accept(this);
+        
+        if (expression.Success != null)
+        {
+            expression.Success.Accept(this);
+        }
+        else
+        {
+            writer.Write("{ }");
+        }
+
         if (expression.Failure != null)
         {
-            writer.Write("else");
+            writer.Write("else ");
             expression.Failure.Accept(this);
         }
         return expression;

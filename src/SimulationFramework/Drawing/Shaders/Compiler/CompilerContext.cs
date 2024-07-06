@@ -103,7 +103,6 @@ internal class CompilerContext
             return ShaderPrimitiveType.Get(primitive);
         }
 
-
         if (type.IsValueType)
         {
             var shaderStruct = CompileStruct(type);
@@ -111,6 +110,11 @@ internal class CompilerContext
             Structs.Add(type, shaderType);
             Compilation.Structures.Add(shaderType.structure);
             return shaderType;
+        }
+
+        if (type.IsArray && type.GetElementType()!.IsValueType)
+        {
+            return ShaderPrimitiveType.Get(ShaderPrimitive.Buffer);
         }
 
         throw new Exception($"type {type} is not supported!");

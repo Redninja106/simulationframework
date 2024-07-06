@@ -11,7 +11,7 @@ namespace SimulationFramework.Drawing.Shaders;
 public static class ShaderIntrinsics
 {
     [ShaderIntrinsic, ShaderIntercept(nameof(Vector4.Transform), typeof(Vector4))]
-    public static Vector4 Multiply(Vector4 vector, Matrix4x4 matrix) => Vector4.Transform(vector, matrix);
+    public static Vector4 Multiply(Matrix4x4 matrix, Vector4 vector) => Vector4.Transform(vector, matrix);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector4))]
     public static Vector4 Vec4(Vector3 xyz, float w) => new(xyz, w);

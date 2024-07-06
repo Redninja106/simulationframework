@@ -1,4 +1,6 @@
-﻿using Silk.NET.OpenGL;
+﻿using ImGuiNET;
+using Silk.NET.Maths;
+using Silk.NET.OpenGL;
 using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
@@ -46,7 +48,7 @@ partial class Program : Simulation
             shader.GetPixelColor(Mouse.Position);
         }
 
-        shader.cameraRotationMatrix = Matrix4x4.CreateRotationY(cameraRotY) * Matrix4x4.CreateRotationX(cameraRotX);
+        shader.cameraTransform = Matrix4x4.CreateRotationX(cameraRotX) * Matrix4x4.CreateRotationY(cameraRotY);
         
         Vector3 delta = Vector3.Zero;
         if (Keyboard.IsKeyDown(Key.W))
@@ -61,8 +63,27 @@ partial class Program : Simulation
             delta.Y -= Time.DeltaTime;
         if (Keyboard.IsKeyDown(Key.C))
             delta.Y += Time.DeltaTime;
-        shader.cameraPosition += Vector3.Transform(delta, shader.cameraRotationMatrix);
+        shader.cameraPosition += Vector3.Transform(delta, shader.cameraTransform);
 
+        if (ImGui.Button("add"))
+        {
+            shader.spheres = [.. shader.spheres, new()];
+        }
+
+        for (int i = 0; i < shader.spheres.Length; i++)
+        {
+            ImGui.PushID(i);
+            ImGui.Separator();
+            ImGui.DragFloat3("sphere pos", ref shader.spheres[i].position);
+            ImGui.DragFloat("sphere rad", ref shader.spheres[i].radius);
+            if (ImGui.Button("remove"))
+            {
+                shader.spheres = [..shader.spheres[..i], ..shader.spheres[(i+1)..]];
+            }
+            ImGui.PopID();
+        }
+
+        // shader.cameraTransform = Matrix4x4.Transpose(shader.cameraTransform);
         // shader.cameraRotationMatrix = Matrix4x4.Transpose(shader.cameraRotationMatrix);
         // draw a fullscreen rect, fill with the shader
         canvas.Fill(shader);
@@ -74,8 +95,9 @@ class RayTracerShader : CanvasShader
 {
     public float width, height;
     public Vector3 cameraPosition;
-    public Matrix4x4 cameraRotationMatrix;
+    public Matrix4x4 cameraTransform;
     public float vfov = 60;
+    public Sphere[] spheres = [];
 
     public override ColorF GetPixelColor(Vector2 position)
     {
@@ -84,10 +106,20 @@ class RayTracerShader : CanvasShader
         vp.X *= width / height;
 
         Vector3 origin = cameraPosition;
-        Vector4 direction4 = ShaderIntrinsics.Multiply(new(vp * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1), cameraRotationMatrix);
+        Vector4 direction4 = ShaderIntrinsics.Multiply(cameraTransform, new(vp * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1));
         Vector3 direction = new(direction4.X, direction4.Y, direction4.Z);
 
-        if (RaySphereIntersect(origin, direction, new Vector3(0, 0, 1), .5f, out Vector3 normal) == 1)
+        bool hit = false;
+        Vector3 normal = default;
+        for (int i = 0; i < spheres.Length; i++)
+        {
+            if (RaySphereIntersect(origin, direction, spheres[i], out normal) == 1)
+            {
+                hit = true;
+            }
+        }
+
+        if (hit)
         {
             return new ColorF(new Vector3(.1f + MathF.Max(0, .9f * Vector3.Dot(normal, new Vector3(-1, -1, -1).Normalized()))));
         }
@@ -97,12 +129,12 @@ class RayTracerShader : CanvasShader
         }
     }
 
-    private float RaySphereIntersect(Vector3 origin, Vector3 direction, Vector3 position, float radius, out Vector3 normal)
+    private float RaySphereIntersect(Vector3 origin, Vector3 direction, Sphere sphere, out Vector3 normal)
     {
-        var offset = origin - position;
+        var offset = origin - sphere.position;
         var a = Vector3.Dot(direction, direction);
         var halfB = Vector3.Dot(offset, direction);
-        var c = Vector3.Dot(offset, offset) - radius * radius;
+        var c = Vector3.Dot(offset, offset) - sphere.radius * sphere.radius;
 
         var discriminant = halfB * halfB - a * c;
 
@@ -120,15 +152,29 @@ class RayTracerShader : CanvasShader
         {
             t = (-halfB + sqrtD) / a;
         }
+
         if (t < 0)
         {
             normal = default;
             return 0;
         }
 
-        normal = (origin + direction * t) - position;
+        normal = (origin + direction * t) - sphere.position;
         normal = normal.Normalized();
 
         return 1;
     }
+}
+
+struct Sphere
+{
+    public Vector3 position;
+    public float radius;
+}
+
+struct Ray
+{
+    public Vector3 origin;
+    public Vector3 direction;
+    public float tMax;
 }

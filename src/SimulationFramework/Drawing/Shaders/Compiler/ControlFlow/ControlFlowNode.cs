@@ -11,21 +11,19 @@ internal class ControlFlowNode
     private static int nextDebugID;
     public int DebugID;
 
-    private readonly List<ControlFlowNode> predecessors = new();
-    private readonly List<ControlFlowNode> successors = new();
-    internal readonly List<ControlFlowNode> dominators = new();
+    private readonly HashSet<ControlFlowNode> predecessors = new();
+    private readonly HashSet<ControlFlowNode> successors = new();
+    internal readonly HashSet<ControlFlowNode> dominators = new();
+    internal readonly HashSet<ControlFlowNode> postdominators = new();
 
     public ControlFlowNode immediateDominator = null;
+    public ControlFlowNode immediatePostDominator = null;
 
-    public IReadOnlyList<ControlFlowNode> Predecessors => predecessors;
-    public IReadOnlyList<ControlFlowNode> Successors => successors;
+    public IReadOnlySet<ControlFlowNode> Predecessors => predecessors;
+    public IReadOnlySet<ControlFlowNode> Successors => successors;
 
-    public ControlFlowGraph Graph { get; set; }
-
-
-    public ControlFlowNode(ControlFlowGraph graph)
+    public ControlFlowNode()
     {
-        Graph = graph;
         this.DebugID = nextDebugID++;
     }
 
@@ -37,8 +35,7 @@ internal class ControlFlowNode
 
     public void AddSuccessor(ControlFlowNode successor)
     {
-        successors.Add(successor);
-        successor.predecessors.Add(this);
+        successor.AddPredecessor(this);
     }
 
     public void RemovePredecessor(ControlFlowNode predecessor)
@@ -49,8 +46,7 @@ internal class ControlFlowNode
 
     public void RemoveSuccessor(ControlFlowNode successor)
     {
-        successors.Remove(successor);
-        successor.predecessors.Remove(this);
+        successor.RemovePredecessor(this);
     }
 
     public override string ToString()

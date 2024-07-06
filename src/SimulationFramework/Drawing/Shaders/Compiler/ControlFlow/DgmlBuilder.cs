@@ -34,7 +34,7 @@ public static class DgmlBuilder
 
         graph.DepthFirstTraverse(node => AddNode(node, null));
 
-        void AddNode(ControlFlowNode node, ControlFlowNode parent)
+        void AddNode(ControlFlowNode node, ControlFlowNode? parent)
         {
             var id = GetNodeID(node);
             nodes.Add(new(id, node.ToString(), node.GetType().Name, GetIl(node), GetGroup(node)));
@@ -48,20 +48,9 @@ public static class DgmlBuilder
                 links.Add(new(id, successorId, "", "Edge"));
             }
 
-            if (node is ISubgraphContainer container)
+            if (node is ControlFlowGraph subgraph)
             {
-                var subgraph = container.Subgraph;
-                subgraph.DepthFirstTraverse(n => AddNode(n, node));
-
-                var entryNodeId = GetNodeID(node) + "-ENTRY";
-                nodes.Add(new(entryNodeId, "ENTRY"));
-                links.Add(new(entryNodeId, GetNodeID(subgraph.EntryNode), "", "Edge"));
-                links.Add(new(id, entryNodeId, "", "Contains"));
-
-                var exitNodeId = GetNodeID(node) + "-EXIT";
-                nodes.Add(new(exitNodeId, "EXIT"));
-                links.Add(new(GetNodeID(subgraph.ExitNode), exitNodeId, "", "Edge"));
-                links.Add(new(id, exitNodeId, "", "Contains"));
+                subgraph.DepthFirstTraverse(n => AddNode(n, subgraph));
             }
         }
 
@@ -91,7 +80,7 @@ public static class DgmlBuilder
 
     private static string GetGroup(ControlFlowNode node)
     {
-        return node is ISubgraphContainer ? "Expanded" : null;
+        return node is ControlFlowGraph ? "Expanded" : null;
     }
 
     private static string GetIl(ControlFlowNode node)

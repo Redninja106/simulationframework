@@ -1,17 +1,20 @@
 ﻿using SimulationFramework.Drawing.Shaders.Compiler.ILDisassembler;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.ControlFlow;
-internal class BasicBlockNode : ControlFlowNode
+internal class MethodStructurer
 {
-    public readonly List<Instruction> Instructions = new();
-
-    public BasicBlockNode() : base()
+    public MethodStructurer(MethodDisassembly disassembly)
     {
+
+    }
+
+    public void CreateGraph()
+    {
+
     }
 }

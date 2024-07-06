@@ -174,56 +174,76 @@ internal class ExpressionBuilder
         return true;
     }
 
-    ShaderExpression BuildNode(ControlFlowNode node, bool clearStack = true)
+    ShaderExpression? BuildNode(ControlFlowNode node, bool clearStack = true)
     {
-        if (node is ConditionalNode conditional)
+        if (node is ControlFlowGraph graph)
         {
-            var beginExpr = BuildNode(conditional.Subgraph.EntryNode, clearStack);
-
-            Debug.Assert(beginExpr is not null);
-
-            beginExpr = ExtractConditionExpression(SimplifyExpression(beginExpr), out var condition);
-
-            Debug.Assert(condition is not null);
-
-            var trueExpr = BuildNodeChain(conditional.TrueBranch, conditional.Subgraph.ExitNode);
-
-            ShaderExpression? falseExpr = conditional.FalseBranch is null ? null : BuildNodeChain(conditional.FalseBranch, conditional.Subgraph.ExitNode);
-
-            bool isTernary = false;
-            ShaderExpression condExpr;
-            if (trueExpr is not BlockExpression && /* trueExpr.Type != typeof(void) && */ falseExpr is not BlockExpression)
+            if (graph.SubgraphKind is SubgraphKind.Conditional)
             {
-                // might be ternary
-                isTernary = true;
-                condExpr = new ConditionalExpression(condition, trueExpr, falseExpr);
-                Expressions.Clear();
-                Expressions.Push(condExpr);
+                var conditionNode = graph.EntryNode;
+                var trueNode = conditionNode.Successors.First();
+                var falseNode = conditionNode.Successors.Last();
+
+                var beginExpr = BuildNode(graph.EntryNode, clearStack);
+
+                Debug.Assert(beginExpr is not null);
+
+                beginExpr = ExtractConditionExpression(SimplifyExpression(beginExpr), out var condition);
+
+                Debug.Assert(condition is not null);
+
+                var trueExpr = BuildNodeChain(trueNode, graph.ExitNode);
+
+                ShaderExpression? falseExpr = falseNode is null ? null : BuildNodeChain(falseNode, graph.ExitNode);
+
+                bool isTernary = false;
+                ShaderExpression condExpr;
+                if (trueExpr is not BlockExpression && /* trueExpr.Type != typeof(void) && */ falseExpr is not BlockExpression)
+                {
+                    // might be ternary
+                    isTernary = true;
+                    condExpr = new ConditionalExpression(condition, trueExpr, falseExpr);
+                    Expressions.Clear();
+                    Expressions.Push(condExpr);
+                }
+                else
+                {
+                    condExpr = new ConditionalExpression(condition, trueExpr, falseExpr);
+                }
+
+                return CreateBlockExpressionIfNeeded([beginExpr, condExpr /*isTernary?null:blockExpr*/]);
+            }
+            else if (graph.SubgraphKind is SubgraphKind.Loop)
+            {
+                var headNode = graph.EntryNode;
+                var tailNode = headNode.Predecessors.Single();
+
+                var header = BuildNode(headNode);
+
+                header = ExtractConditionExpression(header, out var cond);
+
+                var condition = new ConditionalExpression(cond, null, new BreakExpression());
+
+                var body = BuildNodeChain(tailNode, headNode);
+
+                return new LoopExpression(CreateBlockExpressionIfNeeded(new ShaderExpression[] { header, condition, body }));
+            }
+            else if (graph.SubgraphKind is SubgraphKind.Switch)
+            {
+                throw new("switches not added");
             }
             else
             {
-                condExpr = new ConditionalExpression(condition, trueExpr, falseExpr);
+                throw new UnreachableException();
             }
-
-            var endExpr = BuildNode(conditional.Subgraph.ExitNode, !isTernary);
-
-            return CreateBlockExpressionIfNeeded(new ShaderExpression[] { beginExpr, isTernary ? null : condExpr, endExpr }.Where(ex => ex is not null).Cast<ShaderExpression>());
-        }
-        else if (node is LoopNode loop)
-        {
-            var header = BuildNode(loop.Header);
-
-            header = ExtractConditionExpression(header, out var cond);
-
-            var condition = new ConditionalExpression(cond, null, new BreakExpression());
-
-            var body = BuildNodeChain(loop.Tail, loop.Header);
-
-            return new LoopExpression(CreateBlockExpressionIfNeeded(new ShaderExpression[] { header, condition, body }));
         }
         else if (node is BasicBlockNode basicBlock)
         {
             return BuildBasicBlockExpression(basicBlock, clearStack);
+        }
+        else if (node is DummyNode)
+        {
+            return null;
         }
         else
         {
@@ -257,9 +277,6 @@ internal class ExpressionBuilder
 
     ShaderExpression BuildNodeChain(ControlFlowNode start, ControlFlowNode end)
     {
-        Debug.Assert(start.Graph == end.Graph);
-
-        var graph = start.Graph;
         List<ShaderExpression> exprs = new();
 
         var node = start;
