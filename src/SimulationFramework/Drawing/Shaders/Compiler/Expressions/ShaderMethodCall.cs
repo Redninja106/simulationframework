@@ -9,9 +9,9 @@ public record ShaderMethodCall(ShaderMethod Callee, IReadOnlyList<ShaderExpressi
 {
     public override ShaderType? ExpressionType => Callee.ReturnType;
 
-    public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitShaderMethodCall(this);
+    public override ShaderExpression Accept(ShaderExpressionVisitor visitor) => visitor.VisitShaderMethodCall(this);
 
-    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression VisitChildren(ShaderExpressionVisitor visitor)
     {
         return new ShaderMethodCall(Callee, Arguments.Select(arg => arg.Accept(visitor)).ToList());
     }

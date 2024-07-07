@@ -10,6 +10,6 @@ public record InlineSourceExpression(string Language, string Source) : ShaderExp
 {
     public override ShaderType? ExpressionType => null;
 
-    public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitInlineSourceExpression(this);
-    public override ShaderExpression VisitChildren(ExpressionVisitor visitor) => this;
+    public override ShaderExpression Accept(ShaderExpressionVisitor visitor) => visitor.VisitInlineSourceExpression(this);
+    public override ShaderExpression VisitChildren(ShaderExpressionVisitor visitor) => this;
 }

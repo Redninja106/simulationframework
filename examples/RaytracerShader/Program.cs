@@ -63,6 +63,7 @@ partial class Program : Simulation
             delta.Y -= Time.DeltaTime;
         if (Keyboard.IsKeyDown(Key.C))
             delta.Y += Time.DeltaTime;
+
         shader.cameraPosition += Vector3.Transform(delta, shader.cameraTransform);
 
         if (ImGui.Button("add"))
@@ -82,10 +83,8 @@ partial class Program : Simulation
             ImGui.PopID();
         }
 
-        // shader.cameraTransform = Matrix4x4.Transpose(shader.cameraTransform);
-        // shader.cameraRotationMatrix = Matrix4x4.Transpose(shader.cameraRotationMatrix);
         // draw a fullscreen rect, fill with the shader
-        canvas.Fill(shader);
+        canvas.Fill(new MyShader());
         canvas.DrawRect(0, 0, canvas.Width, canvas.Height);
     }
 }
@@ -106,9 +105,9 @@ class RayTracerShader : CanvasShader
         vp.X *= width / height;
 
         Vector3 origin = cameraPosition;
-        Vector4 direction4 = ShaderIntrinsics.Multiply(cameraTransform, new(vp * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1));
+        Vector4 direction4 = ShaderIntrinsics.Transform(new(vp * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1), cameraTransform);
         Vector3 direction = new(direction4.X, direction4.Y, direction4.Z);
-
+        
         bool hit = false;
         Vector3 normal = default;
         for (int i = 0; i < count; i++)
@@ -163,6 +162,14 @@ class RayTracerShader : CanvasShader
         normal = normal.Normalized();
 
         return 1;
+    }
+}
+
+class MyShader : CanvasShader
+{
+    public override ColorF GetPixelColor(Vector2 position)
+    {
+        return new(position.X / 2000, position.Y / 1000, 0, 1);
     }
 }
 

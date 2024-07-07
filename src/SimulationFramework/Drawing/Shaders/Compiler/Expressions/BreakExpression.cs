@@ -9,8 +9,8 @@ public record BreakExpression : ShaderExpression
 {
     public override ShaderType? ExpressionType => null;
 
-    public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitBreakExpression(this);
-    public override ShaderExpression VisitChildren(ExpressionVisitor visitor) => this;
+    public override ShaderExpression Accept(ShaderExpressionVisitor visitor) => visitor.VisitBreakExpression(this);
+    public override ShaderExpression VisitChildren(ShaderExpressionVisitor visitor) => this;
 
     public override string ToString()
     {

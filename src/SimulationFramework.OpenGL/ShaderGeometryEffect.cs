@@ -97,8 +97,8 @@ void main() {
 
         switch (uniform.Type)
         {
-            case ShaderPrimitiveType primitiveType:
-                SetMemberUniform(primitiveType.primitive, value!, location);
+            case ShaderType when uniform.Type.GetPrimitiveKind() is PrimitiveKind primitiveKind:
+                SetMemberUniform(primitiveKind, value!, location);
                 break;
             case ShaderStructureType structType:
                 foreach (var member in structType.structure.fields)
@@ -115,25 +115,42 @@ void main() {
     private unsafe void SetArrayUniform(ShaderArrayType arrayType, object value)
     {
         uint buffer;
-        if (buffers.Count <= bufferSlot)
+        if (buffers.Count <= bufferSlot - 1)
         {
             glGenBuffers(1, &buffer);
             buffers.Add(buffer);
         }
         else
         {
-            buffer = buffers[bufferSlot];
+            buffer = buffers[bufferSlot - 1];
         }
 
         // TODO: pin array
 
         Array array = (Array)value;
-        
-        void* ptr = Unsafe.AsPointer(ref MemoryMarshal.GetArrayDataReference(array));
-        glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
-        glBufferData(GL_SHADER_STORAGE_BUFFER, array.Length * Marshal.SizeOf(array.GetType().GetElementType()), ptr, GL_DYNAMIC_READ);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, (uint)bufferSlot, buffer);
-        glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+        GCHandle arrayHandle = GCHandle.Alloc(array, GCHandleType.Pinned);
+        try
+        {
+            void* ptr = Unsafe.AsPointer(ref MemoryMarshal.GetArrayDataReference(array));
+            glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+            int currentSize;
+            glGetBufferParameteriv(GL_SHADER_STORAGE_BUFFER, GL_BUFFER_SIZE, &currentSize);
+            int size = array.Length * Marshal.SizeOf(array.GetType().GetElementType()!);
+            if (size != currentSize)
+            {
+                glBufferData(GL_SHADER_STORAGE_BUFFER, size, ptr, GL_DYNAMIC_COPY);
+            }
+            else
+            {
+                glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, size, ptr);
+            }
+            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, (uint)bufferSlot, buffer);
+            glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+        }
+        finally
+        {
+            arrayHandle.Free();
+        }
 
         bufferSlot++;
     }
@@ -146,9 +163,9 @@ void main() {
         textureSlot++;
     }
 
-    private unsafe void SetMemberUniform(ShaderPrimitive primitive, object value, int location)
+    private unsafe void SetMemberUniform(PrimitiveKind primitive, object value, int location)
     {
-        if (primitive is ShaderPrimitive.Texture)
+        if (primitive is PrimitiveKind.Texture)
         {
             SetTextureUniform((GLTexture?)value, location);
             return;
@@ -159,36 +176,36 @@ void main() {
 
         switch (primitive)
         {
-            case ShaderPrimitive.Bool:
+            case PrimitiveKind.Bool:
                 throw new NotImplementedException();
-            case ShaderPrimitive.Int:
+            case PrimitiveKind.Int:
                 glUniform1iv(location, 1, (int*)ptr);
                 break;
-            case ShaderPrimitive.Int2:
+            case PrimitiveKind.Int2:
                 glUniform2iv(location, 1, (int*)ptr);
                 break;
-            case ShaderPrimitive.Int3:
+            case PrimitiveKind.Int3:
                 glUniform3iv(location, 1, (int*)ptr);
                 break;
-            case ShaderPrimitive.Int4:
+            case PrimitiveKind.Int4:
                 glUniform4iv(location, 1, (int*)ptr);
                 break;
-            case ShaderPrimitive.Float:
+            case PrimitiveKind.Float:
                 glUniform1fv(location, 1, (float*)ptr);
                 break;
-            case ShaderPrimitive.Float2:
+            case PrimitiveKind.Float2:
                 glUniform2fv(location, 1, (float*)ptr);
                 break;
-            case ShaderPrimitive.Float3:
+            case PrimitiveKind.Float3:
                 glUniform3fv(location, 1, (float*)ptr);
                 break;
-            case ShaderPrimitive.Float4:
+            case PrimitiveKind.Float4:
                 glUniform4fv(location, 1, (float*)ptr);
                 break;
-            case ShaderPrimitive.Matrix4x4:
+            case PrimitiveKind.Matrix4x4:
                 glUniformMatrix4fv(location, 1, (byte)GL_FALSE, (float*)ptr);
                 break;
-            case ShaderPrimitive.Matrix3x2:
+            case PrimitiveKind.Matrix3x2:
                 glUniformMatrix3x2fv(location, 1, (byte)GL_FALSE, (float*)ptr);
                 break;
             default:

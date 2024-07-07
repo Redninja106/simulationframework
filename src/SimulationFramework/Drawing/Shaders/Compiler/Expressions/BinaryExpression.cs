@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 public record BinaryExpression(BinaryOperation Operation, ShaderExpression LeftOperand, ShaderExpression RightOperand) : ShaderExpression
 {
-    public override ShaderType ExpressionType => IsBooleanOperator(Operation) ? ShaderPrimitiveType.Get(ShaderPrimitive.Bool) : LeftOperand.ExpressionType;
+    public override ShaderType? ExpressionType => IsBooleanOperator(Operation) ? ShaderType.Bool : LeftOperand.ExpressionType;
 
 
-    public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitBinaryExpression(this);
-    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ShaderExpressionVisitor visitor) => visitor.VisitBinaryExpression(this);
+    public override ShaderExpression VisitChildren(ShaderExpressionVisitor visitor)
     {
         return new BinaryExpression(this.Operation, LeftOperand.Accept(visitor), RightOperand.Accept(visitor));
     }

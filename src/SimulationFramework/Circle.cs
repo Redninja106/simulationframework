@@ -75,7 +75,7 @@ public struct Circle : IEquatable<Circle>
     /// <returns>The computed distance, or 0 if the point lies within this circle.</returns>
     public float Distance(Vector2 point)
     {
-        return Distance(new Circle(point, 0));
+        return MathF.Max(0, SignedDistance(point));
     }
 
 
@@ -96,7 +96,7 @@ public struct Circle : IEquatable<Circle>
     /// <returns>The computed distance.</returns>
     public float SignedDistance(Vector2 point)
     {
-        return SignedDistance(new Circle(point, 0));
+        return Vector2.Distance(this.Position, point) - this.Radius;
     }
 
     /// <summary>
@@ -126,7 +126,7 @@ public struct Circle : IEquatable<Circle>
     /// <returns><see langword="true"/> if this circle contains the provided point; otherwise <see langword="false"/></returns>
     public bool ContainsPoint(Vector2 point)
     {
-        return this.Intersects(new Circle(point, 0));
+        return Vector2.DistanceSquared(Position, point) <= (Radius * Radius);
     }
 
     /// <summary>

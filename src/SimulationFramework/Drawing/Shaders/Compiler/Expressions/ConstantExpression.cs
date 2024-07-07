@@ -9,8 +9,8 @@ public record ConstantExpression(ShaderType Type, object Value) : ShaderExpressi
 {
     public override ShaderType? ExpressionType => Type;
 
-    public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitConstantExpression(this);
-    public override ShaderExpression VisitChildren(ExpressionVisitor visitor) => this;
+    public override ShaderExpression Accept(ShaderExpressionVisitor visitor) => visitor.VisitConstantExpression(this);
+    public override ShaderExpression VisitChildren(ShaderExpressionVisitor visitor) => this;
 
     public override string ToString()
     {

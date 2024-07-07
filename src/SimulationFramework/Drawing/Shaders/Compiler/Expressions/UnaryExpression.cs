@@ -9,12 +9,12 @@ public record UnaryExpression(UnaryOperation Operation, ShaderExpression Operand
 {
     public override ShaderType? ExpressionType => CastType ?? Operand.ExpressionType;
 
-    public override ShaderExpression Accept(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ShaderExpressionVisitor visitor)
     {
         return visitor.VisitUnaryExpression(this);
     }
 
-    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression VisitChildren(ShaderExpressionVisitor visitor)
     {
         return new UnaryExpression(Operation, Operand.Accept(visitor), CastType);
     }

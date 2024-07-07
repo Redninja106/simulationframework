@@ -4,12 +4,12 @@ public record ReturnExpression(ShaderExpression? ReturnValue) : ShaderExpression
 {
     public override ShaderType? ExpressionType => null;
 
-    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression VisitChildren(ShaderExpressionVisitor visitor)
     {
         return new ReturnExpression(ReturnValue?.Accept(visitor));
     }
 
-    public override ShaderExpression Accept(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ShaderExpressionVisitor visitor)
     {
         return visitor.VisitReturnExpression(this);
     }

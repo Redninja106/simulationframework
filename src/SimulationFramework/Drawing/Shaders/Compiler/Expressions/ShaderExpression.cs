@@ -13,8 +13,20 @@ namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 /// </summary>
 public abstract record ShaderExpression
 {
+    public static ShaderExpression Empty { get; } = new EmptyExpression();
+    
     public abstract ShaderType? ExpressionType { get; }
 
-    public virtual ShaderExpression VisitChildren(ExpressionVisitor visitor) => this;
-    public abstract ShaderExpression Accept(ExpressionVisitor visitor);
+    public virtual ShaderExpression VisitChildren(ShaderExpressionVisitor visitor) => this;
+    public abstract ShaderExpression Accept(ShaderExpressionVisitor visitor);
+
+    private record EmptyExpression : ShaderExpression
+    {
+        public override ShaderType? ExpressionType => null;
+
+        public override ShaderExpression Accept(ShaderExpressionVisitor visitor)
+        {
+            return this;
+        }
+    }
 }

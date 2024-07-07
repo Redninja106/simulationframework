@@ -2,7 +2,7 @@
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 
-public class ExpressionVisitor
+public class ShaderExpressionVisitor
 {
     public virtual ShaderExpression VisitBinaryExpression(BinaryExpression expression) => expression.VisitChildren(this);
     public virtual ShaderExpression VisitBlockExpression(BlockExpression expression) => expression.VisitChildren(this);

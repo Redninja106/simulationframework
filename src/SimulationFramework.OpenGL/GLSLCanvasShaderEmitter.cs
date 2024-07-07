@@ -18,7 +18,7 @@ internal class GLSLCanvasShaderEmitter
 {
     IndentedTextWriter writer;
     GLSLExpressionEmitter expressionEmitter;
-    private int nextBufferSlot = 0;
+    private int nextBufferSlot = 1;
 
     public GLSLCanvasShaderEmitter(TextWriter writer)
     {
@@ -70,7 +70,10 @@ internal class GLSLCanvasShaderEmitter
         }
         foreach (var expr in ((BlockExpression)method.Body).Expressions)
         {
-            expr.Accept(this.expressionEmitter);
+            if (expr == ShaderExpression.Empty)
+                continue;
+
+            expr.Accept(expressionEmitter);
             writer.WriteLine(';');
         }
         writer.Indent--;
@@ -110,24 +113,25 @@ internal class GLSLCanvasShaderEmitter
             return;
         }
 
-        if (type is ShaderPrimitiveType primitiveType)
+
+        if (type.GetPrimitiveKind() is PrimitiveKind primitive)
         {
-            writer.Write(primitiveType.primitive switch
+            writer.Write(primitive switch
             {
-                ShaderPrimitive.Void => "void",
-                ShaderPrimitive.Bool => "bool",
-                ShaderPrimitive.Float => "float",
-                ShaderPrimitive.Float2 => "vec2",
-                ShaderPrimitive.Float3 => "vec3",
-                ShaderPrimitive.Float4 => "vec4",
-                ShaderPrimitive.Int => "int",
-                ShaderPrimitive.Int2 => "vec2i",
-                ShaderPrimitive.Int3 => "vec3i",
-                ShaderPrimitive.Int4 => "vec4i",
-                ShaderPrimitive.Matrix3x2 => "mat3x2",
-                ShaderPrimitive.Matrix4x4 => "mat4",
-                ShaderPrimitive.Texture => "sampler2D",
-                _ => throw new NotSupportedException(primitiveType.primitive.ToString())
+                PrimitiveKind.Void => "void",
+                PrimitiveKind.Bool => "bool",
+                PrimitiveKind.Float => "float",
+                PrimitiveKind.Float2 => "vec2",
+                PrimitiveKind.Float3 => "vec3",
+                PrimitiveKind.Float4 => "vec4",
+                PrimitiveKind.Int => "int",
+                PrimitiveKind.Int2 => "vec2i",
+                PrimitiveKind.Int3 => "vec3i",
+                PrimitiveKind.Int4 => "vec4i",
+                PrimitiveKind.Matrix3x2 => "mat3x2",
+                PrimitiveKind.Matrix4x4 => "mat4",
+                PrimitiveKind.Texture => "sampler2D",
+                _ => throw new NotSupportedException(primitive.ToString())
             });
             return;
         }
@@ -138,8 +142,16 @@ internal class GLSLCanvasShaderEmitter
             return;
         }
 
+        if (type is ShaderArrayType arrayType)
+        {
+            //EmitType(arrayType.ElementType);
+            writer.Write("buffer");
+            return;
+        }
+
         throw new(type.ToString());
     }
+
 
     public void EmitName(ShaderName name)
     {
@@ -196,7 +208,7 @@ internal class GLSLCanvasShaderEmitter
 
 }
 
-class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter emitter) : ExpressionVisitor
+class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter emitter) : ShaderExpressionVisitor
 {
     public override ShaderExpression VisitBlockExpression(BlockExpression expression)
     {
@@ -204,12 +216,15 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
         writer.Indent++;
         foreach (var expr in expression.Expressions)
         {
+            if (expr == ShaderExpression.Empty)
+                continue;
+
             expr.Accept(this);
             writer.WriteLine(';');
         }
 
         writer.Indent--;
-        writer.WriteLine('}');
+        writer.Write('}');
         return expression;
     }
 
@@ -384,6 +399,16 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
             return expression;
         }
 
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.Transform))
+        {
+            writer.Write('(');
+            expression.Arguments[1].Accept(this);
+            writer.Write(" * ");
+            expression.Arguments[0].Accept(this);
+            writer.Write(')');
+            return expression;
+        }
+
         writer.Write(expression.Intrinsic.Name switch
         {
             nameof(ShaderIntrinsics.ColorF) => "vec4",
@@ -410,7 +435,7 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
     {
         writer.Write("if (");
         expression.Condition.Accept(this);
-        writer.Write(")");
+        writer.Write(") ");
         
         if (expression.Success != null)
         {
@@ -431,7 +456,32 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
 
     public override ShaderExpression VisitLoopExpression(LoopExpression expression)
     {
-        writer.Write("while (true)");
+        if (expression.Body is BlockExpression block)
+        {
+            if (block.Expressions[0] is ConditionalExpression cond && cond.Success is BreakExpression && cond.Failure is null)
+            {
+                writer.Write("while (");
+
+                if (cond.Condition is UnaryExpression unary && unary.Operation is UnaryOperation.Not)
+                {
+                    unary.Operand.Accept(this);
+                }
+                else
+                {
+                    var invertedCond = new UnaryExpression(UnaryOperation.Not, cond.Condition, null);
+                    invertedCond.Accept(this);
+                }
+
+                writer.Write(") ");
+
+                var remainingBody = new BlockExpression(block.Expressions.Skip(1).ToList());
+                remainingBody.Accept(this);
+
+                return expression;
+            }
+        }
+
+        writer.Write("while (true) ");
         expression.Body.Accept(this);
 
         return expression;
@@ -462,27 +512,27 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
 
     public override ShaderExpression VisitDefaultExpression(DefaultExpression expression)
     {
-        if (expression.Type == ShaderPrimitiveType.Get(ShaderPrimitive.Bool))
+        if (expression.Type == ShaderType.Bool)
         {
             writer.Write("false");
         }
-        else if (expression.Type == ShaderPrimitiveType.Get(ShaderPrimitive.Int))
+        else if (expression.Type == ShaderType.Int)
         {
             writer.Write("0");
         }
-        else if(expression.Type == ShaderPrimitiveType.Get(ShaderPrimitive.Float))
+        else if(expression.Type == ShaderType.Float)
         {
             writer.Write("0.0");
         }
-        else if (expression.Type == ShaderPrimitiveType.Get(ShaderPrimitive.Float2))
+        else if (expression.Type == ShaderType.Float2)
         {
             writer.Write("vec2(0, 0)");
         }
-        else if (expression.Type == ShaderPrimitiveType.Get(ShaderPrimitive.Float3))
+        else if (expression.Type == ShaderType.Float3)
         {
             writer.Write("vec3(0, 0, 0)");
         }
-        else if (expression.Type == ShaderPrimitiveType.Get(ShaderPrimitive.Float4))
+        else if (expression.Type == ShaderType.Float4)
         {
             writer.Write("vec4(0, 0, 0, 0)");
         }

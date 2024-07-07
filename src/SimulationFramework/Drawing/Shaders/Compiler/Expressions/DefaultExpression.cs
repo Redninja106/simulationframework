@@ -9,5 +9,5 @@ public record DefaultExpression(ShaderType Type) : ShaderExpression
 {
     public override ShaderType? ExpressionType => Type;
 
-    public override ShaderExpression Accept(ExpressionVisitor visitor) => visitor.VisitDefaultExpression(this);
+    public override ShaderExpression Accept(ShaderExpressionVisitor visitor) => visitor.VisitDefaultExpression(this);
 }

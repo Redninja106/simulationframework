@@ -10,12 +10,12 @@ public record MemberAccess(ShaderExpression? Instance, MemberInfo Member, Shader
 {
     public override ShaderType? ExpressionType => MemberType;
 
-    public override ShaderExpression Accept(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ShaderExpressionVisitor visitor)
     {
         return visitor.VisitMemberAccess(this);
     }
 
-    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression VisitChildren(ShaderExpressionVisitor visitor)
     {
         return new MemberAccess(Instance.Accept(visitor), Member, MemberType);
     }

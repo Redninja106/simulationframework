@@ -9,12 +9,12 @@ public record LoopExpression(ShaderExpression Body) : ShaderExpression
 {
     public override ShaderType? ExpressionType => null;
 
-    public override ShaderExpression Accept(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ShaderExpressionVisitor visitor)
     {
         return visitor.VisitLoopExpression(this);
     }
 
-    public override ShaderExpression VisitChildren(ExpressionVisitor visitor)
+    public override ShaderExpression VisitChildren(ShaderExpressionVisitor visitor)
     {
         return new LoopExpression(Body.Accept(visitor));
     }

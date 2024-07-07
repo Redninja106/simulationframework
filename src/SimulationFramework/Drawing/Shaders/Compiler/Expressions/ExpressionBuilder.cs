@@ -95,6 +95,8 @@ internal class ExpressionBuilder
             case OpCode.Ceq:
             case OpCode.Clt:
             case OpCode.Cgt:
+            case OpCode.Clt_Un:
+            case OpCode.Cgt_Un:
             case OpCode.Rem:
             case OpCode.Rem_Un:
                 BuildBinaryExpr(instruction);
@@ -331,7 +333,7 @@ internal class ExpressionBuilder
 
                 bool isTernary = false;
                 ShaderExpression condExpr;
-                if (trueExpr is not BlockExpression && /* trueExpr.Type != typeof(void) && */ falseExpr is not BlockExpression)
+                if (trueExpr is not BlockExpression && falseExpr is not BlockExpression)
                 {
                     // might be ternary
                     isTernary = true;
@@ -354,10 +356,13 @@ internal class ExpressionBuilder
                 var header = BuildNode(headNode);
 
                 header = ExtractConditionExpression(header, out var cond);
+                header = SimplifyExpression(header, false);
 
-                var condition = new ConditionalExpression(cond, null, new BreakExpression());
+                ShaderExpression condition = new ConditionalExpression(new UnaryExpression(UnaryOperation.Not, cond, null), new BreakExpression(), null);
+                condition = SimplifyExpression(condition, false);
 
                 var body = BuildNodeChain(headNode.Successors.Single(n => n != graph.ExitNode), tailNode);
+                body = SimplifyExpression(body, false);
 
                 return new LoopExpression(CreateBlockExpressionIfNeeded(new ShaderExpression[] { header, condition, body }));
             }
@@ -386,8 +391,8 @@ internal class ExpressionBuilder
 
     private static ShaderExpression CreateBlockExpressionIfNeeded(IEnumerable<ShaderExpression> expressions)
     {
-        // if (expressions.Count() is 1)
-        //     return expressions.Single()!;
+        if (expressions.Count() is 1)
+            return expressions.Single()!;
 
         return new BlockExpression(expressions
             .Where(x => x is not null)
@@ -396,7 +401,7 @@ internal class ExpressionBuilder
     }
 
     // trims the last expr from a block used for grabbing head statements for ifs and loops
-    private ShaderExpression ExtractConditionExpression(ShaderExpression expr, out ShaderExpression lastExpr)
+    private ShaderExpression? ExtractConditionExpression(ShaderExpression expr, out ShaderExpression lastExpr)
     {
         if (expr is not BlockExpression blockExpr)
         {
@@ -410,6 +415,11 @@ internal class ExpressionBuilder
 
     ShaderExpression BuildNodeChain(ControlFlowNode start, ControlFlowNode end)
     {
+        if (start == end)
+        {
+            return BuildNode(start);
+        }
+
         List<ShaderExpression> exprs = new();
 
         var node = start;
@@ -419,29 +429,58 @@ internal class ExpressionBuilder
             node = node.Successors.Single();
         }
 
+        exprs.Add(BuildNode(node));
+
         return CreateBlockExpressionIfNeeded(exprs.Where(ex => ex is not null).Cast<ShaderExpression>());
     }
 
-    ShaderExpression SimplifyExpression(ShaderExpression expression)
+    [return: NotNullIfNotNull(nameof(expression))]
+    ShaderExpression? SimplifyExpression(ShaderExpression? expression, bool requireBlock = true)
     {
-        if (expression is ConditionalExpression conditionalExpr)
+        if (expression is null)
+        {
+            return null;
+        }
+        if (expression is ConditionalExpression conditional)
+        {
+            if (conditional.Failure is not null && conditional.Success is null && conditional.Condition is UnaryExpression unary && unary.Operation is UnaryOperation.Not)
+            {
+                return new ConditionalExpression(
+                    SimplifyExpression(unary.Operand), 
+                    SimplifyExpression(conditional.Failure), 
+                    SimplifyExpression(conditional.Success)
+                    );
+            }
+
+
             return new ConditionalExpression(
-                SimplifyExpression(conditionalExpr.Condition),
-                ForceVoidType(SimplifyExpression(conditionalExpr.Success)),
-                ForceVoidType(SimplifyExpression(conditionalExpr.Failure))
+                SimplifyExpression(conditional.Condition, true),
+                SimplifyExpression(conditional.Success, true),
+                SimplifyExpression(conditional.Failure, true)
                 );
+        }
+        if (expression is LoopExpression loop)
+        {
+            return new LoopExpression(SimplifyExpression(loop.Body));
+        }
+        if (expression is BlockExpression block)
+        {
+        }
 
         if (expression is not BlockExpression blockExpr)
             return expression;
 
         IEnumerable<ShaderExpression> expressions = Enumerable.Empty<ShaderExpression>();
 
-        foreach (var expr in blockExpr.Expressions.Select(SimplifyExpression))
+        foreach (var expr in blockExpr.Expressions.Select(e => SimplifyExpression(e)))
         {
             expressions = expr is BlockExpression b ? 
                 expressions.Concat(b.Expressions) :
                 expressions = expressions.Append(expr);
         }
+
+        if (!requireBlock && expressions.Count() == 1)
+            return expressions.Single();
 
         return CreateBlockExpressionIfNeeded(expressions);
     }
@@ -449,11 +488,6 @@ internal class ExpressionBuilder
     ShaderExpression ForceVoidType(ShaderExpression expression)
     {
         return expression;
-
-        // if (expression.Type == typeof(void))
-        //     return expression;
-        // 
-        // return Expression.Block(typeof(void), expression);
     }
 
     void BuildDup(Instruction instruction)
@@ -462,12 +496,6 @@ internal class ExpressionBuilder
         Expressions.Push(expr);
         Expressions.Push(expr);
     }
-
-    //static LocalVariableExpression[] GetLocals(MethodDisassembly disassembly)
-    //{
-    //    var locals = disassembly.MethodBody.LocalVariables.Select(l => new LocalVariableExpression(new(l)));
-    //    return locals.ToArray();
-    //}
 
     void BuildBinaryExpr(Instruction instruction)
     {
@@ -508,11 +536,11 @@ internal class ExpressionBuilder
 
     private BinaryExpression CreateBinaryExpression(BinaryOperation operation, ShaderExpression left, ShaderExpression right)
     {
-        if (left.ExpressionType is ShaderPrimitiveType prim && prim.primitive == ShaderPrimitive.Bool)
+        if (left.ExpressionType == ShaderType.Bool)
         {
             if (right is ConstantExpression constExpr2 && constExpr2.Value is 0 or 1)
             {
-                right = new ConstantExpression(ShaderPrimitiveType.Get(ShaderPrimitive.Bool), (int)constExpr2.Value == 1);
+                right = new ConstantExpression(ShaderType.Bool, (int)constExpr2.Value == 1);
             }
         }
 

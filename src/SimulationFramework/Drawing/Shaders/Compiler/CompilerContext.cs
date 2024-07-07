@@ -11,7 +11,7 @@ namespace SimulationFramework.Drawing.Shaders.Compiler;
 
 internal class CompilerContext
 {
-    private readonly Dictionary<Type, ShaderPrimitive> primitiveTypeMap;
+    private readonly Dictionary<Type, ShaderType> primitiveTypeMap;
 
     public ShaderCompilation Compilation { get; }
     public Queue<MethodBase> MethodQueue { get; } = [];
@@ -26,7 +26,7 @@ internal class CompilerContext
     public Type ShaderType { get; }
     public MethodInfo EntryPoint { get; }
 
-    public CompilerContext(Type shaderType, MethodInfo entryPoint, Dictionary<Type, ShaderPrimitive> primitiveTypeMap)
+    public CompilerContext(Type shaderType, MethodInfo entryPoint, Dictionary<Type, ShaderType> primitiveTypeMap)
     {
         ShaderType = shaderType;
         EntryPoint = entryPoint;
@@ -98,9 +98,9 @@ internal class CompilerContext
             return new ReferenceType(CompileType(type.GetElementType()));
         }
 
-        if (this.primitiveTypeMap.TryGetValue(type, out ShaderPrimitive primitive))
+        if (this.primitiveTypeMap.TryGetValue(type, out ShaderType? primitive))
         {
-            return ShaderPrimitiveType.Get(primitive);
+            return primitive;
         }
 
         if (type.IsValueType)

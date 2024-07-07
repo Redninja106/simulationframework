@@ -10,8 +10,17 @@ public record ShaderIntrinsicCall(MethodInfo Intrinsic, ShaderType ReturnType, I
 {
     public override ShaderType? ExpressionType => ReturnType;
 
-    public override ShaderExpression Accept(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ShaderExpressionVisitor visitor)
     {
         return visitor.VisitShaderIntrinsicCall(this);
+    }
+
+    public override ShaderExpression VisitChildren(ShaderExpressionVisitor visitor)
+    {
+        return new ShaderIntrinsicCall(
+            Intrinsic,
+            ReturnType,
+            Arguments.Select(arg => arg.Accept(visitor)).ToList()
+            );
     }
 }

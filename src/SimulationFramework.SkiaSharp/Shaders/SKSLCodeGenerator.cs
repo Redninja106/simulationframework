@@ -180,7 +180,7 @@ internal class SKSLCodeGenerator
     }
 }
 
-class MethodBodyEmitter : ExpressionVisitor
+class MethodBodyEmitter : ShaderExpressionVisitor
 {
     public readonly IndentedTextWriter writer;
     private readonly SKSLCodeGenerator generator;
@@ -414,7 +414,7 @@ class MethodBodyEmitter : ExpressionVisitor
     }
 }
 
-class IntrinsicOperatorReplacementVisitor : ExpressionVisitor
+class IntrinsicOperatorReplacementVisitor : ShaderExpressionVisitor
 {
     public override ShaderExpression VisitCallExpression(CallExpression expression)
     {

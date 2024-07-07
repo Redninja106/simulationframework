@@ -9,7 +9,7 @@ public record ShaderVariableExpression(ShaderVariable Variable) : ShaderExpressi
 {
     public override ShaderType? ExpressionType => Variable.Type;
 
-    public override ShaderExpression Accept(ExpressionVisitor visitor)
+    public override ShaderExpression Accept(ShaderExpressionVisitor visitor)
     {
         return visitor.VisitShaderVariableExpression(this);
     }
