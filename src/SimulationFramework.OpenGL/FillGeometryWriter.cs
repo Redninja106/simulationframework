@@ -13,7 +13,7 @@ class FillGeometryWriter : GeometryWriter
 
     public override void PushArc(GeometryStream stream, Rectangle bounds, float begin, float end, bool includeCenter)
     {
-        const int steps = 16;
+        const int steps = 64;
 
         float increment = (end - begin) / steps;
         float angle = begin;

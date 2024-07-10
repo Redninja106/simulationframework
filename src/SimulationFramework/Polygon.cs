@@ -1,5 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using ImGuiNET;
+using SimulationFramework.Drawing;
+using System;
+using System.ComponentModel.Design;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 // parameter's docs may be inherited
 #pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
@@ -306,6 +312,7 @@ public static class Polygon
 
     public static Circle GetBoundingCircle(ReadOnlySpan<Vector2> polygon)
     {
+        // TODO: implement welzl's algorithm here
         Vector2 vertexAverage = Vector2.Zero;
         for (int i = 0; i < polygon.Length; i++)
         {
@@ -325,4 +332,196 @@ public static class Polygon
 
         return new(vertexAverage, furthestDistance);
     }
+
+    public static bool IsClockwise(ReadOnlySpan<Vector2> polygon)
+    {
+        return SignedArea(polygon) > 0;
+    }
+
+    public static float Area(ReadOnlySpan<Vector2> polygon)
+    {
+        return MathF.Abs(SignedArea(polygon));
+    }
+
+    public static float SignedArea(ReadOnlySpan<Vector2> polygon)
+    {
+        // https://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order
+        float result = 0;
+        for (int i = 0; i < polygon.Length; i++)
+        {
+            Vector2 from = polygon[i];
+            Vector2 to = polygon[i + 1 == polygon.Length ? 0 : i + 1];
+
+            result += from.X * to.Y - to.X * from.Y;
+        }
+
+        return result * .5f;
+    }
+
+    public static Vector2[] Triangulate(ReadOnlySpan<Vector2> polygon)
+    {
+        if (polygon.Length <= 3)
+            return polygon.ToArray();
+
+        List<Vector2> tris = [];
+        bool cw = IsClockwise(polygon);
+
+        PolygonLinkedList list = new(polygon);
+
+        bool forceTri = false;
+        int current;
+        while (tris.Count < (polygon.Length - 2) * 3)
+        {
+            bool pushedTri = false;
+            current = list.First();
+            for (int i = 0; i < polygon.Length + 1; i++)
+            {
+                if (cw ^ IsVertexConvex(list, current))
+                {
+                    Vector2 p1 = list[current];
+                    Vector2 p2 = list[list.Previous(current)];
+                    Vector2 p3 = list[list.Next(current)];
+
+                    int current2 = list.Next(list.Next(current));
+                    bool pointInTri = false;
+                    for (int j = 0; j < list.Length - 3; j++)
+                    {
+                        Debug.Assert(current2 != current);
+                        Debug.Assert(current2 != list.Previous(current));
+                        Debug.Assert(current2 != list.Next(current));
+
+                        if (PointInTriangle(list[current2], p1, p2, p3))
+                        {
+                            pointInTri = true;
+                            break;
+                        }
+                        current2 = list.Next(current2);
+                    }
+
+                    if (pointInTri)
+                    {
+                        current = list.Next(current);
+                        continue;
+                    }
+
+                    tris.Add(p1);
+                    tris.Add(p2);
+                    tris.Add(p3);
+
+                    list.Remove(current);
+                    pushedTri = true;
+                }
+                current = list.Next(current);
+            }
+            if (!pushedTri)
+            {
+                return tris.ToArray();
+            }
+        }
+
+        return tris.ToArray();
+
+        static bool IsVertexConvex(PolygonLinkedList list, int index)
+        {
+            Vector2 vertex = list[index];
+            Vector2 prev = list[list.Previous(index)];
+            Vector2 next = list[list.Next(index)];
+
+            Vector2 p1 = vertex - prev;
+            Vector2 p2 = next - vertex;
+
+            return (MathF.PI + MathF.Atan2(MathHelper.Cross(p1, p2), Vector2.Dot(p1, p2))) < MathF.PI;
+        }
+
+        static IEnumerable<(Vector2, bool)> ListToArr(PolygonLinkedList list)
+        {
+            var first = list.First();
+            var current = first;
+            do
+            {
+                yield return (list[current], IsVertexConvex(list, current));
+                current = list.Next(current);
+            }
+            while (current != first);
+        }
+    }
+    
+    // https://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
+    public static bool PointInTriangle(Vector2 p, Vector2 p0, Vector2 p1, Vector2 p2)
+    {
+        var s = (p0.X - p2.X) * (p.Y - p2.Y) - (p0.Y - p2.Y) * (p.X - p2.X);
+        var t = (p1.X - p0.X) * (p.Y - p0.Y) - (p1.Y - p0.Y) * (p.X - p0.X);
+
+        if ((s < 0) != (t < 0) && s != 0 && t != 0)
+            return false;
+
+        var d = (p2.X - p1.X) * (p.Y - p1.Y) - (p2.Y - p1.Y) * (p.X - p1.X);
+        return d == 0 || (d < 0) == (s + t <= 0);
+    }
+
+    private struct PolygonLinkedList
+    {
+        Vertex<Vector2>[] vertices;
+        int firstVertex;
+        int length;
+
+        public int Length => length;
+
+        public PolygonLinkedList(ReadOnlySpan<Vector2> polygon)
+        {
+            vertices = new Vertex<Vector2>[polygon.Length];
+
+            for (int i = 0; i < polygon.Length; i++)
+            {
+                vertices[i].position = polygon[i];
+                vertices[i].prev = i - 1;
+                vertices[i].next = i + 1;
+            }
+            vertices[0].prev = polygon.Length - 1;
+            vertices[polygon.Length - 1].next = 0;
+
+            length = polygon.Length;
+        }
+
+        public Vector2 this[int index] => vertices[index].position;
+
+        public void Remove(int index)
+        {
+            var vertex = vertices[index];
+
+            if (index == firstVertex)
+            {
+                firstVertex = Next(firstVertex);
+            }
+
+            vertices[vertex.next].prev = vertex.prev;
+            vertices[vertex.prev].next = vertex.next;
+
+            length--;
+        }
+
+        public int Next(int index)
+        {
+            return vertices[index].next;
+        }
+
+        public int Previous(int index)
+        {
+            return vertices[index].prev;
+        }
+
+        public int First()
+        {
+            return firstVertex;
+        }
+
+        private struct Vertex<T>
+        {
+            public T position;
+            public int next;
+            public int prev;
+        }
+    }
+
+
 }

@@ -26,6 +26,8 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
         global::OpenGL.Initialize(name => (delegate*<void>)getProcAddress(name));
 
         glDebugMessageCallback(&DebugCallback, null);
+
+        DefaultFont = LoadSystemFont("Verdana");
     }
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
@@ -52,19 +54,27 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
         frameCanvas = new GLCanvas(this, frame);
     }
 
-    public bool TryLoadFont(ReadOnlySpan<byte> encodedData, [NotNullWhen(true)] out IFont? font)
+    public IFont LoadFont(ReadOnlySpan<byte> encodedData)
     {
-        throw new NotImplementedException();
+        return new GLFont(this, encodedData);
     }
 
-    public bool TryLoadSystemFont(string name, [NotNullWhen(true)] out IFont? font)
+    public IFont LoadSystemFont(string name)
     {
-        throw new NotImplementedException();
+        if (OperatingSystem.IsWindows())
+        {
+            string path = Path.Combine(Environment.SystemDirectory, "../fonts", name + ".ttf");
+            return LoadFont(File.ReadAllBytes(Path.GetFullPath(path)));
+        }
+        else
+        {
+            throw new NotSupportedException("System fonts not supported on this platform!");
+        }
     }
 
     public ITexture CreateTexture(int width, int height, ReadOnlySpan<Color> pixels, TextureOptions options)
     {
-        return new GLTexture(width, height, pixels, options);
+        return new GLTexture(this, width, height, pixels, options);
     }
 
     public ITexture LoadTexture(ReadOnlySpan<byte> encodedData, TextureOptions options)

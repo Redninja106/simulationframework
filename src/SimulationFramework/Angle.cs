@@ -158,4 +158,9 @@ public static class Angle
 
         return MathF.MinMagnitude(d0, MathF.MinMagnitude(d1, d2));
     }
+
+    public static float Between(Vector2 a, Vector2 b)
+    {
+        return MathF.Acos(Vector2.Dot(a, b) / a.Length() * b.Length());
+    }
 }

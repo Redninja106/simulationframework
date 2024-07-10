@@ -19,7 +19,7 @@ internal sealed class GLTexture : ITexture
     private readonly uint id;
     private readonly GLCanvas? canvas;
 
-    public unsafe GLTexture(int width, int height, ReadOnlySpan<Color> colors, TextureOptions options)
+    public unsafe GLTexture(GLGraphicsProvider provider, int width, int height, ReadOnlySpan<Color> colors, TextureOptions options)
     {
         this.Width = width;
         this.Height = height;
@@ -39,7 +39,7 @@ internal sealed class GLTexture : ITexture
             glTexImage2D(GL_TEXTURE_2D, 0, unchecked((int)GL_RGBA8), width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         }
 
-        // canvas = new(provider, this, surface.Canvas, true);
+        canvas = new(provider, this);
 
         if (!options.HasFlag(TextureOptions.Constant))
         {
@@ -84,57 +84,24 @@ internal sealed class GLTexture : ITexture
 
     private unsafe void UpdateLocalPixels()
     {
-        Color* buffer = null;
-        try
+        glFinish();
+        glBindTexture(GL_TEXTURE_2D, id);
+        fixed (Color* buffer = colors) 
         {
-            buffer = (Color*)NativeMemory.Alloc((nuint)colors.Length, (nuint)sizeof(Color));
-
-            glFinish();
-            glBindTexture(GL_TEXTURE_2D, id);
             glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-            glBindTexture(GL_TEXTURE_2D, 0);
-            pixelsDirty = false;
-
-            TextureFlip(new(buffer, colors.Length), colors);
         }
-        finally
-        {
-            NativeMemory.Free(buffer);
-        }
+        glBindTexture(GL_TEXTURE_2D, 0);
+        pixelsDirty = false;
     }
 
     public unsafe void Update(ReadOnlySpan<Color> pixels)
     {
-        Color* buffer = null;
-        try
+        glBindTexture(GL_TEXTURE_2D, id);
+        fixed (Color* buffer = pixels)
         {
-            // we need to flip the texture (thanks opengl)
-            buffer = (Color*)NativeMemory.Alloc((nuint)pixels.Length, (nuint)sizeof(Color));
-
-            TextureFlip(pixels, new(buffer, pixels.Length));
-
-            glBindTexture(GL_TEXTURE_2D, id);
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, this.Width, this.Height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
-            glBindTexture(GL_TEXTURE_2D, 0);
         }
-        finally
-        {
-            NativeMemory.Free(buffer);
-        }
-    }
-
-    private void TextureFlip(ReadOnlySpan<Color> src, Span<Color> dest)
-    {
-        for (int y = 0; y < Height; y++)
-        {
-            for (int x = 0; x < Width; x++)
-            {
-                var srcIndex = y * Width + x;
-                var dstIndex = (Height - y - 1) * Width + x;
-
-                dest[dstIndex] = src[srcIndex];
-            }
-        }
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     public ICanvas GetCanvas()

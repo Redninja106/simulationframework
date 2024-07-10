@@ -264,7 +264,7 @@ namespace SimulationFramework.Drawing;
 public class CanvasState
 {
     public Matrix3x2 Transform;
-    public Rectangle? ClippingRectangle;
+    public Rectangle? ClipRectangle;
 
     public bool fill;
     public ColorF color;
@@ -272,7 +272,7 @@ public class CanvasState
 
     public CanvasShader? shader;
     public FontStyle FontStyle;
-    public float fontSize;
+    public float FontSize;
     public IFont font;
 
     public CanvasState Clone()
@@ -283,15 +283,15 @@ public class CanvasState
     public void Reset()
     {
         Transform = Matrix3x2.Identity;
-        ClippingRectangle = null;
+        ClipRectangle = null;
         fill = true;
         color = ColorF.White;
         strokeWidth = 0;
         shader = null;
 
         FontStyle = FontStyle.Normal;
-        fontSize = 16;
-        // font = Graphics.DefaultFont;
+        FontSize = 16;
+        font = Graphics.DefaultFont;
     }
 }
 

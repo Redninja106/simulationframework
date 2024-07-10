@@ -109,7 +109,7 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
             throw new ArgumentException("texture must be a texture created by the skiasharp renderer!", nameof(texture));
 
         canvas.DrawImage(skTexture.GetImage(), source.AsSKRect(), destination.AsSKRect(), currentState.Paint);
-        
+        currentState.Paint.BlendMode == SKBlendMode.Multiply
         SkiaTextureTarget?.InvalidatePixels();
     }
 
@@ -175,12 +175,12 @@ internal sealed class SkiaCanvas : SkiaGraphicsObject, ICanvas
         SkiaTextureTarget?.InvalidatePixels();
     }
 
-    public Vector2 MeasureText(ReadOnlySpan<char> text, float maxWidth, out int charsMeasured, TextBounds origin)
+    public Vector2 MeasureText(ReadOnlySpan<char> text, float maxWidth, out int charsMeasured)
     {
-        return MeasureTextInternal(text, maxWidth, out charsMeasured, origin, out _);
+        return MeasureTextInternal(text, maxWidth, out charsMeasured, out _);
     }
 
-    private Vector2 MeasureTextInternal(ReadOnlySpan<char> text, float maxWidth, out int charsMeasured, TextBounds bounds, out Vector2 skiaOffset)
+    private Vector2 MeasureTextInternal(ReadOnlySpan<char> text, float maxWidth, out int charsMeasured, out Vector2 skiaOffset)
     {
         // ok wow, this is bad:
         // SKPaint.MeasureText seems to return a zero-size rectangle for really small text sizes,

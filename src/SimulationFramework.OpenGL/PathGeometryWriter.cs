@@ -170,6 +170,21 @@ internal class PathGeometryWriter : GeometryWriter
 
     public override void PushArc(GeometryStream stream, Rectangle bounds, float begin, float end, bool includeCenter)
     {
-        throw new NotImplementedException();
+        const int steps = 64;
+
+        float increment = (end - begin) / steps;
+        float angle = begin;
+        for (int i = 0; i < steps; i++)
+        {
+            stream.WriteVertex(bounds.Center + Angle.ToVector(angle) * (.5f * bounds.Size - new Vector2(Width)));
+            stream.WriteVertex(bounds.Center + Angle.ToVector(angle) * (.5f * bounds.Size + new Vector2(Width)));
+            stream.WriteVertex(bounds.Center + Angle.ToVector(angle + increment) * (.5f * bounds.Size - new Vector2(Width)));
+
+            stream.WriteVertex(bounds.Center + Angle.ToVector(angle) * (.5f * bounds.Size + new Vector2(Width)));
+            stream.WriteVertex(bounds.Center + Angle.ToVector(angle + increment) * (.5f * bounds.Size + new Vector2(Width)));
+            stream.WriteVertex(bounds.Center + Angle.ToVector(angle + increment) * (.5f * bounds.Size - new Vector2(Width)));
+
+            angle += increment;
+        }
     }
 }

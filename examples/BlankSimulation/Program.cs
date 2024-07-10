@@ -1,5 +1,4 @@
 using ImGuiNET;
-using Silk.NET.OpenGL;
 using SimulationFramework;
 using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
@@ -9,70 +8,60 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Reflection;
 
-
 Start<Program>(new DesktopPlatform());
 
 partial class Program : Simulation
 {
-    ITexture texture;
-
     public override unsafe void OnInitialize()
     {
-        
+        SetFixedResolution(320, 180, Color.Gray, subpixelInput: true);
     }
-
-    MyShader shader = new MyShader()
-    {
-        circles = [],
-    };
-
+    float scale = 32;
+    string s = "";
     public override void OnRender(ICanvas canvas)
     {
         canvas.Clear(Color.FromHSV(0, 0, .15f));
+        scale += Mouse.ScrollWheelDelta;
 
-        // shader.color = ColorF.FromHSV(MathF.Sin(Time.TotalTime) * .5f + .5f, 1, 1);
+        ImGui.SliderFloat("scale1", ref scale, 8, 64);
 
-        if (ImGui.Button("add"))
+        if (Keyboard.IsKeyPressed(Key.Backspace) && s.Length > 0)
         {
-            shader.circles = [..shader.circles, default];
+            s = s[..^1];
+        }
+        
+        foreach (var typedKey in Keyboard.TypedKeys)
+        {
+            s += typedKey;
         }
 
-        for (int i = 0; i < shader.circles.Length; i++)
-        {
-            ImGui.Separator();
-            ImGui.PushID(i);
-            ImGui.DragFloat("x", ref shader.circles[i].X);
-            ImGui.DragFloat("y", ref shader.circles[i].Y);
-            ImGui.DragFloat("radius", ref shader.circles[i].Z);
-            if (ImGui.Button("remove"))
-            {
-                shader.circles = [..shader.circles[..i], ..shader.circles[(i + 1)..]];
-            }
-            ImGui.PopID();
-        }
-
-        for (int i = 0; i < shader.circles.Length; i++)
-        {
-            shader.circles[i].Z += Time.DeltaTime * 100;
-        }
-
-        if (Mouse.IsButtonPressed(MouseButton.Left))
-        {
-            shader.circles = [.. shader.circles, new(Mouse.Position.X, Mouse.Position.Y, 0, 0)];
-        }
-
-        canvas.Fill(shader);
-        canvas.DrawRect(0, 0, canvas.Width, canvas.Height, Alignment.TopLeft);
+        canvas.FontSize(scale);
+        canvas.DrawText(s, Mouse.Position);
+        canvas.Stroke(Color.Red);
+        canvas.Translate(Mouse.Position);
+        canvas.DrawRect(canvas.State.font.MeasureText(s, canvas.State.FontSize, canvas.State.FontStyle));
+        //canvas.DrawRect(Mouse.Position, Vector2.One * 100);
     }
 }
 
 class MyShader : CanvasShader
 {
     public Vector4[] circles;
+    public void Update()
+    {
+        for (int i = 0; i < circles.Length; i++)
+        {
+            circles[i].Z += Time.DeltaTime * 100;
+        }
+
+        if (Mouse.IsButtonPressed(MouseButton.Left))
+        {
+            circles = [.. circles, new(Mouse.Position.X, Mouse.Position.Y, 0, 0)];
+        }
+    }
 
     public override ColorF GetPixelColor(Vector2 position)
     {
-        ColorF color = ColorF.Black;
         float minDist = 100000;
         for (int i = 0; i < circles.Length; i++)
         {
@@ -85,6 +74,6 @@ class MyShader : CanvasShader
                 minDist = d;
             }
         }
-        return color = new(1 - (minDist / 10f)*(minDist / 10f), 0, 0);
+        return new(1 - (minDist / 10f)*(minDist / 10f), 0, 0);
     }
 }

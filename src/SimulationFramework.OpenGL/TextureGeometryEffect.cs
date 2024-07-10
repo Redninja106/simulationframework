@@ -29,16 +29,18 @@ void main()
 out vec4 FragColor;
 
 uniform sampler2D textureSampler;
+uniform vec4 tint;
 
 in vec2 tex;
 
 void main()
 {
-    FragColor = texture(textureSampler, tex);
+    FragColor = tint * texture(textureSampler, tex);
 } 
 ";
 
     uint program;
+    internal ColorF tint;
 
     public TextureGeometryEffect()
     {
@@ -52,6 +54,7 @@ void main()
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, this.texture.GetID());
         glUniform1i(glGetUniformLocation(program, ToPointer("textureSampler"u8)), 0);
+        glUniform4f(glGetUniformLocation(program, ToPointer("tint"u8)), tint.R, tint.G, tint.B, tint.A);
     }
 
     private unsafe byte* ToPointer(ReadOnlySpan<byte> str)

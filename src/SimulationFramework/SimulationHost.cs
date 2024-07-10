@@ -230,8 +230,8 @@ public class SimulationHost
     /// <param name="component">The component to register.</param>
     public void RegisterComponent(ISimulationComponent component)
     {
-        component.Initialize(this.Dispatcher);
         components.Add(component);
+        component.Initialize(this.Dispatcher);
     }
 
     /// <summary>

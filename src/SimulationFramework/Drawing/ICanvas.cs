@@ -1,7 +1,6 @@
 using System.Numerics;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using SimulationFramework.Drawing.Shaders;
 
@@ -332,7 +331,7 @@ public interface ICanvas
     /// </summary>
     /// <param name="texture">The texture to draw.</param>
     /// <param name="destination">The location to draw the texture.</param>
-    sealed void DrawTexture(ITexture texture, Rectangle destination) => DrawTexture(texture, new(0, 0, texture.Width, texture.Height), destination);
+    sealed void DrawTexture(ITexture texture, Rectangle destination) => DrawTexture(texture, new(0, 0, texture.Width, texture.Height), destination, ColorF.White);
 
     /// <summary>
     /// Draws a texture to the canvas, using the current transform and clipping settings.
@@ -340,7 +339,7 @@ public interface ICanvas
     /// <param name="texture">The texture to draw.</param>
     /// <param name="source">The source bounds of the texture.</param>
     /// <param name="destination">The destination bounds of the texture.</param>
-    void DrawTexture(ITexture texture, Rectangle source, Rectangle destination);
+    void DrawTexture(ITexture texture, Rectangle source, Rectangle destination, ColorF tint);
 
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
@@ -382,7 +381,7 @@ public interface ICanvas
     /// <param name="y">The Y position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
     /// <param name="origin">Determines the text's bounding box.</param>
-    sealed void DrawText(string text, float x, float y, Alignment alignment = Alignment.TopLeft, TextBounds origin = TextBounds.BestFit) => DrawText(text, new(x, y), alignment, origin);
+    sealed Vector2 DrawText(string text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text, new Vector2(x, y), alignment);
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
@@ -391,11 +390,11 @@ public interface ICanvas
     /// <param name="position">The position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
     /// <param name="origin">Determines the text's bounding box.</param>
-    sealed void DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft, TextBounds origin = TextBounds.BestFit)
+    sealed Vector2 DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        DrawText(text.AsSpan(), position, alignment, origin);
+        return DrawText(text.AsSpan(), position, alignment);
     }
 
     /// <summary>
@@ -406,7 +405,7 @@ public interface ICanvas
     /// <param name="y">The Y position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
     /// <param name="origin">Determines the text's bounding box.</param>
-    sealed void DrawText(ReadOnlySpan<char> text, float x, float y, Alignment alignment = Alignment.TopLeft, TextBounds origin = TextBounds.BestFit) => DrawText(text, new(x, y), alignment, origin);
+    sealed Vector2 DrawText(ReadOnlySpan<char> text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text, new(x, y), alignment);
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
@@ -415,47 +414,10 @@ public interface ICanvas
     /// <param name="position">The position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
     /// <param name="origin">Determines the text's bounding box.</param>
-    void DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft, TextBounds origin = TextBounds.BestFit);
+    Vector2 DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft);
 
-    /// <summary>
-    /// Determines the size of the provided text based on the current font selection.
-    /// </summary>
-    /// <param name="text">The text to measure.</param>
-    /// <param name="bounds">Determines how the text's bounding box is calculated.</param>
-    /// <returns>The width and height of the provided text's bounds.</returns>
-    sealed Vector2 MeasureText(string text, TextBounds bounds = TextBounds.BestFit) => MeasureText(text.AsSpan(), 0, out _, bounds);
-
-    /// <summary>
-    /// Determines the size of the provided text based on the current font selection,
-    /// stopping if the string's length exceeds a maximum.
-    /// </summary>
-    /// <param name="text">The text to measure.</param>
-    /// <param name="maxLength">The maximum length of the string.</param>
-    /// <param name="charsMeasured">The number of characters measured before measuring stopped,
-    /// or the length of <paramref name="text"/> if the entire string was measured.</param>
-    /// <param name="bounds">Determines how the text's bounding box is calculated.</param>
-    /// <returns>The width and height of the provided text's bounds.</returns>
-    sealed Vector2 MeasureText(string text, float maxLength, out int charsMeasured, TextBounds bounds = TextBounds.BestFit) => MeasureText(text.AsSpan(), maxLength, out charsMeasured, bounds);
-
-    /// <summary>
-    /// Determines the size of the provided text based on the current font selection.
-    /// </summary>
-    /// <param name="text">The text to measure.</param>
-    /// <param name="bounds">Determines how the text's bounding box is calculated.</param>
-    /// <returns>The width and height of the provided text's bounds.</returns>
-    sealed Vector2 MeasureText(ReadOnlySpan<char> text, TextBounds bounds = TextBounds.BestFit) => MeasureText(text, 0, out _, bounds);
-
-    /// <summary>
-    /// Determines the size of the provided text based on the current font selection,
-    /// stopping if the string's length exceeds a maximum.
-    /// </summary>
-    /// <param name="text">The text to measure.</param>
-    /// <param name="maxLength">The maximum length of the string.</param>
-    /// <param name="charsMeasured">The number of characters measured before measuring stopped,
-    /// or the length of <paramref name="text"/> if the entire string was measured.</param>
-    /// <param name="bounds">Determines how the text's bounding box is calculated.</param>
-    /// <returns>The width and height of the provided text's bounds.</returns>
-    Vector2 MeasureText(ReadOnlySpan<char> text, float maxLength, out int charsMeasured, TextBounds bounds = TextBounds.BestFit);
+    Vector2 DrawCodepoint(int codepoint) => DrawCodepoint(codepoint, Vector2.Zero, Alignment.BottomLeft);
+    Vector2 DrawCodepoint(int codepoint, Vector2 position, Alignment alignment);
 
     /// <summary>
     /// Sets a font with the specified attributes as current (and loads it if it is not already loaded).

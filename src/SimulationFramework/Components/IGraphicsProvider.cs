@@ -34,10 +34,10 @@ public interface IGraphicsProvider : ISimulationComponent
     /// <summary>
     /// Loads a font from a font file.
     /// </summary>
-    bool TryLoadFont(ReadOnlySpan<byte> encodedData, [NotNullWhen(true)] out IFont? font);
+    IFont LoadFont(ReadOnlySpan<byte> encodedData);
 
     /// <summary>
-    /// Attempts to load a system font by name.
+    ///Loads a system font by name.
     /// </summary>
-    bool TryLoadSystemFont(string name, [NotNullWhen(true)] out IFont? font);
+    IFont LoadSystemFont(string name);
 }

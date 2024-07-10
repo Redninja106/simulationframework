@@ -127,25 +127,9 @@ public static class Graphics
             throw new ArgumentException(null, nameof(name));
         }
 
-        return Provider.TryLoadSystemFont(name, out IFont? font) ? font : throw new("Error loading font.");
+        return Provider.LoadSystemFont(name);
     }
 
-    /// <summary>
-    /// Attempts to load a pre-existing font from the operating system. 
-    /// </summary>
-    /// <param name="name">The name of the font to load.</param>
-    /// <param name="font">The loaded font. Will be non-null if this method returns true.</param>
-    /// <returns><see langword="true"/> if the font was loaded; otherwise <see langword="false"/>.</returns>
-    public static bool TryLoadSystemFont(string name, [NotNullWhen(true)] out IFont? font)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            font = null;
-            return false;
-        }
-
-        return Provider.TryLoadSystemFont(name, out font);
-    }
 
     /// <summary>
     /// Loads a font from a file.
@@ -168,6 +152,6 @@ public static class Graphics
         if (encodedData.IsEmpty)
             throw new ArgumentException($"{nameof(encodedData)} was empty!");
 
-        return Provider.TryLoadFont(encodedData, out IFont? result) ? result : throw new Exception("Error loading font!");
+        return Provider.LoadFont(encodedData);
     }
 }

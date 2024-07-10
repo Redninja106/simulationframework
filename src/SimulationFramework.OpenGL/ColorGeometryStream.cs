@@ -30,7 +30,7 @@ unsafe class ColorGeometryStream : GeometryStream
     {
         vertices.Add(new()
         {
-            position = position,
+            position = Vector2.Transform(position, TransformMatrix),
             color = Color,
         });
     }

@@ -3,6 +3,8 @@ using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Drawing.Shaders.Compiler;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
@@ -20,30 +22,44 @@ internal class GLCanvas : ICanvas
     private Stack<CanvasState> stateStack = [];
     private List<CanvasState> statePool = [];
 
-    private PositionGeometryStream positionGeometryStream;
-    private ColorGeometryStream colorGeometryStream;
-    private TextureGeometryStream textureGeometryStream;
+    private readonly PositionGeometryStream positionGeometryStream;
+    private readonly ColorGeometryStream colorGeometryStream;
+    private readonly TextureGeometryStream textureGeometryStream;
 
-    private FillGeometryWriter fillGeometryWriter;
-    private HairlineGeometryWriter hairlineGeometryWriter;
-    private PathGeometryWriter pathGeometryWriter;
+    private readonly FillGeometryWriter fillGeometryWriter;
+    private readonly HairlineGeometryWriter hairlineGeometryWriter;
+    private readonly PathGeometryWriter pathGeometryWriter;
 
-    private ColorGeometryEffect colorGeometryEffect;
-    private TextureGeometryEffect textureGeometryEffect;
-
-    private GeometryEffect currentGeometryEffect;
+    private readonly ColorGeometryEffect colorGeometryEffect;
+    private readonly TextureGeometryEffect textureGeometryEffect;
 
     private GeometryStream currentGeometryStream;
     private GeometryWriter currentGeometryWriter;
     private GeometryBuffer currentGeometryBuffer;
 
     private GLGraphicsProvider graphics;
+    private uint fbo;
 
-    public GLCanvas(GLGraphicsProvider graphics, ITexture target)
+    public unsafe GLCanvas(GLGraphicsProvider graphics, ITexture target)
     {
         this.graphics = graphics;
         this.Target = target;
-        
+        if (target is GLTexture texture)
+        {
+            fixed (uint* fboPtr = &fbo)
+            {
+                glGenFramebuffers(1, fboPtr);
+            }
+
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.GetID(), 0);
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+        else
+        {
+            fbo = 0;
+        }
+
         State = new();
         currentGeometryBuffer = new GeometryBuffer();
         currentGeometryBuffer.Bind();
@@ -58,8 +74,6 @@ internal class GLCanvas : ICanvas
 
         colorGeometryEffect = new ColorGeometryEffect();
         textureGeometryEffect = new TextureGeometryEffect();
-
-        ResetState();
     }
 
 
@@ -77,13 +91,14 @@ internal class GLCanvas : ICanvas
 
     public void Clear(ColorF color)
     {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
         glClearColor(color.R, color.G, color.B, color.A);
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
     public void Clip(Rectangle? rectangle)
     {
-        throw new NotImplementedException();
+        State.ClipRectangle = rectangle;
     }
 
     public void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter)
@@ -100,6 +115,9 @@ internal class GLCanvas : ICanvas
 
     public void DrawPolygon(ReadOnlySpan<Vector2> polygon, bool close = true)
     {
+        if (polygon.Length < 2)
+            return;
+
         SetupRegularGeometry();
         currentGeometryWriter.PushPolygon(currentGeometryStream, polygon, close);
     }
@@ -116,21 +134,26 @@ internal class GLCanvas : ICanvas
         currentGeometryWriter.PushRoundedRect(currentGeometryStream, rect, radius);
     }
 
-    public void DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft, TextBounds origin = TextBounds.BestFit)
+    public Vector2 DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft)
     {
-        throw new NotImplementedException();
+        for (int i = 0; i < text.Length; i++)
+        {
+            position = DrawCodepoint(text[i], position, alignment);
+        }
+
+        return position;
     }
 
-    public void DrawTexture(ITexture texture, Rectangle source, Rectangle destination)
+    public void DrawTexture(ITexture texture, Rectangle source, Rectangle destination, ColorF tint)
     {
-        if (textureGeometryEffect.texture != texture)
+        if (textureGeometryEffect.texture != texture || textureGeometryEffect.tint != tint)
         {
             Flush();
         }
-
         textureGeometryEffect.texture = (GLTexture)texture;
+        textureGeometryEffect.tint = tint;
+
         UpdateGeometryStream(textureGeometryStream);
-        currentGeometryEffect = textureGeometryEffect;
 
         Vector2 uvScale = new(1f/texture.Width, 1f/texture.Height);
         textureGeometryStream.WriteVertex(new(destination.X,                     destination.Y                     ), uvScale * new Vector2(source.X, source.Y));
@@ -147,7 +170,10 @@ internal class GLCanvas : ICanvas
         if (currentGeometryStream == textureGeometryStream)
         {
             UpdateGeometryStream(colorGeometryStream);
-            currentGeometryEffect = colorGeometryEffect;
+        }
+        else
+        {
+            currentGeometryStream.TransformMatrix = this.State.Transform;
         }
     }
 
@@ -163,8 +189,6 @@ internal class GLCanvas : ICanvas
 
         colorGeometryStream.Color = color.ToColor();
         
-        currentGeometryEffect = colorGeometryEffect;
-
         UpdateGeometryStream(colorGeometryStream);
         UpdateGeometryWriter(fillGeometryWriter);
     }
@@ -172,12 +196,20 @@ internal class GLCanvas : ICanvas
     public void Fill(CanvasShader shader)
     {
         var effect = graphics.GetShaderEffect(shader);
+        if (effect.Shader != shader)
+            Flush();
         effect.Shader = shader;
-        currentGeometryEffect = effect;
         UpdateGeometryStream(positionGeometryStream);
         UpdateGeometryWriter(fillGeometryWriter);
+    }
 
-
+    public Vector2 DrawCodepoint(int codepoint, Vector2 position, Alignment alignment)
+    {
+        GLFont font = (GLFont)State.font;
+        Vector2 newPos = font.GetCodepointPosition(codepoint, position, State.FontSize, State.FontStyle, out Rectangle source, out Rectangle destination);
+        GLTexture atlas = font.GetAtlasTexture(State.FontSize, State.FontStyle);
+        DrawTexture(atlas, source, destination, State.color);
+        return newPos;
     }
 
     public unsafe void Flush()
@@ -185,11 +217,15 @@ internal class GLCanvas : ICanvas
         if (currentGeometryStream.GetVertexCount() == 0)
             return;
 
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glDisable(GL_CULL_FACE);
         glViewport(0, 0, Target.Width, Target.Height);
+        glBindFramebuffer(GL_FRAMEBUFFER, this.fbo);
 
         Matrix3x2 viewportMatrix = Matrix3x2.CreateScale(2f / Target.Width, -2f / Target.Height) * Matrix3x2.CreateTranslation(-1, 1);
 
-        Matrix3x2 transform = this.State.Transform * viewportMatrix;
+        Matrix3x2 transform = viewportMatrix;
         Matrix4x4 transform4x4 = new(
             transform.M11, transform.M12, 0, 0,
             transform.M21, transform.M22, 0, 0,
@@ -198,33 +234,47 @@ internal class GLCanvas : ICanvas
             );
 
         currentGeometryStream.Upload(currentGeometryBuffer);
-        currentGeometryEffect.Use();
-        currentGeometryEffect.ApplyState(State, transform4x4);
+
+        var effect = GetEffect(currentGeometryStream);
+        effect.Use();
+        effect.ApplyState(State, transform4x4);
         currentGeometryStream.BindVertexArray();
 
         glDrawArrays(currentGeometryWriter.GetPrimitive(), 0, currentGeometryStream.GetVertexCount());
         currentGeometryStream.Clear();
     }
 
+    private GeometryEffect GetEffect(GeometryStream geometryStream)
+    {
+        if (geometryStream == textureGeometryStream)
+        {
+            return textureGeometryEffect;
+        }
+
+        if (State.shader is not null)
+        {
+            var effect = graphics.GetShaderEffect(State.shader);
+            effect.Shader = State.shader;
+            return effect;
+        }
+
+        return colorGeometryEffect;
+    }
+
 
     public void Font(IFont font)
     {
-        throw new NotImplementedException();
+        State.font = font;
     }
 
     public void FontSize(float size)
     {
-        throw new NotImplementedException();
+        State.FontSize = size;
     }
 
     public void FontStyle(FontStyle style)
     {
-        throw new NotImplementedException();
-    }
-
-    public Vector2 MeasureText(ReadOnlySpan<char> text, float maxLength, out int charsMeasured, TextBounds bounds = TextBounds.BestFit)
-    {
-        throw new NotImplementedException();
+        State.FontStyle = style;
     }
 
     public void PopState()
@@ -241,12 +291,16 @@ internal class GLCanvas : ICanvas
         State = State.Clone();
     }
 
+
+    [MemberNotNull(
+        nameof(currentGeometryWriter),
+        nameof(currentGeometryStream)
+        )]
     public void ResetState()
     {
         State.Reset();
 
         colorGeometryStream.Color = Color.White;
-        currentGeometryEffect = colorGeometryEffect;
         currentGeometryWriter = fillGeometryWriter;
         currentGeometryStream = colorGeometryStream;
     }
@@ -312,5 +366,6 @@ internal class GLCanvas : ICanvas
         }
 
         currentGeometryStream = stream;
+        stream.TransformMatrix = State.Transform;
     }
 }

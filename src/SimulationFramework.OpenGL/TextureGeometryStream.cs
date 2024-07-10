@@ -53,16 +53,14 @@ internal class TextureGeometryStream : GeometryStream
     public override void WriteVertex(Vector2 position)
     {
         throw new InvalidOperationException();
-
-        WriteVertex(position, Vector2.Zero);
     }
 
     public void WriteVertex(Vector2 position, Vector2 textureCoordinate)
     {
         vertices.Add(new()
         {
-            position = position,
-            textureCoordinate = textureCoordinate,
+            position = Vector2.Transform(position, TransformMatrix),
+            textureCoordinate = new(textureCoordinate.X, 1f - textureCoordinate.Y),
         });
     }
 

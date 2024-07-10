@@ -25,7 +25,7 @@ unsafe class PositionGeometryStream : GeometryStream
 
     public override void WriteVertex(Vector2 position)
     {
-        vertices.Add(position);
+        vertices.Add(Vector2.Transform(position, TransformMatrix));
     }
 
     public override void Upload(GeometryBuffer buffer)
