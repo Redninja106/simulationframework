@@ -48,7 +48,7 @@ in layout(origin_upper_left) vec4 gl_FragCoord;
 {{compiledSource}}
 
 void main() {
-    vec4 transformedFragCoord = _inv_transform * vec4(gl_FragCoord.x, 1.0 - gl_FragCoord.y, 0.0, 1.0);
+    vec4 transformedFragCoord = _inv_transform * vec4(gl_FragCoord.x, gl_FragCoord.y, 0.0, 1.0);
     FragColor = GetPixelColor(transformedFragCoord.xy);
 } 
 """;

@@ -184,8 +184,8 @@ internal class GLCanvas : ICanvas
 
     public void Fill(ColorF color)
     {
-        State.color = color;
-        State.fill = true;
+        State.Color = color;
+        State.Fill = true;
 
         colorGeometryStream.Color = color.ToColor();
         
@@ -199,16 +199,17 @@ internal class GLCanvas : ICanvas
         if (effect.Shader != shader)
             Flush();
         effect.Shader = shader;
+        State.Shader = shader;
         UpdateGeometryStream(positionGeometryStream);
         UpdateGeometryWriter(fillGeometryWriter);
     }
 
     public Vector2 DrawCodepoint(int codepoint, Vector2 position, Alignment alignment)
     {
-        GLFont font = (GLFont)State.font;
+        GLFont font = (GLFont)State.Font;
         Vector2 newPos = font.GetCodepointPosition(codepoint, position, State.FontSize, State.FontStyle, out Rectangle source, out Rectangle destination);
         GLTexture atlas = font.GetAtlasTexture(State.FontSize, State.FontStyle);
-        DrawTexture(atlas, source, destination, State.color);
+        DrawTexture(atlas, source, destination, State.Color);
         return newPos;
     }
 
@@ -251,10 +252,10 @@ internal class GLCanvas : ICanvas
             return textureGeometryEffect;
         }
 
-        if (State.shader is not null)
+        if (State.Shader is not null)
         {
-            var effect = graphics.GetShaderEffect(State.shader);
-            effect.Shader = State.shader;
+            var effect = graphics.GetShaderEffect(State.Shader);
+            effect.Shader = State.Shader;
             return effect;
         }
 
@@ -264,7 +265,7 @@ internal class GLCanvas : ICanvas
 
     public void Font(IFont font)
     {
-        State.font = font;
+        State.Font = font;
     }
 
     public void FontSize(float size)
@@ -312,8 +313,8 @@ internal class GLCanvas : ICanvas
 
     public void Stroke(Color color)
     {
-        State.color = color.ToColorF();
-        State.fill = false;
+        State.Color = color.ToColorF();
+        State.Fill = false;
 
         colorGeometryStream.Color = color;
 

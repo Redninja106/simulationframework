@@ -380,7 +380,12 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
 
         if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.Sample))
         {
-            // writer.Write("texture");
+            // writer.Write("texture(");
+            // expression.Arguments[0].Accept(this);
+            // writer.Write(", ((");
+            // expression.Arguments[1].Accept(this);
+            // writer.Write(")*vec2(1,-1) + vec2(0, 1)))");
+            // return expression;
         }
 
         if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.BufferLength))
