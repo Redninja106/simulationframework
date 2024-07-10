@@ -419,6 +419,9 @@ public interface ICanvas
     Vector2 DrawCodepoint(int codepoint) => DrawCodepoint(codepoint, Vector2.Zero, Alignment.BottomLeft);
     Vector2 DrawCodepoint(int codepoint, Vector2 position, Alignment alignment);
 
+    Rectangle MeasureText(ReadOnlySpan<char> text) => State.font.MeasureText(text, State.FontSize, State.FontStyle);
+    Rectangle MeasureText(string text) => State.font.MeasureText(text, State.FontSize, State.FontStyle);
+
     /// <summary>
     /// Sets a font with the specified attributes as current (and loads it if it is not already loaded).
     /// </summary>
