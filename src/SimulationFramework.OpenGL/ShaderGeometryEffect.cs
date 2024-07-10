@@ -52,7 +52,12 @@ void main() {
     FragColor = GetPixelColor(transformedFragCoord.xy);
 } 
 """;
-        Console.WriteLine(string.Join("\n", fragShader.Split('\n').Select((s, i) => $"{i+1,-3:d}|{s}")));
+        if (GLGraphicsProvider.DumpShaders)
+        {
+            Console.WriteLine(new string('=', 20));
+            Console.WriteLine(string.Join("\n", fragShader.Split('\n').Select((s, i) => $"{i+1,-3:d}|{s}")));
+            Console.WriteLine(new string('=', 20));
+        }
         program = MakeProgram(vert, fragShader);
     }
 

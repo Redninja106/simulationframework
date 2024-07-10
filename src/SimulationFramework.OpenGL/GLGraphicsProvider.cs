@@ -4,7 +4,10 @@ using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Drawing.Shaders.Compiler;
 using SimulationFramework.Messaging;
 using StbImageSharp;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -12,6 +15,8 @@ namespace SimulationFramework.OpenGL;
 
 public unsafe class GLGraphicsProvider : IGraphicsProvider
 {
+    public static bool DumpShaders { get; set; }
+
     public IFont DefaultFont { get; }
 
     private GLCanvas frameCanvas;
