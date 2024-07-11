@@ -379,6 +379,27 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
             return expression;
         }
 
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.GetElement))
+        {
+            expression.Arguments[0].Accept(this);
+            writer.Write('[');
+            expression.Arguments[1].Accept(this);
+            writer.Write(']');
+            return expression;
+        }
+
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.SetElement))
+        {
+            writer.Write('(');
+            expression.Arguments[0].Accept(this);
+            writer.Write('[');
+            expression.Arguments[1].Accept(this);
+            writer.Write("] = ");
+            expression.Arguments[2].Accept(this);
+            writer.Write(')');
+            return expression;
+        }
+
         if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.Sample))
         {
             // writer.Write("texture(");
@@ -420,6 +441,9 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
             nameof(ShaderIntrinsics.ColorF) => "vec4",
             nameof(ShaderIntrinsics.Sample) => "texture",
             nameof(ShaderIntrinsics.BufferLength) => "length",
+            nameof(ShaderIntrinsics.Ceiling) => "ceil",
+            nameof(ShaderIntrinsics.Atan2) => "atan",
+            nameof(ShaderIntrinsics.Truncate) => "trunc",
             _ => expression.Intrinsic.Name.ToLower()
         });
         WriteArgList(expression.Arguments);

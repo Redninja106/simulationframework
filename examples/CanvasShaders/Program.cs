@@ -1,25 +1,22 @@
-using ImGuiNET;
-using SimulationFramework;
-using SimulationFramework.Desktop;
-using SimulationFramework.Drawing;
+﻿using SimulationFramework.Desktop;
 using SimulationFramework.Drawing.Shaders;
+using SimulationFramework.Drawing;
 using SimulationFramework.Input;
-using System.Diagnostics;
+using SimulationFramework;
 using System.Numerics;
-using System.Reflection;
 using static SimulationFramework.Drawing.Shaders.ShaderIntrinsics;
 
-Start<Program>(new DesktopPlatform());
+Start<Program>();
 
 partial class Program : Simulation
 {
     IterationsInversions2 shader = new();
     Vector2 targetPos;
 
-    public override unsafe void OnInitialize()
+    public override void OnInitialize()
     {
     }
-    
+
     public override void OnRender(ICanvas canvas)
     {
         shader.width = canvas.Width;
@@ -84,7 +81,7 @@ class IterationsInversions2 : CanvasShader
         for (int m = 0; m < AA; m++)
             for (int n = 0; n < AA; n++)
             {
-                Vector2 uv = (position + new Vector2(m, n) * (1f/ AA) + mousePosition) / new Vector2(width, height) - Vec2(.5f,.5f);
+                Vector2 uv = (position + new Vector2(m, n) * (1f / AA) + mousePosition) / new Vector2(width, height);
                 Vector3 col = Shape(uv);
                 float f = Dot(col, Vec3(0.333f));
                 Vector3 nor = Normalize(Vec3(Dot(Shape(uv + Vec2(e, 0.0f)), Vec3(0.333f)) - f,
@@ -106,7 +103,7 @@ class IterationsInversions2 : CanvasShader
 }
 
 // ported from https://www.shadertoy.com/view/XsXXDn
-class Shader : CanvasShader
+class Creation : CanvasShader
 {
     public int width, height;
     public float time;

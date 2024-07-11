@@ -12,6 +12,8 @@ internal class ShaderInterceptAttribute : Attribute
 {
     public const string ConstructorName = ".ctor";
     public const string MultiplyOperatorName = "op_Multiply";
+    public const string GetItemName = "get_Item";
+    public const string SetItemName = "set_Item";
 
     public string MethodName { get; }
     public Type MethodType { get; }
@@ -27,6 +29,8 @@ internal class ShaderInterceptAttribute : Attribute
         return MethodName switch
         {
             ConstructorName => MethodType.GetConstructor(types),
+            GetItemName => MethodType.GetMethod("get_Item", types[1..]),
+            SetItemName => MethodType.GetMethod("set_Item", types[1..]),
             _ => MethodType.GetMethod(MethodName, types),
         };
     }

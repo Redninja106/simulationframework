@@ -36,7 +36,7 @@ void main() {
     public ShaderGeometryEffect(ShaderCompilation compilation, string compiledSource)
     {
         this.compilation = compilation;
-
+        
         string fragShader = $$"""
 #version 450 core
 out vec4 FragColor;

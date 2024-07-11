@@ -111,4 +111,9 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
         shaderEffects[shader.GetType()] = effect;
         return effect;
     }
+
+    internal void RemoveCachedShader(Type type)
+    {
+        this.shaderEffects.Remove(type);
+    }
 }
