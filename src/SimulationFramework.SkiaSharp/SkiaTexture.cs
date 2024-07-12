@@ -34,6 +34,7 @@ internal sealed class SkiaTexture : SkiaGraphicsObject, ITexture
         this.colors = new Color[width * height];
         gl.BindTexture(GLEnum.Texture2D, glTexture);
         gl.TexImage2D<Color>(GLEnum.Texture2D, 0, (int)SizedInternalFormat.Rgba8, (uint)width, (uint)height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, this.colors.AsSpan());
+        gl.TexParameterI(GLEnum.Texture2D, TextureParameterName.TextureMinFilter, (uint)GLEnum.Nearest);
 
         backendTexture = new GRBackendTexture(width, height, false, new((uint)GLEnum.Texture2D, glTexture, (uint)SizedInternalFormat.Rgba8));
 
