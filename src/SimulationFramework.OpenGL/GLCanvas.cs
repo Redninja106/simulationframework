@@ -74,6 +74,9 @@ internal class GLCanvas : ICanvas
 
         colorGeometryEffect = new ColorGeometryEffect();
         textureGeometryEffect = new TextureGeometryEffect();
+
+        currentGeometryStream = colorGeometryStream;
+        currentGeometryWriter = fillGeometryWriter;
     }
 
 

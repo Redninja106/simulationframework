@@ -94,6 +94,8 @@ public class CanvasShaderCompiler
         var redundants = redundantVariableFinder.GetRedundantVariables();
         RedundantVariableReplacer replacer = new(redundants);
         expression = (BlockExpression)expression.Accept(replacer);
+        locals = locals.Except(redundants).ToArray();
+        Debug.Assert(replacer.values.Count is 0);
 
         if (!method.IsStatic && method is ConstructorInfo)
         {
@@ -172,7 +174,7 @@ public class CanvasShaderCompiler
         {
             foreach (var (var, assignmentCount) in assignments)
             {
-                if (assignmentCount == 1 && usages[var] == 1)
+                if (assignmentCount == 1 && usages.GetValueOrDefault(var, 0) == 1)
                 {
                     yield return var;
                 }
@@ -182,7 +184,7 @@ public class CanvasShaderCompiler
 
     class RedundantVariableReplacer : ShaderExpressionVisitor
     {
-        Dictionary<ShaderVariable, ShaderExpression?> values = [];
+        internal Dictionary<ShaderVariable, ShaderExpression?> values = [];
 
         public RedundantVariableReplacer(IEnumerable<ShaderVariable> variables)
         {
@@ -200,7 +202,7 @@ public class CanvasShaderCompiler
                 {
                     if (values.ContainsKey(varExpr.Variable))
                     {
-                        values[varExpr.Variable] = expression.RightOperand;
+                        values[varExpr.Variable] = expression.RightOperand.Accept(this);
                         return ShaderExpression.Empty;
                     }
                 }
@@ -211,7 +213,7 @@ public class CanvasShaderCompiler
 
         public override ShaderExpression VisitShaderVariableExpression(ShaderVariableExpression expression)
         {
-            if (values.TryGetValue(expression.Variable, out ShaderExpression? value))
+            if (values.Remove(expression.Variable, out ShaderExpression? value))
             {
                 Debug.Assert(value is not null);
 

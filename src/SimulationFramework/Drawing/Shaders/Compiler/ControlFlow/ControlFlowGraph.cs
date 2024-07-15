@@ -29,7 +29,7 @@ internal class ControlFlowGraph : ControlFlowNode
     public ControlFlowGraph(MethodDisassembly disassembly)
     {
         EntryNode = new DummyNode();
-        ExitNode = new DummyNode();
+        ExitNode = new DummyNode(true);
         AddNode(EntryNode);
         AddNode(ExitNode);
 
@@ -75,7 +75,7 @@ internal class ControlFlowGraph : ControlFlowNode
             SubgraphKind = kind,
         };
 
-        DummyNode exitDummy = new();
+        DummyNode exitDummy = new ExitDummyNode(this);
 
         // all incoming and outgoing connections to a subgraph must go to the same node.
         ControlFlowNode? incomingNode = null;
@@ -108,7 +108,7 @@ internal class ControlFlowGraph : ControlFlowNode
                     outgoingNode ??= succ;
                     if (outgoingNode != succ)
                     {
-                        throw new Exception("invalid subgraph!");
+                       throw new Exception("invalid subgraph!");
                     }
 
                     succ.RemovePredecessor(node);
@@ -117,9 +117,9 @@ internal class ControlFlowGraph : ControlFlowNode
                 }
             }
         }
-
         subgraph.EntryNode = incomingNode;
         subgraph.ExitNode = exitDummy;
+        subgraph.Nodes.Add(exitDummy);
 
         AddNode(subgraph);
         return subgraph;
@@ -529,11 +529,15 @@ internal class ControlFlowGraph : ControlFlowNode
 
         foreach (var node in conditionNodes)
         {
+            if (!this.Nodes.Contains(node))
+                continue;
+
             RecomputePostDominators();
 
             var convergence = node.immediatePostDominator;
+            Debug.Assert(convergence is not null);
             var nodes = GetNodesBetween(node, convergence);
-
+            
             InsertSubgraph(nodes, ControlFlow.SubgraphKind.Conditional);
         }
 

@@ -20,7 +20,8 @@ public static class DgmlBuilder
         List<Category> categories = new();
         List<Property> properties = new();
 
-        categories.Add(new("BasicBlockNode", "Red", null));
+        categories.Add(new("BasicBlockNode", "Blue", null));
+        categories.Add(new("ReturnNode", "Red", null));
         categories.Add(new("IdomEdge", null, "Gray"));
         categories.Add(new("Edge", null, "White"));
         categories.Add(new("Contains", null, null, "Contains", "False", "True", "Contained By", "True", "Contains"));
@@ -37,7 +38,7 @@ public static class DgmlBuilder
         void AddNode(ControlFlowNode node, ControlFlowNode? parent)
         {
             var id = GetNodeID(node);
-            nodes.Add(new(id, node.ToString(), node.GetType().Name, GetIl(node), GetGroup(node)));
+            nodes.Add(new(id, node.ToString(), node.PrecedesExit ? "ReturnNode" : node.GetType().Name, GetIl(node), GetGroup(node)));
 
             if (parent is not null)
                 links.Add(new Link(GetNodeID(parent), id, "", "Contains"));

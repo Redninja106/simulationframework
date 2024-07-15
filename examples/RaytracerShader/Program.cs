@@ -1,11 +1,12 @@
 ﻿using ImGuiNET;
-using Silk.NET.Maths;
-using Silk.NET.OpenGL;
 using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Input;
+using SimulationFramework.OpenGL;
+using System;
 using System.Numerics;
+using System.Runtime.Intrinsics;
 
 Start<Program>();
 
@@ -13,29 +14,54 @@ partial class Program : Simulation
 {
     RayTracerShader shader = new();
     public float cameraRotX, cameraRotY;
-    private float turnSpeed = 5;
+    private float cameraSpeed = 5;
     public override void OnInitialize()
     {
-        // SetFixedResolution(1600, 900, new Color(25, 25, 25));
+        SetFixedResolution(640, 480, new Color(25, 25, 25));
+
+        // for debugging
+        GLGraphicsProvider.DumpShaders = true;
+
+        // setup scene
+        shader.spheres = new Sphere[20];
+
+        // the first sphere is the big floor one
+        shader.spheres[0] = new(new(0, 1000, 0, 1000), ColorF.Gray);
+
+        // the rest are random
+        for (int i = 1; i < shader.spheres.Length; i++)
+        {
+            shader.spheres[i] = new(
+                new Vector4(
+                    Random.Shared.NextSingle(-20, 20),
+                    Random.Shared.NextSingle(-4, 0),
+                    Random.Shared.NextSingle(-20, 20),
+                    Random.Shared.NextSingle(.1f, 7)
+                ),
+                ColorF.FromHSV(Random.Shared.NextSingle(), 1, 1)
+                );
+            shader.spheres[i].posRad.Y -= shader.spheres[i].posRad.W;
+        }
     }
 
     public override void OnRender(ICanvas canvas)
     {
-        canvas.Antialias(false);
+        canvas.Antialias(true);
 
         // fov slider
-        ImGuiNET.ImGui.SliderFloat("vfov", ref shader.vfov, 30, 120);
-        ImGuiNET.ImGui.SliderFloat("camera speed", ref turnSpeed, 1, 10);
+        ImGui.SliderFloat("vfov", ref shader.vfov, 30, 120);
+        ImGui.SliderFloat("camera speed", ref cameraSpeed, 1, 10);
 
-        // set shader width and height
+        // set shader width, height, and time
         shader.width = canvas.Width;
         shader.height = canvas.Height;
+        shader.time = Time.TotalTime;
 
-        // hold rmb to look around
+        // hold lmb to look around
         if (Mouse.IsButtonDown(MouseButton.Left))
         {
-            cameraRotX -= Mouse.DeltaPosition.Y * turnSpeed * 0.001f * MathF.PI;
-            cameraRotY += Mouse.DeltaPosition.X * turnSpeed * 0.001f * MathF.PI;
+            cameraRotX -= Mouse.DeltaPosition.Y * 0.0005f * MathF.PI;
+            cameraRotY += Mouse.DeltaPosition.X * 0.0005f * MathF.PI;
             Mouse.Visible = false;
         }
         else
@@ -43,6 +69,7 @@ partial class Program : Simulation
             Mouse.Visible = true;
         }
 
+        // easy CPU debugging!
         if (Mouse.IsButtonDown(MouseButton.Right))
         {
             shader.GetPixelColor(Mouse.Position);
@@ -64,7 +91,7 @@ partial class Program : Simulation
         if (Keyboard.IsKeyDown(Key.C))
             delta.Y += Time.DeltaTime;
 
-        shader.cameraPosition += Vector3.Transform(delta, shader.cameraTransform);
+        shader.cameraPosition += Vector3.Transform(cameraSpeed * delta, shader.cameraTransform);
 
         if (ImGui.Button("add"))
         {
@@ -75,7 +102,7 @@ partial class Program : Simulation
         {
             ImGui.PushID(i);
             ImGui.Separator();
-            ImGui.DragFloat4("sphere", ref shader.spheres[i].data);
+            ImGui.DragFloat4("sphere", ref shader.spheres[i].posRad);
             if (ImGui.Button("remove"))
             {
                 shader.spheres = [..shader.spheres[..i], ..shader.spheres[(i+1)..]];
@@ -84,8 +111,10 @@ partial class Program : Simulation
         }
 
         // draw a fullscreen rect, fill with the shader
-        canvas.Fill(new MyShader());
+        canvas.Clear(Color.Black);
+        canvas.Fill(shader);
         canvas.DrawRect(0, 0, canvas.Width, canvas.Height);
+        //canvas.DrawCircle(Mouse.Position, 100);
     }
 }
 
@@ -96,7 +125,7 @@ class RayTracerShader : CanvasShader
     public Matrix4x4 cameraTransform;
     public float vfov = 60;
     public Sphere[] spheres = [];
-    int count = 1;
+    public float time;
 
     public override ColorF GetPixelColor(Vector2 position)
     {
@@ -105,30 +134,79 @@ class RayTracerShader : CanvasShader
         vp.X *= width / height;
 
         Vector3 origin = cameraPosition;
-        Vector4 direction4 = ShaderIntrinsics.Transform(new(vp * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1), cameraTransform);
-        Vector3 direction = new(direction4.X, direction4.Y, direction4.Z);
         
-        bool hit = false;
-        Vector3 normal = default;
-        for (int i = 0; i < count; i++)
+        const int antialias = 20; // sample # = antialias^2
+        
+        Vector4 color = default;
+        for (int y = 0; y < antialias; y++)
         {
-            if (RaySphereIntersect(origin, direction, new(new(0,0,0,1)), out normal) == 1)
+            for (int x = 0; x < antialias; x++)
             {
-                hit = true;
+                Vector2 sampleOffset = new((x + .5f) / antialias, (y + .5f) / antialias); // evenly spaced sample distribution
+                //Vector3 sampleOffset = Random3(new(vp * x * y, time)); // random sample distribution
+
+                Vector2 samplePos = new Vector2(
+                    vp.X * width * .5f + sampleOffset.X,
+                    vp.Y * height * .5f + sampleOffset.Y
+                    );
+                samplePos /= new Vector2(width * .5f, height * .5f);
+                Vector4 direction4 = ShaderIntrinsics.Transform(new(samplePos * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1), cameraTransform);
+                color += RayColor(origin, new(direction4.X, direction4.Y, direction4.Z)).AsVector4();
             }
         }
 
-        if (hit)
-        {
-            return new ColorF(new Vector3(.1f + MathF.Max(0, .9f * Vector3.Dot(normal, new Vector3(-1, -1, -1).Normalized()))));
-        }
-        else
-        {
-            return ColorF.Lerp(ColorF.White, ColorF.Blue, direction.Y);
-        }
+        color /= antialias * antialias;
+
+        return new(color);
     }
 
-    private float RaySphereIntersect(Vector3 origin, Vector3 direction, Sphere sphere, out Vector3 normal)
+    private ColorF RayColor(Vector3 origin, Vector3 direction)
+    {
+        const int MaxBounces = 4;
+
+        Vector4 color = Vector4.One;
+        for (int i = 0; i < MaxBounces; i++)
+        {
+            bool hit = false;
+            Vector3 normal = default;
+            float closestT = float.PositiveInfinity;
+            Vector4 closestCol = default;
+            for (int j = 0; j < spheres.Length; j++)
+            {
+                Sphere s = spheres[j];
+                s.posRad = new(s.posRad.X - cameraPosition.X, s.posRad.Y - cameraPosition.Y, s.posRad.Z - cameraPosition.Z, s.posRad.W);
+                if (RaySphereIntersect(origin, direction, s, out Vector3 n, out float t))
+                {
+                    if (t < closestT)
+                    {
+                        hit = true;
+                        normal = n;
+                        closestT = t;
+                        closestCol = s.color;
+                    }
+                }
+            }
+
+            if (hit)
+            {
+                color *= closestCol;
+                origin += direction * closestT + normal * 0.001f;
+
+                direction = ShaderIntrinsics.Normalize(normal * 1.00001f + Random3(normal + direction + new Vector3(time)));
+
+                // for reflective balls uncomment:
+                // direction = ShaderIntrinsics.Reflect(direction, normal);
+            }
+            else
+            {
+                color *= ColorF.Lerp(ColorF.WhiteSmoke, ColorF.SkyBlue, direction.Y).AsVector4();
+                i = MaxBounces;
+            }
+        }
+        return new(color);
+    }
+
+    private bool RaySphereIntersect(Vector3 origin, Vector3 direction, Sphere sphere, out Vector3 normal, out float t)
     {
         var offset = origin - sphere.position;
         var a = Vector3.Dot(direction, direction);
@@ -140,28 +218,38 @@ class RayTracerShader : CanvasShader
         if (discriminant < 0)
         {
             normal = default;
-            return 0;
+            t = float.PositiveInfinity;
+            return false;
         }
 
         var sqrtD = MathF.Sqrt(discriminant);
 
-        var t = (-halfB - sqrtD) / a;
+        t = (-halfB - sqrtD) / a;
 
         if (t < 0)
         {
             t = (-halfB + sqrtD) / a;
+
         }
 
         if (t < 0)
         {
             normal = default;
-            return 0;
+            return false;
         }
 
         normal = (origin + direction * t) - sphere.position;
         normal = normal.Normalized();
 
-        return 1;
+        return true;
+    }
+
+
+    private Vector3 Random3(Vector3 p)
+    {
+        p = ShaderIntrinsics.Fract(p * new Vector3(443.897f, 441.423f, .0973f));
+        p += new Vector3(ShaderIntrinsics.Dot(p, new Vector3(p.Y, p.X, p.Z) + new Vector3(19.19f)));
+        return ShaderIntrinsics.Fract((new Vector3(p.X,p.X,p.Y) + new Vector3(p.Y,p.Z,p.Z)) * new Vector3(p.Z, p.Y, p.X));
     }
 }
 
@@ -175,20 +263,15 @@ class MyShader : CanvasShader
 
 struct Sphere
 {
-    public Vector4 data;
+    public Vector4 posRad;
+    public Vector4 color;
 
-    public Sphere(Vector4 data)
+    public Sphere(Vector4 data, ColorF color)
     {
-        this.data = data;
+        this.posRad = data;
+        this.color = color.AsVector4();
     }
 
-    public Vector3 position => new(data.X, data.Y, data.Z);
-    public float radius => data.W;
-}
-
-struct Ray
-{
-    public Vector3 origin;
-    public Vector3 direction;
-    public float tMax;
+    public Vector3 position => new(posRad.X, posRad.Y, posRad.Z);
+    public float radius => posRad.W;
 }

@@ -214,6 +214,16 @@ internal class ExpressionBuilder
                 break;
             case OpCode.Ldelem:
             case OpCode.Ldelema:
+            case OpCode.Ldelem_I:
+            case OpCode.Ldelem_I1:
+            case OpCode.Ldelem_I2:
+            case OpCode.Ldelem_I4:
+            case OpCode.Ldelem_I8:
+            case OpCode.Ldelem_R4:
+            case OpCode.Ldelem_R8:
+            case OpCode.Ldelem_U1:
+            case OpCode.Ldelem_U2:
+            case OpCode.Ldelem_U4:
                 BuildLoadElement(instruction);
                 break;
             default:
@@ -653,7 +663,7 @@ internal class ExpressionBuilder
 
         var expr = Expressions.Pop();
         var local = locals[(int)storeIndex];
-        Expressions.Push(CreateBinaryExpression(BinaryOperation.Assignment, new ShaderVariableExpression(local), expr));
+        Expressions.Push(CreateBinaryExpression(BinaryOperation.Assignment, new ShaderVariableExpression(local), expr), false);
     }
 
     void BuildConstantExpr(Instruction instruction)

@@ -19,6 +19,8 @@ internal class ControlFlowNode
     public ControlFlowNode immediateDominator = null;
     public ControlFlowNode immediatePostDominator = null;
 
+    public virtual bool PrecedesExit => successors.Count == 1 && successors.Single().PrecedesExit;
+
     public IReadOnlySet<ControlFlowNode> Predecessors => predecessors;
     public IReadOnlySet<ControlFlowNode> Successors => successors;
 

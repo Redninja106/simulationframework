@@ -19,11 +19,14 @@ internal class GLSLCanvasShaderEmitter
 {
     IndentedTextWriter writer;
     GLSLExpressionEmitter expressionEmitter;
-    private int nextBufferSlot = 1;
+    private int nextBufferSlot = 0;
 
     public GLSLCanvasShaderEmitter(TextWriter writer)
     {
         this.writer = new(writer);
+        writer.WriteLine("const float _PositiveInfinity = uintBitsToFloat(0x7F800000);");
+        writer.WriteLine("const float _NegativeInfinity = uintBitsToFloat(0xFF800000);");
+        writer.WriteLine("const float _NaN = 0 * _PositiveInfinity;");
         this.expressionEmitter = new(this.writer, this);
     }
 
@@ -301,7 +304,13 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
         {
             bool b => b ? "true" : "false",
             int i => i.ToString(),
-            float f => f.ToString("G9"),
+            float f => f switch 
+            { 
+                float.NaN => "_NaN",
+                float.PositiveInfinity => "_PositiveInfinity",
+                float.NegativeInfinity => "_NegativeInfinity",
+                _ => f.ToString("G9"),
+            },
             Vector2 v2 => $"vec2({v2.X:G9}, {v2.Y:G9})",
             Vector3 v3 => $"vec3({v3.X:G9}, {v3.Y:G9}, {v3.Z:G9})",
             Vector4 v4 => $"vec4({v4.X:G9}, {v4.Y:G9}, {v4.Z:G9}, {v4.W:G9})",
@@ -400,14 +409,42 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
             return expression;
         }
 
-        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.Sample))
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.TextureSample))
         {
-            // writer.Write("texture(");
-            // expression.Arguments[0].Accept(this);
-            // writer.Write(", ((");
-            // expression.Arguments[1].Accept(this);
-            // writer.Write(")*vec2(1,-1) + vec2(0, 1)))");
-            // return expression;
+            writer.Write("texture(");
+            expression.Arguments[0].Accept(this);
+            writer.Write(", (");
+            expression.Arguments[1].Accept(this);
+            writer.Write(") / textureSize(");
+            expression.Arguments[0].Accept(this);
+            writer.Write("))");
+            return expression;
+        }
+
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.TextureSampleUV))
+        {
+            writer.Write("texture(");
+            expression.Arguments[0].Accept(this);
+            writer.Write(", ");
+            expression.Arguments[1].Accept(this);
+            writer.Write(")");
+            return expression;
+        }
+
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.TextureWidth))
+        {
+            writer.Write("textureSize(");
+            expression.Arguments.Single().Accept(this);
+            writer.Write(").x");
+            return expression;
+        }
+
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.TextureHeight))
+        {
+            writer.Write("textureSize(");
+            expression.Arguments.Single().Accept(this);
+            writer.Write(").y");
+            return expression;
         }
 
         if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.BufferLength))
@@ -439,11 +476,11 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
         writer.Write(expression.Intrinsic.Name switch
         {
             nameof(ShaderIntrinsics.ColorF) => "vec4",
-            nameof(ShaderIntrinsics.Sample) => "texture",
             nameof(ShaderIntrinsics.BufferLength) => "length",
             nameof(ShaderIntrinsics.Ceiling) => "ceil",
             nameof(ShaderIntrinsics.Atan2) => "atan",
             nameof(ShaderIntrinsics.Truncate) => "trunc",
+            nameof(ShaderIntrinsics.Lerp) => "mix",
             _ => expression.Intrinsic.Name.ToLower()
         });
         WriteArgList(expression.Arguments);
@@ -455,8 +492,9 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
         return operatorName switch
         {
             nameof(ShaderIntrinsics.Multiply) => "*",
-            "op_Addition" => "+",
-            "op_Subtraction" => "-",
+            nameof(ShaderIntrinsics.Add) => "+",
+            nameof(ShaderIntrinsics.Subtract) => "-",
+            nameof(ShaderIntrinsics.Divide) => "/",
             _ => null,
         };
     }
@@ -470,6 +508,10 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
         if (expression.Success != null)
         {
             expression.Success.Accept(this);
+            if (expression.Success is not BlockExpression)
+            {
+                writer.Write(';');
+            }
         }
         else
         {
@@ -479,7 +521,11 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
         if (expression.Failure != null)
         {
             writer.Write("else ");
-            expression.Failure.Accept(this);
+            expression.Failure.Accept(this); 
+            if (expression.Failure is not BlockExpression)
+            {
+                writer.Write(';');
+            }
         }
         return expression;
     }

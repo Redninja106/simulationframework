@@ -11,7 +11,25 @@ namespace SimulationFramework.Drawing.Shaders;
 public static class ShaderIntrinsics
 {
     [ShaderIntrinsic, ShaderIntercept(nameof(Transform), typeof(Vector4))]
-    public static Vector4 Transform(Vector4 vector, Matrix4x4 matrix) => System.Numerics.Vector4.Transform(vector, matrix);
+    public static Vector4 Transform(Vector4 vector, Matrix4x4 matrix) => Vector4.Transform(vector, matrix);
+
+    [ShaderIntrinsic]
+    public static int AsInt(bool value) => value ? 1 : 0;
+
+    [ShaderIntrinsic]
+    public static bool AsBool(int value) => value > 0;
+
+    #region Derivatives
+
+    [ShaderIntrinsic]
+    public static T DDX<T>(T value) => throw new NotImplementedException();
+
+    [ShaderIntrinsic]
+    public static T DDY<T>(T value) => throw new NotImplementedException();
+
+    #endregion
+
+    #region Constructors
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector4))]
     public static Vector4 Vec4(Vector3 xyz, float w) => new(xyz, w);
@@ -39,6 +57,62 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(ColorF))]
     public static ColorF ColorF(float r, float g, float b, float a) => new(r, g, b, a);
 
+    #endregion
+
+    #region Float Constants
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(nameof(float.IsNaN), typeof(float))]
+    public static bool IsNaN(float value) => float.IsNaN(value);
+    
+    [ShaderIntrinsic]
+    [ShaderIntercept(nameof(float.IsInfinity), typeof(float))]
+    public static bool IsInfinity(float value) => float.IsInfinity(value);
+    
+    [ShaderIntrinsic]
+    [ShaderIntercept(nameof(float.IsPositiveInfinity), typeof(float))]
+    public static bool IsPositiveInfinity(float value) => float.IsPositiveInfinity(value);
+    
+    [ShaderIntrinsic]
+    [ShaderIntercept(nameof(float.IsNegativeInfinity), typeof(float))]
+    public static bool IsNegativeInfinity(float value) => float.IsNegativeInfinity(value);
+
+    #endregion
+
+    #region Addition
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.AdditionOperatorName, typeof(Vector2))]
+    public static Vector2 Add(Vector2 left, Vector2 right) => left + right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.AdditionOperatorName, typeof(Vector3))]
+    public static Vector3 Add(Vector3 left, Vector3 right) => left + right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.AdditionOperatorName, typeof(Vector4))]
+    public static Vector4 Add(Vector4 left, Vector4 right) => left + right;
+
+    #endregion
+
+    #region Subtraction
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.SubtractionOperatorName, typeof(Vector2))]
+    public static Vector2 Subtract(Vector2 left, Vector2 right) => left - right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.SubtractionOperatorName, typeof(Vector3))]
+    public static Vector3 Subtract(Vector3 left, Vector3 right) => left - right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.SubtractionOperatorName, typeof(Vector4))]
+    public static Vector4 Subtract(Vector4 left, Vector4 right) => left - right;
+
+    #endregion
+
+    #region Multiply
+
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(ColorF))]
     public static ColorF Multiply(ColorF left, ColorF right) => left * right;
 
@@ -49,10 +123,72 @@ public static class ShaderIntrinsics
     public static ColorF Multiply(ColorF left, float right) => left * right;
 
     [ShaderIntrinsic]
-    public static int AsInt(bool value) => value ? 1 : 0;
+    [ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(Vector2))]
+    public static Vector2 Multiply(float left, Vector2 right) => left * right;
 
     [ShaderIntrinsic]
-    public static bool AsBool(int value) => value > 0;
+    [ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(Vector2))]
+    public static Vector2 Multiply(Vector2 left, float right) => left * right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(Vector2))]
+    public static Vector2 Multiply(Vector2 left, Vector2 right) => left * right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(Vector3))]
+    public static Vector3 Multiply(float left, Vector3 right) => left * right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(Vector3))]
+    public static Vector3 Multiply(Vector3 left, float right) => left * right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(Vector3))]
+    public static Vector3 Multiply(Vector3 left, Vector3 right) => left * right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(Vector4))]
+    public static Vector4 Multiply(float left, Vector4 right) => left * right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(Vector4))]
+    public static Vector4 Multiply(Vector4 left, float right) => left * right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(Vector4))]
+    public static Vector4 Multiply(Vector4 left, Vector4 right) => left * right;
+
+    #endregion
+
+    #region Divide
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.DivisionOperatorName, typeof(Vector2))]
+    public static Vector2 Divide(Vector2 left, float right) => left / right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.DivisionOperatorName, typeof(Vector2))]
+    public static Vector2 Divide(Vector2 left, Vector2 right) => left / right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.DivisionOperatorName, typeof(Vector3))]
+    public static Vector3 Divide(Vector3 left, float right) => left / right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.DivisionOperatorName, typeof(Vector3))]
+    public static Vector3 Divide(Vector3 left, Vector3 right) => left / right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.DivisionOperatorName, typeof(Vector4))]
+    public static Vector4 Divide(Vector4 left, float right) => left / right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.DivisionOperatorName, typeof(Vector4))]
+    public static Vector4 Divide(Vector4 left, Vector4 right) => left / right;
+
+    #endregion
+
+    #region Vector Elements
 
     [ShaderIntrinsic]
     [ShaderIntercept(ShaderInterceptAttribute.GetItemName, typeof(Vector2))]
@@ -77,6 +213,8 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic]
     [ShaderIntercept(ShaderInterceptAttribute.SetItemName, typeof(Vector4))]
     public static void SetElement(Vector4 vector, int index, float element) => vector[index] = element;
+
+    #endregion
 
     #region Abs
 
@@ -380,6 +518,7 @@ public static class ShaderIntrinsics
 
     [ShaderIntrinsic]
     [ShaderIntercept(nameof(Max), typeof(Math))]
+    [ShaderIntercept(nameof(Max), typeof(MathF))]
     public static float Max(float a, float b) => MathF.Max(a, b);
 
     [ShaderIntrinsic]
@@ -646,7 +785,7 @@ public static class ShaderIntrinsics
 
     #endregion
 
-    #region Trunc
+    #region Truncate
 
     [ShaderIntrinsic]
     [ShaderIntercept(nameof(MathF.Truncate), typeof(MathF))]
@@ -663,17 +802,43 @@ public static class ShaderIntrinsics
 
     #endregion
 
+    #region Textures
+
     [ShaderIntrinsic]
-    public static ColorF Sample(this ITexture texture, Vector2 uv)
+    public static ColorF TextureSampleUV(ITexture texture, Vector2 uv)
     {
         throw new NotImplementedException();
     }
 
     [ShaderIntrinsic]
-    public static ColorF Load(this ITexture texture, int x, int y)
+    public static ColorF TextureSample(ITexture texture, Vector2 position)
     {
         throw new NotImplementedException();
     }
+
+    [ShaderIntrinsic]
+    public static ColorF TextureLoad(ITexture texture, int x, int y)
+    {
+        return texture.GetPixel(x, y).ToColorF();
+    }
+
+    [ShaderIntrinsic]
+    public static void TextureStore(ITexture texture, int x, int y, ColorF color)
+    {
+        texture.GetPixel(x, y) = color.ToColor();
+    }
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(nameof(ITexture.Width), typeof(ITexture), ShaderInterceptAttribute.InterceptKind.Property)]
+    public static int TextureWidth(this ITexture texture) => texture.Width;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(nameof(ITexture.Height), typeof(ITexture), ShaderInterceptAttribute.InterceptKind.Property)]
+    public static int TextureHeight(ITexture texture) => texture.Height;
+
+    #endregion
+
+    #region Buffers
 
     [ShaderIntrinsic]
     public static int BufferLength(object buffer)
@@ -688,9 +853,24 @@ public static class ShaderIntrinsics
     public static T BufferLoad<T>(object buffer, int element)
     {
         if (buffer is T[] arr)
+        {
             return arr[element];
+        }
 
         throw new ArgumentException(null, nameof(buffer));
     }
 
+    [ShaderIntrinsic]
+    public static void BufferStore<T>(object buffer, int element, T value)
+    {
+        if (buffer is T[] arr)
+        {
+            arr[element] = value;
+            return;
+        }
+
+        throw new ArgumentException(null, nameof(buffer));
+    }
+
+    #endregion
 }

@@ -12,26 +12,38 @@ internal class ShaderInterceptAttribute : Attribute
 {
     public const string ConstructorName = ".ctor";
     public const string MultiplyOperatorName = "op_Multiply";
+    public const string DivisionOperatorName = "op_Division";
+    public const string AdditionOperatorName = "op_Addition";
+    public const string SubtractionOperatorName = "op_Subtraction";
     public const string GetItemName = "get_Item";
     public const string SetItemName = "set_Item";
 
-    public string MethodName { get; }
+    public string MemberName { get; }
     public Type MethodType { get; }
+    public InterceptKind Kind { get; }
 
-    public ShaderInterceptAttribute(string methodName, Type methodType)
+    public ShaderInterceptAttribute(string memberName, Type methodType, InterceptKind kind = InterceptKind.Method)
     {
-        MethodName = methodName;
+        MemberName = memberName;
         MethodType = methodType;
+        Kind = kind;
     }
 
     public MethodBase? GetMethod(Type[] types)
     {
-        return MethodName switch
+        return MemberName switch
         {
             ConstructorName => MethodType.GetConstructor(types),
             GetItemName => MethodType.GetMethod("get_Item", types[1..]),
             SetItemName => MethodType.GetMethod("set_Item", types[1..]),
-            _ => MethodType.GetMethod(MethodName, types),
+            _ when Kind is InterceptKind.Property => MethodType.GetProperty(MemberName)!.GetMethod,
+            _ => MethodType.GetMethod(MemberName, types),
         };
+    }
+
+    public enum InterceptKind
+    {
+        Method,
+        Property,
     }
 }

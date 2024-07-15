@@ -77,7 +77,7 @@ void main() {
         glUniformMatrix4fv(loc2, 1, 0, (float*)&invTransform);
 
         textureSlot = 0;
-        bufferSlot = 1;
+        bufferSlot = 0;
         foreach (var uniform in compilation.Uniforms)
         {
             SetUniform(uniform, Shader, null);
@@ -120,14 +120,14 @@ void main() {
     private unsafe void SetArrayUniform(ShaderArrayType arrayType, object value)
     {
         uint buffer;
-        if (buffers.Count <= bufferSlot - 1)
+        if (buffers.Count <= bufferSlot)
         {
             glGenBuffers(1, &buffer);
             buffers.Add(buffer);
         }
         else
         {
-            buffer = buffers[bufferSlot - 1];
+            buffer = buffers[bufferSlot];
         }
 
         // TODO: pin array

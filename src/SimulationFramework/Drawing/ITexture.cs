@@ -22,6 +22,10 @@ public interface ITexture : IDisposable
     /// </summary>
     TextureOptions Options { get; }
 
+    // TileMode WrapModeX { get; }
+    // TileMode WrapModeY { get; }
+    // TextureFilter Filter { get; }
+
     /// <summary>
     /// A span of colors making up texture's data
     /// <para>
