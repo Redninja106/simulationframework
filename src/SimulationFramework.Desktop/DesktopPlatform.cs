@@ -48,7 +48,7 @@ public class DesktopPlatform : ISimulationPlatform
             frameProvider?.Resize(m.Width, m.Height);
         });
 
-        frameProvider = new DesktopSkiaFrameProvider(Window.Size.X, Window.Size.Y);
+        frameProvider = new DesktopSkiaFrameProvider(Window.FramebufferSize.X, Window.FramebufferSize.Y);
         Application.RegisterComponent(new DesktopApplicationProvider());
         var graphics = CreateGraphicsProvider();
 
