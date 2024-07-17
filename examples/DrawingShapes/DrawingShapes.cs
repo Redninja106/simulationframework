@@ -85,6 +85,6 @@ class MyShader : CanvasShader
 
     public override ColorF GetPixelColor(Vector2 position)
     {
-        return myTexture.TextureSample(position * (1f / 512f));
+        return myTexture.Sample(position * (1f / 512f));
     }
 }

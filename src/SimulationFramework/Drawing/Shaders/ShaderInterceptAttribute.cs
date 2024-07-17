@@ -12,9 +12,9 @@ internal class ShaderInterceptAttribute : Attribute
 {
     public const string ConstructorName = ".ctor";
     public const string MultiplyOperatorName = "op_Multiply";
-    public const string DivisionOperatorName = "op_Division";
-    public const string AdditionOperatorName = "op_Addition";
-    public const string SubtractionOperatorName = "op_Subtraction";
+    public const string DivideOperatorName = "op_Division";
+    public const string AddOperatorName = "op_Addition";
+    public const string SubtractOperatorName = "op_Subtraction";
     public const string GetItemName = "get_Item";
     public const string SetItemName = "set_Item";
 

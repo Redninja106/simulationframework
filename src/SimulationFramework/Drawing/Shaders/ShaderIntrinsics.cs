@@ -82,44 +82,55 @@ public static class ShaderIntrinsics
     #region Addition
 
     [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.AdditionOperatorName, typeof(Vector2))]
+    [ShaderIntercept(ShaderInterceptAttribute.AddOperatorName, typeof(Vector2))]
     public static Vector2 Add(Vector2 left, Vector2 right) => left + right;
 
     [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.AdditionOperatorName, typeof(Vector3))]
+    [ShaderIntercept(ShaderInterceptAttribute.AddOperatorName, typeof(Vector3))]
     public static Vector3 Add(Vector3 left, Vector3 right) => left + right;
 
     [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.AdditionOperatorName, typeof(Vector4))]
+    [ShaderIntercept(ShaderInterceptAttribute.AddOperatorName, typeof(Vector4))]
     public static Vector4 Add(Vector4 left, Vector4 right) => left + right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.AddOperatorName, typeof(ColorF))]
+    public static ColorF Add(ColorF left, ColorF right) => left + right;
 
     #endregion
 
     #region Subtraction
 
     [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.SubtractionOperatorName, typeof(Vector2))]
+    [ShaderIntercept(ShaderInterceptAttribute.SubtractOperatorName, typeof(Vector2))]
     public static Vector2 Subtract(Vector2 left, Vector2 right) => left - right;
 
     [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.SubtractionOperatorName, typeof(Vector3))]
+    [ShaderIntercept(ShaderInterceptAttribute.SubtractOperatorName, typeof(Vector3))]
     public static Vector3 Subtract(Vector3 left, Vector3 right) => left - right;
 
     [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.SubtractionOperatorName, typeof(Vector4))]
+    [ShaderIntercept(ShaderInterceptAttribute.SubtractOperatorName, typeof(Vector4))]
     public static Vector4 Subtract(Vector4 left, Vector4 right) => left - right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.SubtractOperatorName, typeof(ColorF))]
+    public static ColorF Subtract(ColorF left, ColorF right) => left - right;
 
     #endregion
 
     #region Multiply
 
-    [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(ColorF))]
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(ColorF))]
     public static ColorF Multiply(ColorF left, ColorF right) => left * right;
 
-    [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(ColorF))]
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(ColorF))]
     public static ColorF Multiply(float left, ColorF right) => left * right;
 
-    [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(ColorF))]
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.MultiplyOperatorName, typeof(ColorF))]
     public static ColorF Multiply(ColorF left, float right) => left * right;
 
     [ShaderIntrinsic]
@@ -163,27 +174,39 @@ public static class ShaderIntrinsics
     #region Divide
 
     [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.DivisionOperatorName, typeof(Vector2))]
+    [ShaderIntercept(ShaderInterceptAttribute.DivideOperatorName, typeof(ColorF))]
+    public static ColorF Divide(ColorF left, ColorF right) => left / right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.DivideOperatorName, typeof(ColorF))]
+    public static ColorF Divide(float left, ColorF right) => left / right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.DivideOperatorName, typeof(ColorF))]
+    public static ColorF Divide(ColorF left, float right) => left / right;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.DivideOperatorName, typeof(Vector2))]
     public static Vector2 Divide(Vector2 left, float right) => left / right;
 
     [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.DivisionOperatorName, typeof(Vector2))]
+    [ShaderIntercept(ShaderInterceptAttribute.DivideOperatorName, typeof(Vector2))]
     public static Vector2 Divide(Vector2 left, Vector2 right) => left / right;
 
     [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.DivisionOperatorName, typeof(Vector3))]
+    [ShaderIntercept(ShaderInterceptAttribute.DivideOperatorName, typeof(Vector3))]
     public static Vector3 Divide(Vector3 left, float right) => left / right;
 
     [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.DivisionOperatorName, typeof(Vector3))]
+    [ShaderIntercept(ShaderInterceptAttribute.DivideOperatorName, typeof(Vector3))]
     public static Vector3 Divide(Vector3 left, Vector3 right) => left / right;
 
     [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.DivisionOperatorName, typeof(Vector4))]
+    [ShaderIntercept(ShaderInterceptAttribute.DivideOperatorName, typeof(Vector4))]
     public static Vector4 Divide(Vector4 left, float right) => left / right;
 
     [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.DivisionOperatorName, typeof(Vector4))]
+    [ShaderIntercept(ShaderInterceptAttribute.DivideOperatorName, typeof(Vector4))]
     public static Vector4 Divide(Vector4 left, Vector4 right) => left / right;
 
     #endregion

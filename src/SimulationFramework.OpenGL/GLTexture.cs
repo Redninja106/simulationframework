@@ -20,32 +20,61 @@ internal sealed class GLTexture : ITexture
     private readonly uint id;
     private readonly GLCanvas? canvas;
 
-    public unsafe GLTexture(GLGraphicsProvider provider, int width, int height, ReadOnlySpan<Color> colors, TextureOptions options)
+    private TileMode wrapModeX;
+    private TileMode wrapModeY;
+    private TextureFilter filter;
+
+    public TileMode WrapModeX
     {
-        this.Width = width;
-        this.Height = height;
-        this.Options = options;
-
-        fixed (uint* idPtr = &id)
+        get
         {
-            glGenTextures(1, idPtr);
+            return wrapModeX;
         }
-
-        glBindTexture(GL_TEXTURE_2D, id);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (int)GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (int)GL_NEAREST);
-
-        fixed (Color* data = colors)
+        set
         {
-            glTexImage2D(GL_TEXTURE_2D, 0, unchecked((int)GL_RGBA8), width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+            wrapModeX = value;
+            glBindTexture(GL_TEXTURE_2D, id);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, (int)MapTileMode(value));
+            glBindTexture(GL_TEXTURE_2D, 0);
         }
+    }
 
-        canvas = new(provider, this);
-
-        if (!options.HasFlag(TextureOptions.Constant))
+    public TileMode WrapModeY
+    {
+        get
         {
-            this.colors = new Color[width * height];
-            UpdateLocalPixels();
+            return wrapModeY;
+        }
+        set
+        {
+            wrapModeY = value;
+            glBindTexture(GL_TEXTURE_2D, id);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (int)MapTileMode(value));
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
+    }
+
+    public TextureFilter Filter
+    {
+        get
+        {
+            return filter;
+        }
+        set
+        {
+            filter = value;
+
+            int glFilter = value switch
+            {
+                TextureFilter.Point => (int)GL_POINT,
+                TextureFilter.Linear => (int)GL_LINEAR,
+                _ => throw new ArgumentException(null, nameof(value))
+            };
+
+            glBindTexture(GL_TEXTURE_2D, id);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilter);
+            glBindTexture(GL_TEXTURE_2D, 0);
         }
     }
 
@@ -62,6 +91,45 @@ internal sealed class GLTexture : ITexture
             return colors;
         }
     }
+
+    public unsafe GLTexture(GLGraphicsProvider provider, int width, int height, ReadOnlySpan<Color> colors, TextureOptions options)
+    {
+        this.Width = width;
+        this.Height = height;
+        this.Options = options;
+
+        fixed (uint* idPtr = &id)
+        {
+            glGenTextures(1, idPtr);
+        }
+
+        glBindTexture(GL_TEXTURE_2D, id);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (int)GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (int)GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, (int)GL_CLAMP_TO_BORDER);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (int)GL_CLAMP_TO_BORDER);
+
+        fixed (Color* data = colors)
+        {
+            glTexImage2D(GL_TEXTURE_2D, 0, unchecked((int)GL_RGBA8), width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        }
+
+        canvas = new(provider, this);
+
+        if (!options.HasFlag(TextureOptions.Constant))
+        {
+            this.colors = new Color[width * height];
+            UpdateLocalPixels();
+        }
+    }
+
+    private static uint MapTileMode(TileMode mode) => mode switch
+    {
+        TileMode.Mirror => GL_MIRRORED_REPEAT,
+        TileMode.Repeat => GL_MIRRORED_REPEAT,
+        TileMode.Clamp => GL_CLAMP_TO_EDGE,
+        TileMode.None => GL_CLAMP_TO_BORDER,
+    };
 
     public void InvalidatePixels()
     {

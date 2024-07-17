@@ -6,27 +6,27 @@ namespace SimulationFramework;
 /// <summary>
 /// A RGBA floating point color.
 /// </summary>
-public readonly partial struct ColorF : IEquatable<ColorF>
+public partial struct ColorF : IEquatable<ColorF>
 {
     /// <summary>
     /// The R component of the color.
     /// </summary>
-    public float R { get; init; }
+    public float R;
 
     /// <summary>
     /// The G component of the color.
     /// </summary>
-    public float G { get; init; }
+    public float G;
 
     /// <summary>
     /// The B component of the color.
     /// </summary>
-    public float B { get; init; }
+    public float B;
 
     /// <summary>
     /// The A component of the color.
     /// </summary>
-    public float A { get; init; }
+    public float A;
 
     /// <summary>
     /// Creates a new <see cref="ColorF"/> with default values.
@@ -40,9 +40,12 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// Creates a new <see cref="ColorF"/>.
     /// </summary>
     /// <param name="rgb">The RGB values of the color.</param>
-    public ColorF(Vector3 rgb) : this(rgb.X, rgb.Y, rgb.Z)
+    public ColorF(Vector3 rgb)
     {
-    
+        this.R = rgb.X;
+        this.G = rgb.Y;
+        this.B = rgb.Z;
+        this.A = 1f;
     }
 
     /// <summary>
@@ -51,24 +54,24 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// <param name="r">The R component of the color.</param>
     /// <param name="g">The G component of the color.</param>
     /// <param name="b">The B component of the color.</param>
-    public ColorF(float r, float g, float b) : this(r, g, b, 1.0f)
+    public ColorF(float r, float g, float b)
     {
-    }
-
-    /// <summary>
-    /// Creates a new <see cref="ColorF"/>.
-    /// </summary>
-    /// <param name="color">The values of the color.</param>
-    public ColorF(Color color) : this(color.AsVector4())
-    {
+        this.R = r;
+        this.G = g;
+        this.B = b;
+        this.A = 1f;
     }
 
     /// <summary>
     /// Creates a new <see cref="ColorF"/>.
     /// </summary>
     /// <param name="rgba">The RGBA values of the color.</param>
-    public ColorF(Vector4 rgba) : this(rgba.X, rgba.Y, rgba.Z, rgba.W)
+    public ColorF(Vector4 rgba)
     {
+        this.R = rgba.X;
+        this.G = rgba.Y;
+        this.B = rgba.Z;
+        this.A = rgba.W;
     }
 
     /// <summary>
@@ -80,10 +83,22 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// <param name="a">The A component of the color.</param>
     public ColorF(float r, float g, float b, float a)
     {
-        this.R = MathHelper.Normalize(r);
-        this.G = MathHelper.Normalize(g);
-        this.B = MathHelper.Normalize(b);
-        this.A = MathHelper.Normalize(a);
+        this.R = r;
+        this.G = g;
+        this.B = b;
+        this.A = a;
+    }
+
+    /// <summary>
+    /// Returns a normalized version of this color, with each channel clamped between 0.0 and 1.0.
+    /// </summary>
+    public ColorF Normalized()
+    {
+        float r = MathHelper.Normalize(this.R);
+        float g = MathHelper.Normalize(this.G);
+        float b = MathHelper.Normalize(this.B);
+        float a = MathHelper.Normalize(this.A);
+        return new(r, g, b, a);
     }
 
     /// <inheritdoc/>
@@ -119,10 +134,10 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// <returns>The interpolated color.</returns>
     public static ColorF Lerp(ColorF color1, ColorF color2, float t)
     {
-        var vec1 = color1.AsVector4();
-        var vec2 = color2.AsVector4();
+        Vector4 vec1 = color1.ToVector4();
+        Vector4 vec2 = color2.ToVector4();
 
-        var result = Vector4.Lerp(vec1, vec2, t);
+        Vector4 result = Vector4.Lerp(vec1, vec2, t);
         return new(result);
     }
 
@@ -146,7 +161,7 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// Returns this <see cref="Color"/> as a <see cref="Vector3"/>, with its R, G, and B values as X, Y, and Z, respectively.
     /// </summary>
     /// <returns>The converted <see cref="Vector3"/>.</returns>
-    public Vector3 AsVector3()
+    public Vector3 ToVector3()
     {
         return new(this.R, this.G, this.B);
     }
@@ -155,9 +170,9 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     /// Converts this <see cref="Color"/> to <see cref="Vector4"/>, with its R, G, B, and A values as X, Y, Z, and W, respectively.
     /// </summary>
     /// <returns>The converted <see cref="Vector4"/>.</returns>
-    public Vector4 AsVector4()
+    public Vector4 ToVector4()
     {
-        return new(AsVector3(), this.A);
+        return new(ToVector3(), this.A);
     }
 
     /// <summary>
@@ -225,7 +240,7 @@ public readonly partial struct ColorF : IEquatable<ColorF>
         float min, max, delta;
         float hue, sat, value;
 
-        var (r, g, b) = this.AsVector3();
+        var (r, g, b) = this.ToVector3();
 
 
         min = MathF.Min(r, MathF.Min(g, b));
@@ -268,6 +283,14 @@ public readonly partial struct ColorF : IEquatable<ColorF>
     }
 
     /// <summary>
+    /// Creates a <see cref="ColorF"/> from a <see cref="Color"/> instance.
+    /// </summary>
+    public static ColorF FromColor(Color color)
+    {
+        return new ColorF(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
+    }
+
+    /// <summary>
     /// Computes the values of this <see cref="ColorF"/> in the HSV color space.
     /// </summary>
     /// <returns>The computed values, where X is hue, Y is saturation, Z is value, W is alpha.</returns>
@@ -298,18 +321,58 @@ public readonly partial struct ColorF : IEquatable<ColorF>
         return !(left == right);
     }
 
+    /// <summary>
+    /// Multiplies the values in the color by a constant.
+    /// </summary>
     public static ColorF operator *(float left, ColorF right)
     {
         return right * left;
     }
 
+    /// <summary>
+    /// Multiplies the values in the color by a constant.
+    /// </summary>
     public static ColorF operator *(ColorF left, float right)
     {
-        return new(left.AsVector4() * right);
+        return new(left.ToVector4() * right);
     }
 
+    /// <summary>
+    /// Divides the values in the color by a constant.
+    /// </summary>
+    public static ColorF operator /(float left, ColorF right)
+    {
+        return right / left;
+    }
+
+    /// <summary>
+    /// Divides the values in the color by a constant.
+    /// </summary>
+    public static ColorF operator /(ColorF left, float right)
+    {
+        return new(left.ToVector4() / right);
+    }
+
+    /// <summary>
+    /// Multiples the channels in the color by the channels of another.
+    /// </summary>
     public static ColorF operator *(ColorF left, ColorF right)
     {
-        return new(left.AsVector4() * right.AsVector4());
+        return new(left.ToVector4() * right.ToVector4());
     }
+
+    /// <summary>
+    /// Adds the channels of two colors.
+    /// </summary>
+    public static ColorF operator +(ColorF left, ColorF right) => new(left.ToVector4() + right.ToVector4());
+
+    /// <summary>
+    /// Subtracts the channels of two colors.
+    /// </summary>
+    public static ColorF operator -(ColorF left, ColorF right) => new(left.ToVector4() - right.ToVector4());
+
+    /// <summary>
+    /// Divides the channels of two colors.
+    /// </summary>
+    public static ColorF operator /(ColorF left, ColorF right) => new(left.ToVector4() / right.ToVector4());
 }

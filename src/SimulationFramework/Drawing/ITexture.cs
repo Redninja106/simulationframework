@@ -22,9 +22,20 @@ public interface ITexture : IDisposable
     /// </summary>
     TextureOptions Options { get; }
 
-    // TileMode WrapModeX { get; }
-    // TileMode WrapModeY { get; }
-    // TextureFilter Filter { get; }
+    /// <summary>
+    /// The x-axis wrap mode used when sampling the texture.
+    /// </summary>
+    TileMode WrapModeX { get; set; }
+
+    /// <summary>
+    /// The y-axis wrap mode used when sampling the texture.
+    /// </summary>
+    TileMode WrapModeY { get; set; }
+
+    /// <summary>
+    /// The Filter used when sampling the texture.
+    /// </summary>
+    TextureFilter Filter { get; set; }
 
     /// <summary>
     /// A span of colors making up texture's data

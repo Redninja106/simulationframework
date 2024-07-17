@@ -1,6 +1,6 @@
 ﻿namespace SimulationFramework;
 
-public readonly partial struct ColorF
+public partial struct ColorF
 {
     /// <summary>
     /// An RGBA <see cref="ColorF"/> with the value #66CDAAFF.

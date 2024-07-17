@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
-internal enum TextureFilter
+public enum TextureFilter
 {
     Point,
     Linear

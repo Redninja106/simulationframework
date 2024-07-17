@@ -51,6 +51,7 @@ partial class Program : Simulation
         // fov slider
         ImGui.SliderFloat("vfov", ref shader.vfov, 30, 120);
         ImGui.SliderFloat("camera speed", ref cameraSpeed, 1, 10);
+        ImGui.Text(Performance.Framerate.ToString());
 
         // set shader width, height, and time
         shader.width = canvas.Width;
@@ -137,13 +138,13 @@ class RayTracerShader : CanvasShader
         
         const int antialias = 20; // sample # = antialias^2
         
-        Vector4 color = default;
+        ColorF color = default;
         for (int y = 0; y < antialias; y++)
         {
             for (int x = 0; x < antialias; x++)
             {
                 Vector2 sampleOffset = new((x + .5f) / antialias, (y + .5f) / antialias); // evenly spaced sample distribution
-                //Vector3 sampleOffset = Random3(new(vp * x * y, time)); // random sample distribution
+                // Vector3 sampleOffset = Random3(new(vp * x * y, time)); // random sample distribution
 
                 Vector2 samplePos = new Vector2(
                     vp.X * width * .5f + sampleOffset.X,
@@ -151,13 +152,13 @@ class RayTracerShader : CanvasShader
                     );
                 samplePos /= new Vector2(width * .5f, height * .5f);
                 Vector4 direction4 = ShaderIntrinsics.Transform(new(samplePos * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1), cameraTransform);
-                color += RayColor(origin, new(direction4.X, direction4.Y, direction4.Z)).AsVector4();
+                color += RayColor(origin, new(direction4.X, direction4.Y, direction4.Z));
             }
         }
 
         color /= antialias * antialias;
 
-        return new(color);
+        return color;
     }
 
     private ColorF RayColor(Vector3 origin, Vector3 direction)
@@ -199,7 +200,7 @@ class RayTracerShader : CanvasShader
             }
             else
             {
-                color *= ColorF.Lerp(ColorF.WhiteSmoke, ColorF.SkyBlue, direction.Y).AsVector4();
+                color *= ColorF.Lerp(ColorF.WhiteSmoke, ColorF.SkyBlue, direction.Y).ToVector4();
                 i = MaxBounces;
             }
         }
@@ -269,7 +270,7 @@ struct Sphere
     public Sphere(Vector4 data, ColorF color)
     {
         this.posRad = data;
-        this.color = color.AsVector4();
+        this.color = color.ToVector4();
     }
 
     public Vector3 position => new(posRad.X, posRad.Y, posRad.Z);

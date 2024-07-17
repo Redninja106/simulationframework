@@ -14,6 +14,10 @@ public class GLFrame : ITexture
     public TextureOptions Options { get; } = TextureOptions.None;
     public Span<Color> Pixels => throw new NotSupportedException();
 
+    public TileMode WrapModeX { get; set; }
+    public TileMode WrapModeY { get; set; }
+    public TextureFilter Filter { get; set; }
+
     public GLFrame(int width, int height)
     {
         this.Width = width;
