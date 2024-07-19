@@ -23,6 +23,7 @@ public unsafe class GLFont : IFont
 
     private GLTexture atlas;
     stbtt_bakedchar[] chars;
+
     public GLFont(GLGraphicsProvider provider, ReadOnlySpan<byte> ttfData)
     {
         pinnedData = GC.AllocateArray<byte>(ttfData.Length, true);

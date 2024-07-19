@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders;
 public abstract class CanvasShader : Shader
 {
-    public Matrix3x2 TransformMatrix { get; set; }
+    public Matrix3x2 TransformMatrix { get; set; } = Matrix3x2.Identity;
 
     public abstract ColorF GetPixelColor(Vector2 position);
 }

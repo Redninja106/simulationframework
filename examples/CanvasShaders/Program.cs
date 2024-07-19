@@ -10,7 +10,7 @@ Start<Program>();
 
 partial class Program : Simulation
 {
-    IterationsInversions2 shader = new();
+    Creation shader = new();
     Vector2 targetPos;
 
     public override void OnInitialize()

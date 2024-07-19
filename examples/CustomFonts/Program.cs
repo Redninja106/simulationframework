@@ -18,10 +18,9 @@ partial class Program : Simulation
         canvas.Clear(Color.FromHSV(0, 0, .15f));
         canvas.FontSize(32);
         canvas.Translate(Mouse.Position);
-        canvas.Stroke(Color.RebeccaPurple);
-        canvas.StrokeWidth(10);
-        canvas.DrawCircle(0, 0, 50);
-
-        // canvas.DrawText("This text is drawn using a custom font!", 0, 0);
+        canvas.Stroke(Color.White);
+        canvas.DrawRect(canvas.MeasureText("This text is drawn using a custom font!"));
+        canvas.Fill(Color.Red);
+        canvas.DrawText("This text is drawn using a custom font!", 0, 0, Alignment.BottomLeft);
     }
 }

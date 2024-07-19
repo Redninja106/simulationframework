@@ -71,6 +71,16 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
             string path = Path.Combine(Environment.SystemDirectory, "../fonts", name + ".ttf");
             return LoadFont(File.ReadAllBytes(Path.GetFullPath(path)));
         }
+        else if (OperatingSystem.IsLinux())
+        {
+            string path = Path.Combine("/usr/share/fonts", name + ".ttf");
+            return LoadFont(File.ReadAllBytes(Path.GetFullPath(path)));
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            string path = Path.Combine("/Library/Fonts/", name + ".ttf");
+            return LoadFont(File.ReadAllBytes(Path.GetFullPath(path)));
+        }
         else
         {
             throw new NotSupportedException("System fonts not supported on this platform!");

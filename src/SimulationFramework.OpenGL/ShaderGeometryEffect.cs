@@ -67,7 +67,7 @@ void main() {
         glUniformMatrix4fv(loc, 1, 0, (float*)&matrix);
         var loc2 = glGetUniformLocation(program, ToPointer("_inv_transform"u8));
 
-        Matrix3x2.Invert(state.Transform, out var inv);
+        Matrix3x2.Invert(Shader.TransformMatrix * state.Transform, out var inv);
         Matrix4x4 invTransform = new(
             inv.M11, inv.M12, 0, 0,
             inv.M21, inv.M22, 0, 0,
@@ -129,8 +129,6 @@ void main() {
         {
             buffer = buffers[bufferSlot];
         }
-
-        // TODO: pin array
 
         Array array = (Array)value;
         GCHandle arrayHandle = GCHandle.Alloc(array, GCHandleType.Pinned);

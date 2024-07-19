@@ -164,6 +164,7 @@ internal class GLCanvas : ICanvas
         textureGeometryEffect.tint = tint;
 
         UpdateGeometryStream(textureGeometryStream);
+        UpdateGeometryWriter(fillGeometryWriter);
 
         Vector2 uvScale = new(1f/texture.Width, 1f/texture.Height);
         textureGeometryStream.WriteVertex(new(destination.X,                     destination.Y                     ), uvScale * new Vector2(source.X, source.Y));
