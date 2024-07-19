@@ -17,7 +17,8 @@ namespace SimulationFramework.OpenGL;
 internal class GLCanvas : ICanvas
 {
     public ITexture Target { get; }
-    public CanvasState State { get; set; }
+    public ref readonly CanvasState State => ref currentState;
+    public CanvasState currentState;
 
     private Stack<CanvasState> stateStack = [];
     private List<CanvasState> statePool = [];
@@ -60,7 +61,7 @@ internal class GLCanvas : ICanvas
             fbo = 0;
         }
 
-        State = new();
+        currentState = new();
         currentGeometryBuffer = new GeometryBuffer();
         currentGeometryBuffer.Bind();
 
@@ -101,7 +102,7 @@ internal class GLCanvas : ICanvas
 
     public void Clip(Rectangle? rectangle)
     {
-        State.ClipRectangle = rectangle;
+        currentState.ClipRectangle = rectangle;
     }
 
     public void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter)
@@ -131,10 +132,16 @@ internal class GLCanvas : ICanvas
         currentGeometryWriter.PushRect(currentGeometryStream, rect);
     }
 
-    public void DrawRoundedRect(Rectangle rect, float radius)
+    public void DrawEllipse(Rectangle bounds)
     {
         SetupRegularGeometry();
-        currentGeometryWriter.PushRoundedRect(currentGeometryStream, rect, radius);
+        currentGeometryWriter.PushEllipse(currentGeometryStream, bounds);
+    }
+
+    public void DrawRoundedRect(Rectangle rect, Vector2 radii)
+    {
+        SetupRegularGeometry();
+        currentGeometryWriter.PushRoundedRect(currentGeometryStream, rect, radii);
     }
 
     public Vector2 DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft)
@@ -176,7 +183,7 @@ internal class GLCanvas : ICanvas
         }
         else
         {
-            currentGeometryStream.TransformMatrix = this.State.Transform;
+            currentGeometryStream.TransformMatrix = this.currentState.Transform;
         }
     }
 
@@ -187,8 +194,8 @@ internal class GLCanvas : ICanvas
 
     public void Fill(ColorF color)
     {
-        State.Color = color;
-        State.Fill = true;
+        currentState.Color = color;
+        currentState.Fill = true;
 
         colorGeometryStream.Color = color.ToColor();
         
@@ -202,17 +209,17 @@ internal class GLCanvas : ICanvas
         if (effect.Shader != shader)
             Flush();
         effect.Shader = shader;
-        State.Shader = shader;
+        currentState.Shader = shader;
         UpdateGeometryStream(positionGeometryStream);
         UpdateGeometryWriter(fillGeometryWriter);
     }
 
     public Vector2 DrawCodepoint(int codepoint, Vector2 position, Alignment alignment)
     {
-        GLFont font = (GLFont)State.Font;
-        Vector2 newPos = font.GetCodepointPosition(codepoint, position, State.FontSize, State.FontStyle, out Rectangle source, out Rectangle destination);
-        GLTexture atlas = font.GetAtlasTexture(State.FontSize, State.FontStyle);
-        DrawTexture(atlas, source, destination, State.Color);
+        GLFont font = (GLFont)currentState.Font;
+        Vector2 newPos = font.GetCodepointPosition(codepoint, position, currentState.FontSize, currentState.FontStyle, out Rectangle source, out Rectangle destination);
+        GLTexture atlas = font.GetAtlasTexture(currentState.FontSize, currentState.FontStyle);
+        DrawTexture(atlas, source, destination, currentState.Color);
         return newPos;
     }
 
@@ -241,7 +248,7 @@ internal class GLCanvas : ICanvas
 
         var effect = GetEffect(currentGeometryStream);
         effect.Use();
-        effect.ApplyState(State, transform4x4);
+        effect.ApplyState(currentState, transform4x4);
         currentGeometryStream.BindVertexArray();
 
         glDrawArrays(currentGeometryWriter.GetPrimitive(), 0, currentGeometryStream.GetVertexCount());
@@ -255,10 +262,10 @@ internal class GLCanvas : ICanvas
             return textureGeometryEffect;
         }
 
-        if (State.Shader is not null)
+        if (currentState.Shader is not null)
         {
-            var effect = graphics.GetShaderEffect(State.Shader);
-            effect.Shader = State.Shader;
+            var effect = graphics.GetShaderEffect(currentState.Shader);
+            effect.Shader = currentState.Shader;
             return effect;
         }
 
@@ -268,17 +275,17 @@ internal class GLCanvas : ICanvas
 
     public void Font(IFont font)
     {
-        State.Font = font;
+        currentState.Font = font;
     }
 
     public void FontSize(float size)
     {
-        State.FontSize = size;
+        currentState.FontSize = size;
     }
 
     public void FontStyle(FontStyle style)
     {
-        State.FontStyle = style;
+        currentState.FontStyle = style;
     }
 
     public void PopState()
@@ -286,13 +293,12 @@ internal class GLCanvas : ICanvas
         if (stateStack.Count == 0)
             throw new InvalidOperationException("State stack is empty!");
 
-        State = stateStack.Pop();
+        currentState = stateStack.Pop();
     }
 
     public void PushState()
     {
-        stateStack.Push(State);
-        State = State.Clone();
+        stateStack.Push(currentState);
     }
 
 
@@ -302,7 +308,7 @@ internal class GLCanvas : ICanvas
         )]
     public void ResetState()
     {
-        State.Reset();
+        currentState.Reset();
 
         colorGeometryStream.Color = Color.White;
         currentGeometryWriter = fillGeometryWriter;
@@ -311,13 +317,13 @@ internal class GLCanvas : ICanvas
 
     public void SetTransform(Matrix3x2 transform)
     {
-        State.Transform = transform;
+        currentState.Transform = transform;
     }
 
     public void Stroke(Color color)
     {
-        State.Color = color.ToColorF();
-        State.Fill = false;
+        currentState.Color = color.ToColorF();
+        currentState.Fill = false;
 
         colorGeometryStream.Color = color;
 
@@ -326,7 +332,7 @@ internal class GLCanvas : ICanvas
             Flush();
         }
 
-        if (State.strokeWidth == 0)
+        if (currentState.strokeWidth == 0)
         {
             UpdateGeometryWriter(hairlineGeometryWriter);
         }
@@ -339,16 +345,19 @@ internal class GLCanvas : ICanvas
 
     public void StrokeWidth(float width)
     {
-        State.strokeWidth = width;
-        pathGeometryWriter.Width = width; 
-        
-        if (State.strokeWidth == 0)
+        currentState.strokeWidth = width;
+        pathGeometryWriter.StrokeWidth = width;
+
+        if (!currentState.Fill)
         {
-            UpdateGeometryWriter(hairlineGeometryWriter);
-        }
-        else
-        {
-            UpdateGeometryWriter(pathGeometryWriter);
+            if (currentState.strokeWidth == 0)
+            {
+                UpdateGeometryWriter(hairlineGeometryWriter);
+            }
+            else
+            {
+                UpdateGeometryWriter(pathGeometryWriter);
+            }
         }
     }
 
@@ -370,6 +379,6 @@ internal class GLCanvas : ICanvas
         }
 
         currentGeometryStream = stream;
-        stream.TransformMatrix = State.Transform;
+        stream.TransformMatrix = currentState.Transform;
     }
 }

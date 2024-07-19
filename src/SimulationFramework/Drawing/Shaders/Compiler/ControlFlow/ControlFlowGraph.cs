@@ -125,25 +125,6 @@ internal class ControlFlowGraph : ControlFlowNode
         return subgraph;
     }
 
-    public static ControlFlowGraph CreateConditionalSubgraph(ControlFlowNode parent, ControlFlowNode entryNode, ControlFlowNode exitNode)
-    {
-        // exitNode.Graph.RecomputeDominators();
-        // TypedReference.MakeTypedReference
-        // // Debug.Assert(exitNode.immediateDominator == entryNode);
-        // Debug.Assert(entryNode.Graph == exitNode.Graph);
-        // 
-        // entryNode.Graph.RecomputeDominators();
-        // var nodes = entryNode.Graph.GetNodesBetween(entryNode, exitNode);
-        // var dummyExit = new ControlFlowNode(entryNode.Graph);
-        // var graph = new ControlFlowGraph(parent, entryNode, dummyExit, nodes);
-        // 
-        // graph.EntryNode = entryNode;
-        // graph.ExitNode = exitNode;
-        // 
-        // return graph;
-        throw new NotImplementedException();
-    }
-
     public BasicBlockNode GetBasicBlock(Instruction startInstruction)
     {
         var block = BasicBlocks.SingleOrDefault(br => br.Instructions.Contains(startInstruction));

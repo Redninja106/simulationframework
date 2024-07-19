@@ -360,15 +360,32 @@ public static class Polygon
 
     public static Vector2[] Triangulate(ReadOnlySpan<Vector2> polygon)
     {
-        if (polygon.Length <= 3)
+        if (polygon.Length < 3)
+        {
             return polygon.ToArray();
+        }
+
+        Vector2[] result = new Vector2[(polygon.Length - 2) * 3];
+        Triangulate(polygon, result);
+        return result;
+    }
+
+    public static void Triangulate(ReadOnlySpan<Vector2> polygon, Span<Vector2> triangles)
+    {
+        if (polygon.Length <= 3) 
+        { 
+            polygon.CopyTo(triangles);
+            return; 
+        }
 
         List<Vector2> tris = [];
+        int nextTri = 0;
         bool cw = IsClockwise(polygon);
 
-        PolygonLinkedList list = new(polygon);
+        PolygonLinkedList list = polygon.Length < 512 
+            ? PolygonLinkedList.StackAllocate(polygon, stackalloc PolygonLinkedList.Vertex[polygon.Length])
+            : PolygonLinkedList.HeapAllocate(polygon);
 
-        bool forceTri = false;
         int current;
         while (tris.Count < (polygon.Length - 2) * 3)
         {
@@ -404,9 +421,9 @@ public static class Polygon
                         continue;
                     }
 
-                    tris.Add(p1);
-                    tris.Add(p2);
-                    tris.Add(p3);
+                    triangles[nextTri++] = p1;
+                    triangles[nextTri++] = p2;
+                    triangles[nextTri++] = p3;
 
                     list.Remove(current);
                     pushedTri = true;
@@ -415,11 +432,10 @@ public static class Polygon
             }
             if (!pushedTri)
             {
-                return tris.ToArray();
+                // error case: didn't find an ear
+                return;
             }
         }
-
-        return tris.ToArray();
 
         static bool IsVertexConvex(PolygonLinkedList list, int index)
         {
@@ -432,20 +448,8 @@ public static class Polygon
 
             return (MathF.PI + MathF.Atan2(MathHelper.Cross(p1, p2), Vector2.Dot(p1, p2))) < MathF.PI;
         }
-
-        static IEnumerable<(Vector2, bool)> ListToArr(PolygonLinkedList list)
-        {
-            var first = list.First();
-            var current = first;
-            do
-            {
-                yield return (list[current], IsVertexConvex(list, current));
-                current = list.Next(current);
-            }
-            while (current != first);
-        }
     }
-    
+
     // https://stackoverflow.com/questions/2049582/how-to-determine-if-a-point-is-in-a-2d-triangle
     public static bool PointInTriangle(Vector2 p, Vector2 p0, Vector2 p1, Vector2 p2)
     {
@@ -459,18 +463,38 @@ public static class Polygon
         return d == 0 || (d < 0) == (s + t <= 0);
     }
 
-    private struct PolygonLinkedList
+    private ref struct PolygonLinkedList
     {
-        Vertex<Vector2>[] vertices;
+        Span<Vertex> vertices;
         int firstVertex;
         int length;
 
         public int Length => length;
 
-        public PolygonLinkedList(ReadOnlySpan<Vector2> polygon)
+        public static PolygonLinkedList HeapAllocate(ReadOnlySpan<Vector2> polygon)
         {
-            vertices = new Vertex<Vector2>[polygon.Length];
+            PolygonLinkedList result = new();
 
+            result.vertices = new Vertex[polygon.Length];
+            result.Initialize(polygon);
+
+            return result;
+        }
+
+        public static PolygonLinkedList StackAllocate(ReadOnlySpan<Vector2> polygon, Span<Vertex> stackMemory)
+        {
+            Debug.Assert(stackMemory.Length == polygon.Length);
+
+            PolygonLinkedList result = new();
+
+            result.vertices = stackMemory;
+            result.Initialize(polygon);
+
+            return result;
+        }
+
+        private void Initialize(ReadOnlySpan<Vector2> polygon)
+        {
             for (int i = 0; i < polygon.Length; i++)
             {
                 vertices[i].position = polygon[i];
@@ -482,6 +506,7 @@ public static class Polygon
 
             length = polygon.Length;
         }
+
 
         public Vector2 this[int index] => vertices[index].position;
 
@@ -515,13 +540,11 @@ public static class Polygon
             return firstVertex;
         }
 
-        private struct Vertex<T>
+        public struct Vertex
         {
-            public T position;
+            public Vector2 position;
             public int next;
             public int prev;
         }
     }
-
-
 }

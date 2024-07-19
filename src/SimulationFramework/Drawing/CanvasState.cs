@@ -4,7 +4,7 @@ using SimulationFramework.Drawing.Shaders;
 
 namespace SimulationFramework.Drawing;
 
-public class CanvasState
+public struct CanvasState
 {
     public Matrix3x2 Transform { get; set; }
     public Rectangle? ClipRectangle { get; set; }

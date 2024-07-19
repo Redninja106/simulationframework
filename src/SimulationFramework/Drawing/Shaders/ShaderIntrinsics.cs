@@ -1,6 +1,7 @@
 ﻿using SimulationFramework.Drawing.Shaders;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -8,54 +9,69 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders;
 
+/// <summary>
+/// Exposes built-in shader methods.
+/// </summary>
 public static class ShaderIntrinsics
 {
-    [ShaderIntrinsic, ShaderIntercept(nameof(Transform), typeof(Vector4))]
-    public static Vector4 Transform(Vector4 vector, Matrix4x4 matrix) => Vector4.Transform(vector, matrix);
-
     [ShaderIntrinsic]
     public static int AsInt(bool value) => value ? 1 : 0;
 
     [ShaderIntrinsic]
     public static bool AsBool(int value) => value > 0;
 
+    [DoesNotReturn]
+    public static void Discard()
+    {
+        throw new FragmentDiscardedException();
+    }
+
     #region Derivatives
 
     [ShaderIntrinsic]
-    public static T DDX<T>(T value) => throw new NotImplementedException();
+    public static T DDX<T>(T value) => throw new NotSupportedException("DDX cannot be run on the CPU since the shader is not part of a wave.");
 
     [ShaderIntrinsic]
-    public static T DDY<T>(T value) => throw new NotImplementedException();
+    public static T DDY<T>(T value) => throw new NotSupportedException("DDY cannot be run on the CPU since the shader is not part of a wave.");
 
     #endregion
 
     #region Constructors
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector4))]
-    public static Vector4 Vec4(Vector3 xyz, float w) => new(xyz, w);
+    public static Vector4 MakeVector4(Vector3 xyz, float w) => new(xyz, w);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector4))]
-    public static Vector4 Vec4(Vector2 xy, float z, float w) => new(xy.X, xy.Y, z, w);
+    public static Vector4 MakeVector4(Vector2 xy, float z, float w) => new(xy.X, xy.Y, z, w);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector4))]
-    public static Vector4 Vec4(float x, float y, float z, float w) => new(x, y, z, w);
+    public static Vector4 MakeVector4(float x, float y, float z, float w) => new(x, y, z, w);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector3))]
-    public static Vector3 Vec3(float x, float y, float z) => new(x, y, z);
+    public static Vector3 MakeVector3(float x, float y, float z) => new(x, y, z);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector3))]
-    public static Vector3 Vec3(Vector2 xy, float z) => new(xy, z);
+    public static Vector3 MakeVector3(Vector2 xy, float z) => new(xy, z);
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector3))]
-    public static Vector3 Vec3(float xyz) => new(xyz);
+    public static Vector3 MakeVector3(float xyz) => new(xyz);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector2))]
-    public static Vector2 Vec2(float xy) => new(xy, xy);
+    public static Vector2 MakeVector2(float xy) => new(xy, xy);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector2))]
-    public static Vector2 Vec2(float x, float y) => new(x, y);
+    public static Vector2 MakeVector2(float x, float y) => new(x, y);
 
-    [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(ColorF))]
-    public static ColorF ColorF(float r, float g, float b, float a) => new(r, g, b, a);
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(ColorF))]
+    public static ColorF MakeColorF(float r, float g, float b, float a) => new(r, g, b, a);
+
+    // [ShaderIntrinsic]
+    // [ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(ColorF))]
+    // public static ColorF MakeColorF(Vector3 rgb) => new(rgb);
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(ColorF))]
+    public static ColorF MakeColorF(Vector4 rgba) => new(rgba);
 
     #endregion
 
@@ -76,6 +92,19 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic]
     [ShaderIntercept(nameof(float.IsNegativeInfinity), typeof(float))]
     public static bool IsNegativeInfinity(float value) => float.IsNegativeInfinity(value);
+
+    #endregion
+
+    #region Transform
+
+    [ShaderIntrinsic, ShaderIntercept(nameof(Transform), typeof(Vector4))]
+    public static Vector4 Transform(Vector4 vector, Matrix4x4 matrix) => Vector4.Transform(vector, matrix);
+
+    [ShaderIntrinsic, ShaderIntercept(nameof(Transform), typeof(Vector3))]
+    public static Vector3 Transform(Vector3 vector, Matrix4x4 matrix) => Vector3.Transform(vector, matrix);
+
+    [ShaderIntrinsic, ShaderIntercept(nameof(Transform), typeof(Vector2))]
+    public static Vector2 Transform(Vector2 vector, Matrix3x2 matrix) => Vector2.Transform(vector, matrix);
 
     #endregion
 
@@ -253,6 +282,7 @@ public static class ShaderIntrinsics
 
     [ShaderIntrinsic]
     public static Vector4 Abs(Vector4 value) => System.Numerics.Vector4.Abs(value);
+
     #endregion
 
     #region Acos
@@ -647,14 +677,28 @@ public static class ShaderIntrinsics
 
     #region Refract
 
-    public static Vector2 Refract(Vector2 vector, Vector2 normal, float index)
+    public static Vector2 Refract(Vector2 incident, Vector2 normal, float refractionIndex)
     {
-        throw new NotImplementedException();
+        // https://registry.khronos.org/OpenGL-Refpages/gl4/html/refract.xhtml
+        var k = 1.0f - refractionIndex * refractionIndex * (1.0f - Vector2.Dot(normal, incident) * Vector2.Dot(normal, incident));
+        Vector2 result = default;
+        if (k >= 0.0)
+        {
+            result = refractionIndex * incident - (refractionIndex * Vector2.Dot(normal, incident) + MathF.Sqrt(k)) * normal;
+        }
+        return result;
     }
 
-    public static Vector3 Refract(Vector3 vector, Vector3 normal, float index)
+    public static Vector3 Refract(Vector3 incident, Vector3 normal, float refractionIndex)
     {
-        throw new NotImplementedException();
+        // https://registry.khronos.org/OpenGL-Refpages/gl4/html/refract.xhtml
+        var k = 1.0f - refractionIndex * refractionIndex * (1.0f - Vector3.Dot(normal, incident) * Vector3.Dot(normal, incident));
+        Vector3 result = default;
+        if (k >= 0.0)
+        {
+            result = refractionIndex * incident - (refractionIndex * Vector3.Dot(normal, incident) + MathF.Sqrt(k)) * normal;
+        }
+        return result;
     }
 
     #endregion
@@ -830,13 +874,41 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic]
     public static ColorF TextureSampleUV(ITexture texture, Vector2 uv)
     {
-        throw new NotImplementedException();
+        return TextureSample(texture, uv * new Vector2(texture.Width, texture.Height));
     }
 
     [ShaderIntrinsic]
     public static ColorF TextureSample(ITexture texture, Vector2 position)
     {
-        throw new NotImplementedException();
+        if (texture.Filter == TextureFilter.Point)
+        {
+            return texture.GetPixel((int)MathF.Floor(position.X), (int)MathF.Floor(position.Y)).ToColorF();
+        }
+        else if (texture.Filter == TextureFilter.Linear)
+        {
+            int left = (int)MathF.Floor(position.X);
+            int right = (int)MathF.Ceiling(position.X);
+            int top = (int)MathF.Floor(position.Y);
+            int bottom = (int)MathF.Ceiling(position.Y);
+
+            ColorF a = ColorF.Lerp(
+                texture.GetPixel(left, top).ToColorF(), 
+                texture.GetPixel(left, bottom).ToColorF(), 
+                Fract(position.Y)
+                ); 
+            
+            ColorF b = ColorF.Lerp(
+                texture.GetPixel(right, top).ToColorF(),
+                texture.GetPixel(right, bottom).ToColorF(),
+                Fract(position.Y)
+                );
+
+            return ColorF.Lerp(a, b, Fract(position.X));
+        }
+        else
+        {
+            throw new NotSupportedException($"texture filter '{texture.Filter}' is not supported!");
+        }
     }
 
     [ShaderIntrinsic]

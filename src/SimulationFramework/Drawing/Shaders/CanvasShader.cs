@@ -10,11 +10,5 @@ public abstract class CanvasShader : Shader
 {
     public Matrix3x2 TransformMatrix { get; set; }
 
-    [ShaderIntrinsic]
-    protected static void Discard()
-    {
-        throw new Exception("invocation discarded");
-    }
-
     public abstract ColorF GetPixelColor(Vector2 position);
 }

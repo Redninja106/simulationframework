@@ -16,7 +16,7 @@ public static class Performance
     public const int DefaultFramerateAverageDuration = 5;
 
     /// <summary>
-    /// The number of frames that the value of <see cref="Framerate"/> should be averaged over.
+    /// The number of seconds that the value of <see cref="Framerate"/> should be averaged over.
     /// </summary>
     public static float FramerateAverageDuration { get => Provider.FramerateAverageDuration; set => Provider.FramerateAverageDuration = value; }
 

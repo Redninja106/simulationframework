@@ -3,6 +3,7 @@ using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Input;
+using SimulationFramework.OpenGL;
 using System.Numerics;
 
 namespace DrawingShapes;
@@ -52,12 +53,6 @@ class DrawingShapesSimulation : Simulation
         // canvas.DrawLine(500, 500, 1000, 1000);
         // canvas.DrawLine(100, 100, 500, 500);
 
-        var shader = new MyShader();
-        shader.myTexture = logo;
-        canvas.Fill(shader);
-        canvas.Translate(Mouse.Position);
-        canvas.DrawRect(0, 0, 512, 512);
-
         // canvas.Font("Verdana");
         // canvas.Fill(Color.Purple);
         //
@@ -76,15 +71,5 @@ class DrawingShapesSimulation : Simulation
         // 
         // canvas.FontStyle(FontStyle.Strikethrough | FontStyle.Underline);
         // canvas.DrawText("Hello, World!", textX, textY, Alignment.BottomLeft);
-    }
-}
-
-class MyShader : CanvasShader
-{
-    public ITexture myTexture;
-
-    public override ColorF GetPixelColor(Vector2 position)
-    {
-        return myTexture.Sample(position * (1f / 512f));
     }
 }

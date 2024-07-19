@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using SimulationFramework.Drawing.Shaders;
+using System.Runtime.InteropServices;
 
 namespace SimulationFramework.Drawing;
 
@@ -29,13 +30,18 @@ public interface ICanvas
     /// <summary>
     /// The canvas's current state.
     /// </summary>
-    CanvasState State { get; }
+    ref readonly CanvasState State { get; }
 
     /// <summary>
     /// Clears the canvas.
     /// </summary>
-    /// <param name="color">The color with which to clear the canvas.</param>
+    /// <param name="color">The color to clear the canvas with.</param>
     void Clear(ColorF color);
+
+    /// <summary>
+    /// Clears the canvas.
+    /// </summary>
+    /// <param name="color">The color to clear the canvas with.</param>
     sealed void Clear(Color color) => Clear(color.ToColorF());
 
     /// <summary>
@@ -50,21 +56,16 @@ public interface ICanvas
 
     /// <summary>
     /// Configures the canvas to fill shapes with the provided color.
-    /// <para>
-    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Fill"/>, 
-    /// meaning that any shapes drawn after this call will be filled with the provided color. 
-    /// </para>
     /// </summary>
-    void Fill(Color color) => Fill(color.ToColorF());
+    sealed void Fill(Color color) => Fill(color.ToColorF());
 
+    /// <summary>
+    /// Configures the canvas to fill shapes with the provided color.
+    /// </summary>
     void Fill(ColorF color);
 
     /// <summary>
     /// Configures the canvas to fill shapes using the provided gradient.
-    /// <para>
-    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Gradient"/>, 
-    /// meaning that any shapes drawn after this call will be filled with the provided gradient. 
-    /// </para>
     /// </summary>
     void Fill(Gradient gradient)
     {
@@ -73,21 +74,12 @@ public interface ICanvas
 
     /// <summary>
     /// Configures the canvas to outline shapes with the provided color.
-    /// <para>
-    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Stroke"/>, 
-    /// meaning that any shapes drawn after this call will be outlined with the provided color. 
-    /// </para>
     /// </summary>
     void Stroke(Color color);
 
     /// <summary>
     /// Configures the canvas to fill shapes using the provided shader.
     /// </summary>
-    /// 
-    /// <para>
-    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Shader"/>, 
-    /// meaning that any shapes drawn after this call will be filled with the provided shader. 
-    /// </para>
     void Fill(CanvasShader shader);
 
     /// <summary>
@@ -102,33 +94,20 @@ public interface ICanvas
 
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
-    /// <para>
-    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Textured"/>, 
-    /// meaning that any shapes drawn after this call will be filled with the provided texture. 
-    /// </para>
     /// </summary>
     sealed void Fill(ITexture texture) => Fill(texture, Matrix3x2.Identity);
 
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
-    /// <para>
-    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Textured"/>, 
-    /// meaning that any shapes drawn after this call will be filled with the provided texture. 
-    /// </para>
     /// </summary>
     void Fill(ITexture texture, Matrix3x2 transform, TileMode tileMode = TileMode.Repeat)
     {
         throw new Exception("use a shader");
     }
 
-    void DrawTriangles(ReadOnlySpan<Vector2> triangles);
 
     /// <summary>
     /// Fills any drawn shapes with the provided texture.
-    /// <para>
-    /// Calling this method sets the current state's <see cref="DrawMode"/> to <see cref="DrawMode.Textured"/>, 
-    /// meaning that any shapes drawn after this call will be filled with the provided texture. 
-    /// </para>
     /// </summary>
     sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
     {
@@ -184,7 +163,39 @@ public interface ICanvas
     /// <param name="height">The height of the rectangle.</param>
     /// <param name="radius">The radius of the rounded corners of the rectangle.</param>
     /// <param name="alignment">The point on the rectangle to align to the provided position.</param>
-    sealed void DrawRoundedRect(float x, float y, float width, float height, float radius, Alignment alignment = Alignment.TopLeft) => DrawRoundedRect(new(x, y, width, height, alignment), radius);
+    sealed void DrawRoundedRect(float x, float y, float width, float height, float radius, Alignment alignment = Alignment.TopLeft)
+    {
+        DrawRoundedRect(new Rectangle(x, y, width, height, alignment), new Vector2(radius, radius));
+    }
+
+    /// <summary>
+    /// Draws a rounded rectangle to the canvas, using the current transform, clipping, and drawing settings.
+    /// </summary>
+    /// <param name="x">The X position of the rectangle.</param>
+    /// <param name="y">The Y position of the rectangle.</param>
+    /// <param name="width">The width of the rectangle.</param>
+    /// <param name="height">The height of the rectangle.</param>
+    /// <param name="xRadius">The radius of the rounded corners of the rectangle.</param>
+    /// <param name="yRadius">The radius of the rounded corners of the rectangle.</param>
+    /// <param name="alignment">The point on the rectangle to align to the provided position.</param>
+    sealed void DrawRoundedRect(float x, float y, float width, float height, float xRadius, float yRadius, Alignment alignment = Alignment.TopLeft)
+    {
+        DrawRoundedRect(new Rectangle(x, y, width, height, alignment), new Vector2(xRadius, yRadius));
+    }
+
+    /// <summary>
+    /// Draws a rounded rectangle to the canvas, using the current transform, clipping, and drawing settings.
+    /// </summary>
+    /// <param name="x">The X position of the rectangle.</param>
+    /// <param name="y">The Y position of the rectangle.</param>
+    /// <param name="width">The width of the rectangle.</param>
+    /// <param name="height">The height of the rectangle.</param>
+    /// <param name="radii">The x and y radii of the rounded corners of the rectangle.</param>
+    /// <param name="alignment">The point on the rectangle to align to the provided position.</param>
+    sealed void DrawRoundedRect(float x, float y, float width, float height, Vector2 radii, Alignment alignment = Alignment.TopLeft)
+    {
+        DrawRoundedRect(new Rectangle(x, y, width, height, alignment), radii);
+    }
 
     /// <summary>
     /// Draws a rounded rectangle to the canvas, using the current transform, clipping, and drawing settings.
@@ -193,14 +204,39 @@ public interface ICanvas
     /// <param name="size">The size of the rectangle.</param>
     /// <param name="radius">The radius of the rounded corners of the rectangle.</param>
     /// <param name="alignment">The point on the rectangle to align to the provided position.</param>
-    sealed void DrawRoundedRect(Vector2 position, Vector2 size, float radius, Alignment alignment = Alignment.TopLeft) => DrawRoundedRect(new(position, size, alignment), radius);
+    sealed void DrawRoundedRect(Vector2 position, Vector2 size, float radius, Alignment alignment = Alignment.TopLeft) 
+    {
+        DrawRoundedRect(new Rectangle(position, size, alignment), new Vector2(radius));
+    }
+
+    /// <summary>
+    /// Draws a rounded rectangle to the canvas, using the current transform, clipping, and drawing settings.
+    /// </summary>
+    /// <param name="position">The position of the rectangle.</param>
+    /// <param name="size">The size of the rectangle.</param>
+    /// <param name="radii">The x and y radii of the rounded corners of the rectangle.</param>
+    /// <param name="alignment">The point on the rectangle to align to the provided position.</param>
+    sealed void DrawRoundedRect(Vector2 position, Vector2 size, Vector2 radii, Alignment alignment = Alignment.TopLeft)
+    {
+        DrawRoundedRect(new Rectangle(position, size, alignment), radii);
+    }
 
     /// <summary>
     /// Draws a rounded rectangle to the canvas, using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="rect">The position and size of rectangle.</param>
     /// <param name="radius">The radius of the rounded corners of the rectangle.</param>
-    void DrawRoundedRect(Rectangle rect, float radius);
+    sealed void DrawRoundedRect(Rectangle rect, float radius) 
+    {
+        DrawRoundedRect(rect, new Vector2(radius));
+    }
+
+    /// <summary>
+    /// Draws a rounded rectangle to the canvas, using the current transform, clipping, and drawing settings.
+    /// </summary>
+    /// <param name="rect">The position and size of rectangle.</param>
+    /// <param name="radii">The x and y radii of the rounded corners of the rectangle.</param>
+    void DrawRoundedRect(Rectangle rect, Vector2 radii);
 
     /// <summary>
     /// Draws a circle to the canvas, using the current transform, clipping, and drawing settings.
@@ -212,13 +248,13 @@ public interface ICanvas
     sealed void DrawCircle(float x, float y, float radius, Alignment alignment = Alignment.Center) => DrawCircle(new(x, y), radius, alignment);
 
     /// <summary>
-    /// Draws a circle to the canvas, using the current transform, clipping, and drawing settings.
+    /// Draws a circle to the canvas using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="circle">The circle to draw.</param>
     sealed void DrawCircle(Circle circle) => DrawCircle(circle.Position, circle.Radius);
 
     /// <summary>
-    /// Draws a circle to the canvas, using the current transform, clipping, and drawing settings.
+    /// Draws a circle to the canvas using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="position">The position of the circle.</param>
     /// <param name="radius">The radius of the circle on the x-axis.</param>
@@ -226,7 +262,7 @@ public interface ICanvas
     sealed void DrawCircle(Vector2 position, float radius, Alignment alignment = Alignment.Center) => DrawEllipse(position, new(radius, radius), alignment);
 
     /// <summary>
-    /// Draws an ellipse to the canvas, using the current transform, clipping, and drawing settings.
+    /// Draws an ellipse to the canvas using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="x">The x-coordinate of the ellipse.</param>
     /// <param name="y">The y-coordinate of the ellipse.</param>
@@ -236,7 +272,7 @@ public interface ICanvas
     sealed void DrawEllipse(float x, float y, float radiusX, float radiusY, Alignment alignment = Alignment.Center) => DrawEllipse(new(x, y), new(radiusX, radiusY), alignment);
 
     /// <summary>
-    /// Draws an ellipse to the canvas, using the current transform, clipping, and drawing settings.
+    /// Draws an ellipse to the canvas using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="position">The position of the rectangle.</param>
     /// <param name="radii">The radii of the ellipse.</param>
@@ -244,13 +280,13 @@ public interface ICanvas
     sealed void DrawEllipse(Vector2 position, Vector2 radii, Alignment alignment = Alignment.Center) => DrawEllipse(new Rectangle(position, radii * 2, alignment));
 
     /// <summary>
-    /// Draws an ellipse to the canvas, using the current transform, clipping, and drawing settings.
+    /// Draws an ellipse to the canvas using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="bounds">The bounds into which the drawn ellipse should fit.</param>
-    sealed void DrawEllipse(Rectangle bounds) => DrawArc(bounds, 0, MathF.Tau, true);
+    void DrawEllipse(Rectangle bounds);
 
     /// <summary>
-    /// Draws a segment of an ellipse to the canvas to form an arc, using the current transform, clipping, and drawing settings.
+    /// Draws a segment of an ellipse to the canvas to form an arc using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="x">The x-coordinate of the ellipse.</param>
     /// <param name="y">The y-coordinate of the ellipse.</param>
@@ -263,7 +299,7 @@ public interface ICanvas
     sealed void DrawArc(float x, float y, float radiusX, float radiusY, float begin, float end, bool includeCenter, Alignment alignment = Alignment.Center) => DrawArc(new(x, y), new(radiusX, radiusY), begin, end, includeCenter, alignment);
 
     /// <summary>
-    /// Draws a segment of an ellipse to the canvas to form an arc, using the current transform, clipping, and drawing settings.
+    /// Draws a segment of an ellipse to the canvas to form an arc using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="position">The position of the rectangle.</param>
     /// <param name="radii">The radii of the ellipse.</param>
@@ -274,7 +310,7 @@ public interface ICanvas
     sealed void DrawArc(Vector2 position, Vector2 radii, float begin, float end, bool includeCenter, Alignment alignment = Alignment.Center) => DrawArc(new(position, radii * 2, alignment), begin, end, includeCenter);
 
     /// <summary>
-    /// Draws a segment of an ellipse to the canvas to form an arc, using the current transform, clipping, and drawing settings.
+    /// Draws a segment of an ellipse to the canvas to form an arc using the current transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="bounds">The bounds of the ellipse.</param>
     /// <param name="begin">The angle at which the ellipse segment begins.</param>
@@ -283,7 +319,31 @@ public interface ICanvas
     void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter);
 
     /// <summary>
-    /// Draws a texture to the canvas at (0, 0), using the current transform and clipping settings.
+    /// Draws a list of triangles using the current transform, clipping, and drawing settings
+    /// </summary>
+    /// <param name="triangles">The list of triangles to draw. Every three points make a triangle.</param>
+    sealed void DrawTriangles(IEnumerable<Vector2> triangles)
+    {
+        CollectionsHelper.EnumerableAsSpan(triangles, 0, (span, _) => DrawTriangles(span));
+    }
+
+    /// <summary>
+    /// Draws a list of triangles using the current transform, clipping, and drawing settings
+    /// </summary>
+    /// <param name="triangles">The list of triangles to draw. Every three points make a triangle.</param>
+    sealed void DrawTriangles(Vector2[] triangles)
+    {
+        DrawTriangles(triangles.AsSpan());
+    }
+
+    /// <summary>
+    /// Draws a list of triangles using the current transform, clipping, and drawing settings
+    /// </summary>
+    /// <param name="triangles">The list of triangles to draw. Every three points make a triangle.</param>
+    void DrawTriangles(ReadOnlySpan<Vector2> triangles);
+
+    /// <summary>
+    /// Draws a texture to the canvas at (0, 0) using the current transform and clipping settings.
     /// </summary>
     /// <param name="texture">The texture to draw.</param>
     /// <param name="alignment">The point on the texture to align to (0, 0).</param>
@@ -324,43 +384,65 @@ public interface ICanvas
     /// <param name="position">The position of the texture's destination rectangle.</param>
     /// <param name="size">The size of the texture's destination rectangle.</param>
     /// <param name="alignment">The point on the texture to align to the provided position.</param>
-    sealed void DrawTexture(ITexture texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft) => DrawTexture(texture, new Rectangle(position, size, alignment));
+    sealed void DrawTexture(ITexture texture, Vector2 position, Vector2 size, Alignment alignment = Alignment.TopLeft)
+    {
+        Rectangle source = new(0, 0, texture.Width, texture.Height);
+        Rectangle destination = new(position, size, alignment);
+        DrawTexture(texture, source, destination, ColorF.White);
+    }
 
     /// <summary>
     /// Draws a texture to the canvas using the current transform and clipping settings.
     /// </summary>
     /// <param name="texture">The texture to draw.</param>
     /// <param name="destination">The location to draw the texture.</param>
-    sealed void DrawTexture(ITexture texture, Rectangle destination) => DrawTexture(texture, new(0, 0, texture.Width, texture.Height), destination, ColorF.White);
+    sealed void DrawTexture(ITexture texture, Rectangle destination)
+    {
+        Rectangle source = new(0, 0, texture.Width, texture.Height);
+        DrawTexture(texture, source, destination, ColorF.White);
+    }
 
     /// <summary>
-    /// Draws a texture to the canvas, using the current transform and clipping settings.
+    /// Draws a texture to the canvas using the current transform and clipping settings.
+    /// </summary>
+    /// <param name="texture">The texture to draw.</param>
+    /// <param name="destination">The location to draw the texture.</param>
+    /// <param name="tint">The tint to use when drawing the texture. Use <see cref="ColorF.White"/> for no tint.</param>
+    sealed void DrawTexture(ITexture texture, Rectangle destination, ColorF tint)
+    {
+        Rectangle source = new(0, 0, texture.Width, texture.Height);
+        DrawTexture(texture, source, destination, tint);
+    }
+
+    /// <summary>
+    /// Draws part of a texture to the canvas, using the current transform and clipping settings.
     /// </summary>
     /// <param name="texture">The texture to draw.</param>
     /// <param name="source">The source bounds of the texture.</param>
     /// <param name="destination">The destination bounds of the texture.</param>
+    sealed void DrawTexture(ITexture texture, Rectangle source, Rectangle destination) => DrawTexture(texture, source, destination, ColorF.White);
+
+    /// <summary>
+    /// Draws part of a texture to the canvas, using the current transform and clipping settings.
+    /// </summary>
+    /// <param name="texture">The texture to draw.</param>
+    /// <param name="source">The source region of the texture.</param>
+    /// <param name="destination">The destination bounds of the texture.</param>
+    /// <param name="tint">The tint to use when drawing the texture. Use <see cref="ColorF.White"/> for no tint.</param>
     void DrawTexture(ITexture texture, Rectangle source, Rectangle destination, ColorF tint);
 
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
-    /// <para>
-    /// If the current <see cref="DrawMode"/> is <see cref="DrawMode.Fill"/> or <see cref="DrawMode.Gradient"/>,
-    /// the first and last vertices are connected to create a closed polygon.
-    /// </para>
     /// </summary>
     /// <param name="polygon">The vertices of the polygon.</param>
     /// <param name="close">Whether the first and last vertices of the polygon should be treated as connected.</param>
     sealed void DrawPolygon(IEnumerable<Vector2> polygon, bool close = true)
     {
-        CollectionsHelper.EnumerableAsSpan(polygon, 0, (span, _) => DrawPolygon(span, close));
+        CollectionsHelper.EnumerableAsSpan(polygon, close, (span, close) => DrawPolygon(span, close));
     }
 
     /// <summary>
     /// Draws a polygon to the canvas, using the current transform, clipping, and drawing settings.
-    /// <para>
-    /// If the current <see cref="DrawMode"/> is <see cref="DrawMode.Fill"/> or <see cref="DrawMode.Gradient"/>,
-    /// the first and last vertices are connected to create a closed polygon.
-    /// </para>
     /// </summary>
     /// <param name="polygon">The vertices of the polygon.</param>
     /// <param name="close">Whether the first and last vertices of the polygon should be treated as connected.</param>
@@ -380,7 +462,6 @@ public interface ICanvas
     /// <param name="x">The X position of the text.</param>
     /// <param name="y">The Y position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    /// <param name="origin">Determines the text's bounding box.</param>
     sealed Vector2 DrawText(string text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text, new Vector2(x, y), alignment);
 
     /// <summary>
@@ -389,7 +470,6 @@ public interface ICanvas
     /// <param name="text">The text to draw.</param>
     /// <param name="position">The position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    /// <param name="origin">Determines the text's bounding box.</param>
     sealed Vector2 DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -404,7 +484,6 @@ public interface ICanvas
     /// <param name="x">The X position of the text.</param>
     /// <param name="y">The Y position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    /// <param name="origin">Determines the text's bounding box.</param>
     sealed Vector2 DrawText(ReadOnlySpan<char> text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text, new(x, y), alignment);
 
     /// <summary>
@@ -413,7 +492,6 @@ public interface ICanvas
     /// <param name="text">The text to draw.</param>
     /// <param name="position">The position of the text.</param>
     /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    /// <param name="origin">Determines the text's bounding box.</param>
     Vector2 DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft);
 
     Vector2 DrawCodepoint(int codepoint) => DrawCodepoint(codepoint, Vector2.Zero, Alignment.BottomLeft);
@@ -448,17 +526,17 @@ public interface ICanvas
     void FontSize(float size);
 
     /// <summary>
-    /// Pushes the current transformation matrix, clipping rectangle, and drawing state onto the stack.
+    /// Pushes the a copy of the current <see cref="CanvasState"/> onto the top of the canvas's internal state stack.
     /// </summary>
     void PushState();
 
     /// <summary>
-    /// Pops a transformation matrix, clipping rectangle, and drawing state off the top of the stack.
+    /// Pops the current <see cref="CanvasState"/> off the top of the canvas's internal state stack.
     /// </summary>
     void PopState();
 
     /// <summary>
-    /// Resets the transformation matrix, clipping rectangle, and drawing state to their defaults.
+    /// Resets the current <see cref="CanvasState"/> to its default values.
     /// </summary>
     void ResetState();
 
