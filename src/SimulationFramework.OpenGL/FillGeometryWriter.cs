@@ -33,7 +33,7 @@ class FillGeometryWriter : GeometryWriter
     public override void PushEllipse(GeometryStream stream, Rectangle bounds)
     {
         int steps = CalculateRoundedEdgeQuality(stream.TransformMatrix, MathF.Max(bounds.Width, bounds.Height) * .5f, MathF.Tau);
-        ImGui.Text(steps.ToString());
+
         float increment = MathF.Tau / steps;
         float angle = 0;
         for (int i = 0; i < steps; i++)

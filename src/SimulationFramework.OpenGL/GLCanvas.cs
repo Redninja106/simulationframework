@@ -11,7 +11,6 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using static OpenGL;
 
 namespace SimulationFramework.OpenGL;
 internal class GLCanvas : ICanvas
@@ -26,6 +25,7 @@ internal class GLCanvas : ICanvas
     private readonly PositionGeometryStream positionGeometryStream;
     private readonly ColorGeometryStream colorGeometryStream;
     private readonly TextureGeometryStream textureGeometryStream;
+    private readonly TextureGeometryStream sdfGeometryStream;
 
     private readonly FillGeometryWriter fillGeometryWriter;
     private readonly HairlineGeometryWriter hairlineGeometryWriter;
@@ -33,6 +33,7 @@ internal class GLCanvas : ICanvas
 
     private readonly ColorGeometryEffect colorGeometryEffect;
     private readonly TextureGeometryEffect textureGeometryEffect;
+    private readonly SDFFontEffect sdfGeometryEffect;
 
     private GeometryStream currentGeometryStream;
     private GeometryWriter currentGeometryWriter;
@@ -54,6 +55,11 @@ internal class GLCanvas : ICanvas
 
             glBindFramebuffer(GL_FRAMEBUFFER, fbo);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.GetID(), 0);
+
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            {
+                Log.Warn("framebuffer is not complete!");
+            }
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
         }
         else
@@ -68,6 +74,7 @@ internal class GLCanvas : ICanvas
         positionGeometryStream = new PositionGeometryStream();
         colorGeometryStream = new ColorGeometryStream();
         textureGeometryStream = new TextureGeometryStream();
+        sdfGeometryStream = new TextureGeometryStream();
 
         fillGeometryWriter = new FillGeometryWriter();
         hairlineGeometryWriter = new HairlineGeometryWriter();
@@ -75,6 +82,7 @@ internal class GLCanvas : ICanvas
 
         colorGeometryEffect = new ColorGeometryEffect();
         textureGeometryEffect = new TextureGeometryEffect();
+        sdfGeometryEffect = new SDFFontEffect();
 
         currentGeometryStream = colorGeometryStream;
         currentGeometryWriter = fillGeometryWriter;
@@ -144,14 +152,14 @@ internal class GLCanvas : ICanvas
         currentGeometryWriter.PushRoundedRect(currentGeometryStream, rect, radii);
     }
 
-    public Vector2 DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft)
+    public Vector2 DrawText(ReadOnlySpan<char> text, float size, Vector2 baseline, TextStyle style = TextStyle.Regular)
     {
         for (int i = 0; i < text.Length; i++)
         {
-            position = DrawCodepoint(text[i], position, alignment);
+            baseline = DrawCodepoint(text[i], size, baseline, style);
         }
 
-        return position;
+        return baseline;
     }
 
     public void DrawTexture(ITexture texture, Rectangle source, Rectangle destination, ColorF tint)
@@ -163,22 +171,22 @@ internal class GLCanvas : ICanvas
         textureGeometryEffect.texture = (GLTexture)texture;
         textureGeometryEffect.tint = tint;
 
-        UpdateGeometryStream(textureGeometryStream);
         UpdateGeometryWriter(fillGeometryWriter);
+        UpdateGeometryStream(textureGeometryStream);
 
-        Vector2 uvScale = new(1f/texture.Width, 1f/texture.Height);
-        textureGeometryStream.WriteVertex(new(destination.X,                     destination.Y                     ), uvScale * new Vector2(source.X, source.Y));
-        textureGeometryStream.WriteVertex(new(destination.X + destination.Width, destination.Y                     ), uvScale * new Vector2(source.X + source.Width, source.Y));
-        textureGeometryStream.WriteVertex(new(destination.X,                     destination.Y + destination.Height), uvScale * new Vector2(source.X, source.Y + source.Height));
-        
-        textureGeometryStream.WriteVertex(new(destination.X + destination.Width, destination.Y                     ), uvScale * new Vector2(source.X + source.Width, source.Y));
-        textureGeometryStream.WriteVertex(new(destination.X + destination.Width, destination.Y + destination.Height), uvScale * new Vector2(source.X + source.Width, source.Y + source.Height));
-        textureGeometryStream.WriteVertex(new(destination.X,                     destination.Y + destination.Height), uvScale * new Vector2(source.X, source.Y + source.Height));
+        Vector2 uvScale = new(1f / texture.Width, 1f / texture.Height);
+        textureGeometryStream.WriteVertexFlipUV(new(destination.X, destination.Y), uvScale * new Vector2(source.X, source.Y));
+        textureGeometryStream.WriteVertexFlipUV(new(destination.X + destination.Width, destination.Y), uvScale * new Vector2(source.X + source.Width, source.Y));
+        textureGeometryStream.WriteVertexFlipUV(new(destination.X, destination.Y + destination.Height), uvScale * new Vector2(source.X, source.Y + source.Height));
+
+        textureGeometryStream.WriteVertexFlipUV(new(destination.X + destination.Width, destination.Y), uvScale * new Vector2(source.X + source.Width, source.Y));
+        textureGeometryStream.WriteVertexFlipUV(new(destination.X + destination.Width, destination.Y + destination.Height), uvScale * new Vector2(source.X + source.Width, source.Y + source.Height));
+        textureGeometryStream.WriteVertexFlipUV(new(destination.X, destination.Y + destination.Height), uvScale * new Vector2(source.X, source.Y + source.Height));
     }
 
     private void SetupRegularGeometry()
     {
-        if (currentGeometryStream == textureGeometryStream)
+        if (currentGeometryStream == textureGeometryStream || currentGeometryStream == sdfGeometryStream)
         {
             UpdateGeometryStream(colorGeometryStream);
         }
@@ -215,13 +223,47 @@ internal class GLCanvas : ICanvas
         UpdateGeometryWriter(fillGeometryWriter);
     }
 
-    public Vector2 DrawCodepoint(int codepoint, Vector2 position, Alignment alignment)
+    public Vector2 DrawCodepoint(int codepoint, float size, Vector2 baseline, TextStyle style = TextStyle.Regular)
     {
         GLFont font = (GLFont)currentState.Font;
-        Vector2 newPos = font.GetCodepointPosition(codepoint, position, currentState.FontSize, currentState.FontStyle, out Rectangle source, out Rectangle destination);
-        GLTexture atlas = font.GetAtlasTexture(currentState.FontSize, currentState.FontStyle);
-        DrawTexture(atlas, source, destination, currentState.Color);
-        return newPos;
+        var atlas = font.GetAtlas(style);
+        if (!font.SupportsBold && style.HasFlag(TextStyle.Bold))
+        {
+            sdfGeometryEffect.boldThreshold = true;
+        }
+        else
+        {
+            sdfGeometryEffect.boldThreshold = false;
+        }
+
+        if (!font.SupportsItalic && style.HasFlag(TextStyle.Italic))
+        {
+            // sdfGeometryEffect.slant = 1f;
+        }
+
+
+        sdfGeometryEffect.fontAtlas = atlas.GetTextureID();
+
+        UpdateGeometryWriter(fillGeometryWriter);
+        UpdateGeometryStream(sdfGeometryStream);
+
+        baseline = atlas.GetCodepoint(codepoint, baseline, out Rectangle source, out Rectangle destination);
+
+        Vector2 uvScale = new(1f / atlas.Width, 1f / atlas.Height);
+        sdfGeometryStream.WriteVertex(new(destination.X, destination.Y), uvScale * new Vector2(source.X, source.Y));
+        sdfGeometryStream.WriteVertex(new(destination.X + destination.Width, destination.Y), uvScale * new Vector2(source.X + source.Width, source.Y));
+        sdfGeometryStream.WriteVertex(new(destination.X, destination.Y + destination.Height), uvScale * new Vector2(source.X, source.Y + source.Height));
+
+        sdfGeometryStream.WriteVertex(new(destination.X + destination.Width, destination.Y), uvScale * new Vector2(source.X + source.Width, source.Y));
+        sdfGeometryStream.WriteVertex(new(destination.X + destination.Width, destination.Y + destination.Height), uvScale * new Vector2(source.X + source.Width, source.Y + source.Height));
+        sdfGeometryStream.WriteVertex(new(destination.X, destination.Y + destination.Height), uvScale * new Vector2(source.X, source.Y + source.Height));
+
+        return baseline;
+
+        // Vector2 newPos = font.GetCodepointPosition(codepoint, position, currentState.FontSize, currentState.FontStyle, out Rectangle source, out Rectangle destination);
+        // GLTexture atlas = font.GetAtlasTexture(currentState.FontSize, currentState.FontStyle);
+        // DrawTexture(atlas, source, destination, currentState.Color);
+        // return newPos;
     }
 
     public unsafe void Flush()
@@ -263,6 +305,11 @@ internal class GLCanvas : ICanvas
             return textureGeometryEffect;
         }
 
+        if (geometryStream == sdfGeometryStream)
+        {
+            return sdfGeometryEffect;
+        }
+
         if (currentState.Shader is not null)
         {
             var effect = graphics.GetShaderEffect(currentState.Shader);
@@ -277,16 +324,6 @@ internal class GLCanvas : ICanvas
     public void Font(IFont font)
     {
         currentState.Font = font;
-    }
-
-    public void FontSize(float size)
-    {
-        currentState.FontSize = size;
-    }
-
-    public void FontStyle(FontStyle style)
-    {
-        currentState.FontStyle = style;
     }
 
     public void PopState()

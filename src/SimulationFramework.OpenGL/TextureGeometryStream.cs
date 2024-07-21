@@ -55,12 +55,21 @@ internal class TextureGeometryStream : GeometryStream
         throw new InvalidOperationException();
     }
 
-    public void WriteVertex(Vector2 position, Vector2 textureCoordinate)
+    public void WriteVertexFlipUV(Vector2 position, Vector2 textureCoordinate)
     {
         vertices.Add(new()
         {
             position = Vector2.Transform(position, TransformMatrix),
             textureCoordinate = new(textureCoordinate.X, 1f - textureCoordinate.Y),
+        });
+    }
+
+    public void WriteVertex(Vector2 position, Vector2 textureCoordinate)
+    {
+        vertices.Add(new()
+        {
+            position = Vector2.Transform(position, TransformMatrix),
+            textureCoordinate = new(textureCoordinate.X, textureCoordinate.Y),
         });
     }
 

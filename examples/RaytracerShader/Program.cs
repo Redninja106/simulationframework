@@ -151,7 +151,7 @@ class RayTracerShader : CanvasShader
                     vp.Y * height * .5f + sampleOffset.Y
                     );
                 samplePos /= new Vector2(width * .5f, height * .5f);
-                Vector4 direction4 = ShaderIntrinsics.Transform(new(samplePos * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1), cameraTransform);
+                Vector4 direction4 = ShaderIntrinsics.Transform(new Vector4(samplePos * MathF.Tan(Angle.ToRadians(vfov / 2f)), 1, 1), cameraTransform);
                 color += RayColor(origin, new(direction4.X, direction4.Y, direction4.Z));
             }
         }

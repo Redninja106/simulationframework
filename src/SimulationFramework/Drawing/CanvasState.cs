@@ -14,8 +14,6 @@ public struct CanvasState
     public float strokeWidth { get; set; }
 
     public CanvasShader? Shader { get; set; }
-    public FontStyle FontStyle { get; set; }
-    public float FontSize { get; set; }
     public IFont Font { get; set; }
 
     public CanvasState Clone()
@@ -32,8 +30,6 @@ public struct CanvasState
         strokeWidth = 0;
         Shader = null;
 
-        FontStyle = FontStyle.Normal;
-        FontSize = 16;
         Font = Graphics.DefaultFont;
     }
 }

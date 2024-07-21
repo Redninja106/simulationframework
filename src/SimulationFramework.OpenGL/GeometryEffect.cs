@@ -62,6 +62,19 @@ internal abstract class GeometryEffect
             }
         }
     }
+
+    protected static unsafe int GetUniformLocation(uint program, ReadOnlySpan<byte> uniformName)
+    {
+        return glGetUniformLocation(program, ToPointer(uniformName));
+
+        static unsafe byte* ToPointer(ReadOnlySpan<byte> str)
+        {
+            fixed (byte* a = str)
+            {
+                return a;
+            }
+        }
+    }
 }
 
 class ColorGeometryEffect : GeometryEffect
@@ -104,17 +117,10 @@ void main()
 
     public override unsafe void ApplyState(CanvasState state, Matrix4x4 matrix)
     {
-        var loc = glGetUniformLocation(program, ToPointer("transform"u8));
+        var loc = GetUniformLocation(program, "transform"u8);
         glUniformMatrix4fv(loc, 1, 0, (float*)&matrix);
     }
 
-    private unsafe byte* ToPointer(ReadOnlySpan<byte> str)
-    {
-        fixed (byte* a = str)
-        {
-            return a;
-        }
-    }
 
     public override void Use()
     {

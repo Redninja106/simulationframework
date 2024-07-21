@@ -12,15 +12,34 @@ class DrawingShapesSimulation : Simulation
 {
     ITexture logo;
 
-
     public override void OnInitialize()
     {
         logo = Graphics.LoadTexture("./logo-512x512.png");
+        SetFixedResolution(640, 480, Color.Black);
     }
     float f;
+    string s = "Hello!";
     public override void OnRender(ICanvas canvas)
     {
+        Window.Title = "Simulation - " + (int)Performance.Framerate + " FPS";
         canvas.Clear(Color.Gray);
+        //canvas.Scale(MathF.Pow(1.1f, f));
+        f += Mouse.ScrollWheelDelta;
+        foreach (var typedChar in Keyboard.TypedKeys)
+        {
+            s += typedChar;
+        }
+
+        if (Keyboard.IsKeyPressed(Key.Backspace))
+        {
+            if (s.Length > 0)
+                s = s[..(s.Length-1)];
+        }
+
+        canvas.Antialias(true);
+
+        canvas.DrawAlignedText(s, 32f, Mouse.Position + Vector2.One * 10, Alignment.Center, Keyboard.IsKeyDown(Key.Space) ? TextStyle.Bold : 0);
+        canvas.DrawCircle(Mouse.Position, MathF.Pow(1.1f, f));
 
         // ImGuiNET.ImGui.Text("hello, world!");
         // ImGuiNET.ImGui.Image(logo.GetImGuiID(), new(100, 100));

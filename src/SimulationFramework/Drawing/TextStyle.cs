@@ -4,12 +4,12 @@
 /// Options for drawing text. Multiple values can be combined using the "<c>|</c>" (bitwise or) operator.
 /// </summary>
 [Flags]
-public enum FontStyle
+public enum TextStyle
 {
     /// <summary>
     /// Normal text.
     /// </summary>
-    Normal = 0,
+    Regular = 0,
     /// <summary>
     /// Bold text.
     /// </summary>

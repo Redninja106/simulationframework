@@ -459,46 +459,68 @@ public interface ICanvas
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="text">The text to draw.</param>
-    /// <param name="x">The X position of the text.</param>
-    /// <param name="y">The Y position of the text.</param>
-    /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    sealed Vector2 DrawText(string text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text, new Vector2(x, y), alignment);
+    /// <param name="baselineX">The X position of the text.</param>
+    /// <param name="baselineY">The Y position of the text.</param>
+    sealed Vector2 DrawText(string text, float size, float baselineX, float baselineY, TextStyle style = TextStyle.Regular) => DrawText(text, size, new Vector2(baselineX, baselineY));
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="text">The text to draw.</param>
-    /// <param name="position">The position of the text.</param>
-    /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    sealed Vector2 DrawText(string text, Vector2 position, Alignment alignment = Alignment.TopLeft)
+    /// <param name="baseline">The baseline for drawing the text. </param>
+    sealed Vector2 DrawText(string text, float size, Vector2 baseline, TextStyle style = TextStyle.Regular)
     {
         ArgumentNullException.ThrowIfNull(text);
 
-        return DrawText(text.AsSpan(), position, alignment);
+        return DrawText(text.AsSpan(), size, baseline);
     }
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="text">The text to draw.</param>
-    /// <param name="x">The X position of the text.</param>
-    /// <param name="y">The Y position of the text.</param>
-    /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    sealed Vector2 DrawText(ReadOnlySpan<char> text, float x, float y, Alignment alignment = Alignment.TopLeft) => DrawText(text, new(x, y), alignment);
+    /// <param name="baselineX">The X position of the text.</param>
+    /// <param name="baselineY">The Y position of the text.</param>
+    sealed Vector2 DrawText(ReadOnlySpan<char> text, float size, float baselineX, float baselineY, TextStyle style = TextStyle.Regular)
+    {
+        return DrawText(text, size, new Vector2(baselineX, baselineY));
+    }
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="text">The text to draw.</param>
-    /// <param name="position">The position of the text.</param>
-    /// <param name="alignment">The point on the text's bounding box to align to the provided position.</param>
-    Vector2 DrawText(ReadOnlySpan<char> text, Vector2 position, Alignment alignment = Alignment.TopLeft);
+    /// <param name="baseline">The baseline of the text.</param>
+    Vector2 DrawText(ReadOnlySpan<char> text, float size, Vector2 baseline, TextStyle style = TextStyle.Regular);
 
-    Vector2 DrawCodepoint(int codepoint) => DrawCodepoint(codepoint, Vector2.Zero, Alignment.BottomLeft);
-    Vector2 DrawCodepoint(int codepoint, Vector2 position, Alignment alignment);
+    sealed void DrawAlignedText(string text, float size, float x, float y, Alignment alignment, TextStyle style = TextStyle.Regular)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        DrawAlignedText(text.AsSpan(), size, new Vector2(x, y), alignment, style);
+    }
 
-    Rectangle MeasureText(ReadOnlySpan<char> text) => State.Font.MeasureText(text, State.FontSize, State.FontStyle);
-    Rectangle MeasureText(string text) => State.Font.MeasureText(text, State.FontSize, State.FontStyle);
+    sealed void DrawAlignedText(string text, float size, Vector2 position, Alignment alignment, TextStyle style = TextStyle.Regular)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+        DrawAlignedText(text.AsSpan(), size, position, alignment, style);
+    }
+
+    sealed void DrawAlignedText(ReadOnlySpan<char> text, float size, float x, float y, Alignment alignment, TextStyle style = TextStyle.Regular)
+    {
+        DrawAlignedText(text, size, new Vector2(x, y), alignment, style);
+    }
+
+    sealed void DrawAlignedText(ReadOnlySpan<char> text, float size, Vector2 position, Alignment alignment, TextStyle style = TextStyle.Regular)
+    {
+        var bounds = MeasureText(text, size);
+        Rectangle destination = new(position - bounds.Position, bounds.Size, alignment);
+        DrawText(text, size, destination.Position, style);
+    }
+
+    Vector2 DrawCodepoint(int codepoint, float size, Vector2 baseline, TextStyle style = TextStyle.Regular);
+
+    Rectangle MeasureText(ReadOnlySpan<char> text, float size, TextStyle style = TextStyle.Regular) => State.Font.MeasureText(text, size, style);
+    Rectangle MeasureText(string text, float size, TextStyle style = TextStyle.Regular) => State.Font.MeasureText(text, size, style); 
 
     /// <summary>
     /// Sets a font with the specified attributes as current (and loads it if it is not already loaded).
@@ -512,18 +534,6 @@ public interface ICanvas
     /// </summary>
     /// <param name="font">The font to use when drawing text.</param>
     void Font(IFont font);
-
-    /// <summary>
-    /// Configures the style of the current font.
-    /// </summary>
-    /// <param name="style">The style of the font.</param>
-    void FontStyle(FontStyle style);
-
-    /// <summary>
-    /// Configures the size of the current font.
-    /// </summary>
-    /// <param name="size">The size of the font.</param>
-    void FontSize(float size);
 
     /// <summary>
     /// Pushes the a copy of the current <see cref="CanvasState"/> onto the top of the canvas's internal state stack.

@@ -50,20 +50,12 @@ void main()
 
     public override unsafe void ApplyState(CanvasState state, Matrix4x4 matrix)
     {
-        var loc = glGetUniformLocation(program, ToPointer("transform"u8));
+        var loc = GetUniformLocation(program, "transform"u8);
         glUniformMatrix4fv(loc, 1, 0, (float*)&matrix);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, this.texture.GetID());
-        glUniform1i(glGetUniformLocation(program, ToPointer("textureSampler"u8)), 0);
-        glUniform4f(glGetUniformLocation(program, ToPointer("tint"u8)), tint.R, tint.G, tint.B, tint.A);
-    }
-
-    private unsafe byte* ToPointer(ReadOnlySpan<byte> str)
-    {
-        fixed (byte* a = str)
-        {
-            return a;
-        }
+        glUniform1i(GetUniformLocation(program, "textureSampler"u8), 0);
+        glUniform4f(GetUniformLocation(program, "tint"u8), tint.R, tint.G, tint.B, tint.A);
     }
 
     public override void Use()
