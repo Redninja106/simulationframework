@@ -50,7 +50,7 @@ public unsafe class GLFont : IFont
         {
             throw new Exception("Error initializing font!");
         }
-        return new SDFFontAtlas(fontinfo, 32);
+        return new SDFFontAtlas(fontinfo, 64);
 
     }
 
@@ -97,7 +97,8 @@ public unsafe class GLFont : IFont
         Vector2 baseline = Vector2.Zero;
         for (int i = 0; i < text.Length; i++)
         {
-            baseline = atlas.GetCodepoint(text[i], baseline, out Rectangle _, out Rectangle destination);
+            baseline = atlas.GetCodepoint(text[i], size, baseline, out Rectangle _, out Rectangle destination);
+            
 
             if (i == 0)
             {
@@ -132,7 +133,7 @@ public unsafe class GLFont : IFont
     public Rectangle GetCodepointRectangle(int codepoint, float size, TextStyle style, out float xAdvance)
     {
         var atlas = GetAtlas(style);
-        var baseline = atlas.GetCodepoint(codepoint, Vector2.Zero, out _, out Rectangle destination);
+        var baseline = atlas.GetCodepoint(codepoint, size, Vector2.Zero, out _, out Rectangle destination);
         xAdvance = baseline.X;
         return destination;
     }
@@ -145,7 +146,7 @@ internal unsafe class SDFFontAtlas
 
     stbtt_fontinfo fontInfo;
     Dictionary<int, CharInfo> chars = [];
-    int pixelSize;
+    public int pixelSize;
     uint tex;
     int nextX, nextY;
     int atlasWidth = 1024, atlasHeight = 1024;
@@ -181,7 +182,7 @@ internal unsafe class SDFFontAtlas
         int width, height;
         int xoff, yoff;
 
-        float scale = stbtt_ScaleForPixelHeight(fontInfo, 64);
+        float scale = stbtt_ScaleForPixelHeight(fontInfo, pixelSize);
         var sdf = stbtt_GetCodepointSDF(fontInfo, scale, codepoint, 5, 180, 180f / 5f, &width, &height, &xoff, &yoff);
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -201,11 +202,11 @@ internal unsafe class SDFFontAtlas
 
         chars.Add(codepoint, charInfo);
 
-        nextX += 64;
+        nextX += pixelSize;
         if (nextX >= atlasWidth)
         {
             nextX = 0;
-            nextY += 64;
+            nextY += pixelSize;
         }
 
         stbtt_FreeSDF(sdf, null);
@@ -218,19 +219,25 @@ internal unsafe class SDFFontAtlas
         return tex;
     }
 
-    public Vector2 GetCodepoint(int codepoint, Vector2 position, out Rectangle source, out Rectangle destination)
+    public Vector2 GetCodepoint(int codepoint, float size, Vector2 position, out Rectangle source, out Rectangle destination)
     {
         if (!chars.TryGetValue(codepoint, out CharInfo charInfo))
         {
+            // TODO: atlas resizing
             charInfo = AddCodepoint(codepoint);
         }
+
+        float scale = size / pixelSize;
 
         source = charInfo.source;
         destination = charInfo.destination;
 
+        destination.Position *= scale;
+        destination.Size *= scale;
+
         destination.Position += position;
 
-        position.X += charInfo.xAdvance;
+        position.X += charInfo.xAdvance * scale;
         return position;
     }
 
@@ -280,17 +287,18 @@ in vec2 tex;
 
 void main()
 {
-    float dist = texture(textureSampler, tex).r - threshold;
-    if (dist < 0)
+    float dist = threshold - texture(textureSampler, tex).r;
+    if (dist > 0)
     {
         discard;
     }
 
-    // this whole shader-derivative antialiasing thing is breaking my brain. this works but I don't know why
-    float distInPixels = dist / fwidth(dist);
+    // https://mortoray.com/antialiasing-with-a-signed-distance-field/
+
+    float distInPixels = dist / length(vec2(dFdx(dist), dFdy(dist)));
 
     FragColor.rgb = tint.rgb;
-    FragColor.a = tint.a * distInPixels;
+    FragColor.a = tint.a * clamp(0.5 - distInPixels, 0, 1);
 } 
 ";
 
@@ -306,7 +314,8 @@ void main()
         glBindTexture(GL_TEXTURE_2D, this.fontAtlas);
         glUniform1i(GetUniformLocation(program, "textureSampler"u8), 0);
         glUniform4f(GetUniformLocation(program, "tint"u8), state.Color.R, state.Color.G, state.Color.B, state.Color.A);
-        glUniform1f(GetUniformLocation(program, "threshold"u8), boldThreshold ? 140f / 255f : 180f / 255f);
+        // TODO: tweak threshold for small fonts instead of making them all bold (lol)
+        glUniform1f(GetUniformLocation(program, "threshold"u8), boldThreshold ? 140f / 255f : 130f / 255f);
     }
 
     public override void Use()

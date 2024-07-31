@@ -11,7 +11,7 @@ public struct CanvasState
 
     public bool Fill { get; set; }
     public ColorF Color { get; set; }
-    public float strokeWidth { get; set; }
+    public float StrokeWidth { get; set; }
 
     public CanvasShader? Shader { get; set; }
     public IFont Font { get; set; }
@@ -27,7 +27,7 @@ public struct CanvasState
         ClipRectangle = null;
         Fill = true;
         Color = ColorF.White;
-        strokeWidth = 0;
+        StrokeWidth = 0;
         Shader = null;
 
         Font = Graphics.DefaultFont;

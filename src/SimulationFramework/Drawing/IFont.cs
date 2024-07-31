@@ -22,11 +22,11 @@ public interface IFont : IDisposable
     ///// </summary>
     //public bool SupportsItalic { get; }
 
-    sealed Rectangle MeasureText(string text, float size, TextStyle style) => MeasureText(text.AsSpan(), size, style, 0, out _);
+    sealed Rectangle MeasureText(string text, float size, TextStyle style = TextStyle.Regular) => MeasureText(text.AsSpan(), size, style, 0, out _);
      
     sealed Rectangle MeasureText(string text, float size, TextStyle style, float maxLength, out int charsMeasured) => MeasureText(text.AsSpan(), size, style, maxLength, out charsMeasured);
 
-    sealed Rectangle MeasureText(ReadOnlySpan<char> text, float size, TextStyle style) => MeasureText(text, size, style, 0, out _);
+    sealed Rectangle MeasureText(ReadOnlySpan<char> text, float size, TextStyle style = TextStyle.Regular) => MeasureText(text, size, style, 0, out _);
 
     Rectangle MeasureText(ReadOnlySpan<char> text, float size, TextStyle style, float maxLength, out int charsMeasured);
 

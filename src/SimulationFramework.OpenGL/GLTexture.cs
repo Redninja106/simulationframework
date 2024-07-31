@@ -214,4 +214,9 @@ internal sealed class GLTexture : ITexture
         // data.SaveTo(destination);
         throw new NotSupportedException("image encoding not supported on opengl yet!");
     }
+
+    internal void PrepareForRender()
+    {
+        canvas?.Flush();
+    }
 }

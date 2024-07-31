@@ -1,7 +1,10 @@
+using Silk.NET.OpenGL;
 using SimulationFramework;
 using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Input;
+using System.Numerics;
 
 Start<Program>(new DesktopPlatform());
 
@@ -13,6 +16,5 @@ partial class Program : Simulation
 
     public override void OnRender(ICanvas canvas)
     {
-        canvas.Clear(Color.Black);
     }
 }

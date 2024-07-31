@@ -20,7 +20,6 @@ internal class GLCanvas : ICanvas
     public CanvasState currentState;
 
     private Stack<CanvasState> stateStack = [];
-    private List<CanvasState> statePool = [];
 
     private readonly PositionGeometryStream positionGeometryStream;
     private readonly ColorGeometryStream colorGeometryStream;
@@ -37,10 +36,28 @@ internal class GLCanvas : ICanvas
 
     private GeometryStream currentGeometryStream;
     private GeometryWriter currentGeometryWriter;
-    private GeometryBuffer currentGeometryBuffer;
+    private GeometryBuffer geometryBuffer;
+    // private unsafe List<SubmittedDrawCommand> submittedCommands = [];
 
     private GLGraphicsProvider graphics;
     private uint fbo;
+
+    private GeometryWriter GetCurrentGeometryWriter()
+    {
+        if (currentState.Fill)
+        {
+            return fillGeometryWriter;
+        }
+
+        if (currentState.StrokeWidth == 0)
+        {
+            return hairlineGeometryWriter;
+        }
+        else
+        {
+            return pathGeometryWriter;
+        }
+    }
 
     public unsafe GLCanvas(GLGraphicsProvider graphics, ITexture target)
     {
@@ -68,8 +85,7 @@ internal class GLCanvas : ICanvas
         }
 
         currentState = new();
-        currentGeometryBuffer = new GeometryBuffer();
-        currentGeometryBuffer.Bind();
+        geometryBuffer = new();
 
         positionGeometryStream = new PositionGeometryStream();
         colorGeometryStream = new ColorGeometryStream();
@@ -87,7 +103,6 @@ internal class GLCanvas : ICanvas
         currentGeometryStream = colorGeometryStream;
         currentGeometryWriter = fillGeometryWriter;
     }
-
 
     public void Antialias(bool antialias)
     {
@@ -115,14 +130,35 @@ internal class GLCanvas : ICanvas
 
     public void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter)
     {
-        SetupRegularGeometry();
-        currentGeometryWriter.PushArc(currentGeometryStream, bounds, begin, end, includeCenter);
+        var writer = GetCurrentGeometryWriter();
+        writer.PushArc(GetCurrentGeometryStream(), bounds, begin, end, includeCenter);
+    }
+
+    private GeometryStream GetCurrentGeometryStream()
+    {
+        if (State.Shader is null)
+        {
+            return colorGeometryStream;
+        }
+        else
+        {
+            return positionGeometryStream;
+        }
     }
 
     public void DrawLine(Vector2 p1, Vector2 p2)
     {
         SetupRegularGeometry();
-        currentGeometryWriter.PushLine(currentGeometryStream, p1, p2);
+        if (State.Fill)
+        {
+            Stroke(State.Color.ToColor());
+            currentGeometryWriter.PushLine(currentGeometryStream, p1, p2);
+            Fill(State.Color);
+        }
+        else
+        {
+            currentGeometryWriter.PushLine(currentGeometryStream, p1, p2);
+        }
     }
 
     public void DrawPolygon(ReadOnlySpan<Vector2> polygon, bool close = true)
@@ -166,9 +202,10 @@ internal class GLCanvas : ICanvas
     {
         if (textureGeometryEffect.texture != texture || textureGeometryEffect.tint != tint)
         {
-            Flush();
+            SubmitDrawCommands();
         }
         textureGeometryEffect.texture = (GLTexture)texture;
+        textureGeometryEffect.texture.PrepareForRender();
         textureGeometryEffect.tint = tint;
 
         UpdateGeometryWriter(fillGeometryWriter);
@@ -203,24 +240,24 @@ internal class GLCanvas : ICanvas
 
     public void Fill(ColorF color)
     {
+        UpdateGeometryStream(colorGeometryStream);
+        UpdateGeometryWriter(fillGeometryWriter);
+
         currentState.Color = color;
         currentState.Fill = true;
 
         colorGeometryStream.Color = color.ToColor();
-        
-        UpdateGeometryStream(colorGeometryStream);
-        UpdateGeometryWriter(fillGeometryWriter);
     }
 
     public void Fill(CanvasShader shader)
     {
-        var effect = graphics.GetShaderEffect(shader);
-        if (effect.Shader != shader)
-            Flush();
-        effect.Shader = shader;
-        currentState.Shader = shader;
         UpdateGeometryStream(positionGeometryStream);
         UpdateGeometryWriter(fillGeometryWriter);
+        var effect = graphics.GetShaderEffect(shader);
+        if (effect.Shader != shader)
+            SubmitDrawCommands();
+        effect.Shader = shader;
+        currentState.Shader = shader;
     }
 
     public Vector2 DrawCodepoint(int codepoint, float size, Vector2 baseline, TextStyle style = TextStyle.Regular)
@@ -241,13 +278,12 @@ internal class GLCanvas : ICanvas
             // sdfGeometryEffect.slant = 1f;
         }
 
-
         sdfGeometryEffect.fontAtlas = atlas.GetTextureID();
 
         UpdateGeometryWriter(fillGeometryWriter);
         UpdateGeometryStream(sdfGeometryStream);
 
-        baseline = atlas.GetCodepoint(codepoint, baseline, out Rectangle source, out Rectangle destination);
+        baseline = atlas.GetCodepoint(codepoint, size, baseline, out Rectangle source, out Rectangle destination);
 
         Vector2 uvScale = new(1f / atlas.Width, 1f / atlas.Height);
         sdfGeometryStream.WriteVertex(new(destination.X, destination.Y), uvScale * new Vector2(source.X, source.Y));
@@ -268,6 +304,13 @@ internal class GLCanvas : ICanvas
 
     public unsafe void Flush()
     {
+        SubmitDrawCommands();
+        glFinish();
+        geometryBuffer.Reset();
+    }
+
+    private void SubmitDrawCommands()
+    {
         if (currentGeometryStream.GetVertexCount() == 0)
             return;
 
@@ -287,14 +330,24 @@ internal class GLCanvas : ICanvas
             transform.M31, transform.M32, 0, 1
             );
 
-        currentGeometryStream.Upload(currentGeometryBuffer);
+        int vertexSize = currentGeometryStream.GetVertexSize();
+        if (geometryBuffer.offset % vertexSize != 0)
+        {
+            geometryBuffer.offset += vertexSize - (geometryBuffer.offset % vertexSize);
+        }
+
+        int offset = geometryBuffer.offset;
+        currentGeometryStream.Upload(geometryBuffer);
+
+        geometryBuffer.Bind();
+        currentGeometryStream.BindVertexArray();
 
         var effect = GetEffect(currentGeometryStream);
         effect.Use();
         effect.ApplyState(currentState, transform4x4);
         currentGeometryStream.BindVertexArray();
 
-        glDrawArrays(currentGeometryWriter.GetPrimitive(), 0, currentGeometryStream.GetVertexCount());
+        glDrawArrays(currentGeometryWriter.GetPrimitive(), offset / vertexSize, currentGeometryStream.GetVertexCount());
         currentGeometryStream.Clear();
     }
 
@@ -331,7 +384,15 @@ internal class GLCanvas : ICanvas
         if (stateStack.Count == 0)
             throw new InvalidOperationException("State stack is empty!");
 
-        currentState = stateStack.Pop();
+        var newState = stateStack.Pop();
+        if (currentState.Shader != newState.Shader ||
+            currentState.Color != newState.Color ||
+            currentState.Fill != newState.Fill ||
+            currentState.StrokeWidth != newState.StrokeWidth)
+        {
+            SubmitDrawCommands();
+        }
+        currentState = newState;
     }
 
     public void PushState()
@@ -360,17 +421,12 @@ internal class GLCanvas : ICanvas
 
     public void Stroke(Color color)
     {
-        currentState.Color = color.ToColorF();
-        currentState.Fill = false;
-
-        colorGeometryStream.Color = color;
-
         if (currentGeometryWriter != hairlineGeometryWriter)
         {
-            Flush();
+            SubmitDrawCommands();
         }
 
-        if (currentState.strokeWidth == 0)
+        if (currentState.StrokeWidth == 0)
         {
             UpdateGeometryWriter(hairlineGeometryWriter);
         }
@@ -379,16 +435,18 @@ internal class GLCanvas : ICanvas
             UpdateGeometryWriter(pathGeometryWriter);
         }
         UpdateGeometryStream(colorGeometryStream);
+
+        currentState.Color = color.ToColorF();
+        currentState.Fill = false;
+
+        colorGeometryStream.Color = color;
     }
 
     public void StrokeWidth(float width)
     {
-        currentState.strokeWidth = width;
-        pathGeometryWriter.StrokeWidth = width;
-
         if (!currentState.Fill)
         {
-            if (currentState.strokeWidth == 0)
+            if (width == 0)
             {
                 UpdateGeometryWriter(hairlineGeometryWriter);
             }
@@ -397,13 +455,16 @@ internal class GLCanvas : ICanvas
                 UpdateGeometryWriter(pathGeometryWriter);
             }
         }
+
+        currentState.StrokeWidth = width;
+        pathGeometryWriter.StrokeWidth = width;
     }
 
     private void UpdateGeometryWriter(GeometryWriter writer)
     {
         if (currentGeometryWriter.GetPrimitive() != writer.GetPrimitive())
         {
-            Flush();
+            SubmitDrawCommands();
         }
 
         currentGeometryWriter = writer;
@@ -413,10 +474,25 @@ internal class GLCanvas : ICanvas
     {
         if (currentGeometryStream != stream && currentGeometryStream.GetVertexCount() > 0)
         {
-            Flush();
+            SubmitDrawCommands();
         }
 
         currentGeometryStream = stream;
         stream.TransformMatrix = currentState.Transform;
     }
+}
+
+class GLGeometry
+{
+    GLBuffer vertexBuffer;
+    GLBuffer? indexBuffer;
+
+    public void Draw(GLCanvas canvas)
+    {
+    }
+}
+
+class GLBuffer
+{
+
 }

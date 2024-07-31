@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -354,7 +355,6 @@ public static class Polygon
 
             result += from.X * to.Y - to.X * from.Y;
         }
-
         return result * .5f;
     }
 
@@ -387,7 +387,7 @@ public static class Polygon
             : PolygonLinkedList.HeapAllocate(polygon);
 
         int current;
-        while (tris.Count < (polygon.Length - 2) * 3)
+        while (tris.Count < (polygon.Length - 2) * 3 && list.Length >= 3)
         {
             bool pushedTri = false;
             current = list.First();
@@ -426,6 +426,12 @@ public static class Polygon
                     triangles[nextTri++] = p3;
 
                     list.Remove(current);
+
+                    if (list.Length < 3)
+                    {
+                        break;
+                    }
+
                     pushedTri = true;
                 }
                 current = list.Next(current);

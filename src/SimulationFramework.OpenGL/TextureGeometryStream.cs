@@ -20,19 +20,21 @@ internal class TextureGeometryStream : GeometryStream
         {
             glGenVertexArrays(1, vaoPtr);
             glBindVertexArray(vao);
-
-            glVertexAttribPointer(0, 2, GL_FLOAT, (byte)GL_FALSE, Unsafe.SizeOf<TextureVertex>(), null);
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(1, 2, GL_FLOAT, (byte)GL_FALSE, Unsafe.SizeOf<TextureVertex>(), (void*)(sizeof(float) * 2));
-            glEnableVertexAttribArray(1);
-
-            glBindVertexArray(0);
         }
     }
 
-    public override void BindVertexArray()
+    public override int GetVertexSize()
+    {
+        return Unsafe.SizeOf<TextureVertex>();
+    }
+
+    public override unsafe void BindVertexArray()
     {
         glBindVertexArray(vao);
+        glVertexAttribPointer(0, 2, GL_FLOAT, (byte)GL_FALSE, Unsafe.SizeOf<TextureVertex>(), null);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 2, GL_FLOAT, (byte)GL_FALSE, Unsafe.SizeOf<TextureVertex>(), (void*)(sizeof(float) * 2));
+        glEnableVertexAttribArray(1);
     }
 
     public override void Clear()
@@ -47,7 +49,7 @@ internal class TextureGeometryStream : GeometryStream
 
     public override void Upload(GeometryBuffer buffer)
     {
-        buffer.UpdateData(MemoryMarshal.AsBytes(CollectionsMarshal.AsSpan(this.vertices)));
+        buffer.WriteData(MemoryMarshal.AsBytes(CollectionsMarshal.AsSpan(this.vertices)));
     }
 
     public override void WriteVertex(Vector2 position)

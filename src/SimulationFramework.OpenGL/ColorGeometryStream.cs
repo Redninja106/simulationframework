@@ -17,15 +17,12 @@ unsafe class ColorGeometryStream : GeometryStream
         fixed (uint* vaoPtr = &vao)
         {
             glGenVertexArrays(1, vaoPtr);
-            glBindVertexArray(vao);
-
-            glVertexAttribPointer(0, 2, GL_FLOAT, (byte)GL_FALSE, Unsafe.SizeOf<ColorVertex>(), null);
-            glEnableVertexAttribArray(0);
-            glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, (byte)GL_TRUE, Unsafe.SizeOf<ColorVertex>(), (void*)(sizeof(float) * 2));
-            glEnableVertexAttribArray(1);
-
-            glBindVertexArray(0);
         }
+    }
+
+    public override int GetVertexSize()
+    {
+        return Unsafe.SizeOf<ColorVertex>();
     }
 
     public override void WriteVertex(Vector2 position)
@@ -40,6 +37,10 @@ unsafe class ColorGeometryStream : GeometryStream
     public override void BindVertexArray()
     {
         glBindVertexArray(vao);
+        glVertexAttribPointer(0, 2, GL_FLOAT, (byte)GL_FALSE, Unsafe.SizeOf<ColorVertex>(), null);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, (byte)GL_TRUE, Unsafe.SizeOf<ColorVertex>(), (void*)(sizeof(float) * 2));
+        glEnableVertexAttribArray(1);
     }
 
     public override void Clear()
@@ -55,7 +56,7 @@ unsafe class ColorGeometryStream : GeometryStream
     public override void Upload(GeometryBuffer buffer)
     {
         Span<ColorVertex> data = CollectionsMarshal.AsSpan(vertices);
-        buffer.UpdateData(MemoryMarshal.AsBytes(data));
+        buffer.WriteData(MemoryMarshal.AsBytes(data));
     }
 
     struct ColorVertex
