@@ -32,7 +32,7 @@ internal class BasicInputSimulation : Simulation
         canvas.Fill(Color.Red);
         p += Mouse.DeltaPosition;
         canvas.DrawCircle(p, 10, Alignment.Center);
-        canvas.DrawText(c.ToString(), Vector2.One * 20);
+        canvas.DrawText(c.ToString(), 32, Vector2.One * 20);
 
         if (Keyboard.IsKeyPressed(Key.Q))
         {
