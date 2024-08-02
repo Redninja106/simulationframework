@@ -60,12 +60,12 @@ class Program : Simulation
         Start<Program>(); 
     }
 
-    public override OnInitialize()
+    public override void OnInitialize()
     {
 
     }
 
-    public override OnRender(ICanvas canvas)
+    public override void OnRender(ICanvas canvas)
     {
         
     } 
