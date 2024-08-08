@@ -278,6 +278,8 @@ internal class GLCanvas : ICanvas
 
         currentState.Color = color;
         currentState.Fill = true;
+        currentState.Shader = null;
+        currentState.VertexShader = null;
 
         colorGeometryStream.Color = color.ToColor();
     }

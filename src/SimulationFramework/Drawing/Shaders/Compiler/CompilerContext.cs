@@ -97,7 +97,7 @@ internal class CompilerContext
     }
     public ShaderType CompileType(Type type)
     {
-        if (type == ShaderType || ShaderType.IsSubclassOf(type))
+        if (IsSelfType(type))
         {
             return new ShaderGlobalType(type);
         }

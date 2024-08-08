@@ -87,7 +87,7 @@ void main() {
             }
         }
 
-        if (GLGraphicsProvider.DumpShaders)
+        if (ShaderCompiler.DumpShaders)
         {
             Console.WriteLine(new string('=', 20) + " CANVAS SHADER " + new string('=', 20));
             Console.WriteLine(string.Join("\n", fragShader.Split('\n').Select((s, i) => $"{i+1,-3:d}|{s}")));

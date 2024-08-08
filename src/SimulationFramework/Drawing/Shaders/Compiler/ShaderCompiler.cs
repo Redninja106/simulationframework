@@ -21,6 +21,8 @@ public class ShaderCompiler
 {
     private Dictionary<Type, ShaderType> primitiveTypeMap = [];
 
+    public static bool DumpShaders { get; set; } = false;
+
     // TODO: direct texture reads
     // TODO: early returns
     // TODO: add method caching here
@@ -162,7 +164,7 @@ public class ShaderCompiler
         }
 
         ShaderName name;
-        if (method.DeclaringType == context.ShaderType)
+        if (context.IsSelfType(method.DeclaringType))
         {
             name = new(method.Name);
         }

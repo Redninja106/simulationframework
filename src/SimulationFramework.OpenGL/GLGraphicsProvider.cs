@@ -15,8 +15,6 @@ namespace SimulationFramework.OpenGL;
 
 public unsafe class GLGraphicsProvider : IGraphicsProvider
 {
-    public static bool DumpShaders { get; set; }
-
     public IFont DefaultFont { get; }
 
     private GLCanvas frameCanvas;
@@ -154,7 +152,7 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
     {
         foreach (var (effect, _) in shaderEffects)
         {
-            if (effect.Item1 == type || effect.Item2 == type)
+            if (effect.Item1 == type || effect.Item2 == type || effect.Item1.IsSubclassOf(type) || (effect.Item2?.IsSubclassOf(type) ?? false))
             {
                 shaderEffects.Remove(effect);
             }

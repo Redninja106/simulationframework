@@ -2,6 +2,7 @@
 using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
+using SimulationFramework.Drawing.Shaders.Compiler;
 using SimulationFramework.Input;
 using SimulationFramework.OpenGL;
 using System;
@@ -20,7 +21,7 @@ partial class Program : Simulation
         SetFixedResolution(640, 480, new Color(25, 25, 25));
 
         // for debugging
-        GLGraphicsProvider.DumpShaders = true;
+        ShaderCompiler.DumpShaders = true;
 
         // setup scene
         shader.spheres = new Sphere[20];

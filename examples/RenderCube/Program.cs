@@ -1,6 +1,7 @@
 ﻿using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
+using SimulationFramework.Drawing.Shaders.Compiler;
 using SimulationFramework.Input;
 using SimulationFramework.OpenGL;
 using System.Diagnostics.CodeAnalysis;
@@ -65,7 +66,7 @@ partial class Program : Simulation
 
     public override void OnInitialize()
     {
-        GLGraphicsProvider.DumpShaders = true;
+        ShaderCompiler.DumpShaders = true;
         logo = Graphics.LoadTexture("logo-512x512.png");
         logo.WrapModeY = logo.WrapModeX = TileMode.Repeat;
     }
@@ -74,12 +75,12 @@ partial class Program : Simulation
     {
         canvas.Clear(Color.Black);
 
-        var canvasShader = new CustomCanvasShader()
+        var canvasShader = new CubeCanvasShader()
         {
             tex = logo,
         };
 
-        var vertexShader = new CustomVertexShader()
+        var vertexShader = new CubeVertexShader()
         {
             world = Matrix4x4.CreateRotationY(Time.TotalTime * Angle.ToRadians(60)),
             view = Matrix4x4.CreateLookAtLeftHanded(Vector3.One, Vector3.Zero, Vector3.UnitY),
@@ -89,11 +90,10 @@ partial class Program : Simulation
         canvas.Fill(canvasShader, vertexShader);
 
         canvas.DrawTriangles<Vertex>(vertices);
-        // canvas.DrawGeometry(geometry);
     }
 }
 
-class CustomCanvasShader : CanvasShader
+class CubeCanvasShader : CanvasShader
 {
     [VertexShaderOutput]
     Vector2 uv;
@@ -111,7 +111,7 @@ class CustomCanvasShader : CanvasShader
     }
 }
 
-class CustomVertexShader : VertexShader
+class CubeVertexShader : VertexShader
 {
     [VertexData]
     Vertex vertex;

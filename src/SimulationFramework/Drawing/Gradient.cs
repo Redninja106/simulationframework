@@ -18,7 +18,7 @@ public abstract class Gradient : CanvasShader
     /// </summary>
     public TileMode TileMode;
 
-    internal Gradient(GradientStop[] stops, Matrix3x2 transform, TileMode tileMode)
+    public Gradient(GradientStop[] stops, TileMode tileMode)
     {
         Stops = stops;
         TileMode = tileMode;
@@ -37,5 +37,44 @@ public abstract class Gradient : CanvasShader
         }
 
         return stops;
+    }
+
+    protected ColorF GetGradientColor(float gradientProgress)
+    {
+        if (TileMode == TileMode.Clamp)
+        {
+            gradientProgress = Math.Clamp(gradientProgress, 0, 1);
+        }
+        else if (TileMode == TileMode.Repeat)
+        {
+            // TODO: support % operator on floats
+            gradientProgress = ShaderIntrinsics.Mod(gradientProgress, 1f);
+        }
+        else if (TileMode == TileMode.Mirror)
+        {
+            gradientProgress = ShaderIntrinsics.Mod(gradientProgress, 2f);
+            if (gradientProgress >= 1)
+            {
+                gradientProgress = 2 - gradientProgress;
+            }
+        }
+        else if (TileMode == TileMode.None)
+        {
+
+        }
+
+        int index = 0;
+        for (int i = 1; i < Stops.Length; i++)
+        {
+            if (Stops[i].Position >= gradientProgress)
+            {
+                index = i;
+                i = Stops.Length;
+            }
+        }
+
+        GradientStop a = this.Stops[index - 1];
+        GradientStop b = this.Stops[index];
+        return ColorF.Lerp(a.Color, b.Color, (gradientProgress - a.Position) / (b.Position - a.Position));
     }
 }

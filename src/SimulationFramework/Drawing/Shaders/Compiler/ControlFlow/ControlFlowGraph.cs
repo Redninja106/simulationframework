@@ -39,7 +39,11 @@ internal class ControlFlowGraph : ControlFlowNode
         RecomputeDominators();
         ReplaceLoops();
         ReplaceConditionals();
-        DgmlBuilder.WriteDGML(disassembly.Method.DeclaringType.Name + "_" + disassembly.Method.Name, this);
+
+        if (ShaderCompiler.DumpShaders)
+        {
+            DgmlBuilder.WriteDGML(disassembly.Method.DeclaringType.Name + "_" + disassembly.Method.Name, this);
+        }
     }
 
     private ControlFlowGraph(ControlFlowNode parent, ControlFlowNode entryNode, ControlFlowNode exitNode, IEnumerable<ControlFlowNode> nodes)
@@ -327,7 +331,7 @@ internal class ControlFlowGraph : ControlFlowNode
 
     public void RemoveNode(ControlFlowNode node)
     {
-        Debug.Assert(Nodes.Remove(node));
+        Nodes.Remove(node);
     }
 
     public void DepthFirstTraverse(Action<ControlFlowNode> visitNode)

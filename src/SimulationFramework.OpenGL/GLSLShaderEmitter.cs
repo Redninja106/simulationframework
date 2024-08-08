@@ -480,7 +480,6 @@ internal class GLSLShaderEmitter
             return;
         }
 
-
         if (type.GetPrimitiveKind() is PrimitiveKind primitive)
         {
             writer.Write(primitive switch
@@ -518,7 +517,6 @@ internal class GLSLShaderEmitter
 
         throw new(type.ToString());
     }
-
 
     public void EmitName(ShaderName name)
     {
@@ -854,9 +852,11 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
         {
             var left = expression.Arguments[0];
             var right = expression.Arguments[1];
+            writer.Write('(');
             left.Accept(this);
             writer.Write(op);
             right.Accept(this);
+            writer.Write(')');
             return expression;
         }
 
@@ -990,24 +990,41 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
         
         if (expression.Success != null)
         {
-            expression.Success.Accept(this);
-            if (expression.Success is not BlockExpression)
+            if (expression.Success is BlockExpression)
             {
-                writer.Write(';');
+                expression.Success.Accept(this);
+            }
+            else
+            {
+                writer.WriteLine("{");
+                writer.Indent++;
+                expression.Success.Accept(this);
+                writer.WriteLine(";");
+                writer.Indent--;
+                writer.Write("}");
             }
         }
         else
         {
-            writer.Write("{ }");
+            writer.WriteLine("{");
+            writer.Write("}");
         }
 
         if (expression.Failure != null)
         {
-            writer.Write("else ");
-            expression.Failure.Accept(this); 
-            if (expression.Failure is not BlockExpression)
+            writer.Write(" else ");
+            if (expression.Failure is BlockExpression)
             {
-                writer.Write(';');
+                expression.Failure.Accept(this);
+            }
+            else
+            {
+                writer.WriteLine("{");
+                writer.Indent++;
+                expression.Failure.Accept(this);
+                writer.WriteLine(";");
+                writer.Indent--;
+                writer.WriteLine("}");
             }
         }
         return expression;

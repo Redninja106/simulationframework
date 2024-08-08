@@ -28,6 +28,17 @@ internal class MethodDisassembly
         MethodBody = method.GetMethodBody() ?? throw new Exception("Method has no body");
         ilBytes = MethodBody.GetILAsByteArray() ?? throw new Exception("Method has no body");
         instructions = ReadInstructions();
+
+        if (ShaderCompiler.DumpShaders)
+        {
+            string methodStr = method.ToString()!;
+            Console.WriteLine($"===== Disassembly for {method.DeclaringType!.FullName}.{methodStr[methodStr.IndexOf(' ')..]} ====");
+
+            foreach (var instruction in instructions)
+            {
+                Console.WriteLine(instruction);
+            }
+        }
     }
 
     private Instruction[] ReadInstructions()

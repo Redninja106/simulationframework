@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -72,8 +71,11 @@ internal class ExpressionBuilder
     {
         switch (instruction.OpCode)
         {
-            case OpCode.Nop or OpCode.Pop or OpCode.Ldobj:
+            case OpCode.Nop or OpCode.Ldobj:
                 return;
+            case OpCode.Pop:
+                BuildPop(instruction);
+                break;
             case OpCode.Dup:
                 BuildDup(instruction);
                 break;
@@ -231,6 +233,11 @@ internal class ExpressionBuilder
         }
     }
 
+    private void BuildPop(Instruction instruction)
+    {
+        Expressions.Pop();
+    }
+
     private void BuildLoadElement(Instruction instruction)
     {
         var index = Expressions.Pop();
@@ -256,7 +263,17 @@ internal class ExpressionBuilder
             return;
         }
 
-        Expressions.Push(new ReturnExpression(ReturnType == typeof(void) ? null : Expressions.Pop()));
+        ShaderExpression? returnValue = ReturnType == typeof(void) ? null : Expressions.Pop();
+
+        if (ReturnType == typeof(bool))
+        {
+            if (returnValue is ConstantExpression constExpr2 && constExpr2.Value is 0 or 1)
+            {
+                returnValue = new ConstantExpression(ShaderType.Bool, (int)constExpr2.Value == 1);
+            }
+        }
+
+        Expressions.Push(new ReturnExpression(returnValue));
     }
 
     private void BuildInitObj(Instruction instruction)
@@ -310,9 +327,21 @@ internal class ExpressionBuilder
             case OpCode.Brfalse or OpCode.Brfalse_S:
                 // invert condition
                 var expr = Expressions.Pop();
+                if (expr.ExpressionType != ShaderType.Bool)
+                {
+                    expr = new BinaryExpression(BinaryOperation.NotEqual, expr, new ConstantExpression(expr.ExpressionType, 0));
+                }
                 Expressions.Push(new UnaryExpression(UnaryOperation.Not, expr, null));
                 break;
-            case OpCode.Br or OpCode.Br_S or OpCode.Brtrue or OpCode.Brtrue_S:
+            case OpCode.Brtrue or OpCode.Brtrue_S:
+                expr = Expressions.Pop();
+                if (expr.ExpressionType != ShaderType.Bool)
+                {
+                    expr = new BinaryExpression(BinaryOperation.NotEqual, expr, new ConstantExpression(expr.ExpressionType, 0));
+                }
+                Expressions.Push(expr);
+                break;
+            case OpCode.Br or OpCode.Br_S :
                 break; // do nothing for these
             default:
                 throw new UnreachableException();
@@ -538,8 +567,6 @@ internal class ExpressionBuilder
             Expressions.Push(new UnaryExpression(UnaryOperation.Not, left, null));
             return;
         }
-
-        
         
         Expressions.Push(CreateBinaryExpression(exprType, left, right));
     }
@@ -758,7 +785,7 @@ internal class ExpressionBuilder
         var args = PopArgs(method);
 
         var instance = method.IsStatic ? null : Expressions.Pop();
-        if (method is ConstructorInfo || method.DeclaringType == context.ShaderType)
+        if (method is ConstructorInfo || context.IsSelfType(method.DeclaringType))
         {
         }
         else
