@@ -12,7 +12,9 @@ namespace SimulationFramework.Drawing.Shaders.Compiler;
 /// </summary>
 public class ShaderCompilation
 {
+    public ShaderKind Kind { get; set; }
+    public ShaderMethod EntryPoint { get; set; }
     public List<ShaderMethod> Methods { get; } = [];
-    public List<ShaderVariable> Uniforms { get; } = [];
+    public List<ShaderVariable> Variables { get; } = [];
     public List<ShaderStructure> Structures { get; } = [];
 }

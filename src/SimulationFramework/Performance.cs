@@ -32,4 +32,4 @@ public static class Performance
     /// </para>
     /// </summary>
     public static float RawFramerate => Provider.RawFramerate;
-}     
+}

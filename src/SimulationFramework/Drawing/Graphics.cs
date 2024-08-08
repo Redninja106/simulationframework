@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using SimulationFramework.Components;
+using SimulationFramework.Drawing.Shaders;
 
 namespace SimulationFramework.Drawing;
 
@@ -154,4 +155,31 @@ public static class Graphics
 
         return Provider.LoadFont(encodedData);
     }
+
+    public static void Dispatch(ComputeShader computeShader, int lengthI, int lengthJ, int lengthK)
+    {
+        Provider.Dispatch(computeShader, lengthI, lengthJ, lengthK);
+    }
+
+    //internal static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices)
+    //    where TVertex : unmanaged
+    //{
+    //    return Provider.CreateGeometry(vertices, []);
+    //}
+
+    //internal static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices)
+    //    where TVertex : unmanaged
+    //{
+    //    return Provider.CreateGeometry(vertices, indices);
+    //}
+
+    //public static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices)
+    //{
+    //    return CreateGeometry(vertices, ReadOnlySpan<uint>.Empty);
+    //}
+
+    //public static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices)
+    //{
+
+    //}
 }

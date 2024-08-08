@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using SimulationFramework.Components;
 using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Messaging;
 
 namespace SimulationFramework;
@@ -40,9 +41,12 @@ public static class Window
 
     /// <summary>
     /// The size of the window, in pixels.
-    /// 
     /// </summary>
-    public static Vector2 Size => Provider.Size;
+    public static Vector2 Size
+    {
+        [ImplicitUniform]
+        get => Provider.Size;
+    }
 
     /// <summary>
     /// Whether the window can be resized by the user. To handle user resize events, see <see cref="Simulation.OnResize(int, int)"/>.

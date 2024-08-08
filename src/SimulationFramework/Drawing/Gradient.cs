@@ -1,38 +1,33 @@
-﻿using System.Numerics;
+﻿using SimulationFramework.Drawing.Shaders;
+using System.Numerics;
 
 namespace SimulationFramework.Drawing;
 
 /// <summary>
 /// Represents a gradient.
 /// </summary>
-public abstract class Gradient
+public abstract class Gradient : CanvasShader
 {
     /// <summary>
     /// The gradient's stops.
     /// </summary>
-    public GradientStop[] Stops { get; set; }
-
-    /// <summary>
-    /// The gradient's transformation matrix.
-    /// </summary>
-    public Matrix3x2 Transform { get; set; }
+    public GradientStop[] Stops;
 
     /// <summary>
     /// The gradient's tile mode.
     /// </summary>
-    public TileMode TileMode { get; set; }
+    public TileMode TileMode;
 
     internal Gradient(GradientStop[] stops, Matrix3x2 transform, TileMode tileMode)
     {
         Stops = stops;
-        Transform = transform;
         TileMode = tileMode;
     }
 
     /// <summary>
     /// Converts an array of colors to an array of equidistant stops.
     /// </summary>
-    public static GradientStop[] ColorsToStops(Color[] colors)
+    public static GradientStop[] ColorsToStops(ColorF[] colors)
     {
         var stops = new GradientStop[colors.Length];
 

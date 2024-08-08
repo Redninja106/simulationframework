@@ -14,6 +14,7 @@ public struct CanvasState
     public float StrokeWidth { get; set; }
 
     public CanvasShader? Shader { get; set; }
+    public VertexShader? VertexShader { get; set; }
     public IFont Font { get; set; }
 
     public CanvasState Clone()

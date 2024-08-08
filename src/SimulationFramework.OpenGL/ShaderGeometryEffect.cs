@@ -1,24 +1,20 @@
-﻿using SimulationFramework.Drawing;
+﻿using ImGuiNET;
+using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Drawing.Shaders.Compiler;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.OpenGL;
 internal class ShaderGeometryEffect : GeometryEffect
 {
     public CanvasShader? Shader { get; internal set; }
-    private ShaderCompilation compilation;
-    private Dictionary<ShaderVariable, int> uniformLocations = [];
-    private int textureSlot, bufferSlot;
-    private List<uint> buffers = [];
+    public VertexShader? VertexShader { get; internal set; }
+    internal ShaderCompilation compilation;
+    internal ShaderCompilation? vsCompilation;
 
     private const string vert = @"
 #version 330 core
@@ -32,10 +28,12 @@ void main() {
 ";
 
     uint program;
+    UniformHandler uniformHandler;
 
-    public ShaderGeometryEffect(ShaderCompilation compilation, string compiledSource)
+    public ShaderGeometryEffect(ShaderCompilation compilation, string compiledSource, ShaderCompilation? vsCompilation, string? vsSource)
     {
         this.compilation = compilation;
+        this.vsCompilation = vsCompilation;
         
         string fragShader = $$"""
 #version 450 core
@@ -52,13 +50,56 @@ void main() {
     FragColor = GetPixelColor(transformedFragCoord.xy);
 } 
 """;
+
+        string vertShader = vert;
+
+        if (vsSource != null)
+        {
+            if (vsCompilation!.EntryPoint.BackingMethod!.GetCustomAttribute<UseClipSpaceAttribute>() != null)
+            {
+                vertShader = $$"""
+
+#version 450 core
+
+{{vsSource}}
+
+void main() {
+    gl_Position = GetVertexPosition();
+}
+
+""";
+            }
+            else
+            {
+                vertShader = $$"""
+
+#version 450 core
+
+uniform mat4 _vertex_transform;
+
+{{vsSource}}
+
+void main() {
+    gl_Position = _vertex_transform * GetVertexPosition();
+}
+
+""";
+            }
+        }
+
         if (GLGraphicsProvider.DumpShaders)
         {
-            Console.WriteLine(new string('=', 20));
+            Console.WriteLine(new string('=', 20) + " CANVAS SHADER " + new string('=', 20));
             Console.WriteLine(string.Join("\n", fragShader.Split('\n').Select((s, i) => $"{i+1,-3:d}|{s}")));
-            Console.WriteLine(new string('=', 20));
+            if (vsSource != null)
+            {
+                Console.WriteLine(new string('=', 20) + " VERTEX SHADER " + new string('=', 20));
+                Console.WriteLine(string.Join("\n", vertShader.Split('\n').Select((s, i) => $"{i + 1,-3:d}|{s}")));
+            }
         }
-        program = MakeProgram(vert, fragShader);
+        program = MakeProgram(vertShader, fragShader);
+
+        uniformHandler = new(program);
     }
 
     public unsafe override void ApplyState(CanvasState state, Matrix4x4 matrix)
@@ -76,11 +117,22 @@ void main() {
             );
         glUniformMatrix4fv(loc2, 1, 0, (float*)&invTransform);
 
-        textureSlot = 0;
-        bufferSlot = 0;
-        foreach (var uniform in compilation.Uniforms)
+        uniformHandler.Reset();
+
+        foreach (var variable in compilation.Variables)
         {
-            SetUniform(uniform, Shader, null);
+            if (variable.Kind == ShaderVariableKind.Uniform)
+            {
+                uniformHandler.SetUniform(variable, Shader);
+            }
+        }
+
+        foreach (var variable in vsCompilation?.Variables ?? [])
+        {
+            if (variable.Kind == ShaderVariableKind.Uniform)
+            {
+                uniformHandler.SetUniform(variable, VertexShader!);
+            }
         }
     }
 
@@ -90,148 +142,6 @@ void main() {
         {
             return a;
         }
-    }
-
-    unsafe void SetUniform(ShaderVariable uniform, object parent, string? baseName)
-    {
-        var name = baseName is null ? uniform.Name.value : baseName + uniform.Name.value;
-        var location = GetUniformLocation(uniform, name);
-
-        var field = (FieldInfo?)uniform.BackingMember!;
-        var value = field.GetValue(parent)!;
-
-        switch (uniform.Type)
-        {
-            case ShaderType when uniform.Type.GetPrimitiveKind() is PrimitiveKind primitiveKind:
-                SetMemberUniform(primitiveKind, value!, location);
-                break;
-            case ShaderStructureType structType:
-                foreach (var member in structType.structure.fields)
-                {
-                    SetUniform(member, value, name + ".");
-                } 
-                break;
-            case ShaderArrayType arrayType:
-                SetArrayUniform(arrayType, value);
-                break;
-        }
-    }
-
-    private unsafe void SetArrayUniform(ShaderArrayType arrayType, object value)
-    {
-        uint buffer;
-        if (buffers.Count <= bufferSlot)
-        {
-            glGenBuffers(1, &buffer);
-            buffers.Add(buffer);
-        }
-        else
-        {
-            buffer = buffers[bufferSlot];
-        }
-
-        Array array = (Array)value;
-        GCHandle arrayHandle = GCHandle.Alloc(array, GCHandleType.Pinned);
-        try
-        {
-            void* ptr = Unsafe.AsPointer(ref MemoryMarshal.GetArrayDataReference(array));
-            glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
-            int currentSize;
-            glGetBufferParameteriv(GL_SHADER_STORAGE_BUFFER, GL_BUFFER_SIZE, &currentSize);
-            int size = array.Length * Marshal.SizeOf(array.GetType().GetElementType()!);
-            if (size != currentSize)
-            {
-                glBufferData(GL_SHADER_STORAGE_BUFFER, size, ptr, GL_DYNAMIC_COPY);
-            }
-            else
-            {
-                glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, size, ptr);
-            }
-            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, (uint)bufferSlot, buffer);
-            glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-        }
-        finally
-        {
-            arrayHandle.Free();
-        }
-
-        bufferSlot++;
-    }
-
-    private void SetTextureUniform(GLTexture? texture, int location)
-    {
-        glActiveTexture(GL_TEXTURE0 + (uint)textureSlot);
-        glBindTexture(GL_TEXTURE_2D, texture?.GetID() ?? 0);
-        glUniform1i(location, textureSlot);
-        textureSlot++;
-    }
-
-    private unsafe void SetMemberUniform(PrimitiveKind primitive, object value, int location)
-    {
-        if (primitive is PrimitiveKind.Texture)
-        {
-            SetTextureUniform((GLTexture?)value, location);
-            return;
-        }
-
-        GCHandle valueHandle = GCHandle.Alloc(value, GCHandleType.Pinned);
-        void* ptr = (void*)valueHandle.AddrOfPinnedObject();
-
-        switch (primitive)
-        {
-            case PrimitiveKind.Bool:
-                throw new NotImplementedException();
-            case PrimitiveKind.Int:
-                glUniform1iv(location, 1, (int*)ptr);
-                break;
-            case PrimitiveKind.Int2:
-                glUniform2iv(location, 1, (int*)ptr);
-                break;
-            case PrimitiveKind.Int3:
-                glUniform3iv(location, 1, (int*)ptr);
-                break;
-            case PrimitiveKind.Int4:
-                glUniform4iv(location, 1, (int*)ptr);
-                break;
-            case PrimitiveKind.Float:
-                glUniform1fv(location, 1, (float*)ptr);
-                break;
-            case PrimitiveKind.Float2:
-                glUniform2fv(location, 1, (float*)ptr);
-                break;
-            case PrimitiveKind.Float3:
-                glUniform3fv(location, 1, (float*)ptr);
-                break;
-            case PrimitiveKind.Float4:
-                glUniform4fv(location, 1, (float*)ptr);
-                break;
-            case PrimitiveKind.Matrix4x4:
-                glUniformMatrix4fv(location, 1, (byte)GL_FALSE, (float*)ptr);
-                break;
-            case PrimitiveKind.Matrix3x2:
-                glUniformMatrix3x2fv(location, 1, (byte)GL_FALSE, (float*)ptr);
-                break;
-            default:
-                throw new NotImplementedException();
-        }
-
-        valueHandle.Free();
-    }
-
-    unsafe int GetUniformLocation(ShaderVariable uniform, string? nameOverride = null)
-    {
-        if (uniformLocations.TryGetValue(uniform, out int result))
-        {
-            return result;
-        }
-
-        fixed (byte* namePtr = Encoding.UTF8.GetBytes(nameOverride ?? uniform.Name.value)) 
-        {
-            result = glGetUniformLocation(program, namePtr);
-            uniformLocations[uniform] = result;
-        }
-
-        return result;
     }
 
     public override void Use()

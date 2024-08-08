@@ -16,11 +16,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.OpenGL;
-internal class GLSLCanvasShaderEmitter
+internal class GLSLShaderEmitter
 {
     IndentedTextWriter writer;
     GLSLExpressionEmitter expressionEmitter;
     private int nextBufferSlot = 0;
+    internal ShaderVariable? vertexDataVariable;
+    internal ShaderCompilation compilation;
+    internal int vsOutLocation = 0;
 
     private static readonly ImmutableHashSet<string> reservedWords = [
         // KEYWORDS:
@@ -378,7 +381,7 @@ internal class GLSLCanvasShaderEmitter
         "usubBorrow",
     ];
 
-    public GLSLCanvasShaderEmitter(TextWriter writer)
+    public GLSLShaderEmitter(TextWriter writer)
     {
         this.writer = new(writer);
         writer.WriteLine("const float _PositiveInfinity = uintBitsToFloat(0x7F800000);");
@@ -389,14 +392,17 @@ internal class GLSLCanvasShaderEmitter
 
     public void Emit(ShaderCompilation compilation)
     {
+        this.compilation = compilation;
+        vertexDataVariable = compilation.Variables.FirstOrDefault(v => v.Kind == ShaderVariableKind.VertexData);
+        
         foreach (var structure in compilation.Structures)
         {
             EmitStructureDefinition(structure);
         }
 
-        foreach (var uniform in compilation.Uniforms)
+        foreach (var variable in compilation.Variables)
         {
-            EmitUniform(uniform);
+            EmitVariable(variable);
         }
 
         foreach (var method in compilation.Methods)
@@ -535,10 +541,12 @@ internal class GLSLCanvasShaderEmitter
         return false;
     }
 
-    private void EmitUniform(ShaderVariable uniform)
+    private void EmitVariable(ShaderVariable variable)
     {
-        if (uniform.Type is ShaderArrayType bufferType)
+        if (variable.Type is ShaderArrayType bufferType)
         {
+            Debug.Assert(variable.Kind == ShaderVariableKind.Uniform);
+
             writer.Write("layout(std430, binding=");
             writer.Write(nextBufferSlot);
             writer.Write(") buffer _buf_");
@@ -548,7 +556,7 @@ internal class GLSLCanvasShaderEmitter
 
             EmitType(bufferType.ElementType);
             writer.Write(' ');
-            EmitName(uniform.Name);
+            EmitName(variable.Name);
             writer.WriteLine("[];");
 
             writer.Indent--;
@@ -557,11 +565,68 @@ internal class GLSLCanvasShaderEmitter
             return;
         }
 
-        writer.Write("uniform ");
-        EmitType(uniform.Type);
+        if (variable.Kind == ShaderVariableKind.Uniform)
+        {
+            writer.Write("uniform ");
+        }
+        else if (variable.Kind == ShaderVariableKind.VertexData)
+        {
+            int location = 0;
+            EmitVertexDeclaration(variable.Type, variable.Name.value, ref location);
+            return;
+        }
+        else if (variable.Kind == ShaderVariableKind.VertexShaderOutput)
+        {
+            writer.Write("layout(location = ");
+            writer.Write(vsOutLocation++);
+            if (compilation.Kind == ShaderKind.Canvas)
+            {
+                writer.Write(") in ");
+            }
+            else if (compilation.Kind == ShaderKind.Vertex)
+            {
+                writer.Write(") out ");
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+        }
+        else
+        {
+            throw new NotSupportedException(variable.Kind.ToString());
+        }
+
+        EmitType(variable.Type);
         writer.Write(' ');
-        EmitName(uniform.Name);
+        EmitName(variable.Name);
         writer.WriteLine(';');
+    }
+
+    private void EmitVertexDeclaration(ShaderType type, string baseName, ref int location)
+    {
+        if (type is ShaderStructureType structType)
+        {
+            foreach (var field in structType.structure.fields)
+            {
+                EmitVertexDeclaration(field.Type, baseName + "_" + field.Name, ref location);
+            }
+        }
+        else if (type.GetPrimitiveKind() != null)
+        {
+            writer.Write("layout(location = ");
+            writer.Write(location);
+            writer.Write(") in ");
+            EmitType(type);
+            writer.Write(' ');
+            writer.Write(baseName);
+            writer.WriteLine(';');
+            location++;
+        }
+        else
+        {
+            throw new NotSupportedException($"type {type} is not supported as vertex data!");
+        }
     }
 
     private void EmitStructureDefinition(ShaderStructure structure)
@@ -585,7 +650,7 @@ internal class GLSLCanvasShaderEmitter
 
 }
 
-class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter emitter) : ShaderExpressionVisitor
+class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter) : ShaderExpressionVisitor
 {
     public override ShaderExpression VisitBlockExpression(BlockExpression expression)
     {
@@ -731,6 +796,21 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
 
     public override ShaderExpression VisitMemberAccess(MemberAccess expression)
     {
+        ShaderExpression instance = expression;
+        while (instance is MemberAccess ma)
+        {
+            instance = ma.Instance;
+        }
+
+        if (instance is ShaderVariableExpression varExpr)
+        {
+            if (varExpr.Variable == emitter.vertexDataVariable)
+            {
+                WriteVertexDataAccess(expression);
+                return expression;
+            }
+        }
+
         string name = expression.Member.Name;
         if (name.StartsWith('<'))
         {
@@ -746,6 +826,25 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
         writer.Write(name);
 
         return expression;
+    }
+
+    private void WriteVertexDataAccess(ShaderExpression expr)
+    {
+        if (expr is MemberAccess ma)
+        {
+            WriteVertexDataAccess(ma.Instance);
+            writer.Write('_');
+            writer.Write(ma.Member.Name);
+        }
+        else if (expr is ShaderVariableExpression)
+        {
+            expr.Accept(this);
+        }
+        else
+        {
+            throw new UnreachableException();
+        }
+
     }
 
     public override ShaderExpression VisitShaderIntrinsicCall(ShaderIntrinsicCall expression)
@@ -843,6 +942,12 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLCanvasShaderEmitter e
             writer.Write(" * ");
             expression.Arguments[0].Accept(this);
             writer.Write(')');
+            return expression;
+        }
+
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.Discard))
+        {
+            writer.Write("discard");
             return expression;
         }
 

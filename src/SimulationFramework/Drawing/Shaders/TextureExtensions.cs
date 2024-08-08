@@ -10,7 +10,7 @@ public static class TextureExtensions
 {
     public static ColorF SampleUV(this ITexture texture, Vector2 uv)
     {
-        return ShaderIntrinsics.TextureSample(texture, uv);
+        return ShaderIntrinsics.TextureSampleUV(texture, uv);
     }
 
     public static ColorF Sample(this ITexture texture, Vector2 position)

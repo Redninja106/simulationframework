@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Components;
+using SimulationFramework.Drawing.Shaders;
 
 namespace SimulationFramework;
 
@@ -12,12 +13,21 @@ public static class Time
     /// <summary>
     /// The number of seconds since the last frame.
     /// </summary>
-    public static float DeltaTime => Provider.GetDeltaTime();
+
+    public static float DeltaTime
+    {
+        [ImplicitUniform]
+        get => Provider.GetDeltaTime();
+    }
 
     /// <summary>
     /// The number of seconds since the start of the simulation.
     /// </summary>
-    public static float TotalTime => Provider.GetTotalTime();
+    [ImplicitUniform]
+    public static float TotalTime 
+    {
+        get => Provider.GetTotalTime();
+    }
 
     /// <summary>
     /// <see langword="true"/> if duration of the previous frame exceeded <see cref="MaxDeltaTime"/>.

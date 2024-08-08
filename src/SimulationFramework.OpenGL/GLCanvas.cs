@@ -8,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,13 +33,29 @@ internal class GLCanvas : ICanvas
     private readonly TextureGeometryEffect textureGeometryEffect;
     private readonly SDFFontEffect sdfGeometryEffect;
 
+    private readonly Dictionary<Type, CustomVertexGeometryStream> customVertexGeometryStreams = [];
+
     private GeometryStream currentGeometryStream;
     private GeometryWriter currentGeometryWriter;
     private GeometryBuffer geometryBuffer;
-    // private unsafe List<SubmittedDrawCommand> submittedCommands = [];
 
     private GLGraphicsProvider graphics;
     private uint fbo;
+
+    internal CustomVertexGeometryStream GetCustomVertexGeometryStream(Type type)
+    {
+        if (!customVertexGeometryStreams.TryGetValue(type, out var stream))
+        {
+            var effect = graphics.GetShaderEffect(State.Shader, State.VertexShader);
+            var vsCompilation = effect.vsCompilation;
+            var vertexDataVar = vsCompilation!.Variables.Single(v => v.Kind is ShaderVariableKind.VertexData);
+
+            stream = new CustomVertexGeometryStream(vertexDataVar.Type);
+            customVertexGeometryStreams[type] = stream;
+        }
+
+        return stream;
+    }
 
     private GeometryWriter GetCurrentGeometryWriter()
     {
@@ -235,7 +250,25 @@ internal class GLCanvas : ICanvas
 
     public void DrawTriangles(ReadOnlySpan<Vector2> triangles)
     {
+        SetupRegularGeometry();
         currentGeometryWriter.PushTriangles(currentGeometryStream, triangles);
+    }
+
+    public void DrawTriangles<TVertex>(ReadOnlySpan<TVertex> vertices)
+        where TVertex : unmanaged
+    {
+        if (State.VertexShader is null)
+        {
+            throw new InvalidOperationException("Must have a vertex shader to accept custom vertices!");
+        }
+        var stream = GetCustomVertexGeometryStream(typeof(TVertex));
+
+        UpdateGeometryStream(stream);
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            stream.WriteVertex(vertices[i]);
+        }
     }
 
     public void Fill(ColorF color)
@@ -251,13 +284,24 @@ internal class GLCanvas : ICanvas
 
     public void Fill(CanvasShader shader)
     {
+        Fill(shader, vertexShader: null);
+    }
+
+    public void Fill(CanvasShader shader, VertexShader? vertexShader)
+    {
         UpdateGeometryStream(positionGeometryStream);
         UpdateGeometryWriter(fillGeometryWriter);
-        var effect = graphics.GetShaderEffect(shader);
-        if (effect.Shader != shader)
+        
+        ShaderGeometryEffect effect = graphics.GetShaderEffect(shader, vertexShader);
+        
+        if (effect.Shader != shader || effect.VertexShader != vertexShader)
             SubmitDrawCommands();
+        
         effect.Shader = shader;
+        effect.VertexShader = vertexShader;
+
         currentState.Shader = shader;
+        currentState.VertexShader = vertexShader;
     }
 
     public Vector2 DrawCodepoint(int codepoint, float size, Vector2 baseline, TextStyle style = TextStyle.Regular)
@@ -317,6 +361,7 @@ internal class GLCanvas : ICanvas
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
         glDisable(GL_CULL_FACE);
+        glDisable(GL_DEPTH_TEST);
         glViewport(0, 0, Target.Width, Target.Height);
         glBindFramebuffer(GL_FRAMEBUFFER, this.fbo);
 
@@ -339,17 +384,36 @@ internal class GLCanvas : ICanvas
         int offset = geometryBuffer.offset;
         currentGeometryStream.Upload(geometryBuffer);
 
+        // TODO: buffer resizing doesn't preserve draws on first frame
         geometryBuffer.Bind();
         currentGeometryStream.BindVertexArray();
 
         var effect = GetEffect(currentGeometryStream);
         effect.Use();
         effect.ApplyState(currentState, transform4x4);
-        currentGeometryStream.BindVertexArray();
 
         glDrawArrays(currentGeometryWriter.GetPrimitive(), offset / vertexSize, currentGeometryStream.GetVertexCount());
         currentGeometryStream.Clear();
     }
+
+    //public void DrawGeometry(IGeometry geometry)
+    //{
+    //    GLGeometry glGeometry = (GLGeometry)geometry;
+    //    glGeometry.Draw(this);
+    //}
+
+    //public void DrawGeometryInstances(IGeometry geometry, ReadOnlySpan<Matrix3x2> instances)
+    //{
+    //    GLGeometry glGeometry = (GLGeometry)geometry;
+    //    throw new NotImplementedException();
+    //}
+
+    //public void DrawGeometryInstances<TInstance>(IGeometry geometry, ReadOnlySpan<TInstance> instances)
+    //    where TInstance : unmanaged
+    //{
+    //    GLGeometry glGeometry = (GLGeometry)geometry;
+    //    throw new NotImplementedException();
+    //}
 
     private GeometryEffect GetEffect(GeometryStream geometryStream)
     {
@@ -365,7 +429,7 @@ internal class GLCanvas : ICanvas
 
         if (currentState.Shader is not null)
         {
-            var effect = graphics.GetShaderEffect(currentState.Shader);
+            var effect = graphics.GetShaderEffect(currentState.Shader, currentState.VertexShader);
             effect.Shader = currentState.Shader;
             return effect;
         }
@@ -416,6 +480,10 @@ internal class GLCanvas : ICanvas
 
     public void SetTransform(Matrix3x2 transform)
     {
+        if (State.Shader != null)
+        {
+            SubmitDrawCommands();
+        }
         currentState.Transform = transform;
     }
 
@@ -480,19 +548,4 @@ internal class GLCanvas : ICanvas
         currentGeometryStream = stream;
         stream.TransformMatrix = currentState.Transform;
     }
-}
-
-class GLGeometry
-{
-    GLBuffer vertexBuffer;
-    GLBuffer? indexBuffer;
-
-    public void Draw(GLCanvas canvas)
-    {
-    }
-}
-
-class GLBuffer
-{
-
 }

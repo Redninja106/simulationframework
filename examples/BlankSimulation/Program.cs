@@ -16,5 +16,6 @@ partial class Program : Simulation
 
     public override void OnRender(ICanvas canvas)
     {
+        canvas.DrawRect(0, 0, canvas.Width, canvas.Height);
     }
 }

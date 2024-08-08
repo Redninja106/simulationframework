@@ -39,7 +39,7 @@ internal abstract class GeometryEffect
         return program;
     }
 
-    private static unsafe void ShaderSource(uint shader, string source)
+    internal static unsafe void ShaderSource(uint shader, string source)
     {
         byte[] src = Encoding.UTF8.GetBytes(source);
         int len = src.Length;

@@ -7,6 +7,8 @@ using System.Runtime.InteropServices;
 
 namespace SimulationFramework.Drawing;
 
+// TODO: blending api
+
 /// <summary>
 /// Enables the rendering shapes to a texture.
 /// </summary>
@@ -65,22 +67,15 @@ public interface ICanvas
     void Fill(ColorF color);
 
     /// <summary>
-    /// Configures the canvas to fill shapes using the provided gradient.
+    /// Configures the canvas to fill shapes using the provided shader.
     /// </summary>
-    void Fill(Gradient gradient)
-    {
-        throw new NotImplementedException("add shader");
-    }
+    void Fill(CanvasShader shader);
+    void Fill(CanvasShader shader, VertexShader vertexShader);
 
     /// <summary>
     /// Configures the canvas to outline shapes with the provided color.
     /// </summary>
     void Stroke(Color color);
-
-    /// <summary>
-    /// Configures the canvas to fill shapes using the provided shader.
-    /// </summary>
-    void Fill(CanvasShader shader);
 
     /// <summary>
     /// Sets the stroke width of the canvas.
@@ -91,28 +86,6 @@ public interface ICanvas
     /// Sets the clipping rectangle of the canvas.
     /// </summary>
     void Clip(Rectangle? rectangle);
-
-    /// <summary>
-    /// Fills any drawn shapes with the provided texture.
-    /// </summary>
-    sealed void Fill(ITexture texture) => Fill(texture, Matrix3x2.Identity);
-
-    /// <summary>
-    /// Fills any drawn shapes with the provided texture.
-    /// </summary>
-    void Fill(ITexture texture, Matrix3x2 transform, TileMode tileMode = TileMode.Repeat)
-    {
-        throw new Exception("use a shader");
-    }
-
-
-    /// <summary>
-    /// Fills any drawn shapes with the provided texture.
-    /// </summary>
-    sealed void Fill(ITexture texture, Matrix3x2 transform, TileMode tileModeX, TileMode tileModeY)
-    {
-        throw new Exception("use a shader");
-    }
 
     /// <summary>
     /// Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <see cref="StrokeWidth(float)"/>.
@@ -339,8 +312,18 @@ public interface ICanvas
     /// <summary>
     /// Draws a list of triangles using the current transform, clipping, and drawing settings
     /// </summary>
-    /// <param name="triangles">The list of triangles to draw. Every three points make a triangle.</param>
     void DrawTriangles(ReadOnlySpan<Vector2> triangles);
+
+    /// <summary>
+    /// Draws a list of triangles using a custom vertex type.
+    /// <para>
+    /// This method requires a custom vertex shader be set that accepts vertices of type <typeparamref name="TVertex"/>.
+    /// </para>
+    /// </summary>
+    /// <typeparam name="TVertex">The custom vertex type.</typeparam>
+    /// <param name="triangles">The list of triangles to draw. Every three points make a triangle.</param>
+    void DrawTriangles<TVertex>(ReadOnlySpan<TVertex> triangles)
+        where TVertex : unmanaged;
 
     /// <summary>
     /// Draws a texture to the canvas at (0, 0) using the current transform and clipping settings.
@@ -454,6 +437,11 @@ public interface ICanvas
     /// <param name="polygon">The vertices of the polygon.</param>
     /// <param name="close">Whether the first and last vertices of the polygon should be treated as connected.</param>
     void DrawPolygon(ReadOnlySpan<Vector2> polygon, bool close = true);
+
+    // void DrawGeometry(IGeometry geometry);
+    // void DrawGeometryInstances(IGeometry geometry, ReadOnlySpan<Matrix3x2> instances);
+    // void DrawGeometryInstances<TInstance>(IGeometry geometry, ReadOnlySpan<TInstance> instances)
+    //     where TInstance : unmanaged;
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.

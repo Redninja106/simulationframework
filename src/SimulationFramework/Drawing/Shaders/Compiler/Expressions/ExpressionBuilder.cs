@@ -562,11 +562,20 @@ internal class ExpressionBuilder
         var metadataToken = (MetadataToken)instruction.Argument!;
         var fieldInfo = (FieldInfo)metadataToken.Resolve()!;
 
-        if (fieldInfo.DeclaringType == context.ShaderType)
+        if (context.IsSelfType(fieldInfo.DeclaringType!))
         {
-            // uniform!
-            Expressions.Pop(); // pop the 'self'
-            Expressions.Push(new ShaderVariableExpression(context.Uniforms[fieldInfo]));
+            ShaderVariableExpression variable = new ShaderVariableExpression(context.Uniforms[fieldInfo]);
+            if (instruction.OpCode is OpCode.Ldfld or OpCode.Ldflda)
+            {
+                _ = Expressions.Pop(); // pop the 'self'
+                Expressions.Push(variable);
+            }
+            else
+            {
+                var value = Expressions.Pop();
+                _ = Expressions.Pop(); // pop the 'self'
+                Expressions.Push(CreateBinaryExpression(BinaryOperation.Assignment, variable, value));
+            }
             return;
         }
 

@@ -10,12 +10,12 @@ public sealed class LinearGradient : Gradient
     /// <summary>
     /// The gradients starting point.
     /// </summary>
-    public Vector2 From { get; set; }
+    public Vector2 From;
 
     /// <summary>
     /// The gradient's end point.
     /// </summary>
-    public Vector2 To { get; set; }
+    public Vector2 To;
 
     /// <summary>
     /// Creates a new instance of the <see cref="LinearGradient"/> class.
@@ -25,7 +25,7 @@ public sealed class LinearGradient : Gradient
     /// <param name="toX">The X coordinate of the gradient's end point.</param>
     /// <param name="toY">The Y coordinate of the gradient's end point.</param>
     /// <param name="colors">An array of colors.</param>
-    public LinearGradient(float fromX, float fromY, float toX, float toY, params Color[] colors) : this(new Vector2(fromX, fromY), new Vector2(toX, toY), colors) 
+    public LinearGradient(float fromX, float fromY, float toX, float toY, params ColorF[] colors) : this(new Vector2(fromX, fromY), new Vector2(toX, toY), colors) 
     { 
     }
 
@@ -35,7 +35,7 @@ public sealed class LinearGradient : Gradient
     /// <param name="from">The starting point of the gradient.</param>
     /// <param name="to">The end point of the gradient.</param>
     /// <param name="colors">An array of colors.</param>
-    public LinearGradient(Vector2 from, Vector2 to, params Color[] colors) : this(from, to, ColorsToStops(colors)) 
+    public LinearGradient(Vector2 from, Vector2 to, params ColorF[] colors) : this(from, to, ColorsToStops(colors)) 
     { 
     }
 
@@ -69,7 +69,7 @@ public sealed class LinearGradient : Gradient
     /// <param name="colors">An array of colors.</param>
     /// <param name="transform">The gradient's transformation matrix.</param>
     /// <param name="tileMode">The gradients tile mode.</param>
-    public LinearGradient(Vector2 from, Vector2 to, Color[] colors, Matrix3x2 transform, TileMode tileMode = TileMode.Clamp) : this(from, to, ColorsToStops(colors), transform, tileMode) 
+    public LinearGradient(Vector2 from, Vector2 to, ColorF[] colors, Matrix3x2 transform, TileMode tileMode = TileMode.Clamp) : this(from, to, ColorsToStops(colors), transform, tileMode) 
     { 
     }
 
@@ -85,5 +85,27 @@ public sealed class LinearGradient : Gradient
     {
         this.From = from;
         this.To = to;
+    }
+
+    public override ColorF GetPixelColor(Vector2 position)
+    {
+        Vector2 delta = To - From;
+
+        float distance = Vector2.Dot(position - From, delta);
+        float posOnGradient = distance / delta.LengthSquared();
+
+        int index = 0;
+        for (int i = 0; i < Stops.Length; i++)
+        {
+            if (Stops[i].Position > posOnGradient)
+            {
+                index = i;
+                i = Stops.Length;
+            }
+        }
+
+        GradientStop a = this.Stops[index - 1];
+        GradientStop b = this.Stops[index];
+        return ColorF.Lerp(a.Color, b.Color, (posOnGradient - a.Position) / (b.Position - a.Position));
     }
 }

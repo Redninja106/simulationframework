@@ -63,6 +63,20 @@ internal class CompilerContext
         MethodQueue.Enqueue(method);
 
         ShaderMethod shaderMethod = new();
+        
+        if (method is ConstructorInfo ctor)
+        {
+            shaderMethod.ReturnType = CompileType(ctor.DeclaringType);
+        }
+        else if (method is MethodInfo m)
+        {
+            shaderMethod.ReturnType = CompileType(m.ReturnType);
+        }
+        else
+        {
+            throw new UnreachableException();
+        }
+
         Methods.Add(method, shaderMethod);
         return shaderMethod;
     }
@@ -83,7 +97,7 @@ internal class CompilerContext
     }
     public ShaderType CompileType(Type type)
     {
-        if (type == ShaderType)
+        if (type == ShaderType || ShaderType.IsSubclassOf(type))
         {
             return new ShaderGlobalType(type);
         }
@@ -96,6 +110,11 @@ internal class CompilerContext
         if (type.IsByRef)
         {
             return new ReferenceType(CompileType(type.GetElementType()));
+        }
+
+        if (type.IsEnum)
+        {
+            return CompileType(Enum.GetUnderlyingType(type));
         }
 
         if (this.primitiveTypeMap.TryGetValue(type, out ShaderType? primitive))
@@ -122,6 +141,11 @@ internal class CompilerContext
 
     private ShaderStructure CompileStruct(Type structType)
     {
+        if (structType.IsPrimitive)
+        {
+            throw new NotSupportedException("Unsupported primitive type " + structType.ToString());
+        }
+
         FieldInfo[] fieldInfos = structType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         ShaderVariable[] fields = new ShaderVariable[fieldInfos.Length];
         for (int i = 0; i < fieldInfos.Length; i++)
@@ -130,7 +154,8 @@ internal class CompilerContext
             fields[i] = new ShaderVariable(
                 CompileType(fieldInfo.FieldType),
                 new(fieldInfo.Name),
-                fieldInfo
+                fieldInfo,
+                ShaderVariableKind.Field
                 );
         }
 
@@ -139,5 +164,10 @@ internal class CompilerContext
             fields = fields,
             name = new(structType.Name),
         };
+    }
+
+    internal bool IsSelfType(Type declaringType)
+    {
+        return declaringType == ShaderType || ShaderType.IsSubclassOf(declaringType);
     }
 }

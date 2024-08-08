@@ -19,6 +19,10 @@ public enum PrimitiveKind
 {
     Void,
     Bool,
+    UInt,
+    UInt2,
+    UInt3,
+    UInt4,
     Int,
     Int2,
     Int3,

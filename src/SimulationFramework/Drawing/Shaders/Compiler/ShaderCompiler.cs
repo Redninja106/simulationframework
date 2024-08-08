@@ -17,42 +17,95 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler;
 
-public class CanvasShaderCompiler
+public class ShaderCompiler
 {
     private Dictionary<Type, ShaderType> primitiveTypeMap = [];
 
-    // TODO: add method cacheing here
+    // TODO: direct texture reads
+    // TODO: early returns
+    // TODO: add method caching here
+    // TODO: compute shaders (buffers?)
+    // TODO: implicit uniforms (for Mouse.Position, Time.TotalTime, etc)
+    // TODO: Random APIs (and maybe intercept System.Random)
 
-    public CanvasShaderCompiler()
+    public ShaderCompiler()
     {
         primitiveTypeMap[typeof(void)] = ShaderType.Void;
         primitiveTypeMap[typeof(bool)] = ShaderType.Bool;
+        primitiveTypeMap[typeof(sbyte)] = ShaderType.Int;
+        primitiveTypeMap[typeof(short)] = ShaderType.Int;
         primitiveTypeMap[typeof(int)] = ShaderType.Int;
+        primitiveTypeMap[typeof(byte)] = ShaderType.UInt;
+        primitiveTypeMap[typeof(ushort)] = ShaderType.UInt;
+        primitiveTypeMap[typeof(uint)] = ShaderType.UInt;
         primitiveTypeMap[typeof(float)] = ShaderType.Float;
         primitiveTypeMap[typeof(Vector2)] = ShaderType.Float2;
         primitiveTypeMap[typeof(Vector3)] = ShaderType.Float3;
         primitiveTypeMap[typeof(Vector4)] = ShaderType.Float4;
         primitiveTypeMap[typeof(ColorF)] = ShaderType.Float4;
+        primitiveTypeMap[typeof(Color)] = ShaderType.UInt;
         primitiveTypeMap[typeof(Matrix4x4)] = ShaderType.Matrix4x4;
         primitiveTypeMap[typeof(Matrix3x2)] = ShaderType.Matrix3x2;
         primitiveTypeMap[typeof(ITexture)] = ShaderType.Texture;
     }
 
-    public ShaderCompilation Compile(CanvasShader shader)
+    public ShaderCompilation Compile(Shader shader)
     {
         var shaderType = shader.GetType();
-        var entryPoint = shaderType.GetMethod(
-            nameof(CanvasShader.GetPixelColor),
-            [typeof(Vector2)]
-            ) ?? throw new();
+        ShaderKind kind;
+
+        MethodInfo entryPoint;
+        if (shader is CanvasShader)
+        {
+            entryPoint = shaderType.GetMethod(
+                nameof(CanvasShader.GetPixelColor),
+                [typeof(Vector2)]
+                ) ?? throw new();
+            kind = ShaderKind.Canvas;
+        }
+        else if (shader is VertexShader)
+        {
+            entryPoint = shaderType.GetMethod(
+                nameof(VertexShader.GetVertexPosition),
+                []
+                ) ?? throw new();
+            kind = ShaderKind.Vertex;
+        }
+        else if (shader is ComputeShader)
+        {
+            entryPoint = shaderType.GetMethod(
+                nameof(ComputeShader.RunThread),
+                [typeof(int), typeof(int), typeof(int)]
+                ) ?? throw new();
+            kind = ShaderKind.Compute;
+        }
+        else
+        {
+            throw new NotSupportedException(shader.GetType().Name);
+        }
 
         CompilerContext context = new(shaderType, entryPoint, primitiveTypeMap);
+        context.Compilation.Kind = kind;
 
-        foreach (var field in shaderType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+        foreach (var f in shaderType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
         {
-            ShaderVariable variable = new(context.CompileType(field.FieldType), new(field.Name), field);
+            // we need to get the field using the type that declared it so dictionary lookups don't fail (different ReflectedType values casue issues)
+            var field = f.DeclaringType!.GetField(f.Name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)!;
+
+            ShaderVariableKind varKind = ShaderVariableKind.Uniform;
+
+            if (field.GetCustomAttribute<VertexDataAttribute>() != null)
+            {
+                varKind = ShaderVariableKind.VertexData;
+            }
+            else if(field.GetCustomAttribute<VertexShaderOutputAttribute>() != null)
+            {
+                varKind = ShaderVariableKind.VertexShaderOutput;
+            }
+
+            ShaderVariable variable = new(context.CompileType(field.FieldType), new(field.Name), field, varKind);
             context.Uniforms.Add(field, variable);
-            context.Compilation.Uniforms.Add(variable);
+            context.Compilation.Variables.Add(variable);
         }
 
         context.EnqueueMethod(entryPoint);
@@ -62,6 +115,10 @@ public class CanvasShaderCompiler
             var shaderMethod = context.Methods[method];
             CompileMethod(shaderMethod, context, method);
             context.Compilation.Methods.Add(shaderMethod);
+            if (method == entryPoint)
+            {
+                context.Compilation.EntryPoint = shaderMethod;
+            }
         }
 
         return context.Compilation;
@@ -70,18 +127,20 @@ public class CanvasShaderCompiler
 
     private void CompileMethod(ShaderMethod shaderMethod, CompilerContext context, MethodBase method)
     {
+        shaderMethod.BackingMethod = method;
+
         MethodDisassembly disassembly = new(method);
         ControlFlowGraph graph = new ControlFlowGraph(disassembly);
 
-        var locals = disassembly.MethodBody.LocalVariables.Select(l => new ShaderVariable(context.CompileType(l.LocalType), new("var" + l.LocalIndex), null)).ToArray();
-        var parameters = method.GetParameters().Select(p => new ShaderVariable(context.CompileType(p.ParameterType), new(p.Name!), null)).ToArray();
+        var locals = disassembly.MethodBody.LocalVariables.Select(l => new ShaderVariable(context.CompileType(l.LocalType), new("var" + l.LocalIndex), null, ShaderVariableKind.Local)).ToArray();
+        var parameters = method.GetParameters().Select(p => new ShaderVariable(context.CompileType(p.ParameterType), new(p.Name!), null, ShaderVariableKind.Parameter)).ToArray();
 
         var parametersWithThis = parameters;
 
         ShaderVariable? self = null;
-        if (!method.IsStatic) 
+        if (!method.IsStatic)
         {
-            self = new ShaderVariable(context.CompileType(method.DeclaringType!), new("self"), null);
+            self = new ShaderVariable(context.CompileType(method.DeclaringType!), new("self"), null, ShaderVariableKind.Parameter);
             
             parametersWithThis = parameters.Prepend(self).ToArray();
         }
@@ -127,9 +186,11 @@ public class CanvasShaderCompiler
     class RedundantVariableFinder : ShaderExpressionVisitor
     {
         /* 
-         * redundant variables are variables that are both assignened and used exactly once.
+         * redundant variables are variables that are both assigned and used exactly once.
          * these variables are usually not in the original source, instead being inserted by the compiler.
          */
+
+        // TODO: BUG if the single usage is a member access on the lhs of an assignment, this causes improper codegen
 
         Dictionary<ShaderVariable, int> assignments = [];
         Dictionary<ShaderVariable, int> usages = [];

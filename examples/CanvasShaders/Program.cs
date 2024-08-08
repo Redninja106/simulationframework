@@ -10,7 +10,7 @@ Start<Program>();
 
 partial class Program : Simulation
 {
-    Creation shader = new();
+    IterationsInversions2 shader = new();
     Vector2 targetPos;
 
     public override void OnInitialize()
@@ -22,7 +22,7 @@ partial class Program : Simulation
         shader.width = canvas.Width;
         shader.height = canvas.Height;
         shader.mousePosition = Vector2.Lerp(shader.mousePosition, targetPos, 1f - MathF.Pow(0.01f, Time.DeltaTime));
-
+        targetPos = Mouse.Position;
         if (Keyboard.IsKeyDown(Key.Space))
         {
             shader.time += Time.DeltaTime * 100;

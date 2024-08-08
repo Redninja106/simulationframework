@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Shaders;
 
 namespace SimulationFramework.Components;
 
@@ -40,4 +41,9 @@ public interface IGraphicsProvider : ISimulationComponent
     ///Loads a system font by name.
     /// </summary>
     IFont LoadSystemFont(string name);
+    
+    void Dispatch(ComputeShader computeShader, int lengthI, int lengthJ, int lengthK);
+    
+    //IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices) 
+    //    where TVertex : unmanaged;
 }

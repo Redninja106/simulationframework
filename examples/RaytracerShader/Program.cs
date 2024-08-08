@@ -40,7 +40,7 @@ partial class Program : Simulation
                 ),
                 ColorF.FromHSV(Random.Shared.NextSingle(), 1, 1)
                 );
-            shader.spheres[i].posRad.Y -= shader.spheres[i].posRad.W;
+            shader.spheres[i].position.Y -= shader.spheres[i].radius;
         }
     }
 
@@ -103,7 +103,9 @@ partial class Program : Simulation
         {
             ImGui.PushID(i);
             ImGui.Separator();
-            ImGui.DragFloat4("sphere", ref shader.spheres[i].posRad);
+            ImGui.DragFloat3("position", ref shader.spheres[i].position);
+            ImGui.DragFloat("radius", ref shader.spheres[i].radius);
+            ImGui.ColorEdit4("radius", ref shader.spheres[i].color);
             if (ImGui.Button("remove"))
             {
                 shader.spheres = [..shader.spheres[..i], ..shader.spheres[(i+1)..]];
@@ -175,7 +177,7 @@ class RayTracerShader : CanvasShader
             for (int j = 0; j < spheres.Length; j++)
             {
                 Sphere s = spheres[j];
-                s.posRad = new(s.posRad.X - cameraPosition.X, s.posRad.Y - cameraPosition.Y, s.posRad.Z - cameraPosition.Z, s.posRad.W);
+                s.position -= cameraPosition; // = new(s.posRad.X - cameraPosition.X, s.posRad.Y - cameraPosition.Y, s.posRad.Z - cameraPosition.Z, s.posRad.W);
                 if (RaySphereIntersect(origin, direction, s, out Vector3 n, out float t))
                 {
                     if (t < closestT)
@@ -254,25 +256,16 @@ class RayTracerShader : CanvasShader
     }
 }
 
-class MyShader : CanvasShader
-{
-    public override ColorF GetPixelColor(Vector2 position)
-    {
-        return new(position.X / 2000, position.Y / 1000, 0, 1);
-    }
-}
-
 struct Sphere
 {
-    public Vector4 posRad;
+    public Vector3 position;
+    public float radius;
     public Vector4 color;
 
     public Sphere(Vector4 data, ColorF color)
     {
-        this.posRad = data;
+        position = new(data.X, data.Y, data.Z);
+        radius = data.W;
         this.color = color.ToVector4();
     }
-
-    public Vector3 position => new(posRad.X, posRad.Y, posRad.Z);
-    public float radius => posRad.W;
 }

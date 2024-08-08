@@ -22,8 +22,10 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
     private GLCanvas frameCanvas;
     private GLFrame frame;
 
-    private Dictionary<Type, ShaderGeometryEffect> shaderEffects = [];
-    private CanvasShaderCompiler canvasShaderCompiler = new();
+    private readonly Dictionary<Type, ComputeShaderEffect> computeShaders = [];
+    private readonly Dictionary<(Type, Type?), ShaderGeometryEffect> shaderEffects = [];
+    private readonly Dictionary<string, GLFont> systemFontCache = [];
+    internal ShaderCompiler ShaderCompiler = new();
 
     public GLGraphicsProvider(GLFrame frame, Func<string, nint> getProcAddress)
     {
@@ -66,6 +68,17 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
 
     public IFont LoadSystemFont(string name)
     {
+        if (!systemFontCache.TryGetValue(name, out var font))
+        {
+            font = (GLFont)CreateSystemFont(name);
+            systemFontCache.Add(name, font);
+        }
+     
+        return font;
+    }
+
+    private IFont CreateSystemFont(string name)
+    {
         if (OperatingSystem.IsWindows())
         {
             string path = Path.Combine(Environment.SystemDirectory, "../fonts", name + ".ttf");
@@ -103,27 +116,67 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
         }
     }
 
-    internal ShaderGeometryEffect GetShaderEffect(CanvasShader shader)
+    internal ShaderGeometryEffect GetShaderEffect(CanvasShader shader, VertexShader? vs = null)
     {
-        if (shaderEffects.TryGetValue(shader.GetType(), out var effect))
+        if (shaderEffects.TryGetValue((shader.GetType(), vs?.GetType()), out var effect))
         {
             return effect;
         }
 
-        var compilation = canvasShaderCompiler.Compile(shader);
+        var compilation = ShaderCompiler.Compile(shader);
+
+        ShaderCompilation vsCompilation = null;
+        if (vs != null)
+        {
+            vsCompilation = ShaderCompiler.Compile(vs);
+        }
 
         var sw = new StringWriter();
-        var emitter = new GLSLCanvasShaderEmitter(sw);
+        var emitter = new GLSLShaderEmitter(sw);
         emitter.Emit(compilation);
-
         var src = sw.ToString();
-        effect = new(compilation, src);
-        shaderEffects[shader.GetType()] = effect;
+
+        string? vsSrc = null;
+        if (vsCompilation != null)
+        {
+            var vsSw = new StringWriter();
+            var vsEmitter = new GLSLShaderEmitter(vsSw);
+            vsEmitter.Emit(vsCompilation);
+            vsSrc = vsSw.ToString();
+        }
+
+        effect = new(compilation, src, vsCompilation, vsSrc);
+        shaderEffects[(shader.GetType(), vs?.GetType())] = effect;
         return effect;
     }
 
     internal void RemoveCachedShader(Type type)
     {
-        this.shaderEffects.Remove(type);
+        foreach (var (effect, _) in shaderEffects)
+        {
+            if (effect.Item1 == type || effect.Item2 == type)
+            {
+                shaderEffects.Remove(effect);
+            }
+        }
     }
+
+    public void Dispatch(ComputeShader computeShader, int threadCountI, int threadCountJ, int threadCountK)
+    {
+        if (!computeShaders.TryGetValue(computeShader.GetType(), out var glShader))
+        {
+            var compilation = ShaderCompiler.Compile(computeShader);
+            glShader = new ComputeShaderEffect(computeShader.GetType(), compilation);
+            computeShaders[computeShader.GetType()] = glShader;
+        }
+
+        glShader.Dispatch(computeShader, threadCountI, threadCountJ, threadCountK);
+    }
+
+    // public IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices) where TVertex : unmanaged
+    // {
+    //     var result = new GLGeometry();
+    //     result.AddVertexBuffer(vertices);
+    //     return result;
+    // }
 }

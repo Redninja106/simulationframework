@@ -21,6 +21,7 @@ public static class ShaderIntrinsics
     public static bool AsBool(int value) => value > 0;
 
     [DoesNotReturn]
+    [ShaderIntrinsic]
     public static void Discard()
     {
         throw new FragmentDiscardedException();

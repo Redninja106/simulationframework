@@ -139,6 +139,8 @@ public unsafe class GLFont : IFont
     }
 }
 
+
+// TODO: dynamic atlas size
 internal unsafe class SDFFontAtlas
 {
     public int Width => atlasWidth;
