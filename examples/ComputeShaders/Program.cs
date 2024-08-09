@@ -2,9 +2,12 @@
 using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
+using SimulationFramework.Input;
 using System.Numerics;
 
 Start<Program>();
+
+// note: a simple shader like this doesn't see any performance benefits from running in a shader
 
 partial class Program : Simulation
 {
@@ -31,6 +34,7 @@ partial class Program : Simulation
         canvas.Clear(Color.Black);
         particleShader.deltaTime = Time.DeltaTime;
         Window.Title = Performance.Framerate.ToString();
+
         Graphics.Dispatch(particleShader, particleShader.particles.Length, 1, 1);
 
         for (int i = 0; i < particles.Length; i++)

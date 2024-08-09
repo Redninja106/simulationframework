@@ -11,35 +11,16 @@ Start<Program>(new DesktopPlatform());
 partial class Program : Simulation
 {
     ITexture logo;
-    string typedString = "Hello!";
 
     public override void OnInitialize()
     {
         logo = Graphics.LoadTexture("./logo-512x512.png");
-        ShaderCompiler.DumpShaders = true;
-        // SetFixedResolution(640, 480, Color.Black);
     }
     public override void OnRender(ICanvas canvas)
     {
-        Window.Title = "Simulation - " + (int)Performance.Framerate + " FPS";
+        Window.Title = $"Simulation - {(int)Performance.Framerate} FPS";
+
         canvas.Clear(Color.FromHSV(.1f, .1f, .1f));
-
-        // foreach (var typedChar in Keyboard.TypedKeys)
-        // {
-        //     typedString += typedChar;
-        // }
-        // 
-        // if (Keyboard.IsKeyPressed(Key.Backspace))
-        // {
-        //     if (typedString.Length > 0)
-        //         typedString = typedString[..(typedString.Length - 1)];
-        // }
-
-        // canvas.Antialias(true);
-        // canvas.DrawAlignedText(typedString, 32f, Mouse.Position + Vector2.One * 10, Alignment.Center, Keyboard.IsKeyDown(Key.Space) ? TextStyle.Bold : 0);
-
-        // ImGuiNET.ImGui.Text("hello, world!");
-        // ImGuiNET.ImGui.Image(logo.GetImGuiID(), new(100, 100));
 
         canvas.Translate(100, 100);
         canvas.DrawTexture(logo, new Rectangle(0, 0, 100, 100, Alignment.Center));
@@ -67,7 +48,7 @@ partial class Program : Simulation
         {
             TileMode = TileMode.Clamp,
         });
-        canvas.DrawRect(0, 0, 1000, 1000, Alignment.Center);
+        canvas.DrawRect(0, 0, 100, 100, Alignment.Center);
 
         canvas.Translate(150, 0);
         canvas.Fill(new RadialGradient(0, 0, 50, ColorF.Orange, ColorF.Green)
