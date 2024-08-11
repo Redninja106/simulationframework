@@ -357,6 +357,8 @@ internal class GLCanvas : ICanvas
 
     private void SubmitDrawCommands()
     {
+        // TODO: switch to an approach that doesn't require constant state synchronization
+
         if (currentGeometryStream.GetVertexCount() == 0)
             return;
 
@@ -508,6 +510,8 @@ internal class GLCanvas : ICanvas
 
         currentState.Color = color.ToColorF();
         currentState.Fill = false;
+        currentState.Shader = null;
+        currentState.VertexShader = null;
 
         colorGeometryStream.Color = color;
     }

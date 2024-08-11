@@ -16,6 +16,7 @@ public enum BinaryOperation
     Assignment,
     LeftShift,
     RightShift,
+    XOr,
     Or,
     And,
 }

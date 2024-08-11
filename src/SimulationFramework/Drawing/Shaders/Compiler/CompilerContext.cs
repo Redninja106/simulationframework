@@ -87,6 +87,16 @@ internal class CompilerContext
         {
             return (MethodInfo)method;
         }
+        else
+        {
+            if (method is MethodInfo methodInfo && method.IsGenericMethod)
+            {
+                if (IntrinsicMethods.Contains(methodInfo.GetGenericMethodDefinition()))
+                {
+                    return methodInfo;
+                }
+            }
+        }
 
         if (IntrinsicIntercepts.TryGetValue(method, out MethodInfo? intrinsic))
         {

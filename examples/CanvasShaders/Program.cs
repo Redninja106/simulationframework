@@ -5,6 +5,7 @@ using SimulationFramework.Input;
 using SimulationFramework;
 using System.Numerics;
 using static SimulationFramework.Drawing.Shaders.ShaderIntrinsics;
+using SimulationFramework.Drawing.Shaders.Compiler;
 
 Start<Program>();
 
@@ -31,7 +32,7 @@ partial class Program : Simulation
         {
             shader.time += Time.DeltaTime;
         }
-
+        ShaderCompiler.DumpShaders = true;
         canvas.Clear(Color.FromHSV(0, 0, .15f));
         canvas.Fill(shader);
         canvas.DrawRect(0, 0, canvas.Width, canvas.Height);
@@ -74,6 +75,8 @@ class IterationsInversions2 : CanvasShader
 
     public override ColorF GetPixelColor(Vector2 position)
     {
+        Vector2 duv = DDX(position);
+
         const int AA = 2;
         float e = 1.0f / width;
 

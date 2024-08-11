@@ -87,6 +87,7 @@ internal class ExpressionBuilder
                 break;
             case OpCode.Add:
             case OpCode.Sub:
+            case OpCode.Xor:
             case OpCode.Mul:
             case OpCode.Div:
             case OpCode.And:
@@ -538,6 +539,10 @@ internal class ExpressionBuilder
 
     void BuildBinaryExpr(Instruction instruction)
     {
+        // TODO: bitwise operators
+        // TODO: ternary exprs
+        // TODO: support short-circuiting operators (&& and ||)
+
         var exprType = instruction.OpCode switch
         {
             OpCode.Add => BinaryOperation.Add,
@@ -545,6 +550,7 @@ internal class ExpressionBuilder
             OpCode.Mul => BinaryOperation.Multiply,
             OpCode.Div or OpCode.Div_Un => BinaryOperation.Divide,
             OpCode.And => BinaryOperation.And,
+            OpCode.Xor => BinaryOperation.XOr,
             OpCode.Or => BinaryOperation.Or,
             OpCode.Shr => BinaryOperation.RightShift,
             OpCode.Shr_Un => BinaryOperation.RightShift,
@@ -555,7 +561,7 @@ internal class ExpressionBuilder
             OpCode.Rem => BinaryOperation.Modulus,
             OpCode.Rem_Un => BinaryOperation.Modulus,
             _ => throw new UnreachableException(),
-        }; ;
+        };
 
         var right = Expressions.Pop();
         var left = Expressions.Pop();
@@ -573,6 +579,7 @@ internal class ExpressionBuilder
 
     private BinaryExpression CreateBinaryExpression(BinaryOperation operation, ShaderExpression left, ShaderExpression right)
     {
+
         if (left.ExpressionType == ShaderType.Bool)
         {
             if (right is ConstantExpression constExpr2 && constExpr2.Value is 0 or 1)

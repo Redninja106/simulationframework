@@ -131,7 +131,7 @@ class CubeVertexShader : VertexShader
         result = Vector4.Transform(result, view);
         result = Vector4.Transform(result, proj);
 
-        uv = vertex.Texture;
+        uv = new(vertex.Texture.X, vertex.Texture.Y);
 
         return result;
     }

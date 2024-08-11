@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 internal class ExpressionStack : IEnumerable<ShaderExpression>
 {
+    // TODO: use two separate stacks here. it'll be cleaner and make ternary exprs easier
     private Stack<(ShaderExpression expr, bool isOnIlStack)> values = new();
 
     public void Push(ShaderExpression expression, bool isOnStack = true)

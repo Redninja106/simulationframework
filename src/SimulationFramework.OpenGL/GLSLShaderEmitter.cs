@@ -700,6 +700,7 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
             BinaryOperation.RightShift => ">>",
             BinaryOperation.Or => "||",
             BinaryOperation.And => "&&",
+            BinaryOperation.XOr => "^",
             _ => throw new NotImplementedException(expression.Operation.ToString())
         });
         writer.Write(' ');
@@ -831,8 +832,17 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
         if (expr is MemberAccess ma)
         {
             WriteVertexDataAccess(ma.Instance);
-            writer.Write('_');
-            writer.Write(ma.Member.Name);
+            // if the member access is on a primitive type, then it's something like 'vec3.x' and needs to use a '.' not a '_'.
+            if (ma.Instance.ExpressionType.GetPrimitiveKind() == null)
+            {
+                writer.Write('_');
+                writer.Write(ma.Member.Name);
+            }
+            else
+            {
+                writer.Write('.');
+                writer.Write(ma.Member.Name.ToLower());
+            }
         }
         else if (expr is ShaderVariableExpression)
         {
