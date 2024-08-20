@@ -139,7 +139,7 @@ class RayTracerShader : CanvasShader
 
         Vector3 origin = cameraPosition;
         
-        const int antialias = 20; // sample # = antialias^2
+        const int antialias = 15; // sample # = antialias^2
         
         ColorF color = default;
         for (int y = 0; y < antialias; y++)

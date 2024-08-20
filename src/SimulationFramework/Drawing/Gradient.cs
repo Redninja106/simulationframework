@@ -58,23 +58,29 @@ public abstract class Gradient : CanvasShader
                 gradientProgress = 2 - gradientProgress;
             }
         }
-        else if (TileMode == WrapMode.None)
+        else // WrapMode.None
         {
-
-        }
-
-        int index = 0;
-        for (int i = 1; i < Stops.Length; i++)
-        {
-            if (Stops[i].Position >= gradientProgress)
+            if (gradientProgress < 0)
             {
-                index = i;
-                i = Stops.Length;
+                return ColorF.Transparent;
+            }
+            if (gradientProgress > 1)
+            {
+                return ColorF.Transparent;
             }
         }
 
-        GradientStop a = this.Stops[index - 1];
-        GradientStop b = this.Stops[index];
+        int i;
+        for (i = 1; i < Stops.Length; i++)
+        {
+            if (Stops[i].Position >= gradientProgress)
+            {
+                break;
+            }
+        }
+
+        GradientStop a = this.Stops[i - 1];
+        GradientStop b = this.Stops[i];
         return ColorF.Lerp(a.Color, b.Color, (gradientProgress - a.Position) / (b.Position - a.Position));
     }
 }

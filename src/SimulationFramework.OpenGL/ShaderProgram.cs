@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SimulationFramework.Drawing.Shaders.Compiler;
+using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -10,6 +12,15 @@ class ShaderProgram
 
     public unsafe ShaderProgram(string vsSource, string fsSource)
     {
+        if (ShaderCompiler.DumpShaders)
+        {
+            Console.WriteLine(new string('=', 20) + " VERTEX SHADER " + new string('=', 20));
+            Console.WriteLine(string.Join("\n", vsSource.Split('\n').Select((s, i) => $"{i + 1,-3:d}|{s}")));
+
+            Console.WriteLine(new string('=', 20) + " CANVAS SHADER " + new string('=', 20));
+            Console.WriteLine(string.Join("\n", fsSource.Split('\n').Select((s, i) => $"{i + 1,-3:d}|{s}")));
+        }
+
         var vs = glCreateShader(GL_VERTEX_SHADER);
         var fs = glCreateShader(GL_FRAGMENT_SHADER);
         ShaderSource(vs, vsSource);

@@ -14,6 +14,7 @@ using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -136,10 +137,13 @@ internal class GLCanvas : ICanvas
         SubmitStream(stream, effect, writer.UsesTriangles);
     }
 
-    private void SubmitStream(GeometryStream stream, GeometryEffect effect, bool triangles)
+    private void SubmitStream(GeometryStream stream, GeometryEffect effect, bool triangles, ReadOnlySpan<byte> bytes = default)
     {
         int vertexSize = stream.GetVertexSize();
-        ReadOnlySpan<byte> bytes = stream.GetData();
+        if (bytes.IsEmpty)
+        {
+            bytes = stream.GetData();
+        }
 
         int offset, count;
 
@@ -242,11 +246,7 @@ internal class GLCanvas : ICanvas
         }
         var stream = streams.GetCustomVertexGeometryStream(typeof(TVertex), in State);
         var effect = effects.GetEffectFromCanvasState(in State);
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            stream.WriteVertex(vertices[i]);
-        }
-        SubmitStream(stream, effect, true);
+        SubmitStream(stream, effect, true, MemoryMarshal.AsBytes(vertices));
     }
 
     public void Fill(ColorF color)

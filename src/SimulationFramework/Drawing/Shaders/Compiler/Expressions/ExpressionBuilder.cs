@@ -64,7 +64,7 @@ internal class ExpressionBuilder
             BuildInstruction(instruction);
         }
 
-        return CreateBlockExpressionIfNeeded(Expressions.Reverse());
+        return CreateBlockExpressionIfNeeded(Expressions.GetExpressions());
     }
 
     private void BuildInstruction(Instruction instruction)
@@ -260,7 +260,7 @@ internal class ExpressionBuilder
     {
         if (Disassembly.IsConstructor)
         {
-            Expressions.Push(new ReturnExpression(new ShaderVariableExpression(parameters[0])));
+            Expressions.Push(new ShaderVariableExpression(parameters[0]));
             return;
         }
 
@@ -274,7 +274,8 @@ internal class ExpressionBuilder
             }
         }
 
-        Expressions.Push(new ReturnExpression(returnValue));
+        // actual return expression will be built by the return block
+        Expressions.Push(returnValue);
     }
 
     private void BuildInitObj(Instruction instruction)
@@ -282,7 +283,7 @@ internal class ExpressionBuilder
         var type = ((MetadataToken)instruction.Argument).Resolve() as Type ?? throw new();
         var left = Expressions.Pop();
         var right = new DefaultExpression(context.CompileType(type));
-        Expressions.Push(new BinaryExpression(BinaryOperation.Assignment, left, right));
+        Expressions.PushStatement(new BinaryExpression(BinaryOperation.Assignment, left, right));
     }
 
     private void BuildBranch(Instruction instruction)
@@ -408,7 +409,7 @@ internal class ExpressionBuilder
             }
             else if (graph.SubgraphKind is SubgraphKind.Switch)
             {
-                throw new("switches not added");
+                throw new NotImplementedException("switches not implemented");
             }
             else
             {
@@ -418,6 +419,31 @@ internal class ExpressionBuilder
         else if (node is BasicBlockNode basicBlock)
         {
             return BuildBasicBlockExpression(basicBlock, clearStack);
+        }
+        else if (node is BreakNode)
+        {
+            return new BreakExpression();
+        }
+        else if (node is ContinueNode)
+        {
+            return new ContinueExpression();
+        }
+        else if (node is ReturnNode retNode)
+        {
+            ShaderExpression? returnValue = null;
+            if (ReturnType != typeof(void))
+            {
+                if (retNode.isReturnVarBlock)
+                {
+                    returnValue = (Expressions.statements.Peek() as BinaryExpression)!.LeftOperand as ShaderVariableExpression;
+                }
+                else
+                {
+                    returnValue = Expressions.Pop();
+                }
+            }
+
+            return new ReturnExpression(returnValue);
         }
         else if (node is DummyNode)
         {
@@ -463,13 +489,16 @@ internal class ExpressionBuilder
         List<ShaderExpression> exprs = new();
 
         var node = start;
-        while (node != end)
+        while (node != null && node != end)
         {
             exprs.Add(BuildNode(node));
-            node = node.Successors.Single();
+            node = node.Successors.SingleOrDefault();
         }
 
-        exprs.Add(BuildNode(node));
+        if (node != null)
+        {
+            exprs.Add(BuildNode(node));
+        }
 
         return CreateBlockExpressionIfNeeded(exprs.Where(ex => ex is not null).Cast<ShaderExpression>());
     }
@@ -608,7 +637,7 @@ internal class ExpressionBuilder
             {
                 var value = Expressions.Pop();
                 _ = Expressions.Pop(); // pop the 'self'
-                Expressions.Push(CreateBinaryExpression(BinaryOperation.Assignment, variable, value));
+                Expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, variable, value));
             }
             return;
         }
@@ -618,7 +647,7 @@ internal class ExpressionBuilder
             var value = Expressions.Pop();
             var obj = Expressions.Pop();
 
-            Expressions.Push(CreateBinaryExpression(BinaryOperation.Assignment, new MemberAccess(obj, fieldInfo, context.CompileType(fieldInfo.FieldType)), value));
+            Expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, new MemberAccess(obj, fieldInfo, context.CompileType(fieldInfo.FieldType)), value));
         }
         else if (instruction.OpCode is OpCode.Ldsfld)
         {
@@ -706,7 +735,7 @@ internal class ExpressionBuilder
 
         var expr = Expressions.Pop();
         var local = locals[(int)storeIndex];
-        Expressions.Push(CreateBinaryExpression(BinaryOperation.Assignment, new ShaderVariableExpression(local), expr), false);
+        Expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, new ShaderVariableExpression(local), expr));
     }
 
     void BuildConstantExpr(Instruction instruction)
@@ -762,7 +791,7 @@ internal class ExpressionBuilder
             _ => throw new UnreachableException(),
         };
 
-        Expressions.Push(CreateBinaryExpression(BinaryOperation.Assignment, new ShaderVariableExpression(parameters[(int)storeIndex]), Expressions.Pop()), false);
+        Expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, new ShaderVariableExpression(parameters[(int)storeIndex]), Expressions.Pop()));
     }
 
     void BuildNewObjExpr(Instruction instruction)
@@ -817,7 +846,7 @@ internal class ExpressionBuilder
         if (method is ConstructorInfo)
         {
             var value = Expressions.Pop();
-            Expressions.Push(CreateBinaryExpression(BinaryOperation.Assignment, instance, value));
+            Expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, instance, value));
         }
     }
 
@@ -843,6 +872,6 @@ internal class ExpressionBuilder
         var value = Expressions.Pop();
         var reference = Expressions.Pop();
 
-        Expressions.Push(CreateBinaryExpression(BinaryOperation.Assignment, reference, value), false);
+        Expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, reference, value));
     }
 }

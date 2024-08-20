@@ -29,20 +29,6 @@ void main() {
 
         this.compilation = compilation;
         this.vsCompilation = vsCompilation;
-
-        if (ShaderCompiler.DumpShaders)
-        {
-            var vertShader = GetVertexShaderSource(vsCompilation, vsSource);
-            Console.WriteLine(new string('=', 20) + " VERTEX SHADER " + new string('=', 20));
-            Console.WriteLine(string.Join("\n", vertShader.Split('\n').Select((s, i) => $"{i + 1,-3:d}|{s}")));
-        }
-
-        if (ShaderCompiler.DumpShaders)
-        {
-            var fragShader = GetFragmentShaderSource(compilation, source);
-            Console.WriteLine(new string('=', 20) + " CANVAS SHADER " + new string('=', 20));
-            Console.WriteLine(string.Join("\n", fragShader.Split('\n').Select((s, i) => $"{i + 1,-3:d}|{s}")));
-        }
     }
 
     private static string GetFragmentShaderSource(ShaderCompilation compilation, string source)

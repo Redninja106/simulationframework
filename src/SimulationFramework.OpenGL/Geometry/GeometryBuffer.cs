@@ -2,7 +2,7 @@
 
 namespace SimulationFramework.OpenGL.Geometry;
 
-unsafe class GeometryBuffer
+unsafe class GeometryBuffer : IDisposable
 {
     public readonly uint buffer;
     public readonly int size;
@@ -19,7 +19,6 @@ unsafe class GeometryBuffer
             glCreateBuffers(1, bufferPtr);
             glNamedBufferData(buffer, size, null, GL_DYNAMIC_DRAW);
         }
-
     }
 
     public void Reset()
@@ -56,7 +55,7 @@ unsafe class GeometryBuffer
             alignedPosition += alignment - alignedPosition % alignment;
         }
 
-        if (alignedPosition + bytes.Length >= this.size)
+        if (alignedPosition + bytes.Length > this.size)
         {
             offset = count = 0;
             return false;
@@ -68,5 +67,13 @@ unsafe class GeometryBuffer
         offset = alignedPosition;
         count = bytes.Length;
         return true;
+    }
+
+    public void Dispose()
+    {
+        fixed (uint* bufferPtr = &this.buffer)
+        {
+            glDeleteBuffers(1, bufferPtr);
+        }
     }
 }

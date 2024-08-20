@@ -16,6 +16,8 @@ partial class Program : Simulation
     public override void OnInitialize()
     {
         logo = Graphics.LoadTexture("./logo-512x512.png");
+        ShaderCompiler.DumpShaders = true;
+
     }
     public override void OnRender(ICanvas canvas)
     {

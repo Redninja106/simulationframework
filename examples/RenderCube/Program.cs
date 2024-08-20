@@ -1,6 +1,7 @@
 ﻿using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
+using SimulationFramework.Drawing.Shaders.Compiler;
 using System.Numerics;
 
 Start<Program>();
@@ -75,7 +76,7 @@ partial class Program : Simulation
             view = Matrix4x4.CreateLookAt(Vector3.One, Vector3.Zero, Vector3.UnitY),
             proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, canvas.Width / (float)canvas.Height, 0.1f, 100f)
         };
-
+        
         canvas.Fill(canvasShader, vertexShader);
         canvas.Mask(depthMask);
         canvas.WriteMask(depthMask);

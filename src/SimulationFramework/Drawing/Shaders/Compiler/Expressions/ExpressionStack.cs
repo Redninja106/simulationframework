@@ -1,59 +1,49 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
-internal class ExpressionStack : IEnumerable<ShaderExpression>
+internal class ExpressionStack
 {
     // TODO: use two separate stacks here. it'll be cleaner and make ternary exprs easier
-    private Stack<(ShaderExpression expr, bool isOnIlStack)> values = new();
+    public Stack<ShaderExpression> expressions = [];
+    public Stack<ShaderExpression> statements = [];
 
-    public void Push(ShaderExpression expression, bool isOnStack = true)
+    public void Push(ShaderExpression expression)
     {
-        values.Push((expression, isOnStack));
+        Debug.Assert(!(expression is BinaryExpression bin && bin.Operation == BinaryOperation.Assignment));
+        expressions.Push(expression);
+    }
+
+    public void PushStatement(ShaderExpression expression)
+    {
+        statements.Push(expression);
     }
 
     public ShaderExpression Pop()
     {
-        List<ShaderExpression> notOnStackValues = new();
-
-        ShaderExpression expr;
-        bool isOnStack;
-        while (true)
-        {
-            (expr, isOnStack) = values.Pop();
-
-            if (isOnStack)
-            {
-                break;
-            }
-            else
-            {
-                notOnStackValues.Add(expr);
-            }
-        }
-
-        foreach (var e in notOnStackValues)
-        {
-            values.Push((e, false));
-        }
-
-        return expr;
+        return expressions.Pop();
     }
 
     public void Clear()
     {
-        values.Clear();
+        expressions.Clear();
+        statements.Clear();
     }
 
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-    public IEnumerator<ShaderExpression> GetEnumerator()
+    public IEnumerable<ShaderExpression> GetExpressions()
     {
-        return values.Select(e => e.expr).GetEnumerator();
+        Debug.Assert(expressions.Count <= 1);
+        IEnumerable<ShaderExpression> result = statements.Reverse();
+        if (expressions.Count == 1)
+        {
+            result = result.Append(expressions.Peek());
+        }
+        return result;
     }
 }

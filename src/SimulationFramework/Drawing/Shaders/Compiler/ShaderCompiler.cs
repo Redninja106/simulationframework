@@ -278,7 +278,7 @@ public class ShaderCompiler
         {
             if (values.Remove(expression.Variable, out ShaderExpression? value))
             {
-                Debug.Assert(value is not null);
+                Debug.Assert(value is not null, "expression was used but not assigned");
 
                 return value;
             }

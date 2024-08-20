@@ -7,6 +7,7 @@ public class ShaderExpressionVisitor
     public virtual ShaderExpression VisitBinaryExpression(BinaryExpression expression) => expression.VisitChildren(this);
     public virtual ShaderExpression VisitBlockExpression(BlockExpression expression) => expression.VisitChildren(this);
     public virtual ShaderExpression VisitBreakExpression(BreakExpression expression) => expression.VisitChildren(this);
+    public virtual ShaderExpression VisitContinueExpression(ContinueExpression expression) => expression.VisitChildren(this);
     public virtual ShaderExpression VisitConditionalExpression(ConditionalExpression expression) => expression.VisitChildren(this);
     public virtual ShaderExpression VisitConstantExpression(ConstantExpression expression) => expression.VisitChildren(this);
     public virtual ShaderExpression VisitInlineSourceExpression(InlineSourceExpression expression) => expression.VisitChildren(this);
