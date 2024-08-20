@@ -16,9 +16,9 @@ public abstract class Gradient : CanvasShader
     /// <summary>
     /// The gradient's tile mode.
     /// </summary>
-    public TileMode TileMode;
+    public WrapMode TileMode;
 
-    public Gradient(GradientStop[] stops, TileMode tileMode)
+    public Gradient(GradientStop[] stops, WrapMode tileMode)
     {
         Stops = stops;
         TileMode = tileMode;
@@ -41,16 +41,16 @@ public abstract class Gradient : CanvasShader
 
     protected ColorF GetGradientColor(float gradientProgress)
     {
-        if (TileMode == TileMode.Clamp)
+        if (TileMode == WrapMode.Clamp)
         {
             gradientProgress = Math.Clamp(gradientProgress, 0, 1);
         }
-        else if (TileMode == TileMode.Repeat)
+        else if (TileMode == WrapMode.Repeat)
         {
             // TODO: support % operator on floats
             gradientProgress = ShaderIntrinsics.Mod(gradientProgress, 1f);
         }
-        else if (TileMode == TileMode.Mirror)
+        else if (TileMode == WrapMode.Mirror)
         {
             gradientProgress = ShaderIntrinsics.Mod(gradientProgress, 2f);
             if (gradientProgress >= 1)
@@ -58,7 +58,7 @@ public abstract class Gradient : CanvasShader
                 gradientProgress = 2 - gradientProgress;
             }
         }
-        else if (TileMode == TileMode.None)
+        else if (TileMode == WrapMode.None)
         {
 
         }

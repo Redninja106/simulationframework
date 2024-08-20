@@ -5,17 +5,14 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using SimulationFramework.OpenGL.Geometry.Streams;
 
-namespace SimulationFramework.OpenGL;
+namespace SimulationFramework.OpenGL.Geometry.Writers;
 internal class PathGeometryWriter : GeometryWriter
 {
     public float StrokeWidth { get; set; }
 
-    public override uint GetPrimitive()
-    {
-        return GL_TRIANGLES;
-    }
+    public override bool UsesTriangles => true;
 
     public override void PushLine(GeometryStream stream, Vector2 from, Vector2 to)
     {
@@ -103,7 +100,7 @@ internal class PathGeometryWriter : GeometryWriter
             //h=w/sinx
             float a = Angle.FromVector(offsetDir);
             float b = Angle.FromVector(outgoingDir);
-            float dist = (.5f * width) / MathF.Sin(Angle.Distance(a, b));
+            float dist = .5f * width / MathF.Sin(Angle.Distance(a, b));
             return offsetDir * dist * MathF.Sign(Angle.SignedDistance(b, a));
         }
     }
@@ -177,7 +174,7 @@ internal class PathGeometryWriter : GeometryWriter
         float yEdge = rect.Height * .5f - radii.Y;
 
         Rectangle innerRect = new(rect.X + radii.X, rect.Y + radii.Y, rect.Width - 2 * radii.X, rect.Height - 2 * radii.Y);
-        
+
         if (xEdge > 0)
         {
             stream.WriteVertex(new(rect.X + .5f * rect.Width + xEdge, rect.Y - StrokeWidth));

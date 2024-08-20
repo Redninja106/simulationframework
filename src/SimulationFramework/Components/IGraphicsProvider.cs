@@ -20,7 +20,7 @@ public interface IGraphicsProvider : ISimulationComponent
     /// <returns>
     /// The canvas which draws to the current frame. This object should never be saved, as it may be different every frame.
     /// </returns>
-    ICanvas GetFrameCanvas();
+    ICanvas GetWindowCanvas();
 
     /// <summary>
     /// Creates a new bitmap with the provided data.
@@ -43,7 +43,9 @@ public interface IGraphicsProvider : ISimulationComponent
     IFont LoadSystemFont(string name);
     
     void Dispatch(ComputeShader computeShader, int lengthI, int lengthJ, int lengthK);
-    
+    IMask CreateMask(int width, int height);
+    IDepthMask CreateDepthMask(int width, int height);
+
     //IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices) 
     //    where TVertex : unmanaged;
 }

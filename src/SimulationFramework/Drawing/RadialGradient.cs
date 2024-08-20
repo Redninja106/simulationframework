@@ -54,7 +54,7 @@ public sealed class RadialGradient : Gradient
     /// <param name="position">The position of the gradient.</param>
     /// <param name="radius">The radius of the gradent.</param>
     /// <param name="stops">An array of gradient stops.</param>
-    public RadialGradient(Vector2 position, float radius, params GradientStop[] stops) : this(position, radius, stops, TileMode.Clamp) 
+    public RadialGradient(Vector2 position, float radius, params GradientStop[] stops) : this(position, radius, stops, WrapMode.Clamp) 
     { 
     }
 
@@ -66,7 +66,7 @@ public sealed class RadialGradient : Gradient
     /// <param name="colors">Colors</param>
     /// <param name="transform">The gradient's transformation matrix.</param>
     /// <param name="tileMode">The gradients tile mode.</param>
-    public RadialGradient(Vector2 position, float radius, ColorF[] colors, TileMode tileMode = TileMode.Clamp) : this(position, radius, ColorsToStops(colors), tileMode) 
+    public RadialGradient(Vector2 position, float radius, ColorF[] colors, WrapMode tileMode = WrapMode.Clamp) : this(position, radius, ColorsToStops(colors), tileMode) 
     {
     }
 
@@ -77,7 +77,7 @@ public sealed class RadialGradient : Gradient
     /// <param name="radius">The radius of the gradent.</param>
     /// <param name="stops">An array of gradient stops.</param>
     /// <param name="tileMode">The gradients tile mode.</param>
-    public RadialGradient(Vector2 position, float radius, GradientStop[] stops, TileMode tileMode = TileMode.Clamp) : base(stops, tileMode)
+    public RadialGradient(Vector2 position, float radius, GradientStop[] stops, WrapMode tileMode = WrapMode.Clamp) : base(stops, tileMode)
     {
         this.Position = position;
         this.Radius = radius;

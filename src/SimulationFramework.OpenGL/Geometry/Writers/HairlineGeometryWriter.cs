@@ -4,15 +4,12 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using SimulationFramework.OpenGL.Geometry.Streams;
 
-namespace SimulationFramework.OpenGL;
+namespace SimulationFramework.OpenGL.Geometry.Writers;
 internal class HairlineGeometryWriter : GeometryWriter
 {
-    public override uint GetPrimitive()
-    {
-        return GL_LINES;
-    }
+    public override bool UsesTriangles => false;
 
     public override void PushLine(GeometryStream stream, Vector2 from, Vector2 to)
     {
@@ -77,14 +74,14 @@ internal class HairlineGeometryWriter : GeometryWriter
         float yEdge = rect.Height * .5f - yRadius;
 
         Rectangle innerRect = new(rect.X + xRadius, rect.Y + yRadius, rect.Width - 2 * xRadius, rect.Height - 2 * yRadius);
-        
+
         if (xEdge > 0)
         {
             stream.WriteVertex(new(rect.X + .5f * rect.Width + xEdge, rect.Y));
             stream.WriteVertex(new(rect.X + .5f * rect.Width - xEdge, rect.Y));
         }
 
-        if (xRadius > 0 && yRadius > 0) 
+        if (xRadius > 0 && yRadius > 0)
         {
             Vector2 focus = innerRect.GetAlignedPoint(Alignment.TopRight);
             WriteCorner(stream, focus, new(xRadius, yRadius), steps, MathF.PI * (3f / 2f), MathF.Tau);

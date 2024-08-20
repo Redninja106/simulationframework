@@ -134,7 +134,7 @@ public class SimulationHost
         Current = this;
 
         RegisterComponent(new PerformanceProvider());
-        RegisterComponent(new PerformanceProvider());
+        // RegisterComponent(new ImGuiBackend());
         RegisterComponent(platform);
 
         if (simulation is not null && Application.HasComponent<IMouseProvider>())

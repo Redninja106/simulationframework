@@ -75,7 +75,10 @@ public interface ICanvas
     /// <summary>
     /// Configures the canvas to outline shapes with the provided color.
     /// </summary>
-    void Stroke(Color color);
+    void Stroke(Color color) => Stroke(color.ToColorF());
+    void Stroke(ColorF color);
+    void Stroke(CanvasShader shader);
+    void Stroke(CanvasShader shader, VertexShader vertexShader);
 
     /// <summary>
     /// Sets the stroke width of the canvas.
@@ -102,6 +105,10 @@ public interface ICanvas
     /// <param name="p1">The first point of the line.</param>
     /// <param name="p2">The second point of the line.</param>
     void DrawLine(Vector2 p1, Vector2 p2);
+
+    void DrawLines(ReadOnlySpan<Vector2> lines);
+    void DrawLines<TVertex>(ReadOnlySpan<TVertex> lines)
+        where TVertex : unmanaged;
 
     /// <summary>
     /// Draws a rectangle to the canvas, using the current transform, clipping, and drawing settings.
@@ -303,7 +310,7 @@ public interface ICanvas
     /// <summary>
     /// Draws a list of triangles using the current transform, clipping, and drawing settings
     /// </summary>
-    /// <param name="triangles">The list of triangles to draw. Every three points make a triangle.</param>
+    /// <param name="triangles">The list of triangles to draw. Every three vertices make a triangle.</param>
     sealed void DrawTriangles(Vector2[] triangles)
     {
         DrawTriangles(triangles.AsSpan());
@@ -314,6 +321,13 @@ public interface ICanvas
     /// </summary>
     void DrawTriangles(ReadOnlySpan<Vector2> triangles);
 
+    // void DrawIndexedTriangles(ReadOnlySpan<Vector2> triangles, ReadOnlySpan<uint> indices);
+    // void DrawIndexedTriangles(ReadOnlySpan<Vector2> triangles, ReadOnlySpan<ushort> indices);
+    // void DrawIndexedTriangles<TVertex>(ReadOnlySpan<TVertex> triangles, ReadOnlySpan<uint> indices)
+    //     where TVertex : unmanaged;
+    // void DrawIndexedTriangles<TVertex>(ReadOnlySpan<TVertex> triangles, ReadOnlySpan<ushort> indices)
+    //     where TVertex : unmanaged;
+
     /// <summary>
     /// Draws a list of triangles using a custom vertex type.
     /// <para>
@@ -321,7 +335,7 @@ public interface ICanvas
     /// </para>
     /// </summary>
     /// <typeparam name="TVertex">The custom vertex type.</typeparam>
-    /// <param name="triangles">The list of triangles to draw. Every three points make a triangle.</param>
+    /// <param name="triangles">The list of triangles to draw. Every three vertices make a triangle.</param>
     void DrawTriangles<TVertex>(ReadOnlySpan<TVertex> triangles)
         where TVertex : unmanaged;
 
@@ -600,4 +614,7 @@ public interface ICanvas
     /// </summary>
     /// <param name="scale">The scales to transform the transformation matrix by on the X and Y axes.</param>
     sealed void Scale(Vector2 scale) => Transform(Matrix3x2.CreateScale(scale));
+
+    void Mask(IMask? mask);
+    void WriteMask(IMask? mask, bool value = true);
 }

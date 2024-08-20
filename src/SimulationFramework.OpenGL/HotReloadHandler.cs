@@ -13,7 +13,7 @@ internal static class HotReloadHandler
     public static void ClearCache(Type[]? updatedTypes)
     {
         // TODO: BUG: shaders arent updated if a method in a different class that is used by the shader is updated
-        var graphics = Application.GetComponent<GLGraphicsProvider>();
+        var graphics = Application.GetComponent<GLGraphics>();
 
         if (updatedTypes != null) 
         {

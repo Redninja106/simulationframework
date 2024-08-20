@@ -57,7 +57,7 @@ public sealed class LinearGradient : Gradient
     /// <param name="from">The starting point of the gradient.</param>
     /// <param name="to">The end point of the gradient.</param>
     /// <param name="stops">An array of gradient stops.</param>
-    public LinearGradient(Vector2 from, Vector2 to, params GradientStop[] stops) : this(from, to, stops, TileMode.Clamp) 
+    public LinearGradient(Vector2 from, Vector2 to, params GradientStop[] stops) : this(from, to, stops, WrapMode.Clamp) 
     { 
     }
 
@@ -69,7 +69,7 @@ public sealed class LinearGradient : Gradient
     /// <param name="colors">An array of colors.</param>
     /// <param name="transform">The gradient's transformation matrix.</param>
     /// <param name="tileMode">The gradients tile mode.</param>
-    public LinearGradient(Vector2 from, Vector2 to, ColorF[] colors, TileMode tileMode = TileMode.Clamp) : this(from, to, ColorsToStops(colors), tileMode) 
+    public LinearGradient(Vector2 from, Vector2 to, ColorF[] colors, WrapMode tileMode = WrapMode.Clamp) : this(from, to, ColorsToStops(colors), tileMode) 
     { 
     }
 
@@ -80,7 +80,7 @@ public sealed class LinearGradient : Gradient
     /// <param name="to">The end point of the gradient.</param>
     /// <param name="stops">An array of gradient stops.</param>
     /// <param name="tileMode">The gradients tile mode.</param>
-    public LinearGradient(Vector2 from, Vector2 to, GradientStop[] stops, TileMode tileMode = TileMode.Clamp) : base(stops, tileMode)
+    public LinearGradient(Vector2 from, Vector2 to, GradientStop[] stops, WrapMode tileMode = WrapMode.Clamp) : base(stops, tileMode)
     {
         this.From = from;
         this.To = to;

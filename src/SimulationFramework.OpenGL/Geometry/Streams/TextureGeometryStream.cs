@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.OpenGL;
+namespace SimulationFramework.OpenGL.Geometry.Streams;
 internal class TextureGeometryStream : GeometryStream
 {
     private List<TextureVertex> vertices = [];
@@ -47,11 +47,6 @@ internal class TextureGeometryStream : GeometryStream
         return vertices.Count;
     }
 
-    public override void Upload(GeometryBuffer buffer)
-    {
-        buffer.WriteData(MemoryMarshal.AsBytes(CollectionsMarshal.AsSpan(this.vertices)));
-    }
-
     public override void WriteVertex(Vector2 position)
     {
         throw new InvalidOperationException();
@@ -73,6 +68,11 @@ internal class TextureGeometryStream : GeometryStream
             position = Vector2.Transform(position, TransformMatrix),
             textureCoordinate = new(textureCoordinate.X, textureCoordinate.Y),
         });
+    }
+
+    public override ReadOnlySpan<byte> GetData()
+    {
+        return MemoryMarshal.AsBytes(CollectionsMarshal.AsSpan(this.vertices));
     }
 
     private struct TextureVertex

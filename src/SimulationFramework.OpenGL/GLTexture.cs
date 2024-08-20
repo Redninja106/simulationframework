@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Drawing;
+using StbImageWriteSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,23 +9,27 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.OpenGL;
-internal sealed class GLTexture : ITexture
+internal sealed class GLTexture : IGLImage, ITexture
 {
     public int Width { get; }
     public int Height { get; }
     public TextureOptions Options { get; }
-
-    private readonly Color[] colors;
-    private bool pixelsDirty;
+    public IMask? Resident { get; set; }
 
     private readonly uint id;
-    private readonly GLCanvas? canvas;
 
-    private TileMode wrapModeX;
-    private TileMode wrapModeY;
+    private bool pixelsDirty;
+
+    private readonly GLGraphics graphics;
+
+    private GLCanvas? canvas;
+    private Color[]? colors;
+
+    private WrapMode wrapModeX;
+    private WrapMode wrapModeY;
     private TextureFilter filter;
 
-    public TileMode WrapModeX
+    public WrapMode WrapModeX
     {
         get
         {
@@ -39,7 +44,7 @@ internal sealed class GLTexture : ITexture
         }
     }
 
-    public TileMode WrapModeY
+    public WrapMode WrapModeY
     {
         get
         {
@@ -66,7 +71,7 @@ internal sealed class GLTexture : ITexture
 
             int glFilter = value switch
             {
-                TextureFilter.Point => (int)GL_POINT,
+                TextureFilter.Point => (int)GL_NEAREST,
                 TextureFilter.Linear => (int)GL_LINEAR,
                 _ => throw new ArgumentException(null, nameof(value))
             };
@@ -82,21 +87,23 @@ internal sealed class GLTexture : ITexture
     {
         get
         {
-            if (colors is null)
+            if ((Options & TextureOptions.Constant) != 0)
                 throw new InvalidOperationException("CPU access is not allowed on this texture!");
 
-            if (pixelsDirty)
+            if (colors is null || pixelsDirty)
                 UpdateLocalPixels();
 
             return colors;
         }
     }
 
-    public unsafe GLTexture(GLGraphicsProvider provider, int width, int height, ReadOnlySpan<Color> colors, TextureOptions options)
+
+    public unsafe GLTexture(GLGraphics graphics, int width, int height, ReadOnlySpan<Color> colors, TextureOptions options)
     {
         this.Width = width;
         this.Height = height;
         this.Options = options;
+        this.graphics = graphics;
 
         fixed (uint* idPtr = &id)
         {
@@ -114,21 +121,14 @@ internal sealed class GLTexture : ITexture
             glTexImage2D(GL_TEXTURE_2D, 0, unchecked((int)GL_RGBA8), width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         }
 
-        canvas = new(provider, this);
-
-        if (!options.HasFlag(TextureOptions.Constant))
-        {
-            this.colors = new Color[width * height];
-            UpdateLocalPixels();
-        }
     }
 
-    private static uint MapTileMode(TileMode mode) => mode switch
+    private static uint MapTileMode(WrapMode mode) => mode switch
     {
-        TileMode.Mirror => GL_MIRRORED_REPEAT,
-        TileMode.Repeat => GL_MIRRORED_REPEAT,
-        TileMode.Clamp => GL_CLAMP_TO_EDGE,
-        TileMode.None => GL_CLAMP_TO_BORDER,
+        WrapMode.Mirror => GL_MIRRORED_REPEAT,
+        WrapMode.Repeat => GL_MIRRORED_REPEAT,
+        WrapMode.Clamp => GL_CLAMP_TO_EDGE,
+        WrapMode.None => GL_CLAMP_TO_BORDER,
     };
 
     public void InvalidatePixels()
@@ -153,7 +153,8 @@ internal sealed class GLTexture : ITexture
 
     private unsafe void UpdateLocalPixels()
     {
-        glFinish();
+        this.colors = new Color[Width * Height];
+
         glBindTexture(GL_TEXTURE_2D, id);
         fixed (Color* buffer = colors) 
         {
@@ -183,6 +184,12 @@ internal sealed class GLTexture : ITexture
             throw new InvalidOperationException("Cannot render to a texture with the TextureOptions.NonRenderTarget flag.");
         }
 
+        if (canvas is null)
+        {
+            canvas = new(graphics, this);
+            canvas.ResetState();
+        }
+
         return this.canvas;
     }
 
@@ -198,21 +205,20 @@ internal sealed class GLTexture : ITexture
 
     public uint GetID()
     {
-        // if (IsDisposed)
-        //     throw new InvalidOperationException("Cannot use disposed texture!");
         return id;
     }
 
     public void Encode(Stream destination, TextureEncoding encoding)
     {
-        // var data = destination.Encode(encoding switch
-        // {
-        //     TextureEncoding.PNG => SKEncodedImageFormat.Png,
-        //     _ => throw new Exception("Unsupported or unrecognized encoding!")
-        // }, 100);
-        // 
-        // data.SaveTo(destination);
-        throw new NotSupportedException("image encoding not supported on opengl yet!");
+        ImageWriter writer = new();
+
+        unsafe
+        {
+            fixed (Color* pixelsPtr = this.Pixels)
+            {
+                writer.WritePng(pixelsPtr, Width, Height, ColorComponents.RedGreenBlueAlpha, destination);
+            }
+        }
     }
 
     internal void PrepareForRender()

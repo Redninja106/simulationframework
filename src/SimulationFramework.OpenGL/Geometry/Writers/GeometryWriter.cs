@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Numerics;
+using SimulationFramework.OpenGL.Geometry.Streams;
 
-namespace SimulationFramework.OpenGL;
+namespace SimulationFramework.OpenGL.Geometry.Writers;
 
 abstract class GeometryWriter
 {
-    public abstract uint GetPrimitive();
+    public abstract bool UsesTriangles { get; }
     public abstract void PushRect(GeometryStream stream, Rectangle rect);
     public abstract void PushLine(GeometryStream stream, Vector2 from, Vector2 to);
     public abstract void PushRoundedRect(GeometryStream stream, Rectangle rect, Vector2 radii);

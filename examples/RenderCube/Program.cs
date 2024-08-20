@@ -1,25 +1,9 @@
 ﻿using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
-using SimulationFramework.Drawing.Shaders.Compiler;
-using SimulationFramework.Input;
-using SimulationFramework.OpenGL;
-using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 Start<Program>();
-
-struct Vertex
-{ 
-    public Vector3 Position;
-    public Vector2 Texture;
-
-    public Vertex(Vector3 position, Vector2 texture)
-    {
-        this.Position = position;
-        this.Texture = texture;
-    }
-}
 
 partial class Program : Simulation
 {
@@ -63,34 +47,46 @@ partial class Program : Simulation
     ];
 
     ITexture logo;
+    IDepthMask depthMask;
 
     public override void OnInitialize()
     {
-        ShaderCompiler.DumpShaders = true;
+        SetFixedResolution(400, 400, Color.Black);
+
         logo = Graphics.LoadTexture("logo-512x512.png");
-        logo.WrapModeY = logo.WrapModeX = TileMode.Repeat;
+        logo.WrapModeY = logo.WrapModeX = WrapMode.Repeat;
+
+        depthMask = Graphics.CreateDepthMask(Window.Width, Window.Height);
     }
 
     public override void OnRender(ICanvas canvas)
     {
         canvas.Clear(Color.Black);
+        depthMask.Clear(1f);
 
         var canvasShader = new CubeCanvasShader()
         {
-            tex = logo,
+            texture = logo,
         };
 
         var vertexShader = new CubeVertexShader()
         {
             world = Matrix4x4.CreateRotationY(Time.TotalTime * Angle.ToRadians(60)),
-            view = Matrix4x4.CreateLookAtLeftHanded(Vector3.One, Vector3.Zero, Vector3.UnitY),
-            proj = Matrix4x4.CreatePerspectiveFieldOfViewLeftHanded(MathF.PI / 3f, canvas.Width / (float)canvas.Height, 0.1f, 100f)
+            view = Matrix4x4.CreateLookAt(Vector3.One, Vector3.Zero, Vector3.UnitY),
+            proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, canvas.Width / (float)canvas.Height, 0.1f, 100f)
         };
 
         canvas.Fill(canvasShader, vertexShader);
-
+        canvas.Mask(depthMask);
+        canvas.WriteMask(depthMask);
         canvas.DrawTriangles<Vertex>(vertices);
     }
+}
+
+struct Vertex(Vector3 position, Vector2 texture)
+{
+    public Vector3 Position = position;
+    public Vector2 Texture = texture;
 }
 
 class CubeCanvasShader : CanvasShader
@@ -98,11 +94,11 @@ class CubeCanvasShader : CanvasShader
     [VertexShaderOutput]
     Vector2 uv;
 
-    public ITexture tex;
+    public ITexture texture;
 
     public override ColorF GetPixelColor(Vector2 position)
     {
-        ColorF x = tex.SampleUV(uv * 10);
+        ColorF x = texture.SampleUV(uv * 10);
         if (x.A < 0.001f)
         {
             ShaderIntrinsics.Discard();

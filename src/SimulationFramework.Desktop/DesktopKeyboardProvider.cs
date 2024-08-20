@@ -116,7 +116,7 @@ internal class DesktopKeyboardProvider : IKeyboardProvider
             SilkKey.CapsLock => Key.CapsLock,
             SilkKey.Tab => Key.Tab,
             SilkKey.GraveAccent => Key.Tilde,
-            SilkKey.Escape => Key.Esc,
+            SilkKey.Escape => Key.Escape,
             SilkKey.AltRight => Key.RightAlt,
             SilkKey.Menu => Key.Menu,
             SilkKey.ControlRight => Key.RightControl,

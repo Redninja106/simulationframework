@@ -7,6 +7,31 @@ public static class Keyboard
 {
     private static IKeyboardProvider Provider => Application.GetComponent<IKeyboardProvider>();
 
+    // TODO: input capture api
+    // Prototype:
+
+    /* 
+     * object inputCapture = new object();
+     * Keyboard.PushCapture(inputCapture); 
+     * if (Keyboard.IsKeyDown(Key.Space)) {} // always false, since input is captured by inputCapture
+     * if (Keyboard.IsKeyDown(Key.Space, inputCapture)) {} // returns actual input
+     * Keyboard.PopCapture(); 
+     */
+
+    /*
+    public static void PushCapture(object? captureObject)
+    {
+    }
+
+    public static object? PopCapture()
+    {
+    }
+
+    public bool IsKeyPressed(Key key, object? captureObject)
+    {
+    }
+    */
+
     /// <summary>
     /// Invoked when a key is pressed on the keyboard.
     /// </summary>

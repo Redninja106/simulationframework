@@ -1,4 +1,5 @@
-﻿using SimulationFramework;
+﻿using ImGuiNET;
+using SimulationFramework;
 using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders.Compiler;
@@ -19,6 +20,13 @@ partial class Program : Simulation
     public override void OnRender(ICanvas canvas)
     {
         Window.Title = $"Simulation - {(int)Performance.Framerate} FPS";
+
+        if (Keyboard.IsKeyPressed(Key.Space))
+        {
+            logo.Encode("test.png", TextureEncoding.PNG);
+        }
+
+        ImGui.ShowDemoWindow();
 
         canvas.Clear(Color.FromHSV(.1f, .1f, .1f));
 
@@ -44,22 +52,19 @@ partial class Program : Simulation
         canvas.StrokeWidth(10);
         canvas.DrawRect(0, 0, 90, 90, Alignment.Center);
 
+        canvas.Translate(150, 0);
         canvas.Fill(new LinearGradient(-50, -50, 50, 50, ColorF.Blue, ColorF.Purple, ColorF.Green, ColorF.Orange)
         {
-            TileMode = TileMode.Clamp,
+            TileMode = WrapMode.Clamp,
         });
         canvas.DrawRect(0, 0, 100, 100, Alignment.Center);
 
         canvas.Translate(150, 0);
         canvas.Fill(new RadialGradient(0, 0, 50, ColorF.Orange, ColorF.Green)
         {
-            TileMode = TileMode.Clamp
+            TileMode = WrapMode.Clamp
         });
         canvas.DrawRect(0, 0, 100, 100, Alignment.Center);
-
-        canvas.Translate(150, 0);
-        canvas.Stroke(Color.Yellow);
-        canvas.DrawRect(500, 100, 100, 100, Alignment.Center);
 
         canvas.ResetState();
         canvas.Translate(100, 300);

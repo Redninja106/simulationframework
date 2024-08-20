@@ -27,9 +27,14 @@ public class DesktopPlatform : ISimulationPlatform
             API = GraphicsAPI.Default with
             {
                 Version = new APIVersion(4, 5),
+#if DEBUG
                 Flags = ContextFlags.Debug
+#endif
             },
-            Samples = 8,
+            Samples = 1,
+            PreferredBitDepth = null,
+            PreferredDepthBufferBits = 32,
+            PreferredStencilBufferBits = 8,
         };
 
         GlfwWindowing.RegisterPlatform();
@@ -72,10 +77,8 @@ public class DesktopPlatform : ISimulationPlatform
         Application.RegisterComponent(new DesktopAudioProvider());
 
         RegisterInputProviders();
-        if (graphics != null)
-        {
-            Application.RegisterComponent(CreateImGuiProvider());
-        }
+
+        Application.RegisterComponent(new DesktopImGuiComponent(Window, inputContext));
     }
 
 
@@ -86,7 +89,7 @@ public class DesktopPlatform : ISimulationPlatform
 
     protected virtual IGraphicsProvider CreateGraphicsProvider()
     {
-        return new GLGraphicsProvider(frame, name => Window.GLContext!.TryGetProcAddress(name, out nint addr) ? addr : 0);
+        return new GLGraphics(frame, name => Window.GLContext!.TryGetProcAddress(name, out nint addr) ? addr : 0);
     }
 
     protected virtual ITimeProvider CreateTimeProvider()
@@ -102,11 +105,6 @@ public class DesktopPlatform : ISimulationPlatform
     protected virtual IWindowProvider CreateWindowProvider()
     {
         return new DesktopWindowProvider(this.Window);
-    }
-
-    protected virtual ISimulationComponent CreateImGuiProvider()
-    {
-        return new DesktopImGuiComponent(this.Window, this.inputContext);
     }
 
     protected virtual void RegisterInputProviders()

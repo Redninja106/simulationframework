@@ -25,12 +25,12 @@ public interface ITexture : IDisposable
     /// <summary>
     /// The x-axis wrap mode used when sampling the texture.
     /// </summary>
-    TileMode WrapModeX { get; set; }
+    WrapMode WrapModeX { get; set; }
 
     /// <summary>
     /// The y-axis wrap mode used when sampling the texture.
     /// </summary>
-    TileMode WrapModeY { get; set; }
+    WrapMode WrapModeY { get; set; }
 
     /// <summary>
     /// The Filter used when sampling the texture.
@@ -53,6 +53,7 @@ public interface ITexture : IDisposable
     /// </summary>
     /// <param name="x">The x-coordinate of the pixel.</param>
     /// <param name="y">The y-coordinate of the pixel.</param>
+    [Obsolete("use the indexer instead (ie texture[x, y])")]
     sealed ref Color GetPixel(int x, int y)
     {
         if (x < 0 || x >= Width)
@@ -73,6 +74,7 @@ public interface ITexture : IDisposable
     /// <param name="x">The x-coordinate of the pixel.</param>
     /// <param name="y">The y-coordinate of the pixel.</param>
     /// <param name="color">The color the set the pixel to.</param>
+    [Obsolete("use the indexer instead (ie texture[x, y] = value)")]
     sealed void SetPixel(int x, int y, Color color)
     {
         if (x < 0 || x >= Width)
@@ -82,6 +84,19 @@ public interface ITexture : IDisposable
             throw new ArgumentOutOfRangeException(nameof(y));
 
         Pixels[y * Width + x] = color;
+    }
+
+    ref Color this[int x, int y]
+    {
+        get
+        {
+            if ((uint)x >= Width || (uint)y >= Height)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            return ref Pixels[y * Width + x];
+        }
     }
 
     /// <summary>

@@ -70,7 +70,7 @@ public enum Key
     CapsLock,
     Tab,
     Tilde,
-    Esc,
+    Escape,
     RightAlt,
     Menu,
     RightControl,

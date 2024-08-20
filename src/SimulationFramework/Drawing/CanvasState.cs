@@ -9,6 +9,11 @@ public struct CanvasState
     public Matrix3x2 Transform { get; set; }
     public Rectangle? ClipRectangle { get; set; }
 
+    public IMask? Mask { get; set; }
+
+    public IMask? WriteMask { get; set; }
+    public bool WriteMaskValue { get; set; }
+
     public bool Fill { get; set; }
     public ColorF Color { get; set; }
     public float StrokeWidth { get; set; }
@@ -26,10 +31,14 @@ public struct CanvasState
     {
         Transform = Matrix3x2.Identity;
         ClipRectangle = null;
+        Mask = null;
+
         Fill = true;
         Color = ColorF.White;
         StrokeWidth = 0;
+
         Shader = null;
+        VertexShader = null;
 
         Font = Graphics.DefaultFont;
     }

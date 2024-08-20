@@ -38,7 +38,7 @@ public static class Graphics
             return interceptor.FrameBuffer.GetCanvas();
         }
 
-        return Provider.GetFrameCanvas();
+        return Provider.GetWindowCanvas();
     }
 
     /// <summary>
@@ -161,25 +161,28 @@ public static class Graphics
         Provider.Dispatch(computeShader, lengthI, lengthJ, lengthK);
     }
 
-    //internal static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices)
+    //public static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices)
     //    where TVertex : unmanaged
     //{
     //    return Provider.CreateGeometry(vertices, []);
     //}
 
-    //internal static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices)
+    //public static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices)
     //    where TVertex : unmanaged
     //{
     //    return Provider.CreateGeometry(vertices, indices);
     //}
 
-    //public static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices)
-    //{
-    //    return CreateGeometry(vertices, ReadOnlySpan<uint>.Empty);
-    //}
+    public static IMask CreateMask(int width, int height)
+    {
+        return Provider.CreateMask(width, height);
+    }
 
-    //public static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices)
-    //{
+    public static IDepthMask CreateDepthMask(int width, int height)
+    {
+        return Provider.CreateDepthMask(width, height);
+    }
 
-    //}
+    public static void CopyToGPU<T>(T[] array) { }
+    public static void CopyFromGPU<T>(T[] array) { }
 }

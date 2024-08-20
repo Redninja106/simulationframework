@@ -3,7 +3,7 @@
 /// <summary>
 /// Options to control the behavior of gradients when drawn outside their bounds.
 /// </summary>
-public enum TileMode
+public enum WrapMode
 {
     /// <summary>
     /// Clamp outside the region to the color at the nearest border.

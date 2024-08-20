@@ -1,24 +1,21 @@
 ﻿using ImGuiNET;
 using SimulationFramework.Drawing.Shaders;
+using SimulationFramework.OpenGL.Geometry.Streams;
 using System;
 using System.Collections;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace SimulationFramework.OpenGL;
+namespace SimulationFramework.OpenGL.Geometry.Writers;
 
 class FillGeometryWriter : GeometryWriter
 {
-    public override uint GetPrimitive()
-    {
-        return GL_TRIANGLES;
-    }
+    public override bool UsesTriangles => true;
 
     public override void PushArc(GeometryStream stream, Rectangle bounds, float begin, float end, bool includeCenter)
     {
         int steps = CalculateRoundedEdgeQuality(stream.TransformMatrix, MathF.Max(bounds.Width, bounds.Height) * .5f, Angle.Distance(begin, end));
-        
+
         float increment = (end - begin) / steps;
         float angle = begin;
         for (int i = 0; i < steps; i++)
@@ -47,8 +44,7 @@ class FillGeometryWriter : GeometryWriter
 
     public override void PushLine(GeometryStream stream, Vector2 from, Vector2 to)
     {
-        stream.WriteVertex(from);
-        stream.WriteVertex(to);
+        throw new InvalidOperationException();
     }
 
     public override void PushTriangles(GeometryStream stream, ReadOnlySpan<Vector2> triangles)

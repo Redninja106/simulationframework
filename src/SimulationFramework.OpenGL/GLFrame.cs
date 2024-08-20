@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Drawing;
+using StbImageWriteSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,16 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.OpenGL;
-public class GLFrame : ITexture
+public class GLFrame : IGLImage, ITexture
 {
     public int Width { get; private set; }
     public int Height { get; private set; }
     public TextureOptions Options { get; } = TextureOptions.None;
     public Span<Color> Pixels => throw new NotSupportedException();
 
-    public TileMode WrapModeX { get; set; }
-    public TileMode WrapModeY { get; set; }
+    public WrapMode WrapModeX { get; set; }
+    public WrapMode WrapModeY { get; set; }
     public TextureFilter Filter { get; set; }
+    public IMask? Resident { get; set; }
 
     public GLFrame(int width, int height)
     {
@@ -40,9 +42,16 @@ public class GLFrame : ITexture
         this.Height = height;
     }
 
-    public void Encode(Stream destination, TextureEncoding encoding)
+    public unsafe void Encode(Stream destination, TextureEncoding encoding)
     {
-        throw new NotImplementedException();
+        ImageWriter writer = new();
+
+        Color[] pixels = new Color[Width * Height];
+        fixed (Color* pixelsPtr = pixels)
+        {
+            glReadPixels(0, 0, this.Width, this.Height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, pixelsPtr);
+            writer.WritePng(pixelsPtr, Width, Height, ColorComponents.RedGreenBlueAlpha, destination);
+        }
     }
 
     public ICanvas GetCanvas()

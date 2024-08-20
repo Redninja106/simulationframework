@@ -15,7 +15,7 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.OpenGL;
+namespace SimulationFramework.OpenGL.Shaders;
 internal class GLSLShaderEmitter
 {
     IndentedTextWriter writer;
@@ -394,7 +394,7 @@ internal class GLSLShaderEmitter
     {
         this.compilation = compilation;
         vertexDataVariable = compilation.Variables.FirstOrDefault(v => v.Kind == ShaderVariableKind.VertexData);
-        
+
         foreach (var structure in compilation.Structures)
         {
             EmitStructureDefinition(structure);
@@ -680,7 +680,7 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
         {
             expression.LeftOperand.Accept(this);
         }
-        
+
         writer.Write(' ');
         writer.Write(expression.Operation switch
         {
@@ -741,8 +741,8 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
         {
             bool b => b ? "true" : "false",
             int i => i.ToString(),
-            float f => f switch 
-            { 
+            float f => f switch
+            {
                 float.NaN => "_NaN",
                 float.PositiveInfinity => "_PositiveInfinity",
                 float.NegativeInfinity => "_NegativeInfinity",
@@ -979,7 +979,7 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
         WriteArgList(expression.Arguments);
         return expression;
     }
-    
+
     private string? GetOperatorFromName(string operatorName)
     {
         return operatorName switch
@@ -997,7 +997,7 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
         writer.Write("if (");
         expression.Condition.Accept(this);
         writer.Write(") ");
-        
+
         if (expression.Success != null)
         {
             if (expression.Success is BlockExpression)
@@ -1106,7 +1106,7 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
         {
             writer.Write("0");
         }
-        else if(expression.Type == ShaderType.Float)
+        else if (expression.Type == ShaderType.Float)
         {
             writer.Write("0.0");
         }

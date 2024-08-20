@@ -1,4 +1,3 @@
-using Silk.NET.OpenGL;
 using SimulationFramework;
 using SimulationFramework.Desktop;
 using SimulationFramework.Drawing;
@@ -16,6 +15,5 @@ partial class Program : Simulation
 
     public override void OnRender(ICanvas canvas)
     {
-        canvas.DrawRect(0, 0, canvas.Width, canvas.Height);
     }
 }

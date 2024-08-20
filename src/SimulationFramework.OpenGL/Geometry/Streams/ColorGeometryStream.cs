@@ -4,7 +4,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace SimulationFramework.OpenGL;
+namespace SimulationFramework.OpenGL.Geometry.Streams;
 
 unsafe class ColorGeometryStream : GeometryStream
 {
@@ -53,10 +53,9 @@ unsafe class ColorGeometryStream : GeometryStream
         return vertices.Count;
     }
 
-    public override void Upload(GeometryBuffer buffer)
+    public override ReadOnlySpan<byte> GetData()
     {
-        Span<ColorVertex> data = CollectionsMarshal.AsSpan(vertices);
-        buffer.WriteData(MemoryMarshal.AsBytes(data));
+        return MemoryMarshal.AsBytes(CollectionsMarshal.AsSpan(this.vertices));
     }
 
     struct ColorVertex

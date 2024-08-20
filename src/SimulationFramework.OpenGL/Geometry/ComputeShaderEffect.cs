@@ -1,5 +1,6 @@
 ﻿using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Drawing.Shaders.Compiler;
+using SimulationFramework.OpenGL.Shaders;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,7 +13,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimulationFramework.OpenGL;
+namespace SimulationFramework.OpenGL.Geometry;
 internal class ComputeShaderEffect
 {
     public Type type;
@@ -45,7 +46,7 @@ void main()
 """;
         var shader = glCreateShader(GL_COMPUTE_SHADER);
         program = glCreateProgram();
-        GeometryEffect.ShaderSource(shader, src);
+        ShaderProgram.ShaderSource(shader, src);
         glAttachShader(program, shader);
         glLinkProgram(program);
         glDeleteShader(shader);

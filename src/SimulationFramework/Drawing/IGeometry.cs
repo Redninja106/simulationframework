@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing;
 
-//internal interface IGeometry : IDisposable
-//{
-//    TVertex[] GetVertices<TVertex>() where TVertex : unmanaged;
-//    uint[]? GetIndices();
-//}
+public interface IGeometry : IDisposable
+{
+    TVertex[] GetVertices<TVertex>() where TVertex : unmanaged;
+    uint[]? GetIndices();
+}

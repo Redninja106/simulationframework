@@ -47,6 +47,9 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
     /// </summary>
     public ITexture FrameBuffer { get; private set; }
 
+    public IMouseProvider BaseMouseProvider => mouseProvider.Original;
+    public IWindowProvider BaseWindowProvider => windowProvider.Original;
+    public IFullscreenProvider BaseFullscreenProvider => fullscreenProvider.Original;
 
     private FixedResolutionMouseProvider? mouseProvider;
     private FixedResolutionWindowProvider? windowProvider;
@@ -83,7 +86,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
 
     internal void BeforeRender()
     {
-        var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
+        var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetWindowCanvas();
         outputCanvas.ResetState();
 
         this.mouseProvider!.transform
@@ -95,7 +98,7 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
 
     internal void AfterRender()
     {
-        var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
+        var outputCanvas = Application.GetComponent<IGraphicsProvider>().GetWindowCanvas();
         outputCanvas.Clear(this.BackgroundColor);
         outputCanvas.Translate(outputCanvas.Width / 2f, outputCanvas.Height / 2f);
         outputCanvas.Scale(GetScale(outputCanvas.Width, outputCanvas.Height));
@@ -168,6 +171,8 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
     // hijacks mouse position to be accurate to fake framebuffer
     private class FixedResolutionMouseProvider : IMouseProvider
     {
+        public IMouseProvider Original => original;
+
         private readonly IMouseProvider original;
         public MatrixBuilder transform = new();
         public bool SubpixelInput { get; set; }
@@ -268,6 +273,8 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
         public bool IsMinimized => baseProvider.IsMinimized;
         public bool IsMaximized => baseProvider.IsMaximized;
 
+        public IWindowProvider Original => baseProvider;
+
         private readonly IWindowProvider baseProvider;
         internal Vector2 fixedSize;
 
@@ -325,6 +332,8 @@ public sealed class FixedResolutionInterceptor : ISimulationComponent
 
     private class FixedResolutionFullscreenProvider(IFullscreenProvider baseProvider) : ISimulationComponent, IFullscreenProvider
     {
+        public IFullscreenProvider Original => baseProvider;
+
         public int SwapInterval { get => baseProvider.SwapInterval; set => baseProvider.SwapInterval = value; }
         public bool PreferExclusive { get => baseProvider.PreferExclusive; set => baseProvider.PreferExclusive = value; }
         public bool IsFullscreen { get => baseProvider.IsFullscreen; }

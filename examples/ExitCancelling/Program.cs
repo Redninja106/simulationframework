@@ -30,7 +30,7 @@ partial class Program : Simulation
             Application.Exit(true);
         }
 
-        if (Keyboard.IsKeyReleased(Key.Esc))
+        if (Keyboard.IsKeyReleased(Key.Escape))
         {
             Application.Exit(false);
         }

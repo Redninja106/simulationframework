@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
-namespace SimulationFramework.OpenGL;
+namespace SimulationFramework.OpenGL.Geometry.Streams;
 
 class CustomVertexGeometryStream : GeometryStream
 {
@@ -16,7 +16,7 @@ class CustomVertexGeometryStream : GeometryStream
 
     public unsafe CustomVertexGeometryStream(ShaderType vertexType)
     {
-        var graphics = Application.GetComponent<GLGraphicsProvider>();
+        var graphics = Application.GetComponent<GLGraphics>();
         this.vertexType = vertexType;
 
         fixed (uint* vaoPtr = &vao)
@@ -37,10 +37,9 @@ class CustomVertexGeometryStream : GeometryStream
         throw new NotSupportedException();
     }
 
-    public override void Upload(GeometryBuffer buffer)
+    public override ReadOnlySpan<byte> GetData()
     {
-        Span<byte> span = CollectionsMarshal.AsSpan(vertexData);
-        buffer.WriteData(MemoryMarshal.AsBytes(span));
+        return CollectionsMarshal.AsSpan(this.vertexData);
     }
 
     public void WriteVertex<TVertex>(TVertex vertex)

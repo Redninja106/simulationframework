@@ -3,6 +3,9 @@ using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Drawing.Shaders.Compiler;
 using SimulationFramework.Messaging;
+using SimulationFramework.OpenGL.Fonts;
+using SimulationFramework.OpenGL.Geometry;
+using SimulationFramework.OpenGL.Shaders;
 using StbImageSharp;
 using System;
 using System.Collections.Generic;
@@ -13,7 +16,7 @@ using System.Runtime.InteropServices;
 
 namespace SimulationFramework.OpenGL;
 
-public unsafe class GLGraphicsProvider : IGraphicsProvider
+public unsafe class GLGraphics : IGraphicsProvider
 {
     public IFont DefaultFont { get; }
 
@@ -21,15 +24,17 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
     private GLFrame frame;
 
     private readonly Dictionary<Type, ComputeShaderEffect> computeShaders = [];
-    private readonly Dictionary<(Type, Type?), ShaderGeometryEffect> shaderEffects = [];
+    private readonly Dictionary<(Type, Type?), ProgrammableShaderProgram> shaderPrograms = [];
     private readonly Dictionary<string, GLFont> systemFontCache = [];
     internal ShaderCompiler ShaderCompiler = new();
 
-    public GLGraphicsProvider(GLFrame frame, Func<string, nint> getProcAddress)
+    public GLGraphics(GLFrame frame, Func<string, nint> getProcAddress)
     {
         this.frame = frame;
         global::OpenGL.Initialize(name => (delegate*<void>)getProcAddress(name));
 
+        glEnable(GL_DEBUG_OUTPUT);
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(&DebugCallback, null);
 
         DefaultFont = LoadSystemFont("Verdana");
@@ -49,7 +54,7 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
     {
     }
 
-    public ICanvas GetFrameCanvas()
+    public ICanvas GetWindowCanvas()
     {
         return frameCanvas;
     }
@@ -114,11 +119,11 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
         }
     }
 
-    internal ShaderGeometryEffect GetShaderEffect(CanvasShader shader, VertexShader? vs = null)
+    internal ProgrammableShaderProgram GetShaderProgram(CanvasShader shader, VertexShader? vs = null)
     {
-        if (shaderEffects.TryGetValue((shader.GetType(), vs?.GetType()), out var effect))
+        if (shaderPrograms.TryGetValue((shader.GetType(), vs?.GetType()), out var program))
         {
-            return effect;
+            return program;
         }
 
         var compilation = ShaderCompiler.Compile(shader);
@@ -143,18 +148,18 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
             vsSrc = vsSw.ToString();
         }
 
-        effect = new(compilation, src, vsCompilation, vsSrc);
-        shaderEffects[(shader.GetType(), vs?.GetType())] = effect;
-        return effect;
+        program = new(compilation, src, vsCompilation, vsSrc);
+        shaderPrograms[(shader.GetType(), vs?.GetType())] = program;
+        return program;
     }
 
     internal void RemoveCachedShader(Type type)
     {
-        foreach (var (effect, _) in shaderEffects)
+        foreach (var (effect, _) in shaderPrograms)
         {
             if (effect.Item1 == type || effect.Item2 == type || effect.Item1.IsSubclassOf(type) || (effect.Item2?.IsSubclassOf(type) ?? false))
             {
-                shaderEffects.Remove(effect);
+                shaderPrograms.Remove(effect);
             }
         }
     }
@@ -169,6 +174,16 @@ public unsafe class GLGraphicsProvider : IGraphicsProvider
         }
 
         glShader.Dispatch(computeShader, threadCountI, threadCountJ, threadCountK);
+    }
+
+    public IMask CreateMask(int width, int height)
+    {
+        return new GLMask(width, height);
+    }
+
+    public IDepthMask CreateDepthMask(int width, int height)
+    {
+        return new GLDepthMask(width, height);
     }
 
     // public IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices) where TVertex : unmanaged

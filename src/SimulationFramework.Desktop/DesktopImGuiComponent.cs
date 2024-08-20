@@ -43,7 +43,7 @@ internal class DesktopImGuiComponent : ISimulationComponent
 
     void AfterRender(AfterRenderMessage message)
     {
-        var canvas = Application.GetComponent<IGraphicsProvider>().GetFrameCanvas();
+        var canvas = Application.GetComponent<IGraphicsProvider>().GetWindowCanvas();
         gl.Viewport(0, 0, (uint)canvas.Width, (uint)canvas.Height);
         imGuiController.Render();
     }
