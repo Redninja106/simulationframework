@@ -473,7 +473,7 @@ internal class GLSLShaderEmitter
 
     public void EmitType(ShaderType type)
     {
-        if (type is ReferenceType refType)
+        if (type is ShaderReferenceType refType)
         {
             writer.Write("inout ");
             EmitType(refType.ElementType);

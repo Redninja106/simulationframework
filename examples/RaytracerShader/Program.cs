@@ -148,7 +148,7 @@ class RayTracerShader : CanvasShader
             {
                 Vector2 sampleOffset = new((x + .5f) / antialias, (y + .5f) / antialias); // evenly spaced sample distribution
                 // Vector3 sampleOffset = Random3(new(vp * x * y, time)); // random sample distribution
-
+                
                 Vector2 samplePos = new Vector2(
                     vp.X * width * .5f + sampleOffset.X,
                     vp.Y * height * .5f + sampleOffset.Y

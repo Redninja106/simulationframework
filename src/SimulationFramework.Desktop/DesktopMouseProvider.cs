@@ -1,10 +1,11 @@
-﻿using Silk.NET.Input;
+﻿using Silk.NET.GLFW;
+using Silk.NET.Input;
 using SimulationFramework.Input;
 using SimulationFramework.Messaging;
 using System.Numerics;
 
 namespace SimulationFramework.Desktop;
-internal class DesktopMouseProvider : IMouseProvider
+internal unsafe class DesktopMouseProvider : IMouseProvider
 {
     private readonly IMouse mouse;
 
@@ -31,11 +32,16 @@ internal class DesktopMouseProvider : IMouseProvider
     private Vector2 mousePosition;
     private Vector2? lastMousePosition;
 
+    private Glfw glfw = Glfw.GetApi();
+    private unsafe Cursor* glfwCursor;
+    private unsafe WindowHandle* glfwWindow;
+
     private float scrollWheel;
     internal bool capturedByImgui;
 
-    public DesktopMouseProvider(IMouse mouse)
+    public DesktopMouseProvider(IMouse mouse, WindowHandle* window)
     {
+        this.glfwWindow = window;
         this.mouse = mouse;
 
         mouse.MouseDown += Mouse_MouseDown;
@@ -128,32 +134,62 @@ internal class DesktopMouseProvider : IMouseProvider
 
     public unsafe void SetCursor(ReadOnlySpan<Color> colors, int width, int height, int centerX, int centerY)
     {
-        fixed (Color* colorsPtr = &colors[0])
+        Cursor* oldCursor = glfwCursor;
+
+        fixed (Color* colorsPtr = colors)
         {
-            var memoryManager = new UnsafePinnedMemoryManager<byte>((byte*)colorsPtr, sizeof(Color) * width * height);
-            this.mouse.Cursor.Image = new(width, height, memoryManager.Memory);
+            Image image = new()
+            {
+                Width = width,
+                Height = height,
+                Pixels = (byte*)colorsPtr,
+            };
+
+            UpdateCursor(glfw.CreateCursor(&image, centerX, centerY));
         }
 
-        this.mouse.Cursor.HotspotX = centerX;
-        this.mouse.Cursor.HotspotY = centerY;
 
-        this.mouse.Cursor.Type = CursorType.Custom;
+        //fixed (Color* colorsPtr = &colors[0])
+        //{
+        //    var memoryManager = new UnsafePinnedMemoryManager<byte>((byte*)colorsPtr, sizeof(Color) * width * height);
+
+        //    // TODO: silk.net leaks glfw cursor objects like mad here?!?
+        //    // https://github.com/dotnet/Silk.NET/blob/main/src/Input/Silk.NET.Input.Glfw/GlfwCursor.cs#L266
+
+        //    this.mouse.Cursor.Image = new(width, height, memoryManager.Memory);
+        //}
+
+        //this.mouse.Cursor.HotspotX = centerX;
+        //this.mouse.Cursor.HotspotY = centerY;
+
+        //this.mouse.Cursor.Type = CursorType.Custom;
     }
 
     public void SetCursor(SystemCursor cursor)
     {
-        this.mouse.Cursor.StandardCursor = cursor switch
+        CursorShape shape = cursor switch
         {
-            SystemCursor.Default => StandardCursor.Default,
-            SystemCursor.Arrow => StandardCursor.Arrow,
-            SystemCursor.IBeam => StandardCursor.IBeam,
-            SystemCursor.Crosshair => StandardCursor.Crosshair,
-            SystemCursor.Hand => StandardCursor.Hand,
-            SystemCursor.HorizontalResize => StandardCursor.HResize,
-            SystemCursor.VerticalResize => StandardCursor.VResize,
+            SystemCursor.Default => CursorShape.Arrow,
+            SystemCursor.Arrow => CursorShape.Arrow,
+            SystemCursor.IBeam => CursorShape.IBeam,
+            SystemCursor.Crosshair => CursorShape.Crosshair,
+            SystemCursor.Hand => CursorShape.Hand,
+            SystemCursor.HorizontalResize => CursorShape.HResize,
+            SystemCursor.VerticalResize => CursorShape.VResize,
             _ => throw new ArgumentException(null, nameof(cursor))
         };
 
-        this.mouse.Cursor.Type = CursorType.Standard;
+        UpdateCursor(glfw.CreateStandardCursor(shape));
+    }
+
+    private void UpdateCursor(Cursor* cursor)
+    {
+        var oldCursor = glfwCursor;
+        glfwCursor = cursor;
+        glfw.SetCursor(glfwWindow, cursor);
+        if (oldCursor != null)
+        {
+            glfw.DestroyCursor(oldCursor);
+        }
     }
 }

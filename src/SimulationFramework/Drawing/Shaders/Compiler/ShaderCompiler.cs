@@ -24,9 +24,7 @@ public class ShaderCompiler
     public static bool DumpShaders { get; set; } = false;
 
     // TODO: direct texture reads
-    // TODO: early returns
     // TODO: add method caching here
-    // TODO: compute shaders (buffers?)
     // TODO: implicit uniforms (for Mouse.Position, Time.TotalTime, etc)
     // TODO: Random APIs (and maybe intercept System.Random)
 

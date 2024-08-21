@@ -26,8 +26,6 @@ internal class ControlFlowGraph : ControlFlowNode
     
     public SubgraphKind? SubgraphKind { get; set; }
 
-    // TODO: for both loops and conditionals, before subgraph creation, replace certain edges with a connection to a node that represents that jump, ie a edge to the end of the method is a "return node", also applies to continue and break in loops
-
     public ControlFlowGraph(MethodDisassembly disassembly)
     {
         EntryNode = new DummyNode();

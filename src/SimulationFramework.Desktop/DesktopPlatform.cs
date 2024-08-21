@@ -7,6 +7,7 @@ using Silk.NET.Input.Glfw;
 using Silk.NET.OpenGL;
 using SimulationFramework.Desktop.Audio;
 using SimulationFramework.OpenGL;
+using Silk.NET.GLFW;
 
 namespace SimulationFramework.Desktop;
 
@@ -113,7 +114,10 @@ public class DesktopPlatform : ISimulationPlatform
 
         if (mouse is not null)
         {
-            Application.RegisterComponent(new DesktopMouseProvider(mouse));
+            unsafe
+            {
+                Application.RegisterComponent(new DesktopMouseProvider(mouse, (WindowHandle*)Window.Native.Glfw!.Value));
+            }
         }
 
         var keyboard = inputContext.Keyboards.FirstOrDefault();

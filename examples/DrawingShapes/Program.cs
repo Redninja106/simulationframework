@@ -17,18 +17,11 @@ partial class Program : Simulation
     {
         logo = Graphics.LoadTexture("./logo-512x512.png");
         ShaderCompiler.DumpShaders = true;
-
     }
+
     public override void OnRender(ICanvas canvas)
     {
         Window.Title = $"Simulation - {(int)Performance.Framerate} FPS";
-
-        if (Keyboard.IsKeyPressed(Key.Space))
-        {
-            logo.Encode("test.png", TextureEncoding.PNG);
-        }
-
-        ImGui.ShowDemoWindow();
 
         canvas.Clear(Color.FromHSV(.1f, .1f, .1f));
 
@@ -38,12 +31,12 @@ partial class Program : Simulation
         canvas.Translate(150, 0);
         canvas.DrawPolygon(new[]
         {
-             50 * Angle.ToVector(.0f * MathF.Tau),
-             50 * Angle.ToVector(.2f * MathF.Tau),
-             50 * Angle.ToVector(.4f * MathF.Tau),
-             50 * Angle.ToVector(.6f * MathF.Tau),
-             50 * Angle.ToVector(.8f * MathF.Tau),
-        });
+              50 * Angle.ToVector(.0f * MathF.Tau),
+              50 * Angle.ToVector(.2f * MathF.Tau),
+              50 * Angle.ToVector(.4f * MathF.Tau),
+              50 * Angle.ToVector(.6f * MathF.Tau),
+              50 * Angle.ToVector(.8f * MathF.Tau),
+         });
 
         canvas.Translate(150, 0);
         canvas.Fill(Color.Red);
@@ -60,7 +53,7 @@ partial class Program : Simulation
             TileMode = WrapMode.Clamp,
         });
         canvas.DrawRect(0, 0, 100, 100, Alignment.Center);
-
+        
         canvas.Translate(150, 0);
         canvas.Fill(new RadialGradient(0, 0, 50, ColorF.Orange, ColorF.Green)
         {

@@ -48,7 +48,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ComputeShaders", "examples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Render3D", "examples\Render3D\Render3D.csproj", "{441721D5-F03A-4C67-8032-294C394550C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Masks", "examples\Masks\Masks.csproj", "{A0E58F84-0ADF-4782-90DF-09BAE71E3288}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masks", "examples\Masks\Masks.csproj", "{A0E58F84-0ADF-4782-90DF-09BAE71E3288}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderIntegration", "tests\ShaderIntegration\ShaderIntegration.csproj", "{68267971-9F25-4BF3-8876-908DE53F1082}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -264,6 +266,18 @@ Global
 		{A0E58F84-0ADF-4782-90DF-09BAE71E3288}.Release|arm64.Build.0 = Release|Any CPU
 		{A0E58F84-0ADF-4782-90DF-09BAE71E3288}.Release|x86.ActiveCfg = Release|Any CPU
 		{A0E58F84-0ADF-4782-90DF-09BAE71E3288}.Release|x86.Build.0 = Release|Any CPU
+		{68267971-9F25-4BF3-8876-908DE53F1082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68267971-9F25-4BF3-8876-908DE53F1082}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68267971-9F25-4BF3-8876-908DE53F1082}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{68267971-9F25-4BF3-8876-908DE53F1082}.Debug|arm64.Build.0 = Debug|Any CPU
+		{68267971-9F25-4BF3-8876-908DE53F1082}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{68267971-9F25-4BF3-8876-908DE53F1082}.Debug|x86.Build.0 = Debug|Any CPU
+		{68267971-9F25-4BF3-8876-908DE53F1082}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68267971-9F25-4BF3-8876-908DE53F1082}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68267971-9F25-4BF3-8876-908DE53F1082}.Release|arm64.ActiveCfg = Release|Any CPU
+		{68267971-9F25-4BF3-8876-908DE53F1082}.Release|arm64.Build.0 = Release|Any CPU
+		{68267971-9F25-4BF3-8876-908DE53F1082}.Release|x86.ActiveCfg = Release|Any CPU
+		{68267971-9F25-4BF3-8876-908DE53F1082}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -285,6 +299,7 @@ Global
 		{BE8EBCBD-FD16-4787-BDEA-26AA78B6EBA0} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 		{441721D5-F03A-4C67-8032-294C394550C1} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 		{A0E58F84-0ADF-4782-90DF-09BAE71E3288} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
+		{68267971-9F25-4BF3-8876-908DE53F1082} = {813D5E58-CE77-4969-B74A-A724228D8F73}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09D3B2BE-AC85-48C2-835F-6B781E265873}

@@ -27,7 +27,7 @@ internal class ProgrammableShaderEffect : GeometryEffect
         this.transform = transform;
         Shader = shader;
         VertexShader = vertexShader;
-        uniformHandler = new(program.GetID());
+        uniformHandler = program.GetUniformHandler(shader, vertexShader);
         usesClipSpace = vsCompilation?.EntryPoint?.BackingMethod?.GetCustomAttribute<UseClipSpaceAttribute>() != null;
     }
 

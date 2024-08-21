@@ -119,7 +119,7 @@ internal class CompilerContext
 
         if (type.IsByRef)
         {
-            return new ReferenceType(CompileType(type.GetElementType()));
+            return new ShaderReferenceType(CompileType(type.GetElementType()));
         }
 
         if (type.IsEnum)

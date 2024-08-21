@@ -1,10 +1,10 @@
 ﻿namespace SimulationFramework.Drawing.Shaders.Compiler;
 
-public class ReferenceType : ShaderType
+public class ShaderReferenceType : ShaderType
 {
     public ShaderType ElementType { get; }
 
-    public ReferenceType(ShaderType elementType)
+    public ShaderReferenceType(ShaderType elementType)
     {
         ElementType = elementType;
     }

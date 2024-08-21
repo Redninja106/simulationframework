@@ -1,6 +1,7 @@
 ﻿using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Drawing.Shaders.Compiler;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -21,7 +22,8 @@ void main() {
 ";
     internal ShaderCompilation compilation;
     internal ShaderCompilation? vsCompilation;
-
+    
+    private UniformHandler uniformHandler;
 
     public ProgrammableShaderProgram(ShaderCompilation compilation, string source, ShaderCompilation? vsCompilation, string? vsSource)
         : base(GetVertexShaderSource(vsCompilation, vsSource), GetFragmentShaderSource(compilation, source))
@@ -29,6 +31,13 @@ void main() {
 
         this.compilation = compilation;
         this.vsCompilation = vsCompilation;
+
+        uniformHandler = new(GetID());
+    }
+
+    public UniformHandler GetUniformHandler(CanvasShader shader, VertexShader? vertexShader)
+    {
+        return uniformHandler;
     }
 
     private static string GetFragmentShaderSource(ShaderCompilation compilation, string source)

@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 internal class ExpressionStack
 {
-    // TODO: use two separate stacks here. it'll be cleaner and make ternary exprs easier
     public Stack<ShaderExpression> expressions = [];
     public Stack<ShaderExpression> statements = [];
 
