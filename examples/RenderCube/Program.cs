@@ -50,14 +50,19 @@ partial class Program : Simulation
     ITexture logo;
     IDepthMask depthMask;
 
+    IGeometry cubeGeometry;
+
     public override void OnInitialize()
     {
-        SetFixedResolution(400, 400, Color.Black);
+        SetFixedResolution(200, 200, Color.Black);
 
         logo = Graphics.LoadTexture("logo-512x512.png");
         logo.WrapModeY = logo.WrapModeX = WrapMode.Repeat;
 
         depthMask = Graphics.CreateDepthMask(Window.Width, Window.Height);
+
+        uint[] indices = Enumerable.Range(0, 36).Select(i => (uint)i).ToArray();
+        cubeGeometry = Graphics.CreateGeometry<Vertex>(vertices, indices);
     }
 
     public override void OnRender(ICanvas canvas)
@@ -81,6 +86,9 @@ partial class Program : Simulation
         canvas.Mask(depthMask);
         canvas.WriteMask(depthMask);
         canvas.DrawTriangles<Vertex>(vertices);
+
+        vertexShader.world = Matrix4x4.CreateRotationY(Time.TotalTime * -Angle.ToRadians(60)) * Matrix4x4.CreateTranslation(0, 1, 0);
+        canvas.DrawGeometry(this.cubeGeometry);
     }
 }
 

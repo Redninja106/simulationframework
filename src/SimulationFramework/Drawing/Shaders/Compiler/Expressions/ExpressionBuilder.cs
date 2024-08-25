@@ -17,12 +17,12 @@ internal class ExpressionBuilder
 {
     public MethodDisassembly Disassembly { get; set; }
     public Type ReturnType { get; set; }
-    public ExpressionStack Expressions { get; set; }
+    // public ExpressionStack Expressions { get; set; }
 
-    private readonly CompilerContext context;
+    public readonly CompilerContext context;
     public ControlFlowGraph controlFlowGraph;
-    private readonly ShaderVariable[] parameters;
-    private readonly ShaderVariable[] locals;
+    public readonly ShaderVariable[] parameters;
+    public readonly ShaderVariable[] locals;
 
     public ExpressionBuilder(CompilerContext context, ControlFlowGraph controlFlowGraph, MethodDisassembly disassembly, ShaderVariable[] parameters, ShaderVariable[] locals)
     {
@@ -35,12 +35,13 @@ internal class ExpressionBuilder
 
     public BlockExpression BuildExpressions()
     {
-        Expressions = new();
+        // Expressions = new();
         ReturnType = Disassembly.Method is MethodInfo method ? method.ReturnType : ((ConstructorInfo)Disassembly.Method).DeclaringType!;
 
-        var exprs = BuildNodeChain(controlFlowGraph.EntryNode, controlFlowGraph.ExitNode);
+        var exprs = new ExpressionStack();
+        BuildNodeChain(controlFlowGraph.EntryNode, controlFlowGraph.ExitNode, exprs);
 
-        ShaderExpression result = SimplifyExpression(exprs);
+        ShaderExpression result = SimplifyExpression(CreateBlockExpressionIfNeeded(exprs.GetExpressions()));
         if (result is BlockExpression resultBlock)
         {
             return resultBlock;
@@ -51,306 +52,18 @@ internal class ExpressionBuilder
         }
     }
 
-    ShaderExpression? BuildBasicBlockExpression(BasicBlockNode basicBlock, bool clearStack = true)
+    void BuildBasicBlockExpression(BasicBlockNode basicBlock, ExpressionStack expressions)
     {
         if (basicBlock.Instructions.Count is 0)
-            return null;
-
-        if (clearStack)
-            Expressions.Clear();
+            return;
 
         foreach (var instruction in basicBlock.Instructions)
         {
-            BuildInstruction(instruction);
-        }
-
-        return CreateBlockExpressionIfNeeded(Expressions.GetExpressions());
-    }
-
-    private void BuildInstruction(Instruction instruction)
-    {
-        switch (instruction.OpCode)
-        {
-            case OpCode.Nop or OpCode.Ldobj:
-                return;
-            case OpCode.Pop:
-                BuildPop(instruction);
-                break;
-            case OpCode.Dup:
-                BuildDup(instruction);
-                break;
-            case OpCode.Initobj:
-                BuildInitObj(instruction);
-                break;
-            case OpCode.Ret:
-                BuildReturnExpr(instruction);
-                break;
-            case OpCode.Add:
-            case OpCode.Sub:
-            case OpCode.Xor:
-            case OpCode.Mul:
-            case OpCode.Div:
-            case OpCode.And:
-            case OpCode.Or:
-            case OpCode.Shr:
-            case OpCode.Shr_Un:
-            case OpCode.Shl:
-            case OpCode.Ceq:
-            case OpCode.Clt:
-            case OpCode.Cgt:
-            case OpCode.Clt_Un:
-            case OpCode.Cgt_Un:
-            case OpCode.Rem:
-            case OpCode.Rem_Un:
-                BuildBinaryExpr(instruction);
-                break;
-            case OpCode.Ldfld or OpCode.Ldflda or OpCode.Stfld or OpCode.Ldsfld:
-                BuildFieldExpr(instruction);
-                break;
-            case OpCode.Not:
-            case OpCode.Neg:
-            case OpCode.Conv_I:
-            case OpCode.Conv_I1:
-            case OpCode.Conv_I2:
-            case OpCode.Conv_I4:
-            case OpCode.Conv_I8:
-            case OpCode.Conv_U:
-            case OpCode.Conv_U1:
-            case OpCode.Conv_U2:
-            case OpCode.Conv_U4:
-            case OpCode.Conv_U8:
-            case OpCode.Conv_R4:
-            case OpCode.Conv_R8:
-            case OpCode.Conv_R_Un:
-                BuildUnaryExpr(instruction);
-                break;
-            case OpCode.Ldloc:
-            case OpCode.Ldloc_S:
-            case OpCode.Ldloc_0:
-            case OpCode.Ldloc_1:
-            case OpCode.Ldloc_2:
-            case OpCode.Ldloc_3:
-            case OpCode.Ldloca:
-            case OpCode.Ldloca_S:
-                BuildLoadLocalExpr(instruction);
-                break;
-            case OpCode.Stloc:
-            case OpCode.Stloc_S:
-            case OpCode.Stloc_0:
-            case OpCode.Stloc_1:
-            case OpCode.Stloc_2:
-            case OpCode.Stloc_3:
-                BuildStoreLocalExpr(instruction);
-                break;
-            case OpCode.Ldc_I4:
-            case OpCode.Ldc_I8:
-            case OpCode.Ldc_R4:
-            case OpCode.Ldc_R8:
-            case OpCode.Ldc_I4_S:
-            case OpCode.Ldc_I4_M1:
-            case OpCode.Ldc_I4_0:
-            case OpCode.Ldc_I4_1:
-            case OpCode.Ldc_I4_2:
-            case OpCode.Ldc_I4_3:
-            case OpCode.Ldc_I4_4:
-            case OpCode.Ldc_I4_5:
-            case OpCode.Ldc_I4_6:
-            case OpCode.Ldc_I4_7:
-            case OpCode.Ldc_I4_8:
-            case OpCode.Ldstr:
-                BuildConstantExpr(instruction);
-                break;
-            case OpCode.Ldarg:
-            case OpCode.Ldarg_S:
-            case OpCode.Ldarg_0:
-            case OpCode.Ldarg_1:
-            case OpCode.Ldarg_2:
-            case OpCode.Ldarg_3:
-            case OpCode.Ldarga:
-            case OpCode.Ldarga_S:
-                BuildLoadArgExpr(instruction);
-                break;
-            case OpCode.Starg:
-            case OpCode.Starg_S:
-                BuildStoreArgExpr(instruction);
-                break;
-            case OpCode.Newobj:
-                BuildNewObjExpr(instruction);
-                break;
-            case OpCode.Stind_I:
-            case OpCode.Stind_I1:
-            case OpCode.Stind_I2:
-            case OpCode.Stind_I4:
-            case OpCode.Stind_I8:
-            case OpCode.Stind_R4:
-            case OpCode.Stind_R8:
-            case OpCode.Stind_Ref:
-            case OpCode.Stobj:
-                BuildStoreIndirect(instruction);
-                break;
-            case OpCode.Ldind_I:
-            case OpCode.Ldind_I1:
-            case OpCode.Ldind_I2:
-            case OpCode.Ldind_I4:
-            case OpCode.Ldind_I8:
-            case OpCode.Ldind_R4:
-            case OpCode.Ldind_R8:
-            case OpCode.Ldind_Ref:
-            // case OpCode.Ldobj:
-                BuildLoadIndirect(instruction);
-                break;
-            case OpCode.Bne_Un or OpCode.Bne_Un_S:
-            case OpCode.Beq or OpCode.Beq_S:
-            case OpCode.Blt or OpCode.Blt_S or OpCode.Blt_Un or OpCode.Blt_Un_S:
-            case OpCode.Ble or OpCode.Ble_S or OpCode.Ble_Un or OpCode.Ble_Un_S:
-            case OpCode.Bgt or OpCode.Bgt_S or OpCode.Bgt_Un or OpCode.Bgt_Un_S:
-            case OpCode.Bge or OpCode.Bge_S or OpCode.Bge_Un or OpCode.Bge_Un_S:
-            case OpCode.Brfalse or OpCode.Brfalse_S:
-            case OpCode.Br or OpCode.Br_S or OpCode.Brtrue or OpCode.Brtrue_S:
-                BuildBranch(instruction);
-                break;
-            case OpCode.Call or OpCode.Callvirt:
-                BuildCallExpr(instruction);
-                break;
-            case OpCode.Ldlen:
-                BuildLoadLength(instruction);
-                break;
-            case OpCode.Ldelem:
-            case OpCode.Ldelema:
-            case OpCode.Ldelem_I:
-            case OpCode.Ldelem_I1:
-            case OpCode.Ldelem_I2:
-            case OpCode.Ldelem_I4:
-            case OpCode.Ldelem_I8:
-            case OpCode.Ldelem_R4:
-            case OpCode.Ldelem_R8:
-            case OpCode.Ldelem_U1:
-            case OpCode.Ldelem_U2:
-            case OpCode.Ldelem_U4:
-                BuildLoadElement(instruction);
-                break;
-            default:
-                throw new NotSupportedException("Unsupported instruction '" + instruction.OpCode + "'.");
+            BuildInstruction(instruction, expressions);
         }
     }
 
-    private void BuildPop(Instruction instruction)
-    {
-        Expressions.Pop();
-    }
-
-    private void BuildLoadElement(Instruction instruction)
-    {
-        var index = Expressions.Pop();
-        var array = Expressions.Pop();
-
-        var method = typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLoad))!;
-        Expressions.Push(new ShaderIntrinsicCall(method, ((ShaderArrayType?)array.ExpressionType)!.ElementType, [array, index]));
-    }
-
-    private void BuildLoadLength(Instruction instruction)
-    {
-        var arg = Expressions.Pop();
-
-        var method = typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLength))!;
-        Expressions.Push(new ShaderIntrinsicCall(method, context.CompileType(method.ReturnType), [arg]));
-    }
-
-    private void BuildReturnExpr(Instruction instruction)
-    {
-        if (Disassembly.IsConstructor)
-        {
-            Expressions.Push(new ShaderVariableExpression(parameters[0]));
-            return;
-        }
-
-        ShaderExpression? returnValue = ReturnType == typeof(void) ? null : Expressions.Pop();
-
-        if (ReturnType == typeof(bool))
-        {
-            if (returnValue is ConstantExpression constExpr2 && constExpr2.Value is 0 or 1)
-            {
-                returnValue = new ConstantExpression(ShaderType.Bool, (int)constExpr2.Value == 1);
-            }
-        }
-
-        // actual return expression will be built by the return block
-        Expressions.Push(returnValue);
-    }
-
-    private void BuildInitObj(Instruction instruction)
-    {
-        var type = ((MetadataToken)instruction.Argument).Resolve() as Type ?? throw new();
-        var left = Expressions.Pop();
-        var right = new DefaultExpression(context.CompileType(type));
-        Expressions.PushStatement(new BinaryExpression(BinaryOperation.Assignment, left, right));
-    }
-
-    private void BuildBranch(Instruction instruction)
-    {
-        ShaderExpression left, right;
-        switch (instruction.OpCode)
-        {
-            case OpCode.Bne_Un or OpCode.Bne_Un_S:
-                // emit not equal comparison
-                right = Expressions.Pop();
-                left = Expressions.Pop();
-                Expressions.Push(new BinaryExpression(BinaryOperation.NotEqual, left, right));
-                break;
-            case OpCode.Beq or OpCode.Beq_S:
-                right = Expressions.Pop();
-                left = Expressions.Pop();
-                Expressions.Push(new BinaryExpression(BinaryOperation.Equal, left, right));
-                break;
-            case OpCode.Blt or OpCode.Blt_S or OpCode.Blt_Un or OpCode.Blt_Un_S:
-                // emit less than comparison
-                right = Expressions.Pop();
-                left = Expressions.Pop();
-                Expressions.Push(new BinaryExpression(BinaryOperation.LessThan, left, right));
-                break;
-            case OpCode.Ble or OpCode.Ble_S or OpCode.Ble_Un or OpCode.Ble_Un_S:
-                // emit less than or equal comparison
-                right = Expressions.Pop();
-                left = Expressions.Pop();
-                Expressions.Push(new BinaryExpression(BinaryOperation.LessThanEqual, left, right));
-                break;
-            case OpCode.Bgt or OpCode.Bgt_S or OpCode.Bgt_Un or OpCode.Bgt_Un_S:
-                // emit greater than comparison
-                right = Expressions.Pop();
-                left = Expressions.Pop();
-                Expressions.Push(new BinaryExpression(BinaryOperation.GreaterThan, left, right));
-                break;
-            case OpCode.Bge or OpCode.Bge_S or OpCode.Bge_Un or OpCode.Bge_Un_S:
-                // emit greater than or equal comparison
-                right = Expressions.Pop();
-                left = Expressions.Pop();
-                Expressions.Push(new BinaryExpression(BinaryOperation.GreaterThanEqual, left, right));
-                break;
-            case OpCode.Brfalse or OpCode.Brfalse_S:
-                // invert condition
-                var expr = Expressions.Pop();
-                if (expr.ExpressionType != ShaderType.Bool)
-                {
-                    expr = new BinaryExpression(BinaryOperation.NotEqual, expr, new ConstantExpression(expr.ExpressionType, 0));
-                }
-                Expressions.Push(new UnaryExpression(UnaryOperation.Not, expr, null));
-                break;
-            case OpCode.Brtrue or OpCode.Brtrue_S:
-                expr = Expressions.Pop();
-                if (expr.ExpressionType != ShaderType.Bool)
-                {
-                    expr = new BinaryExpression(BinaryOperation.NotEqual, expr, new ConstantExpression(expr.ExpressionType, 0));
-                }
-                Expressions.Push(expr);
-                break;
-            case OpCode.Br or OpCode.Br_S :
-                break; // do nothing for these
-            default:
-                throw new UnreachableException();
-        }
-    }
-
-    ShaderExpression? BuildNode(ControlFlowNode node, bool clearStack = true)
+    void BuildNode(ControlFlowNode node, ExpressionStack expressions)
     {
         if (node is ControlFlowGraph graph)
         {
@@ -360,52 +73,68 @@ internal class ExpressionBuilder
                 var trueNode = conditionNode.Successors.First();
                 var falseNode = conditionNode.Successors.Last();
 
-                var beginExpr = BuildNode(graph.EntryNode, clearStack);
-
-                Debug.Assert(beginExpr is not null);
-
-                beginExpr = ExtractConditionExpression(SimplifyExpression(beginExpr), out var condition);
+                BuildNode(graph.EntryNode, expressions);
+                var condition = expressions.Pop();
 
                 Debug.Assert(condition is not null);
 
-                var trueExpr = BuildNodeChain(trueNode, graph.ExitNode);
+                var trueExprs = new ExpressionStack();
+                BuildNodeChain(trueNode, graph.ExitNode, trueExprs);
 
-                ShaderExpression? falseExpr = falseNode is null ? null : BuildNodeChain(falseNode, graph.ExitNode);
-
-                bool isTernary = false;
-                ShaderExpression condExpr;
-                if (trueExpr is not BlockExpression && falseExpr is not BlockExpression)
+                ExpressionStack? falseExprs = null;
+                if (falseNode != null)
                 {
-                    // might be ternary
-                    isTernary = true;
-                    condExpr = new ConditionalExpression(condition, trueExpr, falseExpr);
-                    Expressions.Clear();
-                    Expressions.Push(condExpr);
-                }
-                else
-                {
-                    condExpr = new ConditionalExpression(condition, trueExpr, falseExpr);
+                    falseExprs = new ExpressionStack();
+                    BuildNodeChain(falseNode, graph.ExitNode, falseExprs);
                 }
 
-                return CreateBlockExpressionIfNeeded([beginExpr, condExpr /*isTernary?null:blockExpr*/]);
+                bool ternary = trueExprs.HasElementsOnStack;
+                ShaderExpression trueExpr = CreateBlockExpressionIfNeeded(trueExprs.GetExpressions());
+                ShaderExpression? falseExpr = null;
+                if (falseExprs != null)
+                {
+                    falseExpr = CreateBlockExpressionIfNeeded(falseExprs.GetExpressions());
+                }
+
+                if (ternary)
+                {
+                    FixBoolConstants(ref trueExpr, ref falseExpr);
+                }
+
+                ConditionalExpression conditionalExpr = new ConditionalExpression(
+                    ternary,
+                    condition,
+                    trueExpr,
+                    falseExpr
+                    );
+
+                if (ternary)
+                {
+                    expressions.Push(conditionalExpr);
+                }
+                else 
+                {
+                    expressions.PushStatement(conditionalExpr);
+                }
             }
             else if (graph.SubgraphKind is SubgraphKind.Loop)
             {
                 var headNode = graph.EntryNode;
                 var tailNode = headNode.Predecessors.Single();
 
-                var header = BuildNode(headNode);
+                BuildNode(headNode, expressions);
 
-                header = ExtractConditionExpression(header, out var cond);
-                header = SimplifyExpression(header, false);
+                var cond = expressions.Pop();
+                ShaderExpression condition = new ConditionalExpression(false, new UnaryExpression(UnaryOperation.Not, cond, null), new BreakExpression(), null);
+                
+                ExpressionStack exprs = new();
+                BuildNodeChain(headNode.Successors.Single(n => n != graph.ExitNode), tailNode, exprs);
 
-                ShaderExpression condition = new ConditionalExpression(new UnaryExpression(UnaryOperation.Not, cond, null), new BreakExpression(), null);
-                condition = SimplifyExpression(condition, false);
-
-                var body = BuildNodeChain(headNode.Successors.Single(n => n != graph.ExitNode), tailNode);
-                body = SimplifyExpression(body, false);
-
-                return new LoopExpression(CreateBlockExpressionIfNeeded(new ShaderExpression[] { header, condition, body }));
+                expressions.PushStatement(
+                    new LoopExpression(
+                        CreateBlockExpressionIfNeeded([condition, ..exprs.GetExpressions()])
+                        )
+                    );
             }
             else if (graph.SubgraphKind is SubgraphKind.Switch)
             {
@@ -418,15 +147,15 @@ internal class ExpressionBuilder
         }
         else if (node is BasicBlockNode basicBlock)
         {
-            return BuildBasicBlockExpression(basicBlock, clearStack);
+            BuildBasicBlockExpression(basicBlock, expressions);
         }
         else if (node is BreakNode)
         {
-            return new BreakExpression();
+            expressions.PushStatement(new BreakExpression());
         }
         else if (node is ContinueNode)
         {
-            return new ContinueExpression();
+            expressions.PushStatement(new ContinueExpression());
         }
         else if (node is ReturnNode retNode)
         {
@@ -435,23 +164,23 @@ internal class ExpressionBuilder
             {
                 if (retNode.isReturnVarBlock)
                 {
-                    returnValue = (Expressions.statements.Peek() as BinaryExpression)!.LeftOperand as ShaderVariableExpression;
+                    returnValue = (expressions.GetExpressions().Last() as BinaryExpression)!.LeftOperand as ShaderVariableExpression;
                 }
                 else
                 {
-                    returnValue = Expressions.Pop();
+                    returnValue = expressions.Pop();
                 }
             }
 
-            return new ReturnExpression(returnValue);
+            expressions.PushStatement(new ReturnExpression(returnValue));
         }
         else if (node is DummyNode)
         {
-            return null;
+            return;
         }
         else
         {
-            throw new Exception();
+            throw new Exception("unknown node type!");
         }
     }
 
@@ -479,28 +208,25 @@ internal class ExpressionBuilder
         return CreateBlockExpressionIfNeeded(blockExpr.Expressions.SkipLast(1));
     }
 
-    ShaderExpression BuildNodeChain(ControlFlowNode start, ControlFlowNode end)
+    void BuildNodeChain(ControlFlowNode start, ControlFlowNode end, ExpressionStack expressions)
     {
         if (start == end)
         {
-            return BuildNode(start);
+            BuildNode(start, expressions);
+            return;
         }
-
-        List<ShaderExpression> exprs = new();
 
         var node = start;
         while (node != null && node != end)
         {
-            exprs.Add(BuildNode(node));
+            BuildNode(node, expressions);
             node = node.Successors.SingleOrDefault();
         }
 
         if (node != null)
         {
-            exprs.Add(BuildNode(node));
+            BuildNode(node, expressions);
         }
-
-        return CreateBlockExpressionIfNeeded(exprs.Where(ex => ex is not null).Cast<ShaderExpression>());
     }
 
     [return: NotNullIfNotNull(nameof(expression))]
@@ -515,6 +241,7 @@ internal class ExpressionBuilder
             if (conditional.Failure is not null && conditional.Success is null && conditional.Condition is UnaryExpression unary && unary.Operation is UnaryOperation.Not)
             {
                 return new ConditionalExpression(
+                    conditional.IsTernary,
                     SimplifyExpression(unary.Operand), 
                     SimplifyExpression(conditional.Failure), 
                     SimplifyExpression(conditional.Success)
@@ -523,6 +250,7 @@ internal class ExpressionBuilder
 
 
             return new ConditionalExpression(
+                conditional.IsTernary,
                 SimplifyExpression(conditional.Condition, true),
                 SimplifyExpression(conditional.Success, true),
                 SimplifyExpression(conditional.Failure, true)
@@ -554,19 +282,301 @@ internal class ExpressionBuilder
         return CreateBlockExpressionIfNeeded(expressions);
     }
 
-    ShaderExpression ForceVoidType(ShaderExpression expression)
+    public void BuildInstruction(Instruction instruction, ExpressionStack expressions)
+    {
+        switch (instruction.OpCode)
+        {
+            case OpCode.Nop or OpCode.Ldobj:
+                return;
+            case OpCode.Pop:
+                BuildPop(instruction, expressions);
+                break;
+            case OpCode.Dup:
+                BuildDup(instruction, expressions);
+                break;
+            case OpCode.Initobj:
+                BuildInitObj(instruction, expressions);
+                break;
+            case OpCode.Ret:
+                BuildReturnExpr(instruction, expressions);
+                break;
+            case OpCode.Add:
+            case OpCode.Sub:
+            case OpCode.Xor:
+            case OpCode.Mul:
+            case OpCode.Div:
+            case OpCode.And:
+            case OpCode.Or:
+            case OpCode.Shr:
+            case OpCode.Shr_Un:
+            case OpCode.Shl:
+            case OpCode.Ceq:
+            case OpCode.Clt:
+            case OpCode.Cgt:
+            case OpCode.Clt_Un:
+            case OpCode.Cgt_Un:
+            case OpCode.Rem:
+            case OpCode.Rem_Un:
+                BuildBinaryExpr(instruction, expressions);
+                break;
+            case OpCode.Ldfld or OpCode.Ldflda or OpCode.Stfld or OpCode.Ldsfld:
+                BuildFieldExpr(instruction, expressions);
+                break;
+            case OpCode.Not:
+            case OpCode.Neg:
+            case OpCode.Conv_I:
+            case OpCode.Conv_I1:
+            case OpCode.Conv_I2:
+            case OpCode.Conv_I4:
+            case OpCode.Conv_I8:
+            case OpCode.Conv_U:
+            case OpCode.Conv_U1:
+            case OpCode.Conv_U2:
+            case OpCode.Conv_U4:
+            case OpCode.Conv_U8:
+            case OpCode.Conv_R4:
+            case OpCode.Conv_R8:
+            case OpCode.Conv_R_Un:
+                BuildUnaryExpr(instruction, expressions);
+                break;
+            case OpCode.Ldloc:
+            case OpCode.Ldloc_S:
+            case OpCode.Ldloc_0:
+            case OpCode.Ldloc_1:
+            case OpCode.Ldloc_2:
+            case OpCode.Ldloc_3:
+            case OpCode.Ldloca:
+            case OpCode.Ldloca_S:
+                BuildLoadLocalExpr(instruction, expressions);
+                break;
+            case OpCode.Stloc:
+            case OpCode.Stloc_S:
+            case OpCode.Stloc_0:
+            case OpCode.Stloc_1:
+            case OpCode.Stloc_2:
+            case OpCode.Stloc_3:
+                BuildStoreLocalExpr(instruction, expressions);
+                break;
+            case OpCode.Ldc_I4:
+            case OpCode.Ldc_I8:
+            case OpCode.Ldc_R4:
+            case OpCode.Ldc_R8:
+            case OpCode.Ldc_I4_S:
+            case OpCode.Ldc_I4_M1:
+            case OpCode.Ldc_I4_0:
+            case OpCode.Ldc_I4_1:
+            case OpCode.Ldc_I4_2:
+            case OpCode.Ldc_I4_3:
+            case OpCode.Ldc_I4_4:
+            case OpCode.Ldc_I4_5:
+            case OpCode.Ldc_I4_6:
+            case OpCode.Ldc_I4_7:
+            case OpCode.Ldc_I4_8:
+            case OpCode.Ldstr:
+                BuildConstantExpr(instruction, expressions);
+                break;
+            case OpCode.Ldarg:
+            case OpCode.Ldarg_S:
+            case OpCode.Ldarg_0:
+            case OpCode.Ldarg_1:
+            case OpCode.Ldarg_2:
+            case OpCode.Ldarg_3:
+            case OpCode.Ldarga:
+            case OpCode.Ldarga_S:
+                BuildLoadArgExpr(instruction, expressions);
+                break;
+            case OpCode.Starg:
+            case OpCode.Starg_S:
+                BuildStoreArgExpr(instruction, expressions);
+                break;
+            case OpCode.Newobj:
+                BuildNewObjExpr(instruction, expressions);
+                break;
+            case OpCode.Stind_I:
+            case OpCode.Stind_I1:
+            case OpCode.Stind_I2:
+            case OpCode.Stind_I4:
+            case OpCode.Stind_I8:
+            case OpCode.Stind_R4:
+            case OpCode.Stind_R8:
+            case OpCode.Stind_Ref:
+            case OpCode.Stobj:
+                BuildStoreIndirect(instruction, expressions);
+                break;
+            case OpCode.Ldind_I:
+            case OpCode.Ldind_I1:
+            case OpCode.Ldind_I2:
+            case OpCode.Ldind_I4:
+            case OpCode.Ldind_I8:
+            case OpCode.Ldind_R4:
+            case OpCode.Ldind_R8:
+            case OpCode.Ldind_Ref:
+                // case OpCode.Ldobj:
+                BuildLoadIndirect(instruction, expressions);
+                break;
+            case OpCode.Bne_Un or OpCode.Bne_Un_S:
+            case OpCode.Beq or OpCode.Beq_S:
+            case OpCode.Blt or OpCode.Blt_S or OpCode.Blt_Un or OpCode.Blt_Un_S:
+            case OpCode.Ble or OpCode.Ble_S or OpCode.Ble_Un or OpCode.Ble_Un_S:
+            case OpCode.Bgt or OpCode.Bgt_S or OpCode.Bgt_Un or OpCode.Bgt_Un_S:
+            case OpCode.Bge or OpCode.Bge_S or OpCode.Bge_Un or OpCode.Bge_Un_S:
+            case OpCode.Brfalse or OpCode.Brfalse_S:
+            case OpCode.Br or OpCode.Br_S or OpCode.Brtrue or OpCode.Brtrue_S:
+                BuildBranch(instruction, expressions);
+                break;
+            case OpCode.Call or OpCode.Callvirt:
+                BuildCallExpr(instruction, expressions);
+                break;
+            case OpCode.Ldlen:
+                BuildLoadLength(instruction, expressions);
+                break;
+            case OpCode.Ldelem:
+            case OpCode.Ldelema:
+            case OpCode.Ldelem_I:
+            case OpCode.Ldelem_I1:
+            case OpCode.Ldelem_I2:
+            case OpCode.Ldelem_I4:
+            case OpCode.Ldelem_I8:
+            case OpCode.Ldelem_R4:
+            case OpCode.Ldelem_R8:
+            case OpCode.Ldelem_U1:
+            case OpCode.Ldelem_U2:
+            case OpCode.Ldelem_U4:
+                BuildLoadElement(instruction, expressions);
+                break;
+            default:
+                throw new NotSupportedException("Unsupported instruction '" + instruction.OpCode + "'.");
+        }
+    }
+    private void BuildPop(Instruction instruction, ExpressionStack expressions)
+    {
+        expressions.Pop();
+    }
+
+    private void BuildLoadElement(Instruction instruction, ExpressionStack expressions)
+    {
+        var index = expressions.Pop();
+        var array = expressions.Pop();
+
+        var method = typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLoad))!;
+        expressions.Push(new ShaderIntrinsicCall(method, ((ShaderArrayType?)array.ExpressionType)!.ElementType, [array, index]));
+    }
+
+    private void BuildLoadLength(Instruction instruction, ExpressionStack expressions)
+    {
+        var arg = expressions.Pop();
+
+        var method = typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLength))!;
+        expressions.Push(new ShaderIntrinsicCall(method, context.CompileType(method.ReturnType), [arg]));
+    }
+
+    private void BuildReturnExpr(Instruction instruction, ExpressionStack expressions)
+    {
+        if (Disassembly.IsConstructor)
+        {
+            expressions.Push(new ShaderVariableExpression(parameters[0]));
+            return;
+        }
+
+        ShaderExpression? returnValue = ReturnType == typeof(void) ? null : expressions.Pop();
+
+        if (ReturnType == typeof(bool))
+        {
+            if (returnValue is ConstantExpression constExpr2 && constExpr2.Value is 0 or 1)
+            {
+                returnValue = new ConstantExpression(ShaderType.Bool, (int)constExpr2.Value == 1);
+            }
+        }
+
+        // actual return expression will be built by the return block
+        expressions.Push(returnValue);
+    }
+
+    private void BuildInitObj(Instruction instruction, ExpressionStack expressions)
+    {
+        var type = ((MetadataToken)instruction.Argument).Resolve() as Type ?? throw new();
+        var left = expressions.Pop();
+        var right = new DefaultExpression(context.CompileType(type));
+        expressions.PushStatement(new BinaryExpression(BinaryOperation.Assignment, left, right));
+    }
+
+    private void BuildBranch(Instruction instruction, ExpressionStack expressions)
+    {
+        ShaderExpression left, right;
+        switch (instruction.OpCode)
+        {
+            case OpCode.Bne_Un or OpCode.Bne_Un_S:
+                // emit not equal comparison
+                right = expressions.Pop();
+                left = expressions.Pop();
+                expressions.Push(new BinaryExpression(BinaryOperation.NotEqual, left, right));
+                break;
+            case OpCode.Beq or OpCode.Beq_S:
+                right = expressions.Pop();
+                left = expressions.Pop();
+                expressions.Push(new BinaryExpression(BinaryOperation.Equal, left, right));
+                break;
+            case OpCode.Blt or OpCode.Blt_S or OpCode.Blt_Un or OpCode.Blt_Un_S:
+                // emit less than comparison
+                right = expressions.Pop();
+                left = expressions.Pop();
+                expressions.Push(new BinaryExpression(BinaryOperation.LessThan, left, right));
+                break;
+            case OpCode.Ble or OpCode.Ble_S or OpCode.Ble_Un or OpCode.Ble_Un_S:
+                // emit less than or equal comparison
+                right = expressions.Pop();
+                left = expressions.Pop();
+                expressions.Push(new BinaryExpression(BinaryOperation.LessThanEqual, left, right));
+                break;
+            case OpCode.Bgt or OpCode.Bgt_S or OpCode.Bgt_Un or OpCode.Bgt_Un_S:
+                // emit greater than comparison
+                right = expressions.Pop();
+                left = expressions.Pop();
+                expressions.Push(new BinaryExpression(BinaryOperation.GreaterThan, left, right));
+                break;
+            case OpCode.Bge or OpCode.Bge_S or OpCode.Bge_Un or OpCode.Bge_Un_S:
+                // emit greater than or equal comparison
+                right = expressions.Pop();
+                left = expressions.Pop();
+                expressions.Push(new BinaryExpression(BinaryOperation.GreaterThanEqual, left, right));
+                break;
+            case OpCode.Brfalse or OpCode.Brfalse_S:
+                // invert condition
+                var expr = expressions.Pop();
+                if (expr.ExpressionType != ShaderType.Bool)
+                {
+                    expr = new BinaryExpression(BinaryOperation.NotEqual, expr, new ConstantExpression(expr.ExpressionType, 0));
+                }
+                expressions.Push(new UnaryExpression(UnaryOperation.Not, expr, null));
+                break;
+            case OpCode.Brtrue or OpCode.Brtrue_S:
+                expr = expressions.Pop();
+                if (expr.ExpressionType != ShaderType.Bool)
+                {
+                    expr = new BinaryExpression(BinaryOperation.NotEqual, expr, new ConstantExpression(expr.ExpressionType, 0));
+                }
+                expressions.Push(expr);
+                break;
+            case OpCode.Br or OpCode.Br_S:
+                break; // do nothing for these
+            default:
+                throw new UnreachableException();
+        }
+    }
+
+    ShaderExpression ForceVoidType(ShaderExpression expression, ExpressionStack expressions)
     {
         return expression;
     }
 
-    void BuildDup(Instruction instruction)
+    void BuildDup(Instruction instruction, ExpressionStack Expressions)
     {
         var expr = Expressions.Pop();
         Expressions.Push(expr);
         Expressions.Push(expr);
     }
 
-    void BuildBinaryExpr(Instruction instruction)
+    void BuildBinaryExpr(Instruction instruction, ExpressionStack expressions)
     {
         // TODO: bitwise operators
         // TODO: ternary exprs
@@ -593,24 +603,29 @@ internal class ExpressionBuilder
             _ => throw new UnreachableException(),
         };
 
-        var right = Expressions.Pop();
-        var left = Expressions.Pop();
+        var right = expressions.Pop();
+        var left = expressions.Pop();
 
         // special case: the compiler will often emit == 0 on a comparison to invert it (ie (x == 10) == 0 is the same as x != 10)
         // in this case instead of emitting the second x == 0 we just emit !x.
         if (left is BinaryExpression bin && BinaryExpression.IsBooleanOperator(bin.Operation) && right is ConstantExpression constExpr && constExpr.Value is 0)
         {
-            Expressions.Push(new UnaryExpression(UnaryOperation.Not, left, null));
+            expressions.Push(new UnaryExpression(UnaryOperation.Not, left, null));
             return;
         }
-        
-        Expressions.Push(CreateBinaryExpression(exprType, left, right));
+
+        expressions.Push(CreateBinaryExpression(exprType, left, right));
     }
 
     private BinaryExpression CreateBinaryExpression(BinaryOperation operation, ShaderExpression left, ShaderExpression right)
     {
+        FixBoolConstants(ref left, ref right);
+        return new(operation, left, right);
+    }
 
-        if (left.ExpressionType == ShaderType.Bool)
+    private void FixBoolConstants([NotNullIfNotNull(nameof(left))] ref ShaderExpression? left, ref ShaderExpression? right)
+    {
+        if (left?.ExpressionType == ShaderType.Bool)
         {
             if (right is ConstantExpression constExpr2 && constExpr2.Value is 0 or 1)
             {
@@ -618,10 +633,16 @@ internal class ExpressionBuilder
             }
         }
 
-        return new(operation, left, right);
+        if (right?.ExpressionType == ShaderType.Bool)
+        {
+            if (left is ConstantExpression constExpr2 && constExpr2.Value is 0 or 1)
+            {
+                left = new ConstantExpression(ShaderType.Bool, (int)constExpr2.Value == 1);
+            }
+        }
     }
 
-    private void BuildFieldExpr(Instruction instruction)
+    private void BuildFieldExpr(Instruction instruction, ExpressionStack expressions)
     {
         var metadataToken = (MetadataToken)instruction.Argument!;
         var fieldInfo = (FieldInfo)metadataToken.Resolve()!;
@@ -631,41 +652,41 @@ internal class ExpressionBuilder
             ShaderVariableExpression variable = new ShaderVariableExpression(context.Uniforms[fieldInfo]);
             if (instruction.OpCode is OpCode.Ldfld or OpCode.Ldflda)
             {
-                _ = Expressions.Pop(); // pop the 'self'
-                Expressions.Push(variable);
+                _ = expressions.Pop(); // pop the 'self'
+                expressions.Push(variable);
             }
             else
             {
-                var value = Expressions.Pop();
-                _ = Expressions.Pop(); // pop the 'self'
-                Expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, variable, value));
+                var value = expressions.Pop();
+                _ = expressions.Pop(); // pop the 'self'
+                expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, variable, value));
             }
             return;
         }
 
         if (instruction.OpCode is OpCode.Stfld)
         {
-            var value = Expressions.Pop();
-            var obj = Expressions.Pop();
+            var value = expressions.Pop();
+            var obj = expressions.Pop();
 
-            Expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, new MemberAccess(obj, fieldInfo, context.CompileType(fieldInfo.FieldType)), value));
+            expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, new MemberAccess(obj, fieldInfo, context.CompileType(fieldInfo.FieldType)), value));
         }
         else if (instruction.OpCode is OpCode.Ldsfld)
         {
             if (!fieldInfo.Attributes.HasFlag(FieldAttributes.InitOnly))
                 throw new Exception("Cannot access a non-readonly static field!");
 
-            Expressions.Push(new ConstantExpression(context.CompileType(fieldInfo.FieldType), fieldInfo.GetValue(null)!));
+            expressions.Push(new ConstantExpression(context.CompileType(fieldInfo.FieldType), fieldInfo.GetValue(null)!));
         }
         else // OpCode is Ldfld or Ldflda
         {
-            var obj = Expressions.Pop();
+            var obj = expressions.Pop();
 
-            Expressions.Push(new MemberAccess(obj, fieldInfo, context.CompileType(fieldInfo.FieldType)));
+            expressions.Push(new MemberAccess(obj, fieldInfo, context.CompileType(fieldInfo.FieldType)));
         }
     }
 
-    void BuildUnaryExpr(Instruction instruction)
+    void BuildUnaryExpr(Instruction instruction, ExpressionStack expressions)
     {
         var castType = instruction.OpCode switch
         {
@@ -692,7 +713,7 @@ internal class ExpressionBuilder
             _ => castType != null ? UnaryOperation.Cast : throw new UnreachableException(),
         };
 
-        var operand = Expressions.Pop();
+        var operand = expressions.Pop();
 
         ShaderType? shaderCastType = null;
         if (castType != null)
@@ -700,10 +721,10 @@ internal class ExpressionBuilder
             shaderCastType = context.CompileType(castType);
         }
 
-        Expressions.Push(new UnaryExpression(operation, operand, shaderCastType));
+        expressions.Push(new UnaryExpression(operation, operand, shaderCastType));
     }
 
-    private void BuildLoadLocalExpr(Instruction instruction)
+    private void BuildLoadLocalExpr(Instruction instruction, ExpressionStack expressions)
     {
         uint loadIndex = instruction.OpCode switch
         {
@@ -718,10 +739,10 @@ internal class ExpressionBuilder
             _ => throw new UnreachableException()
         };
 
-        Expressions.Push(new ShaderVariableExpression(this.locals[(int)loadIndex]));
+        expressions.Push(new ShaderVariableExpression(this.locals[(int)loadIndex]));
     }
 
-    private void BuildStoreLocalExpr(Instruction instruction)
+    private void BuildStoreLocalExpr(Instruction instruction, ExpressionStack expressions)
     {
         uint storeIndex = instruction.OpCode switch
         {
@@ -734,12 +755,12 @@ internal class ExpressionBuilder
             _ => throw new UnreachableException()
         };
 
-        var expr = Expressions.Pop();
+        var expr = expressions.Pop();
         var local = locals[(int)storeIndex];
-        Expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, new ShaderVariableExpression(local), expr));
+        expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, new ShaderVariableExpression(local), expr));
     }
 
-    void BuildConstantExpr(Instruction instruction)
+    void BuildConstantExpr(Instruction instruction, ExpressionStack expressions)
     {
         object value = instruction.OpCode switch
         {
@@ -762,10 +783,10 @@ internal class ExpressionBuilder
             _ => throw new UnreachableException(),
         };
 
-        Expressions.Push(new ConstantExpression(context.CompileType(value.GetType()), value));
+        expressions.Push(new ConstantExpression(context.CompileType(value.GetType()), value));
     }
 
-    private void BuildLoadArgExpr(Instruction instruction)
+    private void BuildLoadArgExpr(Instruction instruction, ExpressionStack expressions)
     {
         uint loadIndex = instruction.OpCode switch
         {
@@ -780,10 +801,10 @@ internal class ExpressionBuilder
             _ => throw new UnreachableException()
         };
 
-        Expressions.Push(new ShaderVariableExpression(this.parameters[(int)loadIndex]));
+        expressions.Push(new ShaderVariableExpression(this.parameters[(int)loadIndex]));
     }
 
-    private void BuildStoreArgExpr(Instruction instruction)
+    private void BuildStoreArgExpr(Instruction instruction, ExpressionStack expressions)
     {
         uint storeIndex = instruction.OpCode switch
         {
@@ -792,36 +813,36 @@ internal class ExpressionBuilder
             _ => throw new UnreachableException(),
         };
 
-        Expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, new ShaderVariableExpression(parameters[(int)storeIndex]), Expressions.Pop()));
+        expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, new ShaderVariableExpression(parameters[(int)storeIndex]), expressions.Pop()));
     }
 
-    void BuildNewObjExpr(Instruction instruction)
+    void BuildNewObjExpr(Instruction instruction, ExpressionStack expressions)
     {
         var metadataToken = (MetadataToken)instruction.Argument!;
         var ctor = (ConstructorInfo)(metadataToken.Resolve() ?? throw new Exception());
 
-        var args = PopArgs(ctor);
+        var args = PopArgs(ctor, expressions);
 
         var intrinsic = context.ResolveMethodToIntrinsic(ctor);
         if (intrinsic != null)
         {
-            Expressions.Push(new ShaderIntrinsicCall(intrinsic, context.CompileType(intrinsic.ReturnType), args));
+            expressions.Push(new ShaderIntrinsicCall(intrinsic, context.CompileType(intrinsic.ReturnType), args));
         }
         else
         {
             var shaderMethod = context.EnqueueMethod(ctor);
-            Expressions.Push(new ShaderMethodCall(shaderMethod, args));
+            expressions.Push(new ShaderMethodCall(shaderMethod, args));
         }
     }
 
-    void BuildCallExpr(Instruction instruction)
+    void BuildCallExpr(Instruction instruction, ExpressionStack expressions)
     {
         var metadataToken = (MetadataToken)instruction.Argument!;
         var method = (MethodBase)(metadataToken.Resolve() ?? throw new Exception());
 
-        var args = PopArgs(method);
+        var args = PopArgs(method, expressions);
 
-        var instance = method.IsStatic ? null : Expressions.Pop();
+        var instance = method.IsStatic ? null : expressions.Pop();
         if (method is ConstructorInfo || context.IsSelfType(method.DeclaringType))
         {
         }
@@ -836,43 +857,43 @@ internal class ExpressionBuilder
         var intrinsic = context.ResolveMethodToIntrinsic(method);
         if (intrinsic != null)
         {
-            Expressions.Push(new ShaderIntrinsicCall(intrinsic, context.CompileType(intrinsic.ReturnType), args));
+            expressions.Push(new ShaderIntrinsicCall(intrinsic, context.CompileType(intrinsic.ReturnType), args));
         }
         else
         {
             var shaderMethod = context.EnqueueMethod(method);
-            Expressions.Push(new ShaderMethodCall(shaderMethod, args));
+            expressions.Push(new ShaderMethodCall(shaderMethod, args));
         }
 
         if (method is ConstructorInfo)
         {
-            var value = Expressions.Pop();
-            Expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, instance, value));
+            var value = expressions.Pop();
+            expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, instance, value));
         }
     }
 
-    ShaderExpression[] PopArgs(MethodBase method)
+    ShaderExpression[] PopArgs(MethodBase method, ExpressionStack expressions)
     {
         var args = new ShaderExpression[method.GetParameters().Length];
 
         for (int i = args.Length - 1; i >= 0; i--)
         {
-            args[i] = Expressions.Pop();
+            args[i] = expressions.Pop();
         }
 
         return args;
     }
 
-    private void BuildLoadIndirect(Instruction instruction)
+    private void BuildLoadIndirect(Instruction instruction, ExpressionStack expressions)
     {
         // nop
     }
 
-    private void BuildStoreIndirect(Instruction instruction)
+    private void BuildStoreIndirect(Instruction instruction, ExpressionStack expressions)
     {
-        var value = Expressions.Pop();
-        var reference = Expressions.Pop();
+        var value = expressions.Pop();
+        var reference = expressions.Pop();
 
-        Expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, reference, value));
+        expressions.PushStatement(CreateBinaryExpression(BinaryOperation.Assignment, reference, value));
     }
 }

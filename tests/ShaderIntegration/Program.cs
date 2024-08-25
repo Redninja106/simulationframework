@@ -1,4 +1,5 @@
 ﻿using ShaderIntegration;
+using ShaderIntegration.Shaders;
 using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
@@ -13,7 +14,7 @@ partial class Program : Simulation
 
     public override void OnInitialize()
     {
-        ShaderCompiler.DumpShaders = false;
+        ShaderCompiler.DumpShaders = true;
 
         List<CanvasShader> shaders = [];
         foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetCustomAttribute<TestAttribute>() != null))

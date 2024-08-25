@@ -8,41 +8,58 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders.Compiler.Expressions;
+
 internal class ExpressionStack
 {
-    public Stack<ShaderExpression> expressions = [];
-    public Stack<ShaderExpression> statements = [];
+    private Stack<(ShaderExpression expr, bool isOnIlStack)> values = new();
+
+    public bool HasElementsOnStack => values.Any(v => v.isOnIlStack);
 
     public void Push(ShaderExpression expression)
     {
-        Debug.Assert(!(expression is BinaryExpression bin && bin.Operation == BinaryOperation.Assignment));
-        expressions.Push(expression);
+        values.Push((expression, true));
     }
 
     public void PushStatement(ShaderExpression expression)
     {
-        statements.Push(expression);
+        values.Push((expression, false));
     }
 
     public ShaderExpression Pop()
     {
-        return expressions.Pop();
+        List<ShaderExpression> notOnStackValues = new();
+
+        ShaderExpression expr;
+        bool isOnStack;
+        while (true)
+        {
+            (expr, isOnStack) = values.Pop();
+
+            if (isOnStack)
+            {
+                break;
+            }
+            else
+            {
+                notOnStackValues.Add(expr);
+            }
+        }
+
+        foreach (var e in notOnStackValues)
+        {
+            values.Push((e, false));
+        }
+
+        return expr;
     }
 
     public void Clear()
     {
-        expressions.Clear();
-        statements.Clear();
+        values.Clear();
     }
 
     public IEnumerable<ShaderExpression> GetExpressions()
     {
-        Debug.Assert(expressions.Count <= 1);
-        IEnumerable<ShaderExpression> result = statements.Reverse();
-        if (expressions.Count == 1)
-        {
-            result = result.Append(expressions.Peek());
-        }
-        return result;
+        return values.Select(v => v.expr).Reverse();
     }
 }

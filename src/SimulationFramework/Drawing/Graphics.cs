@@ -161,17 +161,17 @@ public static class Graphics
         Provider.Dispatch(computeShader, lengthI, lengthJ, lengthK);
     }
 
-    //public static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices)
-    //    where TVertex : unmanaged
-    //{
-    //    return Provider.CreateGeometry(vertices, []);
-    //}
+    public static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices)
+        where TVertex : unmanaged
+    {
+        return Provider.CreateGeometry(vertices, []);
+    }
 
-    //public static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices)
-    //    where TVertex : unmanaged
-    //{
-    //    return Provider.CreateGeometry(vertices, indices);
-    //}
+    public static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices)
+        where TVertex : unmanaged
+    {
+        return Provider.CreateGeometry(vertices, indices);
+    }
 
     public static IMask CreateMask(int width, int height)
     {
@@ -183,6 +183,7 @@ public static class Graphics
         return Provider.CreateDepthMask(width, height);
     }
 
-    public static void CopyToGPU<T>(T[] array) { }
-    public static void CopyFromGPU<T>(T[] array) { }
+    // TODO: optional manual buffer copies
+    // public static void CopyToGPU<T>(T[] array) { }
+    // public static void CopyFromGPU<T>(T[] array) { }
 }

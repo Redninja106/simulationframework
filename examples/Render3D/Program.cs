@@ -6,7 +6,6 @@ using System.Numerics;
 
 Start<Program>();
 
-
 partial class Program : Simulation
 {
     Vertex[] vertices = [
@@ -48,13 +47,9 @@ partial class Program : Simulation
         new Vertex(new(-0.5f, 0.5f, -0.5f), new(0.0f, 1.0f))
     ];
 
-    ITexture logo;
-
     public override void OnInitialize()
     {
         ShaderCompiler.DumpShaders = true;
-        logo = Graphics.LoadTexture("logo-512x512.png");
-        logo.WrapModeY = logo.WrapModeX = WrapMode.Repeat;
     }
 
     public override void OnRender(ICanvas canvas)
@@ -63,7 +58,6 @@ partial class Program : Simulation
 
         var canvasShader = new TheCanvasShader()
         {
-            tex = logo,
         };
 
         var vertexShader = new CubeVertexShader()
@@ -95,16 +89,9 @@ class TheCanvasShader : CanvasShader
     [VertexShaderOutput]
     Vector2 uv;
 
-    public ITexture tex;
-
     public override ColorF GetPixelColor(Vector2 position)
     {
-        ColorF x = tex.SampleUV(uv * 10);
-        if (x.A < 0.001f)
-        {
-            ShaderIntrinsics.Discard();
-        }
-        return x;
+        return new(uv.X, uv.Y, 0, 1);
     }
 }
 

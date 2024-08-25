@@ -1,7 +1,7 @@
 ﻿<Project>
 	<PropertyGroup>
 		<Deterministic>true</Deterministic>
-		<Version>0.3.0-alpha.3</Version>
+		<Version>0.3.0-alpha.4</Version>
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>

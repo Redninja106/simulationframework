@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,13 +31,17 @@ public record BinaryExpression(BinaryOperation Operation, ShaderExpression LeftO
             BinaryOperation.Equal => "==",
             BinaryOperation.LessThan => "<",
             BinaryOperation.LessThanEqual => "<=",
-            BinaryOperation.GreaterThan => ">=",
-            BinaryOperation.GreaterThanEqual => ">",
+            BinaryOperation.GreaterThan => ">",
+            BinaryOperation.GreaterThanEqual => ">=",
             BinaryOperation.Assignment => "=",
-            BinaryOperation.LeftShift => "<<=",
-            BinaryOperation.RightShift => ">>=",
+            BinaryOperation.LeftShift => "<<",
+            BinaryOperation.RightShift => ">>",
+            BinaryOperation.Or when LeftOperand.ExpressionType == ShaderType.Bool => "||",
+            BinaryOperation.And when LeftOperand.ExpressionType == ShaderType.Bool => "&&",
             BinaryOperation.Or => "|",
             BinaryOperation.And => "&",
+            BinaryOperation.XOr => "^",
+            _ => throw new NotImplementedException(Operation.ToString())
         };
     }
 

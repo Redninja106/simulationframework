@@ -19,6 +19,14 @@ namespace SimulationFramework;
 public static class Polygon
 {
     /// <summary>
+    /// Creates an <see cref="IGeometry"/> from a polygon.
+    /// </summary>
+    public static IGeometry ToGeometry(ReadOnlySpan<Vector2> polygon)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
     /// Determines if two convex polygons are intersecting.
     /// </summary>
     /// <param name="polygonA">The first polygon. This should be convex and non-self-intersecting.</param>

@@ -120,7 +120,8 @@ class UniformHandler
         switch (primitive)
         {
             case PrimitiveKind.Bool:
-                throw new NotImplementedException();
+                glUniform1i(location, *(byte*)ptr != 0 ? 1 : 0);
+                break;
             case PrimitiveKind.Int:
                 glUniform1iv(location, 1, (int*)ptr);
                 break;

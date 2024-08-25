@@ -5,6 +5,7 @@ using SimulationFramework.Drawing.Shaders.Compiler;
 using SimulationFramework.Messaging;
 using SimulationFramework.OpenGL.Fonts;
 using SimulationFramework.OpenGL.Geometry;
+using SimulationFramework.OpenGL.Geometry.Streams;
 using SimulationFramework.OpenGL.Shaders;
 using StbImageSharp;
 using System;
@@ -27,6 +28,8 @@ public unsafe class GLGraphics : IGraphicsProvider
     private readonly Dictionary<(Type, Type?), ProgrammableShaderProgram> shaderPrograms = [];
     private readonly Dictionary<string, GLFont> systemFontCache = [];
     internal ShaderCompiler ShaderCompiler = new();
+
+    internal GeometryStreamCollection streams;
 
     public GLGraphics(GLFrame frame, Func<string, nint> getProcAddress)
     {
@@ -186,10 +189,14 @@ public unsafe class GLGraphics : IGraphicsProvider
         return new GLDepthMask(width, height);
     }
 
-    // public IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices) where TVertex : unmanaged
-    // {
-    //     var result = new GLGeometry();
-    //     result.AddVertexBuffer(vertices);
-    //     return result;
-    // }
+    public IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices) where TVertex : unmanaged
+    {
+        var result = new GLGeometry(this);
+        if (!indices.IsEmpty)
+        {
+            result.SetIndices(indices);
+        }
+        result.AddVertexBuffer(vertices);
+        return result;
+    }
 }

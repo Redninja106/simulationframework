@@ -115,7 +115,7 @@ internal class ImGuiBackend : ISimulationComponent
                 Span<ImDrawVert> vertices = vertexBuffer[(int)command.VtxOffset..];
                 Span<ushort> indices = indexBuffer.Slice((int)command.IdxOffset, (int)command.ElemCount);
 
-                canvas.DrawIndexedTriangles<ImDrawVert>(vertices, indices);
+                canvas.DrawIndexedTriangles<ImDrawVert>(vertices, indices, -((int)command.VtxOffset));
             }
         }
     }

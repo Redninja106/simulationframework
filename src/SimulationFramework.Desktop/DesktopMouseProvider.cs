@@ -147,22 +147,6 @@ internal unsafe class DesktopMouseProvider : IMouseProvider
 
             UpdateCursor(glfw.CreateCursor(&image, centerX, centerY));
         }
-
-
-        //fixed (Color* colorsPtr = &colors[0])
-        //{
-        //    var memoryManager = new UnsafePinnedMemoryManager<byte>((byte*)colorsPtr, sizeof(Color) * width * height);
-
-        //    // TODO: silk.net leaks glfw cursor objects like mad here?!?
-        //    // https://github.com/dotnet/Silk.NET/blob/main/src/Input/Silk.NET.Input.Glfw/GlfwCursor.cs#L266
-
-        //    this.mouse.Cursor.Image = new(width, height, memoryManager.Memory);
-        //}
-
-        //this.mouse.Cursor.HotspotX = centerX;
-        //this.mouse.Cursor.HotspotY = centerY;
-
-        //this.mouse.Cursor.Type = CursorType.Custom;
     }
 
     public void SetCursor(SystemCursor cursor)

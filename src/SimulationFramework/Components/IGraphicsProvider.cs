@@ -46,6 +46,6 @@ public interface IGraphicsProvider : ISimulationComponent
     IMask CreateMask(int width, int height);
     IDepthMask CreateDepthMask(int width, int height);
 
-    //IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices) 
-    //    where TVertex : unmanaged;
+    IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices) 
+        where TVertex : unmanaged;
 }

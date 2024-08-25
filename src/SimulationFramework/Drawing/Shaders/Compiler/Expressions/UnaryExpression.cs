@@ -24,7 +24,8 @@ public record UnaryExpression(UnaryOperation Operation, ShaderExpression Operand
         return Operation switch
         {
             UnaryOperation.Negate => "-",
-            UnaryOperation.Not => "!",
+            UnaryOperation.Not when Operand.ExpressionType == ShaderType.Bool => "!",
+            UnaryOperation.Not => "~",
         };
     }
 

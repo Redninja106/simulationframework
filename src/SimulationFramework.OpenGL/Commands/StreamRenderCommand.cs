@@ -23,7 +23,7 @@ class StreamRenderCommand : RenderCommand
 
         for (int i = 0; i < draws.Count; i++)
         {
-            glDrawArrays(draws[i].triangles ? GL_TRIANGLES : GL_LINES, draws[i].offset, draws[i].count);
+            glDrawArrays(draws[i].triangles ? GL_TRIANGLES : GL_LINES, draws[i].vertexOffset, draws[i].count);
         }
     }
 
@@ -32,7 +32,7 @@ class StreamRenderCommand : RenderCommand
         if (draws.Count > 0)
         {
             DrawInfo lastDraw = draws[^1];
-            if (lastDraw.offset + lastDraw.count == offset && lastDraw.triangles == triangles)
+            if (lastDraw.vertexOffset + lastDraw.count == offset && lastDraw.triangles == triangles)
             {
                 lastDraw.count += count;
                 draws[^1] = lastDraw;
@@ -43,7 +43,7 @@ class StreamRenderCommand : RenderCommand
         draws.Add(new()
         {
             triangles = triangles,
-            offset = offset,
+            vertexOffset = offset,
             count = count
         });
     }
@@ -51,7 +51,7 @@ class StreamRenderCommand : RenderCommand
     private struct DrawInfo
     {
         public bool triangles;
-        public int offset;
+        public int vertexOffset;
         public int count;
     }
 }

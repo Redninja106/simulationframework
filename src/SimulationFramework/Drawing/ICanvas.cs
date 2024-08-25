@@ -110,6 +110,13 @@ public interface ICanvas
     void DrawLines<TVertex>(ReadOnlySpan<TVertex> lines)
         where TVertex : unmanaged;
 
+    // void DrawIndexedLines(ReadOnlySpan<Vector2> vertices, ReadOnlySpan<ushort> lines, int baseVertex = 0);
+    // void DrawIndexedLines(ReadOnlySpan<Vector2> vertices, ReadOnlySpan<uint> lines, int baseVertex = 0);
+    // void DrawIndexedLines<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<ushort> indices, int baseVertex = 0)
+    //     where TVertex : unmanaged;
+    // void DrawIndexedLines<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices, int baseVertex = 0)
+    //     where TVertex : unmanaged;
+
     /// <summary>
     /// Draws a rectangle to the canvas, using the current transform, clipping, and drawing settings.
     /// </summary>
@@ -321,13 +328,6 @@ public interface ICanvas
     /// </summary>
     void DrawTriangles(ReadOnlySpan<Vector2> triangles);
 
-    // void DrawIndexedTriangles(ReadOnlySpan<Vector2> triangles, ReadOnlySpan<uint> indices);
-    // void DrawIndexedTriangles(ReadOnlySpan<Vector2> triangles, ReadOnlySpan<ushort> indices);
-    // void DrawIndexedTriangles<TVertex>(ReadOnlySpan<TVertex> triangles, ReadOnlySpan<uint> indices)
-    //     where TVertex : unmanaged;
-    // void DrawIndexedTriangles<TVertex>(ReadOnlySpan<TVertex> triangles, ReadOnlySpan<ushort> indices)
-    //     where TVertex : unmanaged;
-
     /// <summary>
     /// Draws a list of triangles using a custom vertex type.
     /// <para>
@@ -338,6 +338,13 @@ public interface ICanvas
     /// <param name="triangles">The list of triangles to draw. Every three vertices make a triangle.</param>
     void DrawTriangles<TVertex>(ReadOnlySpan<TVertex> triangles)
         where TVertex : unmanaged;
+
+    // void DrawIndexedTriangles(ReadOnlySpan<Vector2> triangles, ReadOnlySpan<uint> indices, int baseVertex = 0);
+    // void DrawIndexedTriangles(ReadOnlySpan<Vector2> triangles, ReadOnlySpan<ushort> indices, int baseVertex = 0);
+    // void DrawIndexedTriangles<TVertex>(ReadOnlySpan<TVertex> triangles, ReadOnlySpan<uint> indices, int baseVertex = 0)
+    //     where TVertex : unmanaged;
+    // void DrawIndexedTriangles<TVertex>(ReadOnlySpan<TVertex> triangles, ReadOnlySpan<ushort> indices, int baseVertex = 0)
+    //     where TVertex : unmanaged;
 
     /// <summary>
     /// Draws a texture to the canvas at (0, 0) using the current transform and clipping settings.
@@ -452,24 +459,48 @@ public interface ICanvas
     /// <param name="close">Whether the first and last vertices of the polygon should be treated as connected.</param>
     void DrawPolygon(ReadOnlySpan<Vector2> polygon, bool close = true);
 
-    // void DrawGeometry(IGeometry geometry);
-    // void DrawGeometryInstances(IGeometry geometry, ReadOnlySpan<Matrix3x2> instances);
-    // void DrawGeometryInstances<TInstance>(IGeometry geometry, ReadOnlySpan<TInstance> instances)
-    //     where TInstance : unmanaged;
+    /// <summary>
+    /// Draws an <see cref="IGeometry"/> instance to the canvas.
+    /// </summary>
+    /// <param name="geometry">The <see cref="IGeometry"/> to draw.</param>
+    void DrawGeometry(IGeometry geometry);
+
+    /// <summary>
+    /// Draws multiple instances of an <see cref="IGeometry"/> to the canvas.
+    /// </summary>
+    /// <param name="geometry">The <see cref="IGeometry"/> to draw.</param>
+    /// <param name="instances">A span of <see cref="Matrix3x2"/> values specifying the instances to draw.</param>
+    void DrawGeometryInstances(IGeometry geometry, ReadOnlySpan<Matrix3x2> instances);
+
+    /// <summary>
+    /// Draws multiple instances of an <see cref="IGeometry"/> to the canvas.
+    /// </summary>
+    /// <param name="geometry">The <see cref="IGeometry"/> to draw.</param>
+    /// <param name="instances">A span of <typeparamref name="TInstance"/> values specifying the instances to draw. 
+    /// <para>
+    /// There must be a custom vertex shader active that accepts instances data of <typeparamref name="TInstance"/>.
+    /// </para>
+    /// </param>
+    void DrawGeometryInstances<TInstance>(IGeometry geometry, ReadOnlySpan<TInstance> instances)
+        where TInstance : unmanaged;
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="text">The text to draw.</param>
+    /// <param name="size">The size of the text.</param>
     /// <param name="baselineX">The X position of the text.</param>
     /// <param name="baselineY">The Y position of the text.</param>
+    /// <param name="style">The style of the text.</param>
     sealed Vector2 DrawText(string text, float size, float baselineX, float baselineY, TextStyle style = TextStyle.Regular) => DrawText(text, size, new Vector2(baselineX, baselineY));
 
     /// <summary>
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="text">The text to draw.</param>
+    /// <param name="size">The size of the text.</param>
     /// <param name="baseline">The baseline for drawing the text. </param>
+    /// <param name="style">The style of the text.</param>
     sealed Vector2 DrawText(string text, float size, Vector2 baseline, TextStyle style = TextStyle.Regular)
     {
         ArgumentNullException.ThrowIfNull(text);
@@ -481,8 +512,10 @@ public interface ICanvas
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="text">The text to draw.</param>
+    /// <param name="size">The size of the text.</param>
     /// <param name="baselineX">The X position of the text.</param>
     /// <param name="baselineY">The Y position of the text.</param>
+    /// <param name="style">The style of the text.</param>
     sealed Vector2 DrawText(ReadOnlySpan<char> text, float size, float baselineX, float baselineY, TextStyle style = TextStyle.Regular)
     {
         return DrawText(text, size, new Vector2(baselineX, baselineY));
@@ -492,7 +525,9 @@ public interface ICanvas
     /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="text">The text to draw.</param>
+    /// <param name="size">The size of the text.</param>
     /// <param name="baseline">The baseline of the text.</param>
+    /// <param name="style">The style of the text.</param>
     Vector2 DrawText(ReadOnlySpan<char> text, float size, Vector2 baseline, TextStyle style = TextStyle.Regular);
 
     sealed void DrawAlignedText(string text, float size, float x, float y, Alignment alignment, TextStyle style = TextStyle.Regular)

@@ -21,20 +21,20 @@ internal class ShaderTestRunner
         bool success = true;
         for (int i = 0; i < shaders.Length; i++)
         {
-            try
-            {
-                canvas.Fill(shaders[i]);
-                canvas.DrawRect(0, 0, 1, 1);
-                canvas.Flush();
-                Console.WriteLine("Test Succeeded: " + shaders[i].GetType().Name);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Test Failed: " + shaders[i].GetType().Name);
-                Console.WriteLine(ex.ToString());
-                success = false;
-            }
+            canvas.Fill(shaders[i]);
+            canvas.DrawRect(0, 0, 1, 1);
+            canvas.Flush();
+            Console.WriteLine("Test Succeeded: " + shaders[i].GetType().Name);
         }
         return success;
+    }
+
+    public void RunTest<TShader>(ICanvas canvas)
+        where TShader : CanvasShader, new()
+    {
+        canvas.Fill(new TShader());
+        canvas.DrawRect(0, 0, 1, 1);
+        canvas.Flush();
+        Console.WriteLine("Test Succeeded: " + typeof(TShader).Name);
     }
 }
