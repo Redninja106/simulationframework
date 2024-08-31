@@ -223,6 +223,6 @@ internal sealed class GLTexture : IGLImage, ITexture
 
     internal void PrepareForRender()
     {
-        canvas?.Flush();
+        canvas?.SubmitCommands();
     }
 }

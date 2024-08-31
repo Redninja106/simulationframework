@@ -18,8 +18,8 @@ class ColorGeometryEffect : GeometryEffect
         }
     }
 
-    public override bool CheckStateCompatibility(ref readonly CanvasState state)
+    public override bool Equals(object? obj)
     {
-        return true; // doesn't depend on canvas state
+        return obj is ColorGeometryEffect;
     }
 }

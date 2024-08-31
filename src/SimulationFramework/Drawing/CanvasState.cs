@@ -32,6 +32,8 @@ public struct CanvasState
         Transform = Matrix3x2.Identity;
         ClipRectangle = null;
         Mask = null;
+        WriteMask = null;
+        WriteMaskValue = true;
 
         Fill = true;
         Color = ColorF.White;

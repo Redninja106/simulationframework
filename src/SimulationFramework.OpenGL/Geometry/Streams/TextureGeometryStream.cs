@@ -12,29 +12,11 @@ internal class TextureGeometryStream : GeometryStream
 {
     private List<TextureVertex> vertices = [];
     private int texCoordPosition;
-    private uint vao;
+
+    public override VertexLayout VertexLayout { get; } = VertexLayout.Get(typeof(TextureVertex));
 
     public unsafe TextureGeometryStream()
     {
-        fixed (uint* vaoPtr = &vao)
-        {
-            glGenVertexArrays(1, vaoPtr);
-            glBindVertexArray(vao);
-        }
-    }
-
-    public override int GetVertexSize()
-    {
-        return Unsafe.SizeOf<TextureVertex>();
-    }
-
-    public override unsafe void BindVertexArray()
-    {
-        glBindVertexArray(vao);
-        glVertexAttribPointer(0, 2, GL_FLOAT, (byte)GL_FALSE, Unsafe.SizeOf<TextureVertex>(), null);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 2, GL_FLOAT, (byte)GL_FALSE, Unsafe.SizeOf<TextureVertex>(), (void*)(sizeof(float) * 2));
-        glEnableVertexAttribArray(1);
     }
 
     public override void Clear()

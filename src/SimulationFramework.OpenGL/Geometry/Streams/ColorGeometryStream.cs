@@ -10,19 +10,10 @@ unsafe class ColorGeometryStream : GeometryStream
 {
     private List<ColorVertex> vertices = [];
     public Color Color { get; set; }
-    private uint vao;
+    public override VertexLayout VertexLayout { get; } = VertexLayout.Get(typeof(ColorVertex));
 
     public ColorGeometryStream()
     {
-        fixed (uint* vaoPtr = &vao)
-        {
-            glGenVertexArrays(1, vaoPtr);
-        }
-    }
-
-    public override int GetVertexSize()
-    {
-        return Unsafe.SizeOf<ColorVertex>();
     }
 
     public override void WriteVertex(Vector2 position)
@@ -34,14 +25,6 @@ unsafe class ColorGeometryStream : GeometryStream
         });
     }
 
-    public override void BindVertexArray()
-    {
-        glBindVertexArray(vao);
-        glVertexAttribPointer(0, 2, GL_FLOAT, (byte)GL_FALSE, Unsafe.SizeOf<ColorVertex>(), null);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, (byte)GL_TRUE, Unsafe.SizeOf<ColorVertex>(), (void*)(sizeof(float) * 2));
-        glEnableVertexAttribArray(1);
-    }
 
     public override void Clear()
     {

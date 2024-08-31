@@ -11,7 +11,6 @@ namespace SimulationFramework.OpenGL.Geometry;
 internal abstract class GeometryEffect
 {
     public abstract void Apply(GLCanvas canvas, Matrix4x4 projection);
-    public abstract bool CheckStateCompatibility(ref readonly CanvasState state);
 
     public ShaderProgram Program { get; }
 

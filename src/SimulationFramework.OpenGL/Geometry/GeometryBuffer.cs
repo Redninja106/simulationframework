@@ -6,13 +6,10 @@ unsafe class GeometryBuffer : IDisposable
 {
     public readonly uint buffer;
     public readonly int size;
-    private byte[] data;
-    private int position;
 
     public GeometryBuffer(int size)
     {
         this.size = size;
-        data = new byte[this.size];
 
         fixed (uint* bufferPtr = &buffer)
         {
@@ -23,12 +20,12 @@ unsafe class GeometryBuffer : IDisposable
 
     public void Reset()
     {
-        position = 0;
     }
 
-    public void Upload()
+    public void Upload<T>(ReadOnlySpan<T> data)
+        where T : unmanaged
     {
-        fixed (byte* dataPtr = data)
+        fixed (T* dataPtr = data)
         {
             glNamedBufferSubData(buffer, 0, size, dataPtr);
         }
@@ -39,34 +36,9 @@ unsafe class GeometryBuffer : IDisposable
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
     }
 
-    public void Write(ReadOnlySpan<byte> bytes, int alignment, out int offset, out int count)
+    public void BindAsIndexBuffer()
     {
-        if (!TryWrite(bytes, alignment, out offset, out count))
-        {
-            throw new Exception("buffer is full");
-        }
-    }
-
-    public bool TryWrite(ReadOnlySpan<byte> bytes, int alignment, out int offset, out int count)
-    {
-        int alignedPosition = position;
-        if (alignedPosition % alignment != 0)
-        {
-            alignedPosition += alignment - alignedPosition % alignment;
-        }
-
-        if (alignedPosition + bytes.Length > this.size)
-        {
-            offset = count = 0;
-            return false;
-        }
-
-        bytes.CopyTo(data.AsSpan(alignedPosition, bytes.Length));
-        position = alignedPosition + bytes.Length;
-
-        offset = alignedPosition;
-        count = bytes.Length;
-        return true;
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
     }
 
     public void Dispose()
@@ -76,4 +48,5 @@ unsafe class GeometryBuffer : IDisposable
             glDeleteBuffers(1, bufferPtr);
         }
     }
+
 }

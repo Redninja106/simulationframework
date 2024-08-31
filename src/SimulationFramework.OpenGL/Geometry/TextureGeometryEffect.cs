@@ -26,8 +26,10 @@ internal class TextureGeometryEffect : GeometryEffect
         glUniform4f(Program.GetUniformLocation("tint"u8), tint.R, tint.G, tint.B, tint.A);
     }
 
-    public override bool CheckStateCompatibility(ref readonly CanvasState state)
+    public override bool Equals(object? obj)
     {
-        return true; // doesn't depend on any canvas state
+        return obj is TextureGeometryEffect geometryEffect && 
+            texture == geometryEffect.texture && 
+            tint == geometryEffect.tint;
     }
 }

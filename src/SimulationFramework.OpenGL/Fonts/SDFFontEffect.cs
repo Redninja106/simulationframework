@@ -29,8 +29,8 @@ class SDFFontEffect : GeometryEffect
         glUniform1f(Program.GetUniformLocation("threshold"u8), boldThreshold ? 140f / 255f : 130f / 255f);
     }
 
-    public override bool CheckStateCompatibility(ref readonly CanvasState state)
+    public override bool Equals(object? obj)
     {
-        return state.Color == color;
+        return obj is SDFFontEffect other && atlas == other.atlas && color == other.color;
     }
 }

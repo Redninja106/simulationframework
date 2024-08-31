@@ -191,12 +191,13 @@ public unsafe class GLGraphics : IGraphicsProvider
 
     public IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices) where TVertex : unmanaged
     {
-        var result = new GLGeometry(this);
-        if (!indices.IsEmpty)
+        if (indices.IsEmpty)
         {
-            result.SetIndices(indices);
+            return GLGeometry.Create(this, vertices);
         }
-        result.AddVertexBuffer(vertices);
-        return result;
+        else
+        {
+            return GLGeometry.CreateIndexed(this, vertices, indices);
+        }
     }
 }

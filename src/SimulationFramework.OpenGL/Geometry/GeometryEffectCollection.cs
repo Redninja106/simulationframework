@@ -9,9 +9,9 @@ class GeometryEffectCollection
 {
     private readonly GLGraphics graphics;
 
-    private ColorShaderProgram colorProgram;
-    private SDFFontProgram fontProgram;
-    private TextureProgram textureProgram;
+    public ColorShaderProgram colorProgram;
+    public SDFFontProgram fontProgram;
+    public TextureProgram textureProgram;
 
     public GeometryEffectCollection(GLGraphics graphics)
     {
@@ -42,6 +42,14 @@ class GeometryEffectCollection
 
     public SDFFontEffect GetFontEffect(GLFont font, ColorF color, TextStyle style)
     {
-        return new SDFFontEffect(color, font.GetAtlas(style), fontProgram);
+        throw new NotImplementedException();
+    }
+}
+
+class EffectPool
+{
+    public void Rent()
+    {
+
     }
 }

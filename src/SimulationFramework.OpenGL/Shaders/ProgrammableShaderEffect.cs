@@ -86,8 +86,8 @@ internal class ProgrammableShaderEffect : GeometryEffect
         }
     }
 
-    public override bool CheckStateCompatibility(ref readonly CanvasState state)
+    public override bool Equals(object? obj)
     {
-        return false; // return false here cause there's no way to verify certain values have changed, such as shader uniforms
+        return false;
     }
 }

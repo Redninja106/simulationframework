@@ -59,10 +59,12 @@ partial class Program : Simulation
         logo = Graphics.LoadTexture("logo-512x512.png");
         logo.WrapModeY = logo.WrapModeX = WrapMode.Repeat;
 
+        ShaderCompiler.DumpShaders = true;
+
         depthMask = Graphics.CreateDepthMask(Window.Width, Window.Height);
 
-        uint[] indices = Enumerable.Range(0, 36).Select(i => (uint)i).ToArray();
-        cubeGeometry = Graphics.CreateGeometry<Vertex>(vertices, indices);
+        // uint[] indices = Enumerable.Range(0, 36).Select(i => (uint)i).ToArray();
+        cubeGeometry = Graphics.CreateGeometry<Vertex>(vertices);
     }
 
     public override void OnRender(ICanvas canvas)

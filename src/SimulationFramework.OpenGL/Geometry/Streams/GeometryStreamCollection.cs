@@ -49,7 +49,7 @@ class GeometryStreamCollection
             var vsCompilation = effect.vsCompilation;
             var vertexDataVar = vsCompilation!.Variables.Single(v => v.Kind is ShaderVariableKind.VertexData);
 
-            stream = new CustomVertexGeometryStream(vertexDataVar.Type);
+            stream = new CustomVertexGeometryStream(type);
             customVertexGeometryStreams[type] = stream;
         }
 

@@ -10,20 +10,11 @@ namespace SimulationFramework.OpenGL.Geometry.Streams;
 unsafe class PositionGeometryStream : GeometryStream
 {
     internal List<Vector2> vertices = [];
-    private uint vao;
+
+    public override VertexLayout VertexLayout { get; } = VertexLayout.Get(typeof(Vector2));
 
     public PositionGeometryStream()
     {
-        fixed (uint* vaoPtr = &vao)
-        {
-            glGenVertexArrays(1, vaoPtr);
-            glBindVertexArray(vao);
-        }
-    }
-
-    public override int GetVertexSize()
-    {
-        return sizeof(float) * 2;
     }
 
     public override void WriteVertex(Vector2 position)
@@ -44,14 +35,5 @@ unsafe class PositionGeometryStream : GeometryStream
     public override void Clear()
     {
         vertices.Clear();
-    }
-
-    public override void BindVertexArray()
-    {
-        glBindVertexArray(vao);
-        glVertexAttribPointer(0, 2, GL_FLOAT, (byte)GL_FALSE, 2 * sizeof(float), null);
-        glEnableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
     }
 }

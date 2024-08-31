@@ -308,25 +308,9 @@ public interface ICanvas
     /// <summary>
     /// Draws a list of triangles using the current transform, clipping, and drawing settings
     /// </summary>
-    /// <param name="triangles">The list of triangles to draw. Every three points make a triangle.</param>
-    sealed void DrawTriangles(IEnumerable<Vector2> triangles)
-    {
-        CollectionsHelper.EnumerableAsSpan(triangles, 0, (span, _) => DrawTriangles(span));
-    }
-
-    /// <summary>
-    /// Draws a list of triangles using the current transform, clipping, and drawing settings
-    /// </summary>
-    /// <param name="triangles">The list of triangles to draw. Every three vertices make a triangle.</param>
-    sealed void DrawTriangles(Vector2[] triangles)
-    {
-        DrawTriangles(triangles.AsSpan());
-    }
-
-    /// <summary>
-    /// Draws a list of triangles using the current transform, clipping, and drawing settings
-    /// </summary>
     void DrawTriangles(ReadOnlySpan<Vector2> triangles);
+    // void DrawTriangles(ReadOnlySpan<Vector2> triangles, ReadOnlySpan<uint> indices);
+    // void DrawTriangles(ReadOnlySpan<Vector2> triangles, ReadOnlySpan<uint> indices, ReadOnlySpan<Matrix3x2> instances);
 
     /// <summary>
     /// Draws a list of triangles using a custom vertex type.
@@ -338,13 +322,11 @@ public interface ICanvas
     /// <param name="triangles">The list of triangles to draw. Every three vertices make a triangle.</param>
     void DrawTriangles<TVertex>(ReadOnlySpan<TVertex> triangles)
         where TVertex : unmanaged;
-
-    // void DrawIndexedTriangles(ReadOnlySpan<Vector2> triangles, ReadOnlySpan<uint> indices, int baseVertex = 0);
-    // void DrawIndexedTriangles(ReadOnlySpan<Vector2> triangles, ReadOnlySpan<ushort> indices, int baseVertex = 0);
-    // void DrawIndexedTriangles<TVertex>(ReadOnlySpan<TVertex> triangles, ReadOnlySpan<uint> indices, int baseVertex = 0)
+    // void DrawTriangles<TVertex>(ReadOnlySpan<TVertex> triangles, ReadOnlySpan<uint> indices)
     //     where TVertex : unmanaged;
-    // void DrawIndexedTriangles<TVertex>(ReadOnlySpan<TVertex> triangles, ReadOnlySpan<ushort> indices, int baseVertex = 0)
-    //     where TVertex : unmanaged;
+    // void DrawTriangles<TVertex, TInstance>(ReadOnlySpan<TVertex> triangles, ReadOnlySpan<uint> indices, ReadOnlySpan<TInstance> instances)
+    //         where TVertex : unmanaged
+    //         where TInstance : unmanaged;
 
     /// <summary>
     /// Draws a texture to the canvas at (0, 0) using the current transform and clipping settings.

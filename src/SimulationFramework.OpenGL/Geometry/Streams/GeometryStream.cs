@@ -10,11 +10,10 @@ namespace SimulationFramework.OpenGL.Geometry.Streams;
 internal abstract class GeometryStream
 {
     public Matrix3x2 TransformMatrix { get; set; }
+    public abstract VertexLayout VertexLayout { get; }
     public abstract void WriteVertex(Vector2 position);
     // public abstract void Upload(GeometryBuffer buffer);
     public abstract int GetVertexCount();
-    public abstract int GetVertexSize();
     public abstract void Clear();
-    public abstract void BindVertexArray();
     public abstract ReadOnlySpan<byte> GetData();
 }

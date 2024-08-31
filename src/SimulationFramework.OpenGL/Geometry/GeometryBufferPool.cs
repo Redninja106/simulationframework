@@ -55,18 +55,24 @@ internal class GeometryBufferPool
         return buffer;
     }
 
+    public GeometryBuffer Rent(int minSize)
+    {
+        if (minSize > BufferSize)
+        {
+            return GetLargeBuffer(minSize);
+        }
+        else
+        {
+            return Rent();
+        }
+    }
+
     public void Reset()
     {
         while (usedBuffers.Count > 0)
         {
             var buffer = usedBuffers.Dequeue();
-            buffer.Reset();
             freeBuffers.Enqueue(buffer);
-        }
-
-        foreach (var buffer in usedLargeBuffers)
-        {
-            buffer.Reset();
         }
 
         freeLargeBuffers.AddRange(usedLargeBuffers);
