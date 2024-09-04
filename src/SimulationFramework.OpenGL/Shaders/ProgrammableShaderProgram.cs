@@ -73,7 +73,7 @@ uniform mat4 _vertex_transform;
 {{source}}
 
 void main() {
-gl_Position = _vertex_transform * GetVertexPosition();
+    gl_Position = _vertex_transform * (vec4(1,1,1,1) * GetVertexPosition());
 }
 
 """;

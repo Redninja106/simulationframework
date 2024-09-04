@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 
 namespace SimulationFramework.OpenGL.Geometry;
 
@@ -27,7 +28,7 @@ unsafe class GeometryBuffer : IDisposable
     {
         fixed (T* dataPtr = data)
         {
-            glNamedBufferSubData(buffer, 0, size, dataPtr);
+            glNamedBufferSubData(buffer, 0, data.Length * Unsafe.SizeOf<T>(), dataPtr);
         }
     }
 

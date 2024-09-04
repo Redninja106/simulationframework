@@ -70,7 +70,12 @@ unsafe internal class GLGeometry : IGeometry
     }
     public TVertex[] GetVertices<TVertex>() where TVertex : unmanaged
     {
-        throw new NotImplementedException();
+        TVertex[] array = new TVertex[chunk.vertexBuffer.size / Unsafe.SizeOf<TVertex>()];
+        fixed (TVertex* vertexPtr = array)
+        {
+            glGetNamedBufferSubData(chunk.vertexBuffer.buffer, 0, chunk.vertexBuffer.size, vertexPtr);
+        }
+        return array;
     }
 
     //public void Draw(ref readonly CanvasState state)
@@ -122,7 +127,28 @@ unsafe internal class GLGeometry : IGeometry
 
     internal static GLGeometry CreateIndexed<TVertex>(GLGraphics graphics, ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices) where TVertex : unmanaged
     {
-        throw new NotImplementedException();
+        GeometryBuffer vertexBuffer = new(Unsafe.SizeOf<TVertex>() * vertices.Length);
+        vertexBuffer.Upload(vertices);
+
+        GeometryBuffer indexBuffer = new(sizeof(uint) * indices.Length);
+        indexBuffer.Upload(indices);
+
+        GeometryChunk chunk = new()
+        {
+            count = indices.Length,
+            vertexBuffer = vertexBuffer,
+            triangles = true,
+            vertexLayout = VertexLayout.Get(typeof(TVertex)),
+            indexBuffer = indexBuffer,
+        };
+
+        return new(graphics, chunk);
+    }
+
+    public void SetVertices<TVertex>(TVertex[] vertices) where TVertex : unmanaged
+    {
+
+        chunk.vertexBuffer.Upload<TVertex>(vertices);
     }
 
     struct VertexBuffer

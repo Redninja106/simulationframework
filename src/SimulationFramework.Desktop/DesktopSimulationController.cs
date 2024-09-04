@@ -47,6 +47,10 @@ internal class DesktopSimulationController : ISimulationController
 
         window.Resize += size =>
         {
+            if (size.X == 0 || size.Y == 0)
+            {
+                return;
+            }
             dispatcher.ImmediateDispatch(new ResizeMessage(size.X, size.Y));
         };
 

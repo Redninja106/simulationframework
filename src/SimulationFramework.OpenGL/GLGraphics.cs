@@ -6,6 +6,7 @@ using SimulationFramework.Messaging;
 using SimulationFramework.OpenGL.Fonts;
 using SimulationFramework.OpenGL.Geometry;
 using SimulationFramework.OpenGL.Geometry.Streams;
+using SimulationFramework.OpenGL.Geometry.Writers;
 using SimulationFramework.OpenGL.Shaders;
 using StbImageSharp;
 using System;
@@ -30,6 +31,9 @@ public unsafe class GLGraphics : IGraphicsProvider
     internal ShaderCompiler ShaderCompiler = new();
 
     internal GeometryStreamCollection streams;
+    internal GeometryBufferPool bufferPool;
+    internal GeometryEffectCollection effects;
+    internal GeometryWriterCollection writers;
 
     public GLGraphics(GLFrame frame, Func<string, nint> getProcAddress)
     {
@@ -41,6 +45,12 @@ public unsafe class GLGraphics : IGraphicsProvider
         glDebugMessageCallback(&DebugCallback, null);
 
         DefaultFont = LoadSystemFont("Verdana");
+
+        bufferPool = new();
+
+        streams = new(this);
+        effects = new(this);
+        writers = new();
     }
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]

@@ -2,9 +2,9 @@
 
 internal class ShaderPrimitiveType : ShaderType 
 {
-    public PrimitiveKind primitive;
+    public ShaderPrimitiveKind primitive;
 
-    internal ShaderPrimitiveType(PrimitiveKind primitive)
+    internal ShaderPrimitiveType(ShaderPrimitiveKind primitive)
     {
         this.primitive = primitive;
     }
@@ -15,7 +15,7 @@ internal class ShaderPrimitiveType : ShaderType
     }
 }
 
-public enum PrimitiveKind
+public enum ShaderPrimitiveKind
 {
     Void,
     Bool,

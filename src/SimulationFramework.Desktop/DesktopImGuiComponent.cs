@@ -45,6 +45,7 @@ internal class DesktopImGuiComponent : ISimulationComponent
     {
         var canvas = Application.GetComponent<IGraphicsProvider>().GetWindowCanvas();
         gl.Viewport(0, 0, (uint)canvas.Width, (uint)canvas.Height);
+        gl.BindFramebuffer(FramebufferTarget.DrawFramebuffer, 0);
         imGuiController.Render();
     }
 

@@ -136,19 +136,14 @@ internal sealed class GLTexture : IGLImage, ITexture
         pixelsDirty = true;
     }
 
-    public void Dispose()
+    public unsafe void Dispose()
     {
-        // if (IsDisposed)
-        //     return;
-        // 
-        // this.canvas.Dispose();
-        // this.image.Dispose();
-        // this.surface.Dispose();
-        // this.backendTexture.Dispose();
-        // 
-        // provider.gl.DeleteTexture(this.id);
-        // 
-        // base.Dispose();
+        this.canvas?.Dispose();
+
+        fixed (uint* texPtr = &id) 
+        {
+            glDeleteTextures(1, texPtr);
+        }
     }
 
     private unsafe void UpdateLocalPixels()

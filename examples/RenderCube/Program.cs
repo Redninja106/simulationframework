@@ -2,7 +2,11 @@
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Drawing.Shaders.Compiler;
+using SimulationFramework.Input;
 using System.Numerics;
+using System.Runtime.InteropServices;
+
+
 
 Start<Program>();
 
@@ -50,8 +54,6 @@ partial class Program : Simulation
     ITexture logo;
     IDepthMask depthMask;
 
-    IGeometry cubeGeometry;
-
     public override void OnInitialize()
     {
         SetFixedResolution(200, 200, Color.Black);
@@ -59,12 +61,11 @@ partial class Program : Simulation
         logo = Graphics.LoadTexture("logo-512x512.png");
         logo.WrapModeY = logo.WrapModeX = WrapMode.Repeat;
 
-        ShaderCompiler.DumpShaders = true;
+        Console.Clear();
 
         depthMask = Graphics.CreateDepthMask(Window.Width, Window.Height);
 
-        // uint[] indices = Enumerable.Range(0, 36).Select(i => (uint)i).ToArray();
-        cubeGeometry = Graphics.CreateGeometry<Vertex>(vertices);
+        Thread.Sleep(100);
     }
 
     public override void OnRender(ICanvas canvas)
@@ -80,7 +81,7 @@ partial class Program : Simulation
         var vertexShader = new CubeVertexShader()
         {
             world = Matrix4x4.CreateRotationY(Time.TotalTime * Angle.ToRadians(60)),
-            view = Matrix4x4.CreateLookAt(Vector3.One, Vector3.Zero, Vector3.UnitY),
+            view = Matrix4x4.CreateLookAt(new Vector3(2, 0, 0), Vector3.Zero, Vector3.UnitY),
             proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, canvas.Width / (float)canvas.Height, 0.1f, 100f)
         };
         
@@ -89,8 +90,9 @@ partial class Program : Simulation
         canvas.WriteMask(depthMask);
         canvas.DrawTriangles<Vertex>(vertices);
 
-        vertexShader.world = Matrix4x4.CreateRotationY(Time.TotalTime * -Angle.ToRadians(60)) * Matrix4x4.CreateTranslation(0, 1, 0);
-        canvas.DrawGeometry(this.cubeGeometry);
+        canvas.ResetState();
+        canvas.Fill(Color.HotPink);
+        canvas.DrawRect(Mouse.Position.X, Mouse.Position.Y, 100, 120);
     }
 }
 

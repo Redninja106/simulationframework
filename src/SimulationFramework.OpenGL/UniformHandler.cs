@@ -8,6 +8,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SimulationFramework.OpenGL;
 
@@ -57,7 +59,7 @@ class UniformHandler
 
         switch (uniform.Type)
         {
-            case ShaderType when uniform.Type.GetPrimitiveKind() is PrimitiveKind primitiveKind:
+            case ShaderType when uniform.Type.GetPrimitiveKind() is ShaderPrimitiveKind primitiveKind:
                 SetMemberUniform(primitiveKind, value!, location);
                 break;
             case ShaderStructureType structType:
@@ -84,11 +86,19 @@ class UniformHandler
         GCHandle arrayHandle = GCHandle.Alloc(array, GCHandleType.Pinned);
         try
         {
-            void* ptr = Unsafe.AsPointer(ref MemoryMarshal.GetArrayDataReference(array));
-            ssbo.WriteData(ptr, array.Length);
+            if (array != null)
+            {
+                void* ptr = Unsafe.AsPointer(ref MemoryMarshal.GetArrayDataReference(array));
+                ssbo.WriteData(ptr, array.Length);
 
-            glBindBufferBase(GL_SHADER_STORAGE_BUFFER, (uint)bufferSlot, ssbo.GetBuffer());
-            glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, (uint)bufferSlot, ssbo.GetBuffer());
+                glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+            }
+            else
+            {
+                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, (uint)bufferSlot, 0);
+                glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+            }
         }
         finally
         {
@@ -106,9 +116,9 @@ class UniformHandler
         textureSlot++;
     }
 
-    private unsafe void SetMemberUniform(PrimitiveKind primitive, object value, int location)
+    private unsafe void SetMemberUniform(ShaderPrimitiveKind primitive, object value, int location)
     {
-        if (primitive is PrimitiveKind.Texture)
+        if (primitive is ShaderPrimitiveKind.Texture)
         {
             SetTextureUniform((GLTexture?)value, location);
             return;
@@ -119,37 +129,37 @@ class UniformHandler
 
         switch (primitive)
         {
-            case PrimitiveKind.Bool:
+            case ShaderPrimitiveKind.Bool:
                 glUniform1i(location, *(byte*)ptr != 0 ? 1 : 0);
                 break;
-            case PrimitiveKind.Int:
+            case ShaderPrimitiveKind.Int:
                 glUniform1iv(location, 1, (int*)ptr);
                 break;
-            case PrimitiveKind.Int2:
+            case ShaderPrimitiveKind.Int2:
                 glUniform2iv(location, 1, (int*)ptr);
                 break;
-            case PrimitiveKind.Int3:
+            case ShaderPrimitiveKind.Int3:
                 glUniform3iv(location, 1, (int*)ptr);
                 break;
-            case PrimitiveKind.Int4:
+            case ShaderPrimitiveKind.Int4:
                 glUniform4iv(location, 1, (int*)ptr);
                 break;
-            case PrimitiveKind.Float:
+            case ShaderPrimitiveKind.Float:
                 glUniform1fv(location, 1, (float*)ptr);
                 break;
-            case PrimitiveKind.Float2:
+            case ShaderPrimitiveKind.Float2:
                 glUniform2fv(location, 1, (float*)ptr);
                 break;
-            case PrimitiveKind.Float3:
+            case ShaderPrimitiveKind.Float3:
                 glUniform3fv(location, 1, (float*)ptr);
                 break;
-            case PrimitiveKind.Float4:
+            case ShaderPrimitiveKind.Float4:
                 glUniform4fv(location, 1, (float*)ptr);
                 break;
-            case PrimitiveKind.Matrix4x4:
+            case ShaderPrimitiveKind.Matrix4x4:
                 glUniformMatrix4fv(location, 1, (byte)GL_FALSE, (float*)ptr);
                 break;
-            case PrimitiveKind.Matrix3x2:
+            case ShaderPrimitiveKind.Matrix3x2:
                 glUniformMatrix3x2fv(location, 1, (byte)GL_FALSE, (float*)ptr);
                 break;
             default:
@@ -193,16 +203,32 @@ unsafe class SSBO
 
     public SSBO(uint program, ShaderVariable uniform)
     {
+        Debug.Assert(uniform.Type is ShaderArrayType);
+
         List<Field> fields = [];
         CreateFields(program, uniform, fields);
         this.fields = fields.ToArray();
 
-        uint prop = GL_TOP_LEVEL_ARRAY_STRIDE;
-        int stride;
-        glGetProgramResourceiv(program, GL_BUFFER_VARIABLE, 0, 1, &prop, 1, null, &stride);
-        bufferStride = stride;
+        ShaderType elementType = (uniform.Type as ShaderArrayType)!.ElementType;
 
-        arrayStride = ShaderType.CalculateTypeSize((uniform.Type as ShaderArrayType)!.ElementType);
+        // for some reason on primitive arrays GL_TOP_LEVEL_ARRAY_STRIDE returns
+        // 0 while on arrays of structs GL_ARRAY_STRIDE returns 0
+        uint prop;
+        if (elementType.GetPrimitiveKind() != null)
+        {
+            prop = GL_ARRAY_STRIDE;
+        }
+        else
+        {
+            prop = GL_TOP_LEVEL_ARRAY_STRIDE;
+        }
+
+        fixed (int* stridePtr = &bufferStride)
+        {
+            glGetProgramResourceiv(program, GL_BUFFER_VARIABLE, 0, 1, &prop, 1, null, stridePtr);
+        }
+
+        arrayStride = ShaderType.CalculateTypeSize(elementType);
     }
 
     private void CreateFields(uint program, ShaderVariable uniform, List<Field> fields)

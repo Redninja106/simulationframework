@@ -21,6 +21,7 @@ internal class GLSLShaderEmitter
     internal ShaderVariable? vertexDataVariable;
     internal ShaderCompilation compilation;
     internal int vsOutLocation = 0;
+    int vertexLayoutLocation;
 
     private static readonly ImmutableHashSet<string> reservedWords = [
         // KEYWORDS:
@@ -477,23 +478,23 @@ internal class GLSLShaderEmitter
             return;
         }
 
-        if (type.GetPrimitiveKind() is PrimitiveKind primitive)
+        if (type.GetPrimitiveKind() is ShaderPrimitiveKind primitive)
         {
             writer.Write(primitive switch
             {
-                PrimitiveKind.Void => "void",
-                PrimitiveKind.Bool => "bool",
-                PrimitiveKind.Float => "float",
-                PrimitiveKind.Float2 => "vec2",
-                PrimitiveKind.Float3 => "vec3",
-                PrimitiveKind.Float4 => "vec4",
-                PrimitiveKind.Int => "int",
-                PrimitiveKind.Int2 => "vec2i",
-                PrimitiveKind.Int3 => "vec3i",
-                PrimitiveKind.Int4 => "vec4i",
-                PrimitiveKind.Matrix3x2 => "mat3x2",
-                PrimitiveKind.Matrix4x4 => "mat4",
-                PrimitiveKind.Texture => "sampler2D",
+                ShaderPrimitiveKind.Void => "void",
+                ShaderPrimitiveKind.Bool => "bool",
+                ShaderPrimitiveKind.Float => "float",
+                ShaderPrimitiveKind.Float2 => "vec2",
+                ShaderPrimitiveKind.Float3 => "vec3",
+                ShaderPrimitiveKind.Float4 => "vec4",
+                ShaderPrimitiveKind.Int => "int",
+                ShaderPrimitiveKind.Int2 => "vec2i",
+                ShaderPrimitiveKind.Int3 => "vec3i",
+                ShaderPrimitiveKind.Int4 => "vec4i",
+                ShaderPrimitiveKind.Matrix3x2 => "mat3x2",
+                ShaderPrimitiveKind.Matrix4x4 => "mat4",
+                ShaderPrimitiveKind.Texture => "sampler2D",
                 _ => throw new NotSupportedException(primitive.ToString())
             });
             return;
@@ -566,8 +567,12 @@ internal class GLSLShaderEmitter
         }
         else if (variable.Kind == ShaderVariableKind.VertexData)
         {
-            int location = 0;
-            EmitVertexDeclaration(variable.Type, variable.Name.value, ref location);
+            EmitVertexDeclaration(variable.Type, variable.Name.value, ref vertexLayoutLocation);
+            return;
+        }
+        else if (variable.Kind == ShaderVariableKind.InstanceData)
+        {
+            EmitVertexDeclaration(variable.Type, variable.Name.value, ref vertexLayoutLocation);
             return;
         }
         else if (variable.Kind == ShaderVariableKind.VertexShaderOutput)
@@ -616,7 +621,19 @@ internal class GLSLShaderEmitter
             writer.Write(' ');
             writer.Write(baseName);
             writer.WriteLine(';');
-            location++;
+
+            if (type.GetPrimitiveKind() == ShaderPrimitiveKind.Matrix4x4)
+            {
+                location += 4;
+            }
+            else if (type.GetPrimitiveKind() == ShaderPrimitiveKind.Matrix3x2)
+            {
+                location += 3;
+            }
+            else
+            {
+                location++;
+            }
         }
         else
         {

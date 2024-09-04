@@ -168,12 +168,13 @@ public static class Polygon
             bool vertexClockwise = IsClockwiseWinding(polygon, i);
             if (isAllClockwise != vertexClockwise)
             {
+                isClockwise = null;
                 return false;
             }
         }
 
-        isClockwise = null;
-        return false;
+        isClockwise = isAllClockwise;
+        return true;
 
         // determines the winding order at a specific vertex
         static bool IsClockwiseWinding(ReadOnlySpan<Vector2> polygon, int vertexIndex)

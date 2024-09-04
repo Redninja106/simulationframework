@@ -10,5 +10,6 @@ namespace SimulationFramework.Drawing;
 public interface IGeometry : IDisposable
 {
     TVertex[] GetVertices<TVertex>() where TVertex : unmanaged;
+    void SetVertices<TVertex>(TVertex[] vertices) where TVertex : unmanaged;
     uint[]? GetIndices();
 }

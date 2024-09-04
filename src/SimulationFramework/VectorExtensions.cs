@@ -118,4 +118,34 @@ public static class VectorExtensions
         float y = vector.X * sin + vector.Y * cos;
         return new(x, y);
     }
+
+    public static Vector3 GetXYZ(this Vector4 vector)
+    {
+        return new(vector.X, vector.Y, vector.Z);
+    }
+
+    public static Vector2 GetXY(this Vector4 vector)
+    {
+        return new(vector.X, vector.Y);
+    }
+
+    public static Vector2 GetXY(this Vector3 vector)
+    {
+        return new(vector.X, vector.Y);
+    }
+
+    public static Vector4 WithW(this Vector3 vector, float w)
+    {
+        return new(vector.X, vector.Y, vector.Z, w);
+    }
+
+    public static Vector3 WithY(this Vector4 vector, float y)
+    {
+        return new(vector.X, vector.Y, y);
+    }
+
+    public static Vector4 WithYZ(this Vector4 vector, float y, float z)
+    {
+        return new(vector.X, vector.Y, y, z);
+    }
 }

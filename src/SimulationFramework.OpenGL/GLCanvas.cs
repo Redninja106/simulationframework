@@ -20,26 +20,22 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.OpenGL;
-internal class GLCanvas : ICanvas
+internal class GLCanvas : ICanvas, IDisposable
 {
     public ITexture Target { get; }
     public ref readonly CanvasState State => ref currentState;
     public CanvasState currentState;
 
     private Stack<CanvasState> stateStack = [];
-     private List<RenderCommand> commandList = [];
+    private List<RenderCommand> commandList = [];
 
-    GeometryBufferPool bufferPool;
     GeometryBufferWriter vertexWriter;
-    GeometryBufferWriter elementWriter;
 
     private GeometryStream CurrentStream => graphics.streams.GetStream(in State);
-    private GeometryWriter CurrentWriter => writers.GetWriter(in State);
+    private GeometryWriter CurrentWriter => graphics.writers.GetWriter(in State);
 
     // TODO: multiple frames in flight
 
-    internal GeometryEffectCollection effects;
-    internal GeometryWriterCollection writers;
 
     private GLGraphics graphics;
     public readonly uint fbo;
@@ -82,13 +78,8 @@ internal class GLCanvas : ICanvas
 
         currentState = new();
 
-        graphics.streams = new(graphics);
-        effects = new(graphics);
-        writers = new();
 
-        bufferPool = new();
-        vertexWriter = new(bufferPool);
-        elementWriter = new(bufferPool);
+        vertexWriter = new(graphics.bufferPool);
     }
 
     public void Antialias(bool antialias)
@@ -118,14 +109,14 @@ internal class GLCanvas : ICanvas
     public void DrawArc(Rectangle bounds, float begin, float end, bool includeCenter)
     {
         CurrentWriter.PushArc(CurrentStream, bounds, begin, end, includeCenter);
-        var effect = effects.GetEffectFromCanvasState(in State);
+        var effect = graphics.effects.GetEffectFromCanvasState(in State);
         AddRenderCommand(CreateChunk(CurrentStream, CurrentWriter.UsesTriangles), effect);
     }
 
     public void DrawLine(Vector2 p1, Vector2 p2)
     {
         CurrentWriter.PushLine(CurrentStream, p1, p2);
-        var effect = effects.GetEffectFromCanvasState(in State);
+        var effect = graphics.effects.GetEffectFromCanvasState(in State);
         AddRenderCommand(CreateChunk(CurrentStream, CurrentWriter.UsesTriangles), effect);
     }
 
@@ -135,14 +126,14 @@ internal class GLCanvas : ICanvas
             return;
 
         CurrentWriter.PushPolygon(CurrentStream, polygon, close);
-        var effect = effects.GetEffectFromCanvasState(in State);
+        var effect = graphics.effects.GetEffectFromCanvasState(in State);
         AddRenderCommand(CreateChunk(CurrentStream, CurrentWriter.UsesTriangles), effect);
     }
 
     public void DrawRect(Rectangle rect)
     {
         CurrentWriter.PushRect(CurrentStream, rect);
-        var effect = effects.GetEffectFromCanvasState(in State);
+        var effect = graphics.effects.GetEffectFromCanvasState(in State);
         AddRenderCommand(CreateChunk(CurrentStream, CurrentWriter.UsesTriangles), effect);
     }
 
@@ -151,7 +142,7 @@ internal class GLCanvas : ICanvas
         int vertexSize = stream.VertexLayout.VertexSize;
         var buffer = vertexWriter.Write(stream.GetData(), vertexSize, out int offsetInBytes, out int countInBytes);
         stream.Clear();
-        return GeometryChunk.Create(buffer, stream, offsetInBytes / vertexSize, countInBytes / vertexSize, triangles);
+        return GeometryChunk.Create(buffer, stream.VertexLayout, offsetInBytes / vertexSize, countInBytes / vertexSize, triangles);
     }
 
     //private void SubmitStream(GeometryStream stream, GeometryEffect effect, bool triangles, ReadOnlySpan<byte> bytes = default)
@@ -184,14 +175,14 @@ internal class GLCanvas : ICanvas
     public void DrawEllipse(Rectangle bounds)
     {
         CurrentWriter.PushEllipse(CurrentStream, bounds);
-        var effect = effects.GetEffectFromCanvasState(in State);
+        var effect = graphics.effects.GetEffectFromCanvasState(in State);
         AddRenderCommand(CreateChunk(CurrentStream, CurrentWriter.UsesTriangles), effect);
     }
 
     public void DrawRoundedRect(Rectangle rect, Vector2 radii)
     {
         CurrentWriter.PushRoundedRect(CurrentStream, rect, radii);
-        var effect = effects.GetEffectFromCanvasState(in State);
+        var effect = graphics.effects.GetEffectFromCanvasState(in State);
         AddRenderCommand(CreateChunk(CurrentStream, CurrentWriter.UsesTriangles), effect);
     }
 
@@ -221,14 +212,14 @@ internal class GLCanvas : ICanvas
 
         var glTexture = (GLTexture)texture;
         glTexture.PrepareForRender();
-        var effect = new TextureGeometryEffect(glTexture, tint, effects.textureProgram);
+        var effect = new TextureGeometryEffect(glTexture, tint, graphics.effects.textureProgram);
         AddRenderCommand(CreateChunk(stream, true), effect);
     }
 
     public void DrawTriangles(ReadOnlySpan<Vector2> triangles)
     {
         CurrentWriter.PushTriangles(CurrentStream, triangles);
-        var effect = effects.GetEffectFromCanvasState(in State);
+        var effect = graphics.effects.GetEffectFromCanvasState(in State);
         AddRenderCommand(CreateChunk(CurrentStream, CurrentWriter.UsesTriangles), effect);
     }
 
@@ -240,11 +231,77 @@ internal class GLCanvas : ICanvas
             throw new InvalidOperationException("Must have a vertex shader to accept custom vertices!");
         }
         var stream = graphics.streams.GetCustomVertexGeometryStream(typeof(TVertex), in State);
-        var effect = effects.GetEffectFromCanvasState(in State);
+        var effect = graphics.effects.GetEffectFromCanvasState(in State);
 
         int vertexSize = Unsafe.SizeOf<TVertex>();
         var vertexBuffer = vertexWriter.Write(MemoryMarshal.AsBytes(vertices), vertexSize, out int offsetBytes, out int countBytes);
-        var chunk = GeometryChunk.Create(vertexBuffer, stream, offsetBytes / vertexSize, countBytes / vertexSize, true);
+        var chunk = GeometryChunk.Create(vertexBuffer, stream.VertexLayout, offsetBytes / vertexSize, countBytes / vertexSize, true);
+        AddRenderCommand(chunk, effect);
+    }
+
+    public void DrawTriangles<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices)
+       where TVertex : unmanaged
+    {
+        if (State.VertexShader is null)
+        {
+            throw new InvalidOperationException("Must have a vertex shader to accept custom vertices!");
+        }
+
+        var indexBuffer = vertexWriter.Write(MemoryMarshal.AsBytes(indices), sizeof(uint), out int offsetBytes, out int countBytes);
+        var vertexBuffer = graphics.bufferPool.Rent(vertices.Length * Unsafe.SizeOf<TVertex>());
+        vertexBuffer.Upload(vertices);
+
+        var chunk = GeometryChunk.CreateIndexed(vertexBuffer, indexBuffer, VertexLayout.Get(typeof(TVertex)), offsetBytes / sizeof(uint), countBytes / sizeof(uint), true);
+        var effect = graphics.effects.GetEffectFromCanvasState(in State);
+        AddRenderCommand(chunk, effect);
+    }
+    
+    public void DrawInstancedTriangles<TVertex, TInstance>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<TInstance> instances)
+       where TVertex : unmanaged
+       where TInstance : unmanaged
+    {
+        if (State.VertexShader is null)
+        {
+            throw new InvalidOperationException("Must have a vertex shader to accept custom vertices!");
+        }
+        var stream = graphics.streams.GetCustomVertexGeometryStream(typeof(TVertex), in State);
+        var effect = graphics.effects.GetEffectFromCanvasState(in State);
+
+        int vertexSize = Unsafe.SizeOf<TVertex>();
+        var vertexBuffer = vertexWriter.Write(MemoryMarshal.AsBytes(vertices), vertexSize, out int offsetBytes, out int countBytes);
+        var chunk = GeometryChunk.Create(vertexBuffer, stream.VertexLayout, offsetBytes / vertexSize, countBytes / vertexSize, true);
+
+        var instanceBuffer = graphics.bufferPool.Rent(instances.Length * Unsafe.SizeOf<TInstance>());
+        instanceBuffer.Upload(instances);
+        chunk.instanceBuffer = instanceBuffer;
+        chunk.instanceCount = instances.Length;
+        chunk.instanceLayout = VertexLayout.Get(typeof(TInstance));
+
+        AddRenderCommand(chunk, effect);
+    }
+
+    public void DrawInstancedTriangles<TVertex, TInstance>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices, ReadOnlySpan<TInstance> instances)
+       where TVertex : unmanaged
+       where TInstance : unmanaged
+    {
+        if (State.VertexShader is null)
+        {
+            throw new InvalidOperationException("Must have a vertex shader to accept custom vertices!");
+        }
+
+        var indexBuffer = vertexWriter.Write(MemoryMarshal.AsBytes(indices), sizeof(uint), out int offsetBytes, out int countBytes);
+        var vertexBuffer = graphics.bufferPool.Rent(vertices.Length * Unsafe.SizeOf<TVertex>());
+        vertexBuffer.Upload(vertices);
+
+        var chunk = GeometryChunk.CreateIndexed(vertexBuffer, indexBuffer, VertexLayout.Get(typeof(TVertex)), offsetBytes / sizeof(uint), countBytes / sizeof(uint), true);
+
+        var instanceBuffer = graphics.bufferPool.Rent(instances.Length * Unsafe.SizeOf<TInstance>());
+        instanceBuffer.Upload(instances);
+        chunk.instanceBuffer = instanceBuffer;
+        chunk.instanceCount = instances.Length;
+        chunk.instanceLayout = VertexLayout.Get(typeof(TInstance));
+
+        var effect = graphics.effects.GetEffectFromCanvasState(in State);
         AddRenderCommand(chunk, effect);
     }
 
@@ -263,7 +320,7 @@ internal class GLCanvas : ICanvas
 
     public void Fill(CanvasShader shader, VertexShader? vertexShader)
     {
-        // ProgrammableShaderEffect effect = graphics.GetShaderProgram(shader, vertexShader);
+        ArgumentNullException.ThrowIfNull(shader);
 
         currentState.Fill = true;
         currentState.Shader = shader;
@@ -297,7 +354,7 @@ internal class GLCanvas : ICanvas
         var stream = graphics.streams.GetTextureGeometryStream();
         stream.TransformMatrix = State.Transform;
         GLFont font = (GLFont)currentState.Font;
-        var effect = new SDFFontEffect(currentState.Color, font.GetAtlas(style), effects.fontProgram);
+        var effect = new SDFFontEffect(currentState.Color, font.GetAtlas(style), graphics.effects.fontProgram);
         var atlas = font.GetAtlas(style);
         if (!font.SupportsBold && (style & TextStyle.Bold) != 0)
         {
@@ -358,16 +415,14 @@ internal class GLCanvas : ICanvas
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glEnable(GL_BLEND);
             glDisable(GL_CULL_FACE);
-            glPolygonMode(GL_FRONT_AND_BACK, true ? GL_FILL : GL_LINE);
             glViewport(0, 0, Target.Width, Target.Height);
             glBindFramebuffer(GL_FRAMEBUFFER, this.fbo);
             commandList[i].Execute(this, transform4x4);
         }
         commandList.Clear();
 
-        bufferPool.Reset();
+        graphics.bufferPool.Reset();
         vertexWriter.Reset();
-        elementWriter.Reset();
     }
 
     public unsafe void Flush()
@@ -378,28 +433,48 @@ internal class GLCanvas : ICanvas
 
     public void DrawGeometry(IGeometry geometry)
     {
+        ArgumentNullException.ThrowIfNull(geometry);
+
         var glGeometry = (GLGeometry)geometry;
-        var effect = effects.GetEffectFromCanvasState(in State);
-        AddRenderCommand(glGeometry.chunk, effect);
+        var effect = graphics.effects.GetEffectFromCanvasState(in State);
+        AddRenderCommand(glGeometry.chunk with { wireframe = !State.Fill }, effect);
     }
 
-    public void DrawGeometryInstances(IGeometry geometry, ReadOnlySpan<Matrix3x2> instances)
+    public void DrawInstancedGeometry(IGeometry geometry, ReadOnlySpan<Matrix3x2> instances)
     {
-        var instanceBuffer = bufferPool.Rent(Unsafe.SizeOf<Matrix3x2>() * instances.Length);
+        var instanceBuffer = graphics.bufferPool.Rent(Unsafe.SizeOf<Matrix3x2>() * instances.Length);
         instanceBuffer.Upload(instances);
 
-        GeometryChunk[] chunks = [];
-        for (int i = 0; i < chunks.Length; i++)
-        {
-            AddRenderCommand(
-                chunks[i] with
-                {
-                    instanceBuffer = instanceBuffer,
-                    instanceCount = instances.Length,
-                },
-                effects.GetEffectFromCanvasState(in State)
-                );
-        }
+        var glGeometry = (GLGeometry)geometry;
+
+        AddRenderCommand(
+            glGeometry.chunk with
+            {
+                instanceBuffer = instanceBuffer,
+                instanceLayout = VertexLayout.Get(typeof(Matrix3x2)),
+                instanceCount = instances.Length,
+            },
+            graphics.effects.GetEffectFromCanvasState(in State)
+            );
+    }
+
+    public void DrawInstancedGeometry<TInstance>(IGeometry geometry, ReadOnlySpan<TInstance> instances)
+        where TInstance : unmanaged
+    {
+        var instanceBuffer = graphics.bufferPool.Rent(Unsafe.SizeOf<TInstance>() * instances.Length);
+        instanceBuffer.Upload(instances);
+
+        var glGeometry = (GLGeometry)geometry;
+        
+        AddRenderCommand(
+            glGeometry.chunk with
+            {
+                instanceBuffer = instanceBuffer,
+                instanceLayout = VertexLayout.Get(typeof(TInstance)),
+                instanceCount = instances.Length,
+            },
+            graphics.effects.GetEffectFromCanvasState(in State)
+            );
     }
 
     public void AddRenderCommand(GeometryChunk chunk, GeometryEffect effect)
@@ -433,14 +508,16 @@ internal class GLCanvas : ICanvas
                 }
             }
         }
+        
         commandList.Add(command);
+
+        // TODO: implement proper uniform handling
+        if (effect is ProgrammableShaderEffect)
+        {
+            SubmitCommands();
+        }
     }
 
-    public void DrawGeometryInstances<TInstance>(IGeometry geometry, ReadOnlySpan<TInstance> instances)
-        where TInstance : unmanaged
-    {
-        throw new NotImplementedException();
-    }
 
     public void Font(IFont font)
     {
@@ -477,13 +554,13 @@ internal class GLCanvas : ICanvas
 
     public void DrawLines(ReadOnlySpan<Vector2> vertices)
     {
-        var writer = writers.GetWriter(in State, true);
+        var writer = graphics.writers.GetWriter(in State, true);
         var stream = graphics.streams.GetStream(in State);
         for (int i = 0; i < vertices.Length; i += 2)
         {
             writer.PushLine(stream, vertices[i], vertices[i + 1]);
         }
-        AddRenderCommand(CreateChunk(stream, writer.UsesTriangles), effects.GetEffectFromCanvasState(in State));
+        AddRenderCommand(CreateChunk(stream, writer.UsesTriangles), graphics.effects.GetEffectFromCanvasState(in State));
     }
 
     public void DrawLines<TVertex>(ReadOnlySpan<TVertex> vertices) where TVertex : unmanaged
@@ -493,7 +570,7 @@ internal class GLCanvas : ICanvas
         {
             stream.WriteVertex(vertices[i]);
         }
-        AddRenderCommand(CreateChunk(stream, false), effects.GetEffectFromCanvasState(in State));
+        AddRenderCommand(CreateChunk(stream, false), graphics.effects.GetEffectFromCanvasState(in State));
     }
 
     public void Mask(IMask? mask)
@@ -505,5 +582,18 @@ internal class GLCanvas : ICanvas
     {
         currentState.WriteMask = mask;
         currentState.WriteMaskValue = value;
+    }
+
+    public unsafe void Dispose()
+    {
+        fixed (uint* fboPtr = &fbo) 
+        {
+            glDeleteFramebuffers(1, fboPtr);
+        }
+
+        fixed (uint* vaoPtr = &vao)
+        {
+            glDeleteVertexArrays(1, vaoPtr);
+        }
     }
 }

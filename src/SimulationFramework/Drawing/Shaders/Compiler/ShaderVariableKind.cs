@@ -12,6 +12,6 @@ public enum ShaderVariableKind
     Field,
     Uniform,
     VertexData,
-    // InstanceData,
+    InstanceData,
     VertexShaderOutput,
 }

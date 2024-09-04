@@ -98,7 +98,11 @@ public class ShaderCompiler
             {
                 varKind = ShaderVariableKind.VertexData;
             }
-            else if(field.GetCustomAttribute<VertexShaderOutputAttribute>() != null)
+            else if (field.GetCustomAttribute<InstanceDataAttribute>() != null)
+            {
+                varKind = ShaderVariableKind.InstanceData;
+            }
+            else if (field.GetCustomAttribute<VertexShaderOutputAttribute>() != null)
             {
                 varKind = ShaderVariableKind.VertexShaderOutput;
             }

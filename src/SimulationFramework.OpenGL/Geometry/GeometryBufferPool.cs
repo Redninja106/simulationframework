@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.OpenGL.Geometry;
-internal class GeometryBufferPool
+internal class GeometryBufferPool : IDisposable
 {
     public const int BufferSize = 1024 * 64; // 64kb
 
@@ -77,5 +77,25 @@ internal class GeometryBufferPool
 
         freeLargeBuffers.AddRange(usedLargeBuffers);
         usedLargeBuffers.Clear();
+    }
+
+    public void Dispose()
+    {
+        foreach (var buffer in usedBuffers)
+        {
+            buffer.Dispose();
+        }
+        foreach (var buffer in freeBuffers)
+        {
+            buffer.Dispose();
+        }
+        foreach (var buffer in freeLargeBuffers)
+        {
+            buffer.Dispose();
+        }
+        foreach (var buffer in usedLargeBuffers)
+        {
+            buffer.Dispose();
+        }
     }
 }

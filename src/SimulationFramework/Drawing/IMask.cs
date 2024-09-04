@@ -27,6 +27,9 @@ public interface IMask : IDisposable
 public interface IDepthMask : IMask
 {
     Comparison Comparison { get; set; }
+    float Bias { get; set; }
+    // float MaxDepthBias { get; set; }
+    float SlopeBias { get; set; }
 
     void Clear(float depthValue);
 }

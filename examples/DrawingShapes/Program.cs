@@ -22,7 +22,6 @@ partial class Program : Simulation
     public override void OnRender(ICanvas canvas)
     {
         Window.Title = $"Simulation - {(int)Performance.Framerate} FPS";
-        canvas.DrawText("Hello, World!", 72, 0, 0, TextStyle.Regular);
 
         canvas.Clear(Color.FromHSV(.1f, .1f, .1f));
 
@@ -85,5 +84,15 @@ partial class Program : Simulation
         canvas.Translate(150, 0);
         canvas.Font("Verdana");
         canvas.Fill(Color.Purple);
+        canvas.DrawText("Hello, World!", 72, 0, 0, TextStyle.Regular);
+
+        canvas.ResetState();
+        canvas.Translate(100, 500);
+
+        canvas.DrawTriangles([
+            50 * Angle.ToVector(0 * MathF.Tau / 3),
+            50 * Angle.ToVector(1 * MathF.Tau / 3),
+            50 * Angle.ToVector(2 * MathF.Tau / 3),
+        ]);
     }
 }

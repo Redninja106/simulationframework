@@ -3,6 +3,7 @@ using SimulationFramework.Drawing;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -17,6 +18,8 @@ internal class GLMask : IMask
     {
         get
         {
+            EnsureDataExists();
+
             if ((uint)x >= Width || (uint)y >= Height)
                 throw new IndexOutOfRangeException();
 
@@ -24,6 +27,8 @@ internal class GLMask : IMask
         }
         set
         {
+            EnsureDataExists();
+            
             if ((uint)x >= Width || (uint)y >= Height)
                 throw new IndexOutOfRangeException();
 
@@ -36,9 +41,9 @@ internal class GLMask : IMask
     public bool? WriteValue { get; set; }
 
     private uint tex;
-    private uint texFbo;
+    protected uint texFbo;
     private bool pixelsInvalid;
-    protected uint[] data;
+    protected uint[]? data;
 
     // A Mask can have a size different from the render target it is being used on,
     // so each render target keeps it's own depth stencil buffer and we copy to and
@@ -69,8 +74,6 @@ internal class GLMask : IMask
                 throw new Exception("Could not create mask framebuffer!");
             }
         }
-
-        data = new uint[width * height];
     }
 
     public unsafe void ApplyChanges()
@@ -86,17 +89,39 @@ internal class GLMask : IMask
         }
     }
 
+    [MemberNotNull(nameof(data))]
+    private void EnsureDataExists()
+    {
+        if (data is null)
+        {
+            data = new uint[Width * Height];
+        }
+
+        if (pixelsInvalid)
+        {
+            ReadLocalPixels();
+        }
+    }
+
     public unsafe void Clear(bool value)
     {
-        Array.Fill(data, (byte)(value ? 1 : 0));
-        ApplyChanges();
+        BindFramebuffer();
+        glClearStencil(value ? 1 : 0);
+        glClear(GL_STENCIL_BUFFER_BIT);
+        InvalidateLocalPixels();
     }
 
     public unsafe void Dispose()
     {
-        uint t = tex;
-        glDeleteTextures(1, &t);
-        tex = 0;
+        fixed (uint* texPtr = &tex) 
+        {
+            glDeleteTextures(1, texPtr);
+        }
+        fixed (uint* fboPtr = &texFbo) 
+        {
+            glDeleteFramebuffers(1, fboPtr);
+        }
+        EvictResidence(false);
     }
 
     private unsafe void ReadLocalPixels()
@@ -124,7 +149,11 @@ internal class GLMask : IMask
         }
 
         glEnable(GL_STENCIL_TEST);
-        glDisable(GL_DEPTH_TEST);
+
+        if (this is not GLDepthMask)
+        {
+            glDisable(GL_DEPTH_TEST);
+        }
 
         glStencilFunc(GL_EQUAL, 0x1, 0x1);
         glStencilMask(0x1);
@@ -151,7 +180,12 @@ internal class GLMask : IMask
             int width = Math.Min(Width, residence.Width);
             int height = Math.Min(Height, residence.Height);
             // TODO: this should copy to top left
-            glBlitNamedFramebuffer(this.texFbo, 0, 0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+            uint flags = GL_STENCIL_BUFFER_BIT;
+            if (this is GLDepthMask)
+            {
+                flags |= GL_DEPTH_BUFFER_BIT;
+            }
+            glBlitNamedFramebuffer(this.texFbo, 0, 0, 0, width, height, 0, 0, width, height, flags, GL_NEAREST);
         }
         else if (residence is GLTexture texture)
         {
@@ -163,6 +197,10 @@ internal class GLMask : IMask
             {
                 GLCanvas canvas = (GLCanvas)texture.GetCanvas();
                 glNamedFramebufferTexture(canvas.fbo, GL_DEPTH_STENCIL_ATTACHMENT, this.tex, 0);
+                if (glCheckNamedFramebufferStatus(canvas.fbo, GL_DRAW_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+                {
+                    throw new Exception("Could not make mask resident!");
+                }
             }
         }
         else
@@ -171,30 +209,39 @@ internal class GLMask : IMask
         }
     }
 
-    public void EvictResidence()
+    public void EvictResidence(bool copyBack = true)
     {
-        if (residence is GLFrame frame)
+        if (residence is null)
         {
-            int width = Math.Min(Width, residence.Width);
-            int height = Math.Min(Height, residence.Height);
-            // TODO: this should copy to top left
-            glBlitNamedFramebuffer(0, this.texFbo, 0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+            return;
         }
-        else if (residence is GLTexture texture)
+
+        if (copyBack)
         {
-            if (Width < texture.Width || Height < texture.Height)
+            if (residence is GLFrame frame)
             {
-                throw new NotImplementedException();
+                int width = Math.Min(Width, residence.Width);
+                int height = Math.Min(Height, residence.Height);
+                // TODO: this should copy to top left
+                glBlitNamedFramebuffer(0, this.texFbo, 0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+                glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
+            }
+            else if (residence is GLTexture texture)
+            {
+                if (Width < texture.Width || Height < texture.Height)
+                {
+                    throw new NotImplementedException();
+                }
+                else
+                {
+                    GLCanvas canvas = (GLCanvas)texture.GetCanvas();
+                    glNamedFramebufferTexture(canvas.fbo, GL_DEPTH_STENCIL_ATTACHMENT, 0, 0);
+                }
             }
             else
             {
-                GLCanvas canvas = (GLCanvas)texture.GetCanvas();
-                glNamedFramebufferTexture(canvas.fbo, GL_DEPTH_STENCIL_ATTACHMENT, 0, 0);
+                throw new();
             }
-        }
-        else
-        {
-            throw new();
         }
 
         residence.Resident = null;
@@ -211,5 +258,27 @@ internal class GLMask : IMask
         {
             glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
         }
+    }
+
+    protected void BindFramebuffer()
+    {
+        uint fbo = texFbo;
+        if (residence != null)
+        {
+            if (residence is GLTexture texture)
+            {
+                GLCanvas canvas = (GLCanvas)texture.GetCanvas();
+                fbo = canvas.fbo;
+            }
+            else if (residence is GLFrame frame)
+            {
+                fbo = 0;
+            }
+            else
+            {
+                throw new();
+            }
+        }
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
     }
 }

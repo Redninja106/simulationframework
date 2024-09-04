@@ -8,14 +8,18 @@ using System.Threading.Tasks;
 namespace SimulationFramework.OpenGL;
 internal class GLDepthMask : GLMask, IDepthMask
 {
+    public Comparison Comparison { get; set; } = Comparison.LessThanEqual;
+    public float Bias { get; set; }
+    public float SlopeBias { get; set; }
+
     public GLDepthMask(int width, int height) : base(width, height)
     {
     }
 
-    public Comparison Comparison { get; set; } = Comparison.LessThanEqual;
 
     public void Clear(float value)
     {
+        BindFramebuffer();
         glClearDepth((double)value);
         glClear(GL_DEPTH_BUFFER_BIT);
     }
@@ -24,6 +28,18 @@ internal class GLDepthMask : GLMask, IDepthMask
     {
         base.BindRead(target);
         glEnable(GL_DEPTH_TEST);
+        if (Bias != 0 || SlopeBias != 0)
+        {
+            glEnable(GL_POLYGON_OFFSET_FILL);
+            glEnable(GL_POLYGON_OFFSET_LINE);
+            glPolygonOffset(SlopeBias, Bias);
+        }
+        else
+        {
+            glDisable(GL_POLYGON_OFFSET_FILL);
+            glDisable(GL_POLYGON_OFFSET_LINE);
+        }
+
         glDepthFunc(Comparison switch
         {
             Comparison.Always => GL_ALWAYS,

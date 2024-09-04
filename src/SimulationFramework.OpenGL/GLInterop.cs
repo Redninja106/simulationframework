@@ -10,6 +10,8 @@ public static class GLInterop
 {
     public static uint GetTextureID(ITexture texture)
     {
-        return ((GLTexture)texture).GetID();
+        var glTexture = (GLTexture)texture;
+        glTexture.PrepareForRender();
+        return glTexture.GetID();
     }
 }

@@ -11,8 +11,9 @@ struct GeometryChunk
 
     // vertex information
     public VertexLayout vertexLayout;
-    public bool largeIndices;
+    public VertexLayout? instanceLayout;
     public bool triangles;
+    public bool wireframe;
 
     // draw info
     public int offset;
@@ -23,11 +24,14 @@ struct GeometryChunk
     public unsafe void Draw()
     {
         vertexBuffer.Bind();
-        vertexLayout.Bind();
+        vertexLayout.Bind(0, false);
+
+        glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 
         if (instanceBuffer != null)
         {
             instanceBuffer.Bind();
+            instanceLayout!.Bind(vertexLayout.AttributeCount, true);
         }
 
         uint mode = triangles ? GL_TRIANGLES : GL_LINES;
@@ -46,21 +50,20 @@ struct GeometryChunk
         {
             indexBuffer.BindAsIndexBuffer();
 
-            uint indexType = largeIndices ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT;
-            int indexOffset = offset * (largeIndices ? sizeof(uint) : sizeof(ushort));
+            int indexOffset = offset * sizeof(uint);
 
             if (instanceBuffer == null)
             {
-                glDrawElementsBaseVertex(mode, count, indexType, (void*)indexOffset, baseVertex);
+                glDrawElementsBaseVertex(mode, count, GL_UNSIGNED_INT, (void*)indexOffset, baseVertex);
             }
             else
             {
-                glDrawElementsInstancedBaseVertex(mode, count, indexType, (void*)indexOffset, instanceCount, baseVertex);
+                glDrawElementsInstancedBaseVertex(mode, count, GL_UNSIGNED_INT, (void*)indexOffset, instanceCount, baseVertex);
             }
         }
     }
 
-    public static GeometryChunk Create(GeometryBuffer vertexBuffer, GeometryStream geometryStream, int offset, int count, bool triangles)
+    public static GeometryChunk Create(GeometryBuffer vertexBuffer, VertexLayout vertexLayout, int offset, int count, bool triangles)
     {
         return new()
         {
@@ -68,7 +71,20 @@ struct GeometryChunk
             offset = offset,
             count = count,
             triangles = triangles,
-            vertexLayout = geometryStream.VertexLayout,
+            vertexLayout = vertexLayout,
+        };
+    }
+
+    public static GeometryChunk CreateIndexed(GeometryBuffer vertexBuffer, GeometryBuffer indexBuffer, VertexLayout vertexLayout, int offset, int count, bool triangles)
+    {
+        return new()
+        {
+            vertexBuffer = vertexBuffer,
+            offset = offset,
+            count = count,
+            triangles = triangles,
+            vertexLayout = vertexLayout,
+            indexBuffer = indexBuffer,
         };
     }
 }
