@@ -8,5 +8,7 @@ namespace SimulationFramework.Drawing;
 public enum TextureFilter
 {
     Point,
-    Linear
+    Linear,
+    MipmapPoint,
+    MipmapLinear,
 }

@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using SimulationFramework.Components;
 using SimulationFramework.Drawing;
 using System;
 using System.Collections;
@@ -45,6 +46,11 @@ internal class GLMask : IMask
     private bool pixelsInvalid;
     protected uint[]? data;
 
+    public uint GetID()
+    {
+        return tex;
+    }
+
     // A Mask can have a size different from the render target it is being used on,
     // so each render target keeps it's own depth stencil buffer and we copy to and
     // from it (only) when needed.
@@ -63,6 +69,9 @@ internal class GLMask : IMask
 
         glBindTexture(GL_TEXTURE_2D, tex);
         glTexImage2D(GL_TEXTURE_2D, 0, (int)GL_DEPTH24_STENCIL8, width, height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, null);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (int)GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (int)GL_NEAREST);
+
         glBindTexture(GL_TEXTURE_2D, 0);
 
         fixed (uint* texFboPtr = &texFbo)
@@ -280,5 +289,24 @@ internal class GLMask : IMask
             }
         }
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    }
+
+    internal void PrepareForRender()
+    {
+        if (residence is GLTexture texture)
+        {
+            GLCanvas canvas = (GLCanvas)texture.GetCanvas();
+            canvas.SubmitCommands();
+        }
+        else if (residence is GLFrame frame)
+        {
+            var graphicsProvider = Application.GetComponent<IGraphicsProvider>();
+            GLCanvas canvas = (GLCanvas)graphicsProvider.GetWindowCanvas();
+            canvas.SubmitCommands();
+        }
+        else
+        {
+            throw new();
+        }
     }
 }

@@ -47,6 +47,7 @@ public class ShaderCompiler
         primitiveTypeMap[typeof(Matrix4x4)] = ShaderType.Matrix4x4;
         primitiveTypeMap[typeof(Matrix3x2)] = ShaderType.Matrix3x2;
         primitiveTypeMap[typeof(ITexture)] = ShaderType.Texture;
+        primitiveTypeMap[typeof(IDepthMask)] = ShaderType.DepthMask;
     }
 
     public ShaderCompilation Compile(Shader shader)

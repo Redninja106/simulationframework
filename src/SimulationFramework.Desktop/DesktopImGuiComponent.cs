@@ -24,6 +24,23 @@ internal class DesktopImGuiComponent : ISimulationComponent
         // we expect the mouse & keyboard providers to be registered already
         mouseProvider = Application.GetComponent<DesktopMouseProvider>();
         keyboardProvider = Application.GetComponent<DesktopKeyboardProvider>();
+
+        var io = ImGui.GetIO();
+
+        foreach (ImGuiKey key in Enum.GetValues<ImGuiKey>())
+        {
+            if (Enum.TryParse(key.ToString(), true, out SilkKey silkKey))
+            {
+                io.KeyMap[(int)silkKey] = (int)key;
+            }
+        }
+
+        io.KeyMap[(int)SilkKey.ShiftLeft] = (int)ImGuiKey.LeftShift;
+        io.KeyMap[(int)SilkKey.ShiftRight] = (int)ImGuiKey.RightShift;
+        io.KeyMap[(int)SilkKey.AltLeft] = (int)ImGuiKey.LeftAlt;
+        io.KeyMap[(int)SilkKey.AltRight] = (int)ImGuiKey.RightAlt;
+        io.KeyMap[(int)SilkKey.ControlLeft] = (int)ImGuiKey.LeftCtrl;
+        io.KeyMap[(int)SilkKey.ControlRight] = (int)ImGuiKey.RightCtrl;
     }
 
     public void Initialize(MessageDispatcher dispatcher)
@@ -37,8 +54,8 @@ internal class DesktopImGuiComponent : ISimulationComponent
         imGuiController.Update(Time.DeltaTime);
 
         var io = ImGui.GetIO();
-        keyboardProvider.capturedByImgui = io.WantCaptureKeyboard;
-        mouseProvider.capturedByImgui = io.WantCaptureMouse;
+        keyboardProvider.CapturedByImgui = io.WantCaptureKeyboard;
+        mouseProvider.CapturedByImgui = io.WantCaptureMouse;
     }
 
     void AfterRender(AfterRenderMessage message)

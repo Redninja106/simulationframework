@@ -63,6 +63,13 @@ public unsafe class GLGraphics : IGraphicsProvider
         Console.WriteLine(str);
     }
 
+    public void GenerateMipmaps(ITexture texture)
+    {
+        var glTexture = (GLTexture)texture;
+        glGenerateTextureMipmap(glTexture.GetID());
+        glTexture.hasMipmaps = true;
+    }
+
     public void Dispose()
     {
     }

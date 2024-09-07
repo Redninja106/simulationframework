@@ -495,6 +495,7 @@ internal class GLSLShaderEmitter
                 ShaderPrimitiveKind.Matrix3x2 => "mat3x2",
                 ShaderPrimitiveKind.Matrix4x4 => "mat4",
                 ShaderPrimitiveKind.Texture => "sampler2D",
+                ShaderPrimitiveKind.DepthMask => "sampler2D",
                 _ => throw new NotSupportedException(primitive.ToString())
             });
             return;

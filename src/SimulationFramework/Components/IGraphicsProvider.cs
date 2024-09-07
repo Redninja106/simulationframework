@@ -48,4 +48,6 @@ public interface IGraphicsProvider : ISimulationComponent
 
     IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices) 
         where TVertex : unmanaged;
+
+    void GenerateMipmaps(ITexture texture);
 }

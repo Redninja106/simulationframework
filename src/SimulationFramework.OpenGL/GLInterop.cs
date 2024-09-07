@@ -8,6 +8,13 @@ using System.Threading.Tasks;
 namespace SimulationFramework.OpenGL;
 public static class GLInterop
 {
+    public static uint GetMaskID(IDepthMask mask)
+    {
+        var glTexture = (GLMask)mask;
+        glTexture.PrepareForRender();
+        return glTexture.GetID();
+    }
+
     public static uint GetTextureID(ITexture texture)
     {
         var glTexture = (GLTexture)texture;

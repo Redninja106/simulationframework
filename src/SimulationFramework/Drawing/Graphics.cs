@@ -183,6 +183,11 @@ public static class Graphics
         return Provider.CreateDepthMask(width, height);
     }
 
+    public static void GenerateMipmaps(ITexture texture)
+    {
+        Provider.GenerateMipmaps(texture);
+    }
+
     // TODO: optional manual buffer copies
     // public static void CopyToGPU<T>(T[] array) { }
     // public static void CopyFromGPU<T>(T[] array) { }

@@ -409,14 +409,15 @@ internal class GLCanvas : ICanvas, IDisposable
 
         vertexWriter.UploadCurrentBuffer();
 
-        glBindVertexArray(vao);
+        glBindVertexArray(vao); 
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glDisable(GL_CULL_FACE);
+        glViewport(0, 0, Target.Width, Target.Height);
+        glBindFramebuffer(GL_FRAMEBUFFER, this.fbo);
+
         for (int i = 0; i < commandList.Count; i++)
         {
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glEnable(GL_BLEND);
-            glDisable(GL_CULL_FACE);
-            glViewport(0, 0, Target.Width, Target.Height);
-            glBindFramebuffer(GL_FRAMEBUFFER, this.fbo);
             commandList[i].Execute(this, transform4x4);
         }
         commandList.Clear();

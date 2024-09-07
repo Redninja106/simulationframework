@@ -1,4 +1,5 @@
-﻿using SimulationFramework.Drawing.Shaders;
+﻿using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Drawing.Shaders.Compiler;
 using System;
 using System.Collections.Generic;
@@ -108,10 +109,10 @@ class UniformHandler
         bufferSlot++;
     }
 
-    private void SetTextureUniform(GLTexture? texture, int location)
+    private void SetTextureUniform(uint id, int location)
     {
         glActiveTexture(GL_TEXTURE0 + (uint)textureSlot);
-        glBindTexture(GL_TEXTURE_2D, texture?.GetID() ?? 0);
+        glBindTexture(GL_TEXTURE_2D, id);
         glUniform1i(location, textureSlot);
         textureSlot++;
     }
@@ -120,7 +121,13 @@ class UniformHandler
     {
         if (primitive is ShaderPrimitiveKind.Texture)
         {
-            SetTextureUniform((GLTexture?)value, location);
+            SetTextureUniform(((GLTexture?)value)?.GetID() ?? 0, location);
+            return;
+        }
+
+        if (primitive is ShaderPrimitiveKind.DepthMask)
+        {
+            SetTextureUniform(((GLDepthMask?)value)?.GetID() ?? 0, location);
             return;
         }
 

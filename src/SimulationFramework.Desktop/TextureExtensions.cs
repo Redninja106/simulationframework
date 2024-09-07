@@ -8,4 +8,9 @@ public static class TextureExtensions
     {
         return (nint)GLInterop.GetTextureID(texture);
     }
+
+    public static nint GetImGuiID(this IDepthMask mask)
+    {
+        return (nint)GLInterop.GetMaskID(mask);
+    }
 }

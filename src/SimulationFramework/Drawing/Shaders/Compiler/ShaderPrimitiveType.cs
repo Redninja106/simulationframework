@@ -34,4 +34,5 @@ public enum ShaderPrimitiveKind
     Matrix4x4,
     Matrix3x2,
     Texture,
+    DepthMask,
 }

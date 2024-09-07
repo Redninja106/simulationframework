@@ -37,7 +37,7 @@ internal unsafe class DesktopMouseProvider : IMouseProvider
     private unsafe WindowHandle* glfwWindow;
 
     private float scrollWheel;
-    internal bool capturedByImgui;
+    internal bool CapturedByImgui;
 
     public DesktopMouseProvider(IMouse mouse, WindowHandle* window)
     {
@@ -50,7 +50,7 @@ internal unsafe class DesktopMouseProvider : IMouseProvider
 
     private void Mouse_MouseUp(IMouse arg1, SilkButton arg2)
     {
-        if (capturedByImgui)
+        if (CapturedByImgui)
             return;
 
         var button = ConvertButton(arg2);
@@ -63,7 +63,7 @@ internal unsafe class DesktopMouseProvider : IMouseProvider
 
     private void Mouse_MouseDown(IMouse arg1, SilkButton arg2)
     {
-        if (capturedByImgui)
+        if (CapturedByImgui)
             return;
 
         var button = ConvertButton(arg2);
@@ -106,7 +106,7 @@ internal unsafe class DesktopMouseProvider : IMouseProvider
 
     private float GetScrollWheelValue()
     {
-        if (capturedByImgui)
+        if (CapturedByImgui)
             return 0;
 
         if (mouse.ScrollWheels.Count > 0)

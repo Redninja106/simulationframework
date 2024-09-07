@@ -18,7 +18,7 @@ internal class DesktopKeyboardProvider : IKeyboardProvider
     private readonly List<Key> heldKeys = new();
     private readonly List<Key> pressedKeys = new();
     private readonly List<Key> releasedKeys = new();
-    internal bool capturedByImgui;
+    internal bool CapturedByImgui;
 
     public DesktopKeyboardProvider(IKeyboard keyboard)
     {
@@ -29,12 +29,18 @@ internal class DesktopKeyboardProvider : IKeyboardProvider
 
     private void Keyboard_KeyChar(IKeyboard arg1, char arg2)
     {
+        if (CapturedByImgui)
+            return;
+
         typedChars.Add(arg2);
         KeyTyped?.Invoke(arg2);
     }
 
     private void Keyboard_KeyUp(IKeyboard arg1, SilkKey arg2, int arg3)
     {
+        if (CapturedByImgui)
+            return;
+
         var key = ConvertKey(arg2);
 
         heldKeys.Remove(key);
@@ -45,6 +51,9 @@ internal class DesktopKeyboardProvider : IKeyboardProvider
 
     private void Keyboard_KeyDown(IKeyboard arg1, SilkKey arg2, int arg3)
     {
+        if (CapturedByImgui)
+            return;
+
         var key = ConvertKey(arg2);
 
         if (!heldKeys.Contains(key))
@@ -64,6 +73,11 @@ internal class DesktopKeyboardProvider : IKeyboardProvider
         typedChars.Clear();
         pressedKeys.Clear();
         releasedKeys.Clear();
+
+        if (CapturedByImgui)
+        {
+            heldKeys.Clear();
+        }
     }
 
     public void Dispose()

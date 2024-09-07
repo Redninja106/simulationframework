@@ -18,6 +18,7 @@ internal sealed class GLTexture : IGLImage, ITexture
 
     private readonly uint id;
 
+    internal bool hasMipmaps;
     private bool pixelsDirty;
 
     private readonly GLGraphics graphics;
@@ -69,16 +70,25 @@ internal sealed class GLTexture : IGLImage, ITexture
         {
             filter = value;
 
-            int glFilter = value switch
+            int magFilter = value switch
+            {
+                TextureFilter.Point or TextureFilter.MipmapPoint => (int)GL_NEAREST,
+                TextureFilter.Linear or TextureFilter.MipmapLinear => (int)GL_LINEAR,
+                _ => throw new ArgumentException(null, nameof(value))
+            };
+
+            int minFilter = value switch
             {
                 TextureFilter.Point => (int)GL_NEAREST,
                 TextureFilter.Linear => (int)GL_LINEAR,
+                TextureFilter.MipmapPoint => (int)GL_NEAREST_MIPMAP_NEAREST,
+                TextureFilter.MipmapLinear => (int)GL_LINEAR_MIPMAP_LINEAR,
                 _ => throw new ArgumentException(null, nameof(value))
             };
 
             glBindTexture(GL_TEXTURE_2D, id);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilter);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, hasMipmaps ? minFilter : magFilter);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
             glBindTexture(GL_TEXTURE_2D, 0);
         }
     }
@@ -110,23 +120,27 @@ internal sealed class GLTexture : IGLImage, ITexture
             glGenTextures(1, idPtr);
         }
 
-        glBindTexture(GL_TEXTURE_2D, id);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, (int)GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (int)GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, (int)GL_CLAMP_TO_BORDER);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, (int)GL_CLAMP_TO_BORDER);
+        Filter = TextureFilter.Point;
+        WrapModeX = WrapMode.Repeat;
+        WrapModeY = WrapMode.Repeat;
 
         fixed (Color* data = colors)
         {
+            glBindTexture(GL_TEXTURE_2D, id);
             glTexImage2D(GL_TEXTURE_2D, 0, unchecked((int)GL_RGBA8), width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         }
 
     }
 
+    public void SetAnisotropy(float f)
+    {
+        glTextureParameterf(id, GL_TEXTURE_MAX_ANISOTROPY, f);
+    }
+
     private static uint MapTileMode(WrapMode mode) => mode switch
     {
         WrapMode.Mirror => GL_MIRRORED_REPEAT,
-        WrapMode.Repeat => GL_MIRRORED_REPEAT,
+        WrapMode.Repeat => GL_REPEAT,
         WrapMode.Clamp => GL_CLAMP_TO_EDGE,
         WrapMode.None => GL_CLAMP_TO_BORDER,
     };

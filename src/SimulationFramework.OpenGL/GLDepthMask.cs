@@ -10,7 +10,6 @@ internal class GLDepthMask : GLMask, IDepthMask
 {
     public Comparison Comparison { get; set; } = Comparison.LessThanEqual;
     public float Bias { get; set; }
-    public float SlopeBias { get; set; }
 
     public GLDepthMask(int width, int height) : base(width, height)
     {
@@ -28,11 +27,11 @@ internal class GLDepthMask : GLMask, IDepthMask
     {
         base.BindRead(target);
         glEnable(GL_DEPTH_TEST);
-        if (Bias != 0 || SlopeBias != 0)
+        if (Bias != 0)
         {
             glEnable(GL_POLYGON_OFFSET_FILL);
             glEnable(GL_POLYGON_OFFSET_LINE);
-            glPolygonOffset(SlopeBias, Bias);
+            glPolygonOffset(Bias, 0);
         }
         else
         {

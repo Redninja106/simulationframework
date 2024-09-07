@@ -20,6 +20,7 @@ public abstract class ShaderType
     public static ShaderType Matrix4x4 { get; } = new ShaderPrimitiveType(ShaderPrimitiveKind.Matrix4x4);
     public static ShaderType Matrix3x2 { get; } = new ShaderPrimitiveType(ShaderPrimitiveKind.Matrix3x2);
     public static ShaderType Texture { get; } = new ShaderPrimitiveType(ShaderPrimitiveKind.Texture);
+    public static ShaderType DepthMask { get; } = new ShaderPrimitiveType(ShaderPrimitiveKind.DepthMask);
 
     public ShaderPrimitiveKind? GetPrimitiveKind()
     {
