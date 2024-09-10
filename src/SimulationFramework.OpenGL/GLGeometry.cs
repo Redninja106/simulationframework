@@ -73,7 +73,10 @@ unsafe internal class GLGeometry : IGeometry
         TVertex[] array = new TVertex[chunk.vertexBuffer.size / Unsafe.SizeOf<TVertex>()];
         fixed (TVertex* vertexPtr = array)
         {
-            glGetNamedBufferSubData(chunk.vertexBuffer.buffer, 0, chunk.vertexBuffer.size, vertexPtr);
+            glBindBuffer(GL_ARRAY_BUFFER, chunk.vertexBuffer.buffer);
+            void* range = glMapBufferRange(GL_ARRAY_BUFFER, 0, chunk.vertexBuffer.size, GL_MAP_READ_BIT);
+            Buffer.MemoryCopy(range, vertexPtr, chunk.vertexBuffer.size, chunk.vertexBuffer.size);
+            glUnmapBuffer(GL_ARRAY_BUFFER);
         }
         return array;
     }
@@ -167,3 +170,4 @@ unsafe internal class GLGeometry : IGeometry
         }
     }
 }
+;

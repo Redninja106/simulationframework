@@ -26,7 +26,7 @@ struct GeometryChunk
         vertexBuffer.Bind();
         vertexLayout.Bind(0, false);
 
-        glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
+        // glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 
         if (instanceBuffer != null)
         {

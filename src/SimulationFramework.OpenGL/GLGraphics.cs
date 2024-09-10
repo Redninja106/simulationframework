@@ -11,8 +11,10 @@ using SimulationFramework.OpenGL.Shaders;
 using StbImageSharp;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -34,27 +36,59 @@ public unsafe class GLGraphics : IGraphicsProvider
     internal GeometryBufferPool bufferPool;
     internal GeometryEffectCollection effects;
     internal GeometryWriterCollection writers;
+    internal int MaxTextureSize;
 
-    public GLGraphics(GLFrame frame, Func<string, nint> getProcAddress)
+    private readonly string shaderVersion;
+
+    public readonly bool HasGLES31 = false;
+
+    public static bool ForceCompatability { get; set; } = false;
+
+    public GLGraphics(GLFrame frame, string shaderVersion, Func<string, nint> getProcAddress)
     {
+        this.shaderVersion = shaderVersion;
         this.frame = frame;
-        global::OpenGL.Initialize(name => (delegate*<void>)getProcAddress(name));
+        Khronos.OpenGL.glInitialize(name => getProcAddress(name));
 
+#if DEBUG
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
         glDebugMessageCallback(&DebugCallback, null);
+#endif
+        
+        if (!ForceCompatability)
+        {
+            int major, minor;
+            glGetIntegerv(GL_MAJOR_VERSION, &major);
+            glGetIntegerv(GL_MINOR_VERSION, &minor);
 
-        DefaultFont = LoadSystemFont("Verdana");
+            if (major > 3 || (major == 3 && minor >= 1))
+            {
+                HasGLES31 = true;
+            }
+        }
+
+        fixed (int* maxTextureSizePtr = &MaxTextureSize)
+        {
+            glGetIntegerv(GL_MAX_TEXTURE_SIZE, maxTextureSizePtr);
+        }
+        Debug.Assert(MaxTextureSize != 0);
+
+        var defaultFontStream = Assembly.GetExecutingAssembly()
+            .GetManifestResourceStream("SimulationFramework.OpenGL.MartianMono.ttf");
+        byte[] defaultFontData = new byte[defaultFontStream.Length];
+        defaultFontStream.Read(defaultFontData);
+        DefaultFont = LoadFont(defaultFontData);
 
         bufferPool = new();
 
         streams = new(this);
-        effects = new(this);
+        effects = new(this, shaderVersion);
         writers = new();
     }
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
-    private static void DebugCallback(uint source, uint type, uint id, uint severity, long length, byte* message, void* userParam)
+    private static void DebugCallback(uint source, uint type, uint id, uint severity, int length, byte* message, void* userParam)
     {
         if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
             return;
@@ -66,7 +100,8 @@ public unsafe class GLGraphics : IGraphicsProvider
     public void GenerateMipmaps(ITexture texture)
     {
         var glTexture = (GLTexture)texture;
-        glGenerateTextureMipmap(glTexture.GetID());
+        glBindTexture(GL_TEXTURE_2D, glTexture.GetID());
+        glGenerateMipmap(GL_TEXTURE_2D);
         glTexture.hasMipmaps = true;
     }
 
@@ -115,6 +150,11 @@ public unsafe class GLGraphics : IGraphicsProvider
         else if (OperatingSystem.IsMacOS())
         {
             string path = Path.Combine("/Library/Fonts/", name + ".ttf");
+            return LoadFont(File.ReadAllBytes(Path.GetFullPath(path)));
+        }
+        else if (OperatingSystem.IsAndroid())
+        {
+            string path = Path.Combine("/System/Fonts/", name + ".ttf");
             return LoadFont(File.ReadAllBytes(Path.GetFullPath(path)));
         }
         else
@@ -168,7 +208,7 @@ public unsafe class GLGraphics : IGraphicsProvider
             vsSrc = vsSw.ToString();
         }
 
-        program = new(compilation, src, vsCompilation, vsSrc);
+        program = new(this.shaderVersion, compilation, src, vsCompilation, vsSrc);
         shaderPrograms[(shader.GetType(), vs?.GetType())] = program;
         return program;
     }
@@ -189,7 +229,7 @@ public unsafe class GLGraphics : IGraphicsProvider
         if (!computeShaders.TryGetValue(computeShader.GetType(), out var glShader))
         {
             var compilation = ShaderCompiler.Compile(computeShader);
-            glShader = new ComputeShaderEffect(computeShader.GetType(), compilation);
+            glShader = new ComputeShaderEffect(computeShader.GetType(), shaderVersion, compilation);
             computeShaders[computeShader.GetType()] = glShader;
         }
 

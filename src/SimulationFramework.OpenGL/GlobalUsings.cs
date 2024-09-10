@@ -1,1 +1,1 @@
-﻿global using static OpenGL;
+﻿global using static Khronos.OpenGL;

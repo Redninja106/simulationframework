@@ -77,6 +77,7 @@ partial class Program : Simulation
         canvas.Fill(Color.Beige);
         canvas.DrawArc(0, 0, 50, 50, MathF.PI / 3f, 5 * MathF.PI / 3f, true, Alignment.Center);
 
+
         canvas.Translate(150, 0);
         canvas.Fill(Color.DarkOliveGreen);
         canvas.DrawCircle(0, 0, 50);

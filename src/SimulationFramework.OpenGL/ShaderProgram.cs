@@ -10,7 +10,7 @@ class ShaderProgram
 {
     private uint programID;
 
-    public unsafe ShaderProgram(string vsSource, string fsSource)
+    public unsafe ShaderProgram(string shaderVersion, string vsSource, string fsSource)
     {
         if (ShaderCompiler.DumpShaders)
         {
@@ -23,10 +23,12 @@ class ShaderProgram
 
         var vs = glCreateShader(GL_VERTEX_SHADER);
         var fs = glCreateShader(GL_FRAGMENT_SHADER);
-        ShaderSource(vs, vsSource);
+        ShaderSource(vs, shaderVersion + "\n" + vsSource);
 
-        ShaderSource(fs, fsSource);
+        ShaderSource(fs, shaderVersion + "\n" + fsSource);
         programID = glCreateProgram();
+        if (programID == 0)
+            throw new();
         glAttachShader(programID, vs);
         glAttachShader(programID, fs);
         glLinkProgram(programID);

@@ -1,7 +1,9 @@
-﻿using SimulationFramework.Drawing.Shaders.Compiler;
+﻿using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Shaders.Compiler;
 using SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 using System;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Data.Common;
 using System.Diagnostics;
@@ -9,8 +11,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SimulationFramework.OpenGL.Shaders;
 internal class GLSLShaderEmitter
@@ -382,9 +386,9 @@ internal class GLSLShaderEmitter
     public GLSLShaderEmitter(TextWriter writer)
     {
         this.writer = new(writer);
-        writer.WriteLine("const float _PositiveInfinity = uintBitsToFloat(0x7F800000);");
-        writer.WriteLine("const float _NegativeInfinity = uintBitsToFloat(0xFF800000);");
-        writer.WriteLine("const float _NaN = 0 * _PositiveInfinity;");
+        writer.WriteLine("const float _PositiveInfinity = intBitsToFloat(0x7F800000);");
+        writer.WriteLine("const float _NegativeInfinity = intBitsToFloat(0xFF800000);");
+        writer.WriteLine("const float _NaN = 0.0 * _PositiveInfinity;");
         this.expressionEmitter = new(this.writer, this);
     }
 
@@ -403,6 +407,12 @@ internal class GLSLShaderEmitter
             EmitVariable(variable);
         }
 
+        var graphics = Application.GetComponent<GLGraphics>();
+        if (!graphics.HasGLES31)
+        {
+            EmitBufferLoadFunctions(graphics);
+        }
+
         foreach (var method in compilation.Methods)
         {
             EmitMethodHeader(method);
@@ -414,6 +424,71 @@ internal class GLSLShaderEmitter
             EmitMethodHeader(method);
             writer.Write(' ');
             EmitMethodBody(method);
+        }
+
+    }
+
+    private void EmitBufferLoadFunctions(GLGraphics graphics)
+    {
+        foreach (var buffer in compilation.Variables.Where(v => v.Kind == ShaderVariableKind.Uniform))
+        {
+            var elementType = (buffer.Type as ShaderArrayType)?.ElementType;
+            if (elementType == null)
+            {
+                continue;
+            }
+
+            var fields = TextureShaderArray.TexturePackedField.PackFields(buffer, out _, out int bufferStride);
+
+            EmitType(elementType);
+            writer.WriteLine($" _bufferload_{buffer.Name}(int index) {{");
+            writer.Indent++;
+
+            writer.WriteLine($"ivec2 pos = ivec2((index * {bufferStride / 16}) % {graphics.MaxTextureSize}, (index * {bufferStride / 16}) / {graphics.MaxTextureSize});");
+            EmitType(elementType);
+            writer.WriteLine($" result;");
+
+            int fieldIndex = 0;
+            int elementOffset = -1;
+            while (fieldIndex < fields.Length)
+            {
+                var field = fields[fieldIndex];
+                if (elementOffset != field.elementOffset)
+                {
+                    if (elementOffset >= 0)
+                    {
+                        writer.WriteLine("pos.x++;");
+                        writer.WriteLine($"if (pos.x >= {graphics.MaxTextureSize}) {{ pos.x = 0; pos.y++; }} ");
+                    }
+                    
+                    elementOffset++;
+
+                    writer.WriteLine($"uvec4 value{elementOffset} = texelFetch({buffer.Name}, pos, 0);");
+                }
+
+                ReadOnlySpan<char> swizzle = "xyzw".AsSpan(field.channelOffset, field.channelCount);
+
+                if (field.Variable.Type.GetPrimitiveKind() is 
+                    ShaderPrimitiveKind.Float or 
+                    ShaderPrimitiveKind.Float2 or 
+                    ShaderPrimitiveKind.Float3 or 
+                    ShaderPrimitiveKind.Float4
+                    )
+                {
+                    writer.WriteLine($"result.{field.NestedName} = uintBitsToFloat(value{elementOffset}.{swizzle});");
+                }
+                else
+                {
+                    writer.WriteLine($"result.{field.NestedName} = uintBitsToFloat(value{elementOffset}.{swizzle});");
+                }
+
+                fieldIndex++;
+            }
+
+            writer.WriteLine("return result;");
+
+            writer.Indent--;
+            writer.WriteLine("}");
         }
     }
 
@@ -544,20 +619,33 @@ internal class GLSLShaderEmitter
         {
             Debug.Assert(variable.Kind == ShaderVariableKind.Uniform);
 
-            writer.Write("layout(std430, binding=");
-            writer.Write(nextBufferSlot);
-            writer.Write(") buffer _buf_");
-            writer.Write(nextBufferSlot);
-            writer.WriteLine(" {");
-            writer.Indent++;
+            if (Application.GetComponent<GLGraphics>().HasGLES31)
+            {
+                writer.Write("layout(std430, binding=");
+                writer.Write(nextBufferSlot);
+                writer.Write(") buffer _buf_");
+                writer.Write(nextBufferSlot);
+                writer.WriteLine(" {");
+                writer.Indent++;
 
-            EmitType(bufferType.ElementType);
-            writer.Write(' ');
-            EmitName(variable.Name);
-            writer.WriteLine("[];");
+                EmitType(bufferType.ElementType);
+                writer.Write(' ');
+                EmitName(variable.Name);
+                writer.WriteLine("[];");
 
-            writer.Indent--;
-            writer.WriteLine("};");
+                writer.Indent--;
+                writer.WriteLine("};");
+            }
+            else
+            {
+                writer.Write("uniform usampler2D ");
+                EmitName(variable.Name);
+                writer.WriteLine(";");
+
+                writer.Write("uniform uint _");
+                EmitName(variable.Name);
+                writer.WriteLine("_length;");
+            }
 
             return;
         }

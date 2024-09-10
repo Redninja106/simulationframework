@@ -10,8 +10,6 @@ namespace SimulationFramework.OpenGL.Shaders;
 class ProgrammableShaderProgram : ShaderProgram
 {
     private const string defaultVert = @"
-#version 330 core
-
 layout (location = 0) in vec2 _pos;
 
 uniform mat4 _vertex_transform;
@@ -25,8 +23,8 @@ void main() {
     
     private UniformHandler uniformHandler;
 
-    public ProgrammableShaderProgram(ShaderCompilation compilation, string source, ShaderCompilation? vsCompilation, string? vsSource)
-        : base(GetVertexShaderSource(vsCompilation, vsSource), GetFragmentShaderSource(compilation, source))
+    public ProgrammableShaderProgram(string shaderVersion, ShaderCompilation compilation, string source, ShaderCompilation? vsCompilation, string? vsSource)
+        : base(shaderVersion, GetVertexShaderSource(vsCompilation, vsSource), GetFragmentShaderSource(compilation, source))
     {
 
         this.compilation = compilation;
@@ -43,12 +41,13 @@ void main() {
     private static string GetFragmentShaderSource(ShaderCompilation compilation, string source)
     {
         return $$"""
-#version 450 core
+precision highp float;
+precision highp int;
+precision highp usampler2D;
+
 out vec4 FragColor;
 
 uniform mat4 _inv_transform;
-
-in vec4 gl_FragCoord;
 
 {{source}}
 
@@ -65,8 +64,6 @@ void main() {
             return defaultVert;
 
         return $$"""
-
-#version 450 core
 
 uniform mat4 _vertex_transform;
 

@@ -21,8 +21,13 @@ internal class ComputeShaderEffect
     private ShaderCompilation compilation;
     private UniformHandler uniforms;
 
-    public ComputeShaderEffect(Type type, ShaderCompilation compilation)
+    public ComputeShaderEffect(Type type, string shaderVersion, ShaderCompilation compilation)
     {
+        if (!Application.GetComponent<GLGraphics>().HasGLES31)
+        {
+            throw new NotSupportedException("Compute shaders are not supported on this device!");
+        }
+
         this.type = type;
         this.compilation = compilation;
 
@@ -32,7 +37,7 @@ internal class ComputeShaderEffect
         var compiledSrc = sw.ToString();
 
         var src = $$"""
-#version 450
+{{shaderVersion}}
 
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
@@ -82,8 +87,8 @@ void main()
             ref byte data = ref MemoryMarshal.GetArrayDataReference(array);
             void* dataPtr = Unsafe.AsPointer(ref data);
 
-            SSBO buffer = uniforms.GetSSBO(uniform);
-            buffer.Read(dataPtr, array.Length);
+            SSBOShaderArray buffer = (SSBOShaderArray)uniforms.GetShaderArray(uniform);
+            buffer.ReadData(dataPtr, array.Length);
         }
     }
 }

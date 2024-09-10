@@ -132,11 +132,6 @@ internal sealed class GLTexture : IGLImage, ITexture
 
     }
 
-    public void SetAnisotropy(float f)
-    {
-        glTextureParameterf(id, GL_TEXTURE_MAX_ANISOTROPY, f);
-    }
-
     private static uint MapTileMode(WrapMode mode) => mode switch
     {
         WrapMode.Mirror => GL_MIRRORED_REPEAT,
@@ -167,7 +162,9 @@ internal sealed class GLTexture : IGLImage, ITexture
         glBindTexture(GL_TEXTURE_2D, id);
         fixed (Color* buffer = colors) 
         {
-            glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+            var canvas = (GLCanvas)GetCanvas();
+            glBindFramebuffer(GL_FRAMEBUFFER, canvas.fbo);
+            glReadPixels(0, 0, Width, Height, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
         }
         glBindTexture(GL_TEXTURE_2D, 0);
         pixelsDirty = false;

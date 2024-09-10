@@ -88,12 +88,12 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
                 float.NaN => "_NaN",
                 float.PositiveInfinity => "_PositiveInfinity",
                 float.NegativeInfinity => "_NegativeInfinity",
-                _ => f.ToString("G9"),
+                _ => f.ToString("f7"),
             },
-            Vector2 v2 => $"vec2({v2.X:G9}, {v2.Y:G9})",
-            Vector3 v3 => $"vec3({v3.X:G9}, {v3.Y:G9}, {v3.Z:G9})",
-            Vector4 v4 => $"vec4({v4.X:G9}, {v4.Y:G9}, {v4.Z:G9}, {v4.W:G9})",
-            ColorF colF => $"vec4({colF.R:G9}, {colF.G:G9}, {colF.B:G9}, {colF.A:G9})",
+            Vector2 v2 => $"vec2({v2.X:f7}, {v2.Y:f7})",
+            Vector3 v3 => $"vec3({v3.X:f7}, {v3.Y:f7}, {v3.Z:f7})",
+            Vector4 v4 => $"vec4({v4.X:f7}, {v4.Y:f7}, {v4.Z:f7}, {v4.W:f7})",
+            ColorF colF => $"vec4({colF.R:f7}, {colF.G:f7}, {colF.B:f7}, {colF.A:f7})",
             _ => throw new($"unsupported constant {expression.Value.GetType().Name}")
         });
 
@@ -271,8 +271,18 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
             return expression;
         }
 
+        var graphics = Application.GetComponent<GLGraphics>();
+
         if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.BufferLength))
         {
+            if (!graphics.HasGLES31)
+            {
+                var tex = expression.Arguments[0] as ShaderVariableExpression;
+                var elementType = (tex.Variable.Type as ShaderArrayType)!.ElementType;
+                writer.Write($"_{tex.Variable.Name}_length");
+                return expression;
+            }
+
             expression.Arguments.Single().Accept(this);
             writer.Write(".length()");
             return expression;
@@ -280,6 +290,22 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
 
         if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.BufferLoad))
         {
+            if (!graphics.HasGLES31)
+            {
+                // array texture read:
+                var tex = expression.Arguments[0] as ShaderVariableExpression;
+                var elementType = (tex.Variable.Type as ShaderArrayType)!.ElementType;
+                var index = expression.Arguments[1];
+
+                writer.Write("_bufferload_");
+                writer.Write(tex.Variable.Name.value);
+                writer.Write('(');
+                index.Accept(this);
+                writer.Write(')');
+
+                return expression;
+            }
+
             expression.Arguments[0].Accept(this);
             writer.Write('[');
             expression.Arguments[1].Accept(this);

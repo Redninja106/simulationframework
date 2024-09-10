@@ -84,14 +84,14 @@ internal class GLCanvas : ICanvas, IDisposable
 
     public void Antialias(bool antialias)
     {
-        if (antialias) 
-        {
-            glEnable(GL_MULTISAMPLE);
-        }
-        else
-        {
-            glDisable(GL_MULTISAMPLE);
-        }
+        // if (antialias) 
+        // {
+        //     glEnable(GL_MULTI GL_MULTISAMPLE);
+        // }
+        // else
+        // {
+        //     glDisable(GL_MULTISAMPLE);
+        // }
     }
 
     public void Clear(ColorF color)

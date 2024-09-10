@@ -4,7 +4,6 @@ class ColorShaderProgram : ShaderProgram
 {
 
     private const string vert = @"
-#version 330 core
 layout (location = 0) in vec2 aPos;
 layout (location = 1) in vec4 aCol;
 
@@ -21,7 +20,8 @@ void main()
 
 
     private const string frag = @"
-#version 330 core
+precision highp float;
+
 out vec4 FragColor;
 
 in vec4 col;
@@ -32,7 +32,7 @@ void main()
 } 
 ";
 
-    public ColorShaderProgram() : base(vert, frag)
+    public ColorShaderProgram(string shaderVersion) : base(shaderVersion, vert, frag)
     {
     }
 }

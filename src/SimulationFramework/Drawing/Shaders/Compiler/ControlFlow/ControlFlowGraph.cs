@@ -52,7 +52,14 @@ internal class ControlFlowGraph : ControlFlowNode
     {
         if (Disassembly != null)
         {
-            DgmlBuilder.WriteDGML(Disassembly.Method.DeclaringType.Name + "_" + Disassembly.Method.Name, this);
+            try
+            {
+                DgmlBuilder.WriteDGML(Disassembly.Method.DeclaringType.Name + "_" + Disassembly.Method.Name, this);
+            }
+            catch
+            {
+
+            }
         }
     }
 

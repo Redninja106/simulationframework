@@ -49,7 +49,7 @@ public class GLFrame : IGLImage, ITexture
         Color[] pixels = new Color[Width * Height];
         fixed (Color* pixelsPtr = pixels)
         {
-            glReadPixels(0, 0, this.Width, this.Height, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8, pixelsPtr);
+            glReadPixels(0, 0, this.Width, this.Height, GL_RGBA, GL_UNSIGNED_BYTE, pixelsPtr);
             writer.WritePng(pixelsPtr, Width, Height, ColorComponents.RedGreenBlueAlpha, destination);
         }
     }

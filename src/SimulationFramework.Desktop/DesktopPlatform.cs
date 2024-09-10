@@ -90,7 +90,7 @@ public class DesktopPlatform : ISimulationPlatform
 
     protected virtual IGraphicsProvider CreateGraphicsProvider()
     {
-        return new GLGraphics(frame, name => Window.GLContext!.TryGetProcAddress(name, out nint addr) ? addr : 0);
+        return new GLGraphics(frame, "#version 450 core", name => Window.GLContext!.TryGetProcAddress(name, out nint addr) ? addr : 0);
     }
 
     protected virtual ITimeProvider CreateTimeProvider()

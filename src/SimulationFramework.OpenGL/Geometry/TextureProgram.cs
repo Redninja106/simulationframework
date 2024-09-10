@@ -3,7 +3,6 @@
 class TextureProgram : ShaderProgram
 {
     private const string vert = @"
-#version 330 core
 layout (location = 0) in vec2 aPos;
 layout (location = 1) in vec2 aTex;
 
@@ -20,7 +19,8 @@ void main()
 
 
     private const string frag = @"
-#version 330 core
+precision highp float;
+
 out vec4 FragColor;
 
 uniform sampler2D textureSampler;
@@ -33,7 +33,7 @@ void main()
     FragColor = tint * texture(textureSampler, tex);
 } 
 ";
-    public TextureProgram() : base(vert, frag)
+    public TextureProgram(string shaderVersion) : base(shaderVersion, vert, frag)
     {
     }
 }

@@ -14,8 +14,9 @@ unsafe class GeometryBuffer : IDisposable
 
         fixed (uint* bufferPtr = &buffer)
         {
-            glCreateBuffers(1, bufferPtr);
-            glNamedBufferData(buffer, size, null, GL_DYNAMIC_DRAW);
+            glGenBuffers(1, bufferPtr);
+            glBindBuffer(GL_ARRAY_BUFFER, buffer);
+            glBufferData(GL_ARRAY_BUFFER, size, null, GL_DYNAMIC_DRAW);
         }
     }
 
@@ -28,7 +29,8 @@ unsafe class GeometryBuffer : IDisposable
     {
         fixed (T* dataPtr = data)
         {
-            glNamedBufferSubData(buffer, 0, data.Length * Unsafe.SizeOf<T>(), dataPtr);
+            glBindBuffer(GL_ARRAY_BUFFER, buffer);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, data.Length * Unsafe.SizeOf<T>(), dataPtr);
         }
     }
 

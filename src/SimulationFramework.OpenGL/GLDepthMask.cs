@@ -19,7 +19,7 @@ internal class GLDepthMask : GLMask, IDepthMask
     public void Clear(float value)
     {
         BindFramebuffer();
-        glClearDepth((double)value);
+        glClearDepthf(value);
         glClear(GL_DEPTH_BUFFER_BIT);
     }
 
@@ -30,13 +30,11 @@ internal class GLDepthMask : GLMask, IDepthMask
         if (Bias != 0)
         {
             glEnable(GL_POLYGON_OFFSET_FILL);
-            glEnable(GL_POLYGON_OFFSET_LINE);
             glPolygonOffset(Bias, 0);
         }
         else
         {
             glDisable(GL_POLYGON_OFFSET_FILL);
-            glDisable(GL_POLYGON_OFFSET_LINE);
         }
 
         glDepthFunc(Comparison switch

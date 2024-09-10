@@ -13,13 +13,13 @@ class GeometryEffectCollection
     public SDFFontProgram fontProgram;
     public TextureProgram textureProgram;
 
-    public GeometryEffectCollection(GLGraphics graphics)
+    public GeometryEffectCollection(GLGraphics graphics, string shaderVersion)
     {
         this.graphics = graphics;
 
-        colorProgram = new();
-        fontProgram = new();
-        textureProgram = new();
+        colorProgram = new(shaderVersion);
+        fontProgram = new(shaderVersion);
+        textureProgram = new(shaderVersion);
     }
 
     public GeometryEffect GetEffectFromCanvasState(ref readonly CanvasState state)

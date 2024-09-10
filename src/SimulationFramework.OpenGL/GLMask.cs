@@ -76,9 +76,10 @@ internal class GLMask : IMask
 
         fixed (uint* texFboPtr = &texFbo)
         {
-            glCreateFramebuffers(1, texFboPtr);
-            glNamedFramebufferTexture(texFbo, GL_DEPTH_STENCIL_ATTACHMENT, tex, 0);
-            if (glCheckNamedFramebufferStatus(texFbo, GL_READ_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            glGenFramebuffers(1, texFboPtr);
+            glBindFramebuffer(GL_FRAMEBUFFER, texFbo);
+            glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, tex, 0);
+            if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
             {
                 throw new Exception("Could not create mask framebuffer!");
             }
@@ -89,7 +90,8 @@ internal class GLMask : IMask
     {
         fixed (uint* dataPtr = data)
         {
-            glTextureSubImage2D(tex, 0, 0, 0, Width, Height, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, dataPtr);
+            glBindTexture(GL_TEXTURE_2D, tex);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, Width, Height, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, dataPtr);
         }
 
         if (this.residence != null)
@@ -194,7 +196,9 @@ internal class GLMask : IMask
             {
                 flags |= GL_DEPTH_BUFFER_BIT;
             }
-            glBlitNamedFramebuffer(this.texFbo, 0, 0, 0, width, height, 0, 0, width, height, flags, GL_NEAREST);
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, this.texFbo);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+            glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, flags, GL_NEAREST);
         }
         else if (residence is GLTexture texture)
         {
@@ -205,8 +209,9 @@ internal class GLMask : IMask
             else
             {
                 GLCanvas canvas = (GLCanvas)texture.GetCanvas();
-                glNamedFramebufferTexture(canvas.fbo, GL_DEPTH_STENCIL_ATTACHMENT, this.tex, 0);
-                if (glCheckNamedFramebufferStatus(canvas.fbo, GL_DRAW_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, canvas.fbo);
+                glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, this.tex, 0);
+                if (glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
                 {
                     throw new Exception("Could not make mask resident!");
                 }
@@ -232,7 +237,9 @@ internal class GLMask : IMask
                 int width = Math.Min(Width, residence.Width);
                 int height = Math.Min(Height, residence.Height);
                 // TODO: this should copy to top left
-                glBlitNamedFramebuffer(0, this.texFbo, 0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, this.texFbo);
+                glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
                 glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
             }
             else if (residence is GLTexture texture)
@@ -244,7 +251,8 @@ internal class GLMask : IMask
                 else
                 {
                     GLCanvas canvas = (GLCanvas)texture.GetCanvas();
-                    glNamedFramebufferTexture(canvas.fbo, GL_DEPTH_STENCIL_ATTACHMENT, 0, 0);
+                    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, canvas.fbo);
+                    glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, 0, 0);
                 }
             }
             else

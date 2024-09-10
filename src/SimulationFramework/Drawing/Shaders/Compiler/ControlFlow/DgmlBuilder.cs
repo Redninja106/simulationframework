@@ -74,8 +74,10 @@ public static class DgmlBuilder
             Indent = true,
         };
 
+        
         using XmlWriter xmlWriter = XmlWriter.Create(Path.GetFileNameWithoutExtension(path) + ".dgml", settings);
         serializer.Serialize(xmlWriter, dgmlGraph);
+        
         // <Category Id = "Contains" Label = "Contains" Description = "Whether the source of the link contains the target object" CanBeDataDriven = "False" CanLinkedNodesBeDataDriven = "True" IncomingActionLabel = "Contained By" IsContainment = "True" OutgoingActionLabel = "Contains" />
     }
 
