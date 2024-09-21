@@ -96,6 +96,7 @@ internal class GLCanvas : ICanvas, IDisposable
 
     public void Clear(ColorF color)
     {
+        SubmitCommands();
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
         glClearColor(color.R, color.G, color.B, color.A);
         glClear(GL_COLOR_BUFFER_BIT);

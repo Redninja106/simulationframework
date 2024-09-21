@@ -10,6 +10,7 @@ internal sealed class DesktopSound : ISound
     private readonly DesktopAudioProvider provider;
     // internal readonly List<DesktopSoundPlayback> activePlaybacks;
     internal readonly uint buffer;
+    internal HashSet<DesktopSoundPlayback> activePlaybacks = [];
 
     public int SampleRate { get; }
     public float Duration { get; }
@@ -41,7 +42,7 @@ internal sealed class DesktopSound : ISound
                 reader = new Wave24To16Stream(reader);
             }
 
-            var data = new byte[stream.Length / reader.BlockAlign * reader.BlockAlign];
+            var data = new byte[reader.Length / reader.BlockAlign * reader.BlockAlign];
             reader.Read(data.AsSpan());
 
             buffer = provider.al.GenBuffer();
@@ -108,6 +109,8 @@ internal sealed class DesktopSound : ISound
 
     public SoundPlayback Play(float volume = 1)
     {
+        activePlaybacks.RemoveWhere(pb => pb.IsStopped);
+
         return new DesktopSoundPlayback(provider, this, volume, false);
     }
 
