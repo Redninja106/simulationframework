@@ -10,7 +10,7 @@ internal unsafe class DesktopMouseProvider : IMouseProvider
     private readonly IMouse mouse;
 
     public Vector2 Position { get => mouse.Position; set => mouse.Position = value; }
-    public Vector2 DeltaPosition => mousePosition - lastMousePosition!.Value;
+    public Vector2 DeltaPosition => mousePosition - (lastMousePosition ?? mousePosition);
     public float ScrollWheelDelta => scrollWheel;
     public IEnumerable<MouseButton> HeldButtons => heldButtons;
     public IEnumerable<MouseButton> PressedButtons => pressedButtons;

@@ -1,4 +1,5 @@
 ﻿using Silk.NET.OpenAL;
+using System.Net.NetworkInformation;
 
 namespace SimulationFramework.Desktop.Audio;
 internal sealed unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
@@ -44,6 +45,7 @@ internal sealed unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
     {
         sound.activePlaybacks.Add(this);
         this.provider = provider;
+        this.sound = sound;
 
         source = provider.al.GenSource();
         if (source == 0)
