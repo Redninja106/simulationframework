@@ -468,18 +468,40 @@ internal class GLSLShaderEmitter
 
                 ReadOnlySpan<char> swizzle = "xyzw".AsSpan(field.channelOffset, field.channelCount);
 
-                if (field.Variable.Type.GetPrimitiveKind() is 
+                string baseName = "result";
+
+                if (field.NestedName.Length > 0)
+                {
+                    baseName += ".";
+                }
+
+                if (field.primitiveKind is 
                     ShaderPrimitiveKind.Float or 
                     ShaderPrimitiveKind.Float2 or 
                     ShaderPrimitiveKind.Float3 or 
                     ShaderPrimitiveKind.Float4
                     )
                 {
-                    writer.WriteLine($"result.{field.NestedName} = uintBitsToFloat(value{elementOffset}.{swizzle});");
+                    writer.WriteLine($"{baseName}{field.NestedName} = uintBitsToFloat(value{elementOffset}.{swizzle});");
                 }
-                else
+                else if(field.primitiveKind is
+                    ShaderPrimitiveKind.Int or
+                    ShaderPrimitiveKind.Int2 or
+                    ShaderPrimitiveKind.Int3 or
+                    ShaderPrimitiveKind.Int4
+                    )
                 {
-                    writer.WriteLine($"result.{field.NestedName} = uintBitsToFloat(value{elementOffset}.{swizzle});");
+                    string type = swizzle.Length > 1 ? $"ivec{swizzle.Length}" : "int";
+                    writer.WriteLine($"{baseName}{field.NestedName} = {type}(value{elementOffset}.{swizzle});");
+                }
+                else if (field.primitiveKind is ShaderPrimitiveKind.Bool)
+                {
+                    writer.WriteLine($"{baseName}{field.NestedName} = value{elementOffset}.{swizzle} != 0;");
+                }
+                else // uint
+                {
+                    string type = swizzle.Length > 1 ? $"uvec{swizzle.Length}" : "uint";
+                    writer.WriteLine($"{baseName}{field.NestedName} = {type}(value{elementOffset}.{swizzle});");
                 }
 
                 fieldIndex++;
@@ -635,6 +657,8 @@ internal class GLSLShaderEmitter
 
                 writer.Indent--;
                 writer.WriteLine("};");
+
+                nextBufferSlot++;
             }
             else
             {

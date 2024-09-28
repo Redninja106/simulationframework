@@ -30,7 +30,11 @@ in vec2 tex;
 
 void main()
 {
-    FragColor = tint * texture(textureSampler, tex);
+    vec4 color = tint * texture(textureSampler, tex);
+    if (color.a < 0.001) {
+        discard;
+    }
+    FragColor = color;
 } 
 ";
     public TextureProgram(string shaderVersion) : base(shaderVersion, vert, frag)

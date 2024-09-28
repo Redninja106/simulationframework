@@ -1,8 +1,10 @@
-﻿using SimulationFramework.Drawing.Shaders.Compiler;
+﻿using SimulationFramework.Drawing;
+using SimulationFramework.Drawing.Shaders.Compiler;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Xml.Linq;
 
 namespace SimulationFramework.OpenGL;
 
@@ -27,26 +29,8 @@ unsafe class SSBOShaderArray : ShaderArray
 
         ShaderType elementType = (uniform.Type as ShaderArrayType)!.ElementType;
         
-        // for some reason on primitive arrays GL_TOP_LEVEL_ARRAY_STRIDE returns
-        // 0 while on arrays of structs GL_ARRAY_STRIDE returns 0
-        uint prop;
-        if (elementType.GetPrimitiveKind() != null)
-        {
-            prop = GL_ARRAY_STRIDE;
-        }
-        else
-        {
-            prop = GL_TOP_LEVEL_ARRAY_STRIDE;
-        }
-
-        fixed (int* stridePtr = &bufferStride)
-        {
-            glGetProgramResourceiv(program, GL_BUFFER_VARIABLE, 0, 1, &prop, 1, null, stridePtr);
-        }
-
-        Debug.Assert(bufferStride != 0);
-
         arrayStride = ShaderType.CalculateTypeSize(elementType);
+        bufferStride = QueryBufferStride(program, uniform);
 
         int arrayOffset = 0;
         CreateFieldsHelper((uniform.Type as ShaderArrayType)!.ElementType, uniform.Name.value + "[0]");
@@ -65,7 +49,7 @@ unsafe class SSBOShaderArray : ShaderArray
             else if (type.GetPrimitiveKind() != null)
             {
                 uint index;
-                fixed (byte* namePtr = Encoding.UTF8.GetBytes(name)) 
+                fixed (byte* namePtr = Encoding.UTF8.GetBytes(name))
                 {
                     index = glGetProgramResourceIndex(program, GL_BUFFER_VARIABLE, namePtr);
                 }
@@ -88,6 +72,55 @@ unsafe class SSBOShaderArray : ShaderArray
                 throw new();
             }
         }
+    }
+
+    private int QueryBufferStride(uint program, ShaderVariable uniform)
+    {
+        int bufferStride = 0;
+
+        // for some reason on primitive arrays GL_TOP_LEVEL_ARRAY_STRIDE returns
+        // 0 while on arrays of structs GL_ARRAY_STRIDE returns 0
+
+        uint strideProperty = GL_ARRAY_STRIDE;
+        var firstFieldName = uniform.Name.ToString();
+        var firstFieldType = uniform.Type;
+        while (true)
+        {
+            if (firstFieldType is ShaderArrayType arrayType)
+            {
+                firstFieldType = arrayType.ElementType;
+                firstFieldName += "[0]";
+            }
+            else if (firstFieldType is ShaderStructureType structType)
+            {
+                firstFieldType = structType.structure.fields[0].Type;
+                firstFieldName += "." + structType.structure.fields[0].Name.ToString();
+                strideProperty = GL_TOP_LEVEL_ARRAY_STRIDE;
+            }
+            else if (firstFieldType.GetPrimitiveKind() is ShaderPrimitiveKind primitiveKind)
+            {
+                break;
+            }
+            else
+            {
+                throw new();
+            }
+        }
+
+        uint index;
+        fixed (byte* namePtr = Encoding.UTF8.GetBytes(firstFieldName))
+        {
+            index = glGetProgramResourceIndex(program, GL_BUFFER_VARIABLE, namePtr);
+
+        }
+
+        if (index == uint.MaxValue)
+        {
+            throw new();
+        }
+        
+        glGetProgramResourceiv(program, GL_BUFFER_VARIABLE, index, 1, &strideProperty, 1, null, &bufferStride);
+        return bufferStride;
     }
 
     public uint GetBuffer()
@@ -124,10 +157,13 @@ unsafe class SSBOShaderArray : ShaderArray
     {
         SetBufferSize(count * bufferStride);
 
-        glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
-        void* mappedBuf = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, size, GL_MAP_WRITE_BIT);
-        CopyArrayToBuffer(data, mappedBuf, count);
-        glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+        if (count != 0)
+        {
+            glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+            void* mappedBuf = glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, size, GL_MAP_WRITE_BIT);
+            CopyArrayToBuffer(data, mappedBuf, count);
+            glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+        }
     }
 
     public override void ReadData(void* outData, int count)

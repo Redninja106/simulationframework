@@ -1,5 +1,6 @@
 ﻿using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders.Compiler;
+using SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,6 +79,9 @@ unsafe class TextureShaderArray : ShaderArray
 
         sizeInElements = count;
 
+        if (count == 0)
+            return;
+
         var graphics = Application.GetComponent<GLGraphics>();
 
         int capacityInTexels = count * (bufferStride / 16);
@@ -101,6 +105,7 @@ unsafe class TextureShaderArray : ShaderArray
         public int arrayOffset;
         public string Name;
         public string NestedName;
+        public ShaderPrimitiveKind primitiveKind;
         public ShaderVariable Variable;
 
         public Field GetField()
@@ -181,6 +186,7 @@ unsafe class TextureShaderArray : ShaderArray
                         channelOffset = currentChannel,
                         channelCount = channels,
                         arrayOffset = arrayOffset,
+                        primitiveKind = primitive,
                     });
 
                     arrayOffset += ShaderType.CalculateTypeSize(type);

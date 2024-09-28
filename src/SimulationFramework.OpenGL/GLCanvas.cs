@@ -116,7 +116,7 @@ internal class GLCanvas : ICanvas, IDisposable
 
     public void DrawLine(Vector2 p1, Vector2 p2)
     {
-        CurrentWriter.PushLine(CurrentStream, p1, p2);
+        graphics.writers.GetWriter(in State, true).PushLine(CurrentStream, p1, p2);
         var effect = graphics.effects.GetEffectFromCanvasState(in State);
         AddRenderCommand(CreateChunk(CurrentStream, CurrentWriter.UsesTriangles), effect);
     }
@@ -499,7 +499,7 @@ internal class GLCanvas : ICanvas, IDisposable
             if (command.HasSameState(lastCommand))
             {
                 GeometryChunk lastChunk = lastCommand.chunk;
-                if (chunk.vertexBuffer == lastChunk.vertexBuffer)
+                if (chunk.vertexBuffer == lastChunk.vertexBuffer && chunk.triangles == lastChunk.triangles)
                 {
                     if (lastChunk.offset + lastChunk.count == chunk.offset)
                     {

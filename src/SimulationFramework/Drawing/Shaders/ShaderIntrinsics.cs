@@ -10,16 +10,34 @@ using System.Threading.Tasks;
 namespace SimulationFramework.Drawing.Shaders;
 
 /// <summary>
-/// Exposes built-in shader methods.
+/// Provides built-in shader methods.
+/// <para>
+/// The members of this class do not need to be used directly, as they intercept usages of their equivalent members.
+/// </para>
 /// </summary>
 public static class ShaderIntrinsics
 {
+    /// <summary>
+    /// Converts a <see langword="bool"/> to an <see langword="int"/>.
+    /// </summary>
+    /// <returns>A non-zero value if <paramref name="value"/> is <see langword="true"/>; otherwise returns 0.</returns>
     [ShaderIntrinsic]
     public static int AsInt(bool value) => value ? 1 : 0;
 
+    /// <summary>
+    /// Converts an <see langword="int"/> to a <see langword="bool"/>.
+    /// </summary>
+    /// <returns><see langword="false"/> if value is zero; otherwise <see langword="true"/>.</returns>
     [ShaderIntrinsic]
-    public static bool AsBool(int value) => value > 0;
+    public static bool AsBool(int value) => (uint)value > 0;
 
+    /// <summary>
+    /// Discards the current fragment and stops shader execution.
+    /// <para>
+    /// A discarded fragment will not be written to the render target or any active masks.
+    /// </para>
+    /// </summary>
+    /// <exception cref="FragmentDiscardedException"></exception>
     [DoesNotReturn]
     [ShaderIntrinsic]
     public static void Discard()
@@ -29,9 +47,15 @@ public static class ShaderIntrinsics
 
     #region Derivatives
 
+    /// <summary>
+    /// Calculates the screen space derivative of the provided value on the X axis.
+    /// </summary>
     [ShaderIntrinsic]
     public static T DDX<T>(T value) => throw new NotSupportedException("DDX cannot be run on the CPU since the shader is not part of a wave.");
 
+    /// <summary>
+    /// Calculates the screen space derivative of the provided value on the Y axis.
+    /// </summary>
     [ShaderIntrinsic]
     public static T DDY<T>(T value) => throw new NotSupportedException("DDY cannot be run on the CPU since the shader is not part of a wave.");
 
@@ -872,12 +896,23 @@ public static class ShaderIntrinsics
 
     #region Textures
 
+    /// <summary>
+    /// Samples a texture using UV coordinates ((0, 0) to (1, 1)).
+    /// </summary>
+    /// <param name="texture">The texture to sample.</param>
+    /// <param name="uv">The uv coordinates to use to sample the texture.</param>
+    /// <returns></returns>
     [ShaderIntrinsic]
     public static ColorF TextureSampleUV(ITexture texture, Vector2 uv)
     {
         return TextureSample(texture, uv * new Vector2(texture.Width, texture.Height));
     }
 
+    /// <summary>
+    /// Samples a texture using pixel coordinates ((0, 0) to (width, height)).
+    /// </summary>
+    /// <param name="texture">The texture to sample.</param>
+    /// <param name="position">The texture position to use to sample the texture.</param>
     [ShaderIntrinsic]
     public static ColorF TextureSample(ITexture texture, Vector2 position)
     {
@@ -924,10 +959,16 @@ public static class ShaderIntrinsics
         texture.GetPixel(x, y) = color.ToColor();
     }
 
+    /// <summary>
+    /// Determines the width of a texture.
+    /// </summary>
     [ShaderIntrinsic]
     [ShaderIntercept(nameof(ITexture.Width), typeof(ITexture), ShaderInterceptAttribute.InterceptKind.Property)]
     public static int TextureWidth(this ITexture texture) => texture.Width;
 
+    /// <summary>
+    /// Determines the height of a texture.
+    /// </summary>
     [ShaderIntrinsic]
     [ShaderIntercept(nameof(ITexture.Height), typeof(ITexture), ShaderInterceptAttribute.InterceptKind.Property)]
     public static int TextureHeight(ITexture texture) => texture.Height;
@@ -936,6 +977,10 @@ public static class ShaderIntrinsics
 
     #region Buffers
 
+    /// <summary>
+    /// Determines the number of elements in a buffer.
+    /// </summary>
+    /// <param name="buffer">The buffer to determine to length of.</param>
     [ShaderIntrinsic]
     public static int BufferLength(object buffer)
     {
@@ -945,6 +990,11 @@ public static class ShaderIntrinsics
         throw new ArgumentException(null, nameof(buffer));
     }
 
+    /// <summary>
+    /// Loads a value from a buffer.
+    /// </summary>
+    /// <param name="buffer">The buffer to load the value from.</param>
+    /// <param name="element">The index of the element in the buffer.</param>
     [ShaderIntrinsic]
     public static T BufferLoad<T>(object buffer, int element)
     {
@@ -956,6 +1006,9 @@ public static class ShaderIntrinsics
         throw new ArgumentException(null, nameof(buffer));
     }
 
+    /// <summary>
+    /// Stores a value into a buffer. Buffer stores are only supported in compute shaders.
+    /// </summary>
     [ShaderIntrinsic]
     public static void BufferStore<T>(object buffer, int element, T value)
     {

@@ -313,6 +313,22 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
             return expression;
         }
 
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.AsBool))
+        {
+            writer.Write("bool(");
+            expression.Arguments[0].Accept(this);
+            writer.Write(")");
+            return expression;
+        }
+
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.AsInt))
+        {
+            writer.Write("int(");
+            expression.Arguments[0].Accept(this);
+            writer.Write(")");
+            return expression;
+        }
+
         if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.Transform))
         {
             writer.Write('(');
