@@ -70,7 +70,7 @@ partial class Program : Simulation
 
     public override void OnRender(ICanvas canvas)
     {
-        canvas.Clear(Color.Black);
+        canvas.Clear(Color.Gray);
         depthMask.Clear(1f);
 
         var canvasShader = new CubeCanvasShader()
@@ -85,14 +85,10 @@ partial class Program : Simulation
             proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, canvas.Width / (float)canvas.Height, 0.1f, 100f)
         };
         
-        canvas.Fill(canvasShader, vertexShader);
+        canvas.Stroke(canvasShader, vertexShader);
         canvas.Mask(depthMask);
         canvas.WriteMask(depthMask);
         canvas.DrawTriangles<Vertex>(vertices);
-
-        canvas.ResetState();
-        canvas.Fill(Color.HotPink);
-        canvas.DrawRect(Mouse.Position.X, Mouse.Position.Y, 100, 120);
     }
 }
 
@@ -112,9 +108,10 @@ class CubeCanvasShader : CanvasShader
     public override ColorF GetPixelColor(Vector2 position)
     {
         ColorF x = texture.SampleUV(uv * 10);
+        x.A = 1;
         if (x.A < 0.001f)
         {
-            ShaderIntrinsics.Discard();
+            //ShaderIntrinsics.Discard();
         }
         return x;
     }

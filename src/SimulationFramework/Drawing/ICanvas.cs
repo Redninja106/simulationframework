@@ -106,6 +106,8 @@ public interface ICanvas
     /// <param name="p2">The second point of the line.</param>
     void DrawLine(Vector2 p1, Vector2 p2);
 
+    public void DrawLines<TVertex>(ReadOnlySpan<TVertex> vertices) where TVertex : unmanaged;
+
     /// <summary>
     /// Draws a rectangle to the canvas, using the current transform, clipping, and drawing settings.
     /// </summary>

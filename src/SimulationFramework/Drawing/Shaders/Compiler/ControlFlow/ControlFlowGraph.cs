@@ -327,7 +327,10 @@ internal class ControlFlowGraph : ControlFlowNode
 
     public void RemoveNode(ControlFlowNode node)
     {
-        Nodes.Remove(node);
+        if (!Nodes.Remove(node))
+        {
+            throw new("node not in subgraph!");
+        }
     }
 
     public void DepthFirstTraverse(Action<ControlFlowNode> visitNode)
@@ -443,7 +446,7 @@ internal class ControlFlowGraph : ControlFlowNode
     public void ReplaceLoops()
     {
         RecomputeDominators();
-        foreach (var block in BasicBlocks)
+        foreach (var block in BasicBlocks.Reverse<BasicBlockNode>())
         {
             if (block == EntryNode)
                 continue;
