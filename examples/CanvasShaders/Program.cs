@@ -10,7 +10,7 @@ using SimulationFramework.OpenGL;
 using System.Collections.Generic;
 using NAudio.SoundFont;
 
-GLGraphics.ForceCompatability = true;
+// GLGraphics.ForceCompatability = true;
 ShaderCompiler.DumpShaders = true;
 Start<Program>();
 
