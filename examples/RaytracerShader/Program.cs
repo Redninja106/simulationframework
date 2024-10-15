@@ -146,8 +146,8 @@ class RayTracerShader : CanvasShader
         {
             for (int x = 0; x < antialias; x++)
             {
-                Vector2 sampleOffset = new((x + .5f) / antialias, (y + .5f) / antialias); // evenly spaced sample distribution
-                // Vector3 sampleOffset = Random3(new(vp * x * y, time)); // random sample distribution
+                // Vector2 sampleOffset = new((x + .5f) / antialias, (y + .5f) / antialias); // evenly spaced sample distribution
+                Vector3 sampleOffset = Random3(new((vp.X + x), (vp.Y * y), time)); // random sample distribution
                 
                 Vector2 samplePos = new Vector2(
                     vp.X * width * .5f + sampleOffset.X,
@@ -234,12 +234,11 @@ class RayTracerShader : CanvasShader
         {
             t = (-halfB + sqrtD) / a;
 
-        }
-
-        if (t < 0)
-        {
-            normal = default;
-            return false;
+            if (t < 0)
+            {
+                normal = default;
+                return false;
+            }
         }
 
         normal = (origin + direction * t) - sphere.position;

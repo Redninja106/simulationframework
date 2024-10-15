@@ -448,30 +448,41 @@ internal class ControlFlowGraph : ControlFlowNode
     public void ReplaceLoops()
     {
         RecomputeDominators();
-        foreach (var block in BasicBlocks.Reverse<BasicBlockNode>())
+        List<(ControlFlowNode head, ControlFlowNode tail)> loops = [];
+        foreach (var node in Nodes)
         {
-            if (block == EntryNode)
-                continue;
-
-            foreach (var succ in block.Successors)
+            foreach (var succ in node.Successors)
             {
                 // Every successor that dominates its predecessor
                 // is a loop header
 
-                if (block.dominators.Contains(succ))
+                if (node.dominators.Contains(succ))
                 {
-                    HashSet<ControlFlowNode> nodes = FindNodesInLoop(succ, block);
-                    ControlFlowNode breakTarget = succ.Successors.Single(s => !nodes.Contains(s));
-                    nodes.UnionWith(FindNodesInLoop(succ, breakTarget));
-                    nodes.ExceptWith([breakTarget]);
-                    
-                    // DetectReturns(nodes);
-                    
-                    DetectContinuesAndBreaks(nodes, succ, breakTarget);
-
-                    InsertSubgraph(nodes, ControlFlow.SubgraphKind.Loop, null);
+                    loops.Add((succ, node));
                 }
             }
+        }
+
+        foreach (var (head, tail) in loops)
+        {
+            // skip the loop this subgraph was created for
+            // if not a subgraph, EntryNode is a dummy so this doesn't matter
+            if (head == EntryNode)
+            {
+                continue;
+            }
+
+            HashSet<ControlFlowNode> nodes = FindNodesInLoop(head, tail);
+            ControlFlowNode breakTarget = head.Successors.Single(s => !nodes.Contains(s));
+            nodes.UnionWith(FindNodesInLoop(head, breakTarget));
+            nodes.ExceptWith([breakTarget]);
+
+            // DetectReturns(nodes);
+
+            DetectContinuesAndBreaks(nodes, head, breakTarget);
+
+            var subgraph = InsertSubgraph(nodes, ControlFlow.SubgraphKind.Loop, null);
+            subgraph.ReplaceLoops();
         }
     }
 
@@ -479,7 +490,7 @@ internal class ControlFlowGraph : ControlFlowNode
     {
         HashSet<ControlFlowNode> nodes = [header];
         Stack<ControlFlowNode> stack = [];
-
+        
         if (header != tail)
         {
             nodes.Add(tail);
