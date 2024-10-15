@@ -118,7 +118,7 @@ internal class GLCanvas : ICanvas, IDisposable
     {
         graphics.writers.GetWriter(in State, true).PushLine(CurrentStream, p1, p2);
         var effect = graphics.effects.GetEffectFromCanvasState(in State);
-        AddRenderCommand(CreateChunk(CurrentStream, CurrentWriter.UsesTriangles), effect);
+        AddRenderCommand(CreateChunk(CurrentStream, false), effect);
     }
 
     public void DrawPolygon(ReadOnlySpan<Vector2> polygon, bool close = true)
@@ -562,7 +562,7 @@ internal class GLCanvas : ICanvas, IDisposable
         {
             writer.PushLine(stream, vertices[i], vertices[i + 1]);
         }
-        AddRenderCommand(CreateChunk(stream, writer.UsesTriangles), graphics.effects.GetEffectFromCanvasState(in State));
+        AddRenderCommand(CreateChunk(stream, false), graphics.effects.GetEffectFromCanvasState(in State));
     }
 
     public void DrawLines<TVertex>(ReadOnlySpan<TVertex> vertices) where TVertex : unmanaged
