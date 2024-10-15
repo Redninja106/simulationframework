@@ -36,6 +36,7 @@ internal class ControlFlowGraph : ControlFlowNode
         Disassembly = disassembly;
 
         EntryNode.AddSuccessor(GetBasicBlock(disassembly.instructions[0]));
+        Dump();
 
         DetectReturns(ExitNode);
         RecomputeDominators();
@@ -73,6 +74,7 @@ internal class ControlFlowGraph : ControlFlowNode
         ControlFlowGraph subgraph = new()
         {
             SubgraphKind = kind,
+            Disassembly = this.Disassembly
         };
 
         DummyNode exitDummy = new ExitDummyNode(this);
@@ -93,7 +95,7 @@ internal class ControlFlowGraph : ControlFlowNode
                     incomingNode ??= node;
                     if (incomingNode != node)
                     {
-                        throw new Exception("invalid subgraph!");
+                        throw new Exception($"invalid subgraph in method '{this.Disassembly.Method.DeclaringType}.{this.Disassembly.Method.Name}'!");
                     }
                     
                     pred.RemoveSuccessor(node);
@@ -108,7 +110,7 @@ internal class ControlFlowGraph : ControlFlowNode
                     outgoingNode ??= succ;
                     if (outgoingNode != succ)
                     {
-                        throw new Exception("invalid subgraph!");
+                        throw new Exception($"invalid subgraph in method '{this.Disassembly.Method.DeclaringType}.{this. Disassembly.Method.Name}'!");
                     }
 
                     succ.RemovePredecessor(node);

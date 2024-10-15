@@ -21,6 +21,7 @@ internal class ShaderInterceptAttribute : Attribute
     public string MemberName { get; }
     public Type MethodType { get; }
     public InterceptKind Kind { get; }
+    public bool IsInstanceMethod { get; init; }
 
     public ShaderInterceptAttribute(string memberName, Type methodType, InterceptKind kind = InterceptKind.Method)
     {
@@ -37,6 +38,7 @@ internal class ShaderInterceptAttribute : Attribute
             GetItemName => MethodType.GetMethod("get_Item", types[1..]),
             SetItemName => MethodType.GetMethod("set_Item", types[1..]),
             _ when Kind is InterceptKind.Property => MethodType.GetProperty(MemberName)!.GetMethod,
+            _ when IsInstanceMethod => MethodType.GetMethod(MemberName, types[1..]),
             _ => MethodType.GetMethod(MemberName, types),
         };
     }

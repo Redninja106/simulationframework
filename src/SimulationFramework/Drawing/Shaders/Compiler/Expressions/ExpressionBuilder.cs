@@ -843,10 +843,7 @@ internal class ExpressionBuilder
         var args = PopArgs(method, expressions);
 
         var instance = method.IsStatic ? null : expressions.Pop();
-        if (method is ConstructorInfo || context.IsSelfType(method.DeclaringType))
-        {
-        }
-        else
+        if (method is not ConstructorInfo && !context.IsSelfType(method.DeclaringType))
         {
             if (instance != null)
             {

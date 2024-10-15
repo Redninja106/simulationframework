@@ -44,10 +44,15 @@ internal class CompilerContext
 
             foreach (var interceptAttr in method.GetCustomAttributes<ShaderInterceptAttribute>())
             {
-                var interceptedMethod = interceptAttr.GetMethod(method.GetParameters().Select(p => p.ParameterType).ToArray());
+                MethodBase? interceptedMethod = interceptAttr.GetMethod(method.GetParameters().Select(p => p.ParameterType).ToArray());
+
                 if (interceptedMethod != null)
                 {
                     IntrinsicIntercepts.Add(interceptedMethod, method);
+                }
+                else
+                {
+                    Console.WriteLine($"Warning: could not resolve shader intercept for " + method.Name);
                 }
             }
         }

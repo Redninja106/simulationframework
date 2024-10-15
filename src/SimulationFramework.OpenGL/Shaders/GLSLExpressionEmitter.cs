@@ -273,6 +273,14 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
 
         var graphics = Application.GetComponent<GLGraphics>();
 
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.Equals))
+        {
+            expression.Arguments[0].Accept(this);
+            writer.Write(" == ");
+            expression.Arguments[1].Accept(this);
+            return expression;
+        }
+
         if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.BufferLength))
         {
             if (!graphics.HasGLES31)
@@ -349,10 +357,10 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
         {
             nameof(ShaderIntrinsics.DDX) => "dFdx",
             nameof(ShaderIntrinsics.DDY) => "dFdy",
-            nameof(ShaderIntrinsics.MakeVector2) => "vec2",
-            nameof(ShaderIntrinsics.MakeVector3) => "vec3",
-            nameof(ShaderIntrinsics.MakeVector4) => "vec4",
-            nameof(ShaderIntrinsics.MakeColorF) => "vec4",
+            nameof(ShaderIntrinsics.Vec2) => "vec2",
+            nameof(ShaderIntrinsics.Vec3) => "vec3",
+            nameof(ShaderIntrinsics.Vec4) => "vec4",
+            // nameof(ShaderIntrinsics.MakeColorF) => "vec4",
             nameof(ShaderIntrinsics.BufferLength) => "length",
             nameof(ShaderIntrinsics.Ceiling) => "ceil",
             nameof(ShaderIntrinsics.Atan2) => "atan",

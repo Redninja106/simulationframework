@@ -74,7 +74,7 @@ class IterationsInversions2 : CanvasShader
             z += c;
 
             // color
-            col -= 0.5f * Exp(-10.0f * System.Numerics.Vector2.Dot(z, z)) * (new Vector3(0.25f) + 0.4f * Sin(new Vector3(5.5f + 1.5f * s) + MakeVector3(1.6f, 0.8f, 0.5f)));
+            col -= 0.5f * Exp(-10.0f * System.Numerics.Vector2.Dot(z, z)) * (new Vector3(0.25f) + 0.4f * Sin(new Vector3(5.5f + 1.5f * s) + Vec3(1.6f, 0.8f, 0.5f)));
         }
 
         return col;
@@ -91,19 +91,19 @@ class IterationsInversions2 : CanvasShader
             {
                 Vector2 uv = (position + new Vector2(m, n) * (1f / AA) + mousePosition) / new Vector2(width, height);
                 Vector3 col = Shape(uv);
-                float f = Dot(col, MakeVector3(0.333f));
-                Vector3 nor = Normalize(MakeVector3(Dot(Shape(uv + MakeVector2(e, 0.0f)), MakeVector3(0.333f)) - f,
-                                             Dot(Shape(uv + MakeVector2(0.0f, e)), MakeVector3(0.333f)) - f,
+                float f = Dot(col, Vec3(0.333f));
+                Vector3 nor = Normalize(Vec3(Dot(Shape(uv + Vec2(e, 0.0f)), Vec3(0.333f)) - f,
+                                             Dot(Shape(uv + Vec2(0.0f, e)), Vec3(0.333f)) - f,
                                              e));
-                col += 0.2f * MakeVector3(1.0f, 0.9f, 0.5f) * Dot(nor, MakeVector3(0.8f, 0.4f, 0.2f)); ;
-                col += MakeVector3(0.3f * nor.Z);
+                col += 0.2f * Vec3(1.0f, 0.9f, 0.5f) * Dot(nor, Vec3(0.8f, 0.4f, 0.2f)); ;
+                col += Vec3(0.3f * nor.Z);
                 tot += col;
             }
         tot /= (float)(AA * AA);
 
-        tot = Pow(Clamp(tot, MakeVector3(0.0f), MakeVector3(1.0f)), MakeVector3(0.8f, 1.1f, 1.3f));
+        tot = Pow(Clamp(tot, Vec3(0.0f), Vec3(1.0f)), Vec3(0.8f, 1.1f, 1.3f));
 
-        Vector2 uv2 = position / MakeVector2(width, height);
+        Vector2 uv2 = position / Vec2(width, height);
         tot *= 0.4f + 0.6f * Pow(16.0f * uv2.X * uv2.Y * (1.0f - uv2.X) * (1.0f - uv2.Y), 0.1f);
 
         return new ColorF(tot.X, tot.Y, tot.Z, 1.0f);
@@ -119,7 +119,7 @@ class Creation : CanvasShader
 
     public override ColorF GetPixelColor(Vector2 position)
     {
-        Vector2 size = MakeVector2(width, height);
+        Vector2 size = Vec2(width, height);
         Vector3 c = default;
         float l = 0, z = time;
         for (int i = 0; i < 3; i++)
@@ -131,9 +131,9 @@ class Creation : CanvasShader
             z += .07f;
             l = Length(p);
             uv += p / l * (Sin(z) + 1.0f) * Abs(Sin(l * 9.0f - z - z));
-            c[i] = .01f / Length(Mod(uv, 1.0f) - MakeVector2(.5f));
+            c[i] = .01f / Length(Mod(uv, 1.0f) - Vec2(.5f));
         }
-        return new ColorF(MakeVector4(c * (1f / l), time));
+        return new ColorF(Vec4(c * (1f / l), time));
     }
 }
 

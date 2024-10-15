@@ -64,41 +64,49 @@ public static class ShaderIntrinsics
     #region Constructors
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector4))]
-    public static Vector4 MakeVector4(Vector3 xyz, float w) => new(xyz, w);
+    public static Vector4 Vec4(Vector3 xyz, float w) => new(xyz, w);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector4))]
-    public static Vector4 MakeVector4(Vector2 xy, float z, float w) => new(xy.X, xy.Y, z, w);
+    public static Vector4 Vec4(Vector2 xy, float z, float w) => new(xy.X, xy.Y, z, w);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector4))]
-    public static Vector4 MakeVector4(float x, float y, float z, float w) => new(x, y, z, w);
+    public static Vector4 Vec4(float x, float y, float z, float w) => new(x, y, z, w);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector3))]
-    public static Vector3 MakeVector3(float x, float y, float z) => new(x, y, z);
+    public static Vector3 Vec3(float x, float y, float z) => new(x, y, z);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector3))]
-    public static Vector3 MakeVector3(Vector2 xy, float z) => new(xy, z);
+    public static Vector3 Vec3(Vector2 xy, float z) => new(xy, z);
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector3))]
-    public static Vector3 MakeVector3(float xyz) => new(xyz);
+    public static Vector3 Vec3(float xyz) => new(xyz);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector2))]
-    public static Vector2 MakeVector2(float xy) => new(xy, xy);
+    public static Vector2 Vec2(float xy) => new(xy, xy);
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector2))]
-    public static Vector2 MakeVector2(float x, float y) => new(x, y);
-
-    [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(ColorF))]
-    public static ColorF MakeColorF(float r, float g, float b, float a) => new(r, g, b, a);
-
-    // [ShaderIntrinsic]
-    // [ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(ColorF))]
-    // public static ColorF MakeColorF(Vector3 rgb) => new(rgb);
-
-    [ShaderIntrinsic]
-    [ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(ColorF))]
-    public static ColorF MakeColorF(Vector4 rgba) => new(rgba);
-
+    public static Vector2 Vec2(float x, float y) => new(x, y);
+    
     #endregion
+
+    #region Equality
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(nameof(Equals), typeof(Vector4), IsInstanceMethod = true)]
+    public static bool Equals(Vector4 a, Vector4 b) => a == b;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(nameof(Equals), typeof(Vector3), IsInstanceMethod = true)]
+    public static bool Equals(Vector3 a, Vector3 b) => a == b;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(nameof(Equals), typeof(Vector2), IsInstanceMethod = true)]
+    public static bool Equals(Vector2 a, Vector2 b) => a == b;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(nameof(Equals), typeof(ColorF), IsInstanceMethod = true)]
+    public static bool Equals(ColorF a, ColorF b) => a == b;
+
+    #endregion Equality
 
     #region Float Constants
 
@@ -409,7 +417,7 @@ public static class ShaderIntrinsics
     #region Ceil
 
     [ShaderIntrinsic]
-    [ShaderIntercept(nameof(Clamp), typeof(MathF))]
+    [ShaderIntercept(nameof(Ceiling), typeof(MathF))]
     public static float Ceiling(float value) => MathF.Ceiling(value);
     [ShaderIntrinsic]
     public static Vector2 Ceiling(Vector2 value) => new(MathF.Ceiling(value.X), MathF.Ceiling(value.Y));
@@ -559,15 +567,15 @@ public static class ShaderIntrinsics
     #region Length
 
     [ShaderIntrinsic]
-    [ShaderIntercept(nameof(Length), typeof(Vector2))]
+    [ShaderIntercept(nameof(Length), typeof(Vector2), IsInstanceMethod = true)]
     public static float Length(Vector2 vector) => vector.Length();
 
     [ShaderIntrinsic]
-    [ShaderIntercept(nameof(Vector3.Length), typeof(Vector3))]
+    [ShaderIntercept(nameof(Vector3.Length), typeof(Vector3), IsInstanceMethod = true)]
     public static float Length(Vector3 vector) => vector.Length();
 
     [ShaderIntrinsic]
-    [ShaderIntercept(nameof(Vector4.Length), typeof(Vector4))]
+    [ShaderIntercept(nameof(Vector4.Length), typeof(Vector4), IsInstanceMethod = true)]
     public static float Length(Vector4 vector) => vector.Length();
 
     #endregion
@@ -579,15 +587,12 @@ public static class ShaderIntrinsics
     public static float Log(float x) => MathF.Log(x);
 
     [ShaderIntrinsic]
-    [ShaderIntercept(nameof(Log), typeof(Vector2))]
     public static Vector2 Log(Vector2 vector) => new(MathF.Log(vector.X), MathF.Log(vector.Y));
 
     [ShaderIntrinsic]
-    [ShaderIntercept(nameof(Log), typeof(Vector3))]
     public static Vector3 Log(Vector3 vector) => new(MathF.Log(vector.X), MathF.Log(vector.Y), MathF.Log(vector.Z));
 
     [ShaderIntrinsic]
-    [ShaderIntercept(nameof(Log), typeof(Vector2))]
     public static Vector4 Log(Vector4 vector) => new(MathF.Log(vector.X), MathF.Log(vector.Y), MathF.Log(vector.Z), MathF.Log(vector.W));
 
     #endregion
@@ -680,15 +685,12 @@ public static class ShaderIntrinsics
     public static float Pow(float a, float b) => MathF.Pow(a, b);
 
     [ShaderIntrinsic]
-    [ShaderIntercept(nameof(Pow), typeof(MathF))]
     public static Vector2 Pow(Vector2 a, Vector2 b) => new(MathF.Pow(a.X, b.X), MathF.Pow(a.Y, b.Y));
 
     [ShaderIntrinsic]
-    [ShaderIntercept(nameof(Pow), typeof(MathF))]
     public static Vector3 Pow(Vector3 a, Vector3 b) => new(MathF.Pow(a.X, b.X), MathF.Pow(a.Y, b.Y), MathF.Pow(a.Z, b.Z));
 
     [ShaderIntrinsic]
-    [ShaderIntercept(nameof(Pow), typeof(MathF))]
     public static Vector4 Pow(Vector4 a, Vector4 b) => new(MathF.Pow(a.X, b.X), MathF.Pow(a.Y, b.Y), MathF.Pow(a.Z, b.Z), MathF.Pow(a.W, b.W));
 
     #endregion
@@ -927,19 +929,19 @@ public static class ShaderIntrinsics
             int top = (int)MathF.Floor(position.Y);
             int bottom = (int)MathF.Ceiling(position.Y);
 
-            ColorF a = ColorF.Lerp(
+            ColorF a = SimulationFramework.ColorF.Lerp(
                 texture.GetPixel(left, top).ToColorF(), 
-                texture.GetPixel(left, bottom).ToColorF(), 
+                texture.GetPixel(left, bottom).ToColorF(),
                 Fract(position.Y)
-                ); 
-            
-            ColorF b = ColorF.Lerp(
+                );
+
+            ColorF b = SimulationFramework.ColorF.Lerp(
                 texture.GetPixel(right, top).ToColorF(),
                 texture.GetPixel(right, bottom).ToColorF(),
                 Fract(position.Y)
                 );
 
-            return ColorF.Lerp(a, b, Fract(position.X));
+            return SimulationFramework.ColorF.Lerp(a, b, Fract(position.X));
         }
         else
         {
