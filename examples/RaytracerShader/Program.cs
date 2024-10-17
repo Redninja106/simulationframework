@@ -146,8 +146,8 @@ class RayTracerShader : CanvasShader
         {
             for (int x = 0; x < antialias; x++)
             {
-                // Vector2 sampleOffset = new((x + .5f) / antialias, (y + .5f) / antialias); // evenly spaced sample distribution
-                Vector3 sampleOffset = Random3(new((vp.X + x), (vp.Y * y), time)); // random sample distribution
+                //Vector2 sampleOffset = new((x + .5f) / antialias, (y + .5f) / antialias); // evenly spaced sample distribution
+                Vector3 sampleOffset = Random3(Random3(new((vp.X + x), (vp.Y * y), time))); // random sample distribution
                 
                 Vector2 samplePos = new Vector2(
                     vp.X * width * .5f + sampleOffset.X,
@@ -161,7 +161,7 @@ class RayTracerShader : CanvasShader
 
         color /= antialias * antialias;
 
-        return color;
+        return color with { A = 1.0f };
     }
 
     private ColorF RayColor(Vector3 origin, Vector3 direction)
@@ -178,7 +178,7 @@ class RayTracerShader : CanvasShader
             for (int j = 0; j < spheres.Length; j++)
             {
                 Sphere s = spheres[j];
-                s.position -= cameraPosition; // = new(s.posRad.X - cameraPosition.X, s.posRad.Y - cameraPosition.Y, s.posRad.Z - cameraPosition.Z, s.posRad.W);
+                s.position -= cameraPosition;
                 if (RaySphereIntersect(origin, direction, s, out Vector3 n, out float t))
                 {
                     if (t < closestT)
@@ -196,15 +196,15 @@ class RayTracerShader : CanvasShader
                 color *= closestCol;
                 origin += direction * closestT + normal * 0.001f;
 
-                direction = ShaderIntrinsics.Normalize(normal * 1.00001f + Random3(normal + direction + new Vector3(time)));
+                direction = ShaderIntrinsics.Normalize(normal * 1.00001f + RandomUnit3(normal + direction + new Vector3(time)));
 
                 // for reflective balls uncomment:
-                // direction = ShaderIntrinsics.Reflect(direction, normal);
+                direction = ShaderIntrinsics.Reflect(direction, normal);
             }
             else
             {
                 color *= ColorF.Lerp(ColorF.WhiteSmoke, ColorF.SkyBlue, direction.Y).ToVector4();
-                i = MaxBounces;
+                return new(color);
             }
         }
         return new(color);
@@ -247,6 +247,17 @@ class RayTracerShader : CanvasShader
         return true;
     }
 
+    private Vector3 RandomUnit3(Vector3 p)
+    {
+        Vector3 rand = p * 2f - Vector3.One;
+        do
+        {
+            rand = Random3(rand) * 2f - Vector3.One;
+        }
+        while (rand.LengthSquared() >= 1);
+
+        return rand.Normalized();
+    }
 
     private Vector3 Random3(Vector3 p)
     {

@@ -36,7 +36,6 @@ internal class ControlFlowGraph : ControlFlowNode
         Disassembly = disassembly;
 
         EntryNode.AddSuccessor(GetBasicBlock(disassembly.instructions[0]));
-        Dump();
 
         DetectReturns(ExitNode);
         RecomputeDominators();
@@ -466,7 +465,7 @@ internal class ControlFlowGraph : ControlFlowNode
         foreach (var (head, tail) in loops)
         {
             // skip the loop this subgraph was created for
-            // if not a subgraph, EntryNode is a dummy so this doesn't matter
+            // if not a subgraph, EntryNode is a dummy so this doesn't 
             if (head == EntryNode)
             {
                 continue;
@@ -506,10 +505,41 @@ internal class ControlFlowGraph : ControlFlowNode
                 {
                     stack.Push(pred);
                 }
+
+                // the loop may have branches off it leading to return statements
+                if (pred != header)
+                {
+                    foreach (var succ in pred.Successors)
+                    {
+                        if (succ != block)
+                        {
+                            AddSuccessorsToSet(nodes, succ);
+                        }
+                    }
+                }
             }
         }
 
         return nodes;
+    }
+
+    private void AddSuccessorsToSet(HashSet<ControlFlowNode> nodes, ControlFlowNode node)
+    {
+        Stack<ControlFlowNode> stack = [];
+        stack.Push(node);
+
+        while (stack.Count > 0)
+        {
+            var n = stack.Pop();
+            nodes.Add(n);
+            foreach (var succ in n.Successors)
+            {
+                if (!nodes.Contains(succ))
+                {
+                    stack.Push(succ);
+                }
+            }
+        }
     }
 
     private void DetectContinuesAndBreaks(HashSet<ControlFlowNode> nodes, ControlFlowNode header, ControlFlowNode breakTarget)
