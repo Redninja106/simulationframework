@@ -234,10 +234,35 @@ internal class GLCanvas : ICanvas, IDisposable
         var stream = graphics.streams.GetCustomVertexGeometryStream(typeof(TVertex), in State);
         var effect = graphics.effects.GetEffectFromCanvasState(in State);
 
-        int vertexSize = Unsafe.SizeOf<TVertex>();
-        var vertexBuffer = vertexWriter.Write(MemoryMarshal.AsBytes(vertices), vertexSize, out int offsetBytes, out int countBytes);
-        var chunk = GeometryChunk.Create(vertexBuffer, stream.VertexLayout, offsetBytes / vertexSize, countBytes / vertexSize, true);
-        AddRenderCommand(chunk, effect);
+        if (State.Fill)
+        {
+            int vertexSize = Unsafe.SizeOf<TVertex>();
+            var vertexBuffer = vertexWriter.Write(MemoryMarshal.AsBytes(vertices), vertexSize, out int offsetBytes, out int countBytes);
+            var chunk = GeometryChunk.Create(vertexBuffer, stream.VertexLayout, offsetBytes / vertexSize, countBytes / vertexSize, true);
+            AddRenderCommand(chunk, effect);
+        }
+        else
+        {
+            int vertexSize = Unsafe.SizeOf<TVertex>();
+            var buffer = this.graphics.bufferPool.GetLargeBuffer(vertexSize * vertices.Length * 2);
+            TVertex[] wireframeVerts = new TVertex[vertices.Length * 2];
+            for (int i = 0; i < vertices.Length / 3; i++)
+            {
+                TVertex a = vertices[i * 3 + 0];
+                TVertex b = vertices[i * 3 + 1];
+                TVertex c = vertices[i * 3 + 2];
+
+                wireframeVerts[(i * 3 + 0) * 2 + 0] = a;
+                wireframeVerts[(i * 3 + 0) * 2 + 1] = b;
+                wireframeVerts[(i * 3 + 1) * 2 + 0] = b;
+                wireframeVerts[(i * 3 + 1) * 2 + 1] = c;
+                wireframeVerts[(i * 3 + 2) * 2 + 0] = c;
+                wireframeVerts[(i * 3 + 2) * 2 + 1] = a;
+            }
+            buffer.Upload<TVertex>(wireframeVerts);
+            var chunk = GeometryChunk.Create(buffer, stream.VertexLayout, 0, wireframeVerts.Length, false);
+            AddRenderCommand(chunk, effect);
+        }
     }
 
     public void DrawTriangles<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices)
@@ -580,7 +605,7 @@ internal class GLCanvas : ICanvas, IDisposable
         currentState.Mask = mask;
     }
 
-    public void WriteMask(IMask? mask, bool value)
+    public void WriteMask(IMask? mask, bool? value)
     {
         currentState.WriteMask = mask;
         currentState.WriteMaskValue = value;

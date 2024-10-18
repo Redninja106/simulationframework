@@ -15,13 +15,14 @@ internal class ContinueStatement : CanvasShader
     public override ColorF GetPixelColor(Vector2 position)
     {
         float y = 2;
-        for (int i = 0; i < 100; i++)
+        while (y < 10)
         {
-            y *= 1.5f;
-            if (y == 23)
-            {
+            y /= 1.5f;
+
+            if (y == 6)
                 continue;
-            }
+
+            y *= 2;
         }
         return new(y, y, y);
     }

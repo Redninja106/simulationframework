@@ -448,6 +448,7 @@ internal class ControlFlowGraph : ControlFlowNode
     {
         RecomputeDominators();
         List<(ControlFlowNode head, ControlFlowNode tail)> loops = [];
+        HashSet<ControlFlowNode> loopHeaders = [];
         foreach (var node in Nodes)
         {
             foreach (var succ in node.Successors)
@@ -455,9 +456,10 @@ internal class ControlFlowGraph : ControlFlowNode
                 // Every successor that dominates its predecessor
                 // is a loop header
 
-                if (node.dominators.Contains(succ))
+                if (node.dominators.Contains(succ) && !loopHeaders.Contains(succ))
                 {
                     loops.Add((succ, node));
+                    loopHeaders.Add(succ);
                 }
             }
         }
@@ -471,12 +473,9 @@ internal class ControlFlowGraph : ControlFlowNode
                 continue;
             }
 
+            Dump();
             HashSet<ControlFlowNode> nodes = FindNodesInLoop(head, tail);
             ControlFlowNode breakTarget = head.Successors.Single(s => !nodes.Contains(s));
-            nodes.UnionWith(FindNodesInLoop(head, breakTarget));
-            nodes.ExceptWith([breakTarget]);
-
-            // DetectReturns(nodes);
 
             DetectContinuesAndBreaks(nodes, head, breakTarget);
 
@@ -485,17 +484,20 @@ internal class ControlFlowGraph : ControlFlowNode
         }
     }
 
+    // traces a loop from its tail to its head to determine which nodes it includes
     private HashSet<ControlFlowNode> FindNodesInLoop(ControlFlowNode header, ControlFlowNode tail)
     {
-        HashSet<ControlFlowNode> nodes = [header];
-        Stack<ControlFlowNode> stack = [];
-        
+        HashSet<ControlFlowNode> nodes = [header]; // the set of nodes in the loop
+        Stack<ControlFlowNode> stack = []; // a stack of nodes we need to visit
+
         if (header != tail)
         {
             nodes.Add(tail);
             stack.Push(tail);
         }
 
+        // search upwards until there are more nodes left
+        // the search will stop at the head since it's already in the list
         while (stack.Count > 0)
         {
             var block = stack.Pop();
@@ -506,14 +508,14 @@ internal class ControlFlowGraph : ControlFlowNode
                     stack.Push(pred);
                 }
 
-                // the loop may have branches off it leading to return statements
+                // the loop may have branches off it leading to return/break statements
                 if (pred != header)
                 {
                     foreach (var succ in pred.Successors)
                     {
                         if (succ != block)
                         {
-                            AddSuccessorsToSet(nodes, succ);
+                            AddSuccessorsToSet(nodes, succ, header);
                         }
                     }
                 }
@@ -521,36 +523,62 @@ internal class ControlFlowGraph : ControlFlowNode
         }
 
         return nodes;
-    }
 
-    private void AddSuccessorsToSet(HashSet<ControlFlowNode> nodes, ControlFlowNode node)
-    {
-        Stack<ControlFlowNode> stack = [];
-        stack.Push(node);
-
-        while (stack.Count > 0)
+        // adds nodes that branch off the main cycle to 'nodes'
+        static void AddSuccessorsToSet(HashSet<ControlFlowNode> nodes, ControlFlowNode node, ControlFlowNode loopHeader)
         {
-            var n = stack.Pop();
-            nodes.Add(n);
-            foreach (var succ in n.Successors)
+            Stack<ControlFlowNode> stack = [];
+            stack.Push(node);
+            nodes.Add(node);
+
+            while (stack.Count > 0)
             {
-                if (!nodes.Contains(succ))
+                var n = stack.Pop();
+                
+                foreach (var succ in n.Successors)
                 {
-                    stack.Push(succ);
+                    // if the node is a successor of the loop header, it's the break target. don't include it.
+                    if (succ.Predecessors.Contains(loopHeader))
+                    {
+                        continue;
+                    }
+
+                    if (nodes.Add(succ))
+                    {
+                        stack.Push(succ);
+                    }
                 }
             }
         }
+
     }
 
     private void DetectContinuesAndBreaks(HashSet<ControlFlowNode> nodes, ControlFlowNode header, ControlFlowNode breakTarget)
     {
-        foreach(var brk in breakTarget.Predecessors.Except([header]))
+        // replace every edge to the break target with a break node
+        foreach (var brk in breakTarget.Predecessors.Except([header]))
         {
             brk.RemoveSuccessor(breakTarget);
 
             var brkNode = new BreakNode();
             brk.AddSuccessor(brkNode);
             nodes.Add(brkNode);
+            this.Nodes.Add(brkNode);
+        }
+
+        // replace every node in the loop targeting the header with a continue
+        foreach (var pred in header.Predecessors)
+        {
+            if (nodes.Contains(pred))
+            {
+                pred.RemoveSuccessor(header);
+
+                var continueNode = new ContinueNode();
+                nodes.Add(continueNode);
+                this.Nodes.Add(continueNode);
+
+                pred.AddSuccessor(continueNode);
+            }
         }
     }
 

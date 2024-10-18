@@ -84,6 +84,8 @@ internal class GLMask : IMask
                 throw new Exception("Could not create mask framebuffer!");
             }
         }
+
+        Clear(true);
     }
 
     public unsafe void ApplyChanges()
@@ -265,9 +267,13 @@ internal class GLMask : IMask
         residence = null;
     }
 
-    public virtual void BindWrite(bool value)
+    public virtual void BindWrite(bool? value)
     {
-        if (value)
+        if (value is null)
+        {
+            glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+        }
+        else if (value.Value)
         {
             glStencilOp(GL_REPLACE, GL_KEEP, GL_KEEP);
         }

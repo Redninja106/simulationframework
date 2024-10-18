@@ -120,7 +120,7 @@ internal class ExpressionBuilder
             else if (graph.SubgraphKind is SubgraphKind.Loop)
             {
                 var headNode = graph.EntryNode;
-                var tailNode = headNode.Predecessors.Single();
+                // var tailNode = headNode.Predecessors.Single();
 
                 BuildNode(headNode, expressions);
 
@@ -128,7 +128,7 @@ internal class ExpressionBuilder
                 ShaderExpression condition = new ConditionalExpression(false, new UnaryExpression(UnaryOperation.Not, cond, null), new BreakExpression(), null);
                 
                 ExpressionStack exprs = new();
-                BuildNodeChain(headNode.Successors.Single(n => n != graph.ExitNode), tailNode, exprs);
+                BuildNodeChain(headNode.Successors.Single(n => n != graph.ExitNode), graph.ExitNode, exprs);
 
                 expressions.PushStatement(
                     new LoopExpression(

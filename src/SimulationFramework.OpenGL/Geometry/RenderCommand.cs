@@ -14,7 +14,7 @@ struct RenderCommand
     public GeometryChunk chunk;
     public IMask? readMask;
     public IMask? writeMask;
-    public bool writeMaskValue;
+    public bool? writeMaskValue;
 
     public bool HasSameState(RenderCommand other)
     {

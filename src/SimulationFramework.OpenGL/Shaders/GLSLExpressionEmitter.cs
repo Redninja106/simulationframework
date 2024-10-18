@@ -66,6 +66,12 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
         return expression;
     }
 
+    public override ShaderExpression VisitContinueExpression(ContinueExpression expression)
+    {
+        writer.Write("continue");
+        return expression;
+    }
+
     public override ShaderExpression VisitReturnExpression(ReturnExpression expression)
     {
         writer.Write("return");

@@ -12,7 +12,7 @@ public struct CanvasState
     public IMask? Mask { get; set; }
 
     public IMask? WriteMask { get; set; }
-    public bool WriteMaskValue { get; set; }
+    public bool? WriteMaskValue { get; set; }
 
     public bool Fill { get; set; }
     public ColorF Color { get; set; }

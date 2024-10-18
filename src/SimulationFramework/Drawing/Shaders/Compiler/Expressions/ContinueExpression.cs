@@ -10,6 +10,6 @@ public record ContinueExpression : ShaderExpression
 
     public override string ToString()
     {
-        return "break";
+        return "continue";
     }
 }

@@ -183,6 +183,9 @@ public static class Graphics
         return Provider.CreateDepthMask(width, height);
     }
 
+    /// <summary>
+    /// Generates mipmaps for an <see cref="ITexture"/>. To use the mipmaps when sampling, set <see cref="ITexture.Filter"/> to <see cref="TextureFilter.MipmapPoint"/> or <see cref="TextureFilter.MipmapLinear"/>.
+    /// </summary>
     public static void GenerateMipmaps(ITexture texture)
     {
         Provider.GenerateMipmaps(texture);

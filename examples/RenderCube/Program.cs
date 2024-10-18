@@ -61,11 +61,7 @@ partial class Program : Simulation
         logo = Graphics.LoadTexture("logo-512x512.png");
         logo.WrapModeY = logo.WrapModeX = WrapMode.Repeat;
 
-        Console.Clear();
-
         depthMask = Graphics.CreateDepthMask(Window.Width, Window.Height);
-
-        Thread.Sleep(100);
     }
 
     public override void OnRender(ICanvas canvas)
@@ -85,9 +81,9 @@ partial class Program : Simulation
             proj = Matrix4x4.CreatePerspectiveFieldOfView(MathF.PI / 3f, canvas.Width / (float)canvas.Height, 0.1f, 100f)
         };
         
-        canvas.Stroke(canvasShader, vertexShader);
+        canvas.Fill(canvasShader, vertexShader);
         canvas.Mask(depthMask);
-        canvas.WriteMask(depthMask);
+        canvas.WriteMask(depthMask, null);
         canvas.DrawTriangles<Vertex>(vertices);
     }
 }
@@ -111,7 +107,7 @@ class CubeCanvasShader : CanvasShader
         x.A = 1;
         if (x.A < 0.001f)
         {
-            //ShaderIntrinsics.Discard();
+            ShaderIntrinsics.Discard();
         }
         return x;
     }

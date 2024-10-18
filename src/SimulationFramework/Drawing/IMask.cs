@@ -26,6 +26,10 @@ public interface IMask : IDisposable
 
 public interface IDepthMask : IMask
 {
+    /// <summary>
+    /// Sets the comparison to use when rendering with this mask. 
+    /// Pixels are discarded when the comparison evalulates to false. For example, use <see cref="Comparison.LessThan"/> to only render pixels with a smaller depth value than the depth buffer.
+    /// </summary>
     Comparison Comparison { get; set; }
 
     void Clear(float depthValue);
@@ -35,7 +39,7 @@ public enum Comparison
 {
     Always,
     Never,
-    Equals,
+    Equal,
     NotEqual,
     LessThan,
     LessThanEqual,

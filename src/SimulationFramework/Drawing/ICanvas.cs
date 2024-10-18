@@ -624,6 +624,21 @@ public interface ICanvas
     /// <param name="scale">The scales to transform the transformation matrix by on the X and Y axes.</param>
     sealed void Scale(Vector2 scale) => Transform(Matrix3x2.CreateScale(scale));
 
+    /// <summary>
+    /// Sets the canvas's current reading <see cref="IMask"/>.
+    /// Pixels which the mask has a <see langword="false"/> value will discarded.
+    /// <para>
+    /// If <paramref name="mask"/> is an <see cref="IDepthMask"/>, pixels will be also discarded based on the result of 
+    /// the depth test (see <see cref="IDepthMask.Comparison"/>).
+    /// </para>
+    /// </summary>
+    /// <param name="mask">The mask to use. If <see langword="null"/>, the canvas won't use a mask.</param>
     void Mask(IMask? mask);
-    void WriteMask(IMask? mask, bool value = true);
+
+    /// <summary>
+    /// Sets the canvas's current <see cref="IMask"/> for writing.
+    /// </summary>
+    /// <param name="mask"></param>
+    /// <param name="value"></param>
+    void WriteMask(IMask? mask, bool? value = true);
 }

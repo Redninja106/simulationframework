@@ -149,15 +149,6 @@ public static class Window
         });
     }
 
-    /// <summary>
-    /// Gets the back buffer for the window.
-    /// Any rendering done to the back buffer during <see cref="Simulation.OnRender(ICanvas)"/> will be visible on the window.
-    /// </summary>
-    /// <returns>The back buffer for the window.</returns>
-    public static ITexture GetBackBuffer()
-    {
-        return Provider.GetBackBuffer();
-    }
 
     /// <summary>
     /// Attempts to resize the window. Changes may not take effect until the next frame.
