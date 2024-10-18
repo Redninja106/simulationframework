@@ -9,63 +9,21 @@ Start<Program>();
 partial class Program : Simulation
 {
     Vertex[] vertices = [
-        new Vertex(new(-0.5f, -0.5f, -0.5f), new(0.0f, 0.0f)),
-        new Vertex(new(0.5f, -0.5f, -0.5f), new(1.0f, 0.0f)),
-        new Vertex(new(0.5f, 0.5f, -0.5f), new(1.0f, 1.0f)),
-        new Vertex(new(0.5f, 0.5f, -0.5f), new(1.0f, 1.0f)),
-        new Vertex(new(-0.5f, 0.5f, -0.5f), new(0.0f, 1.0f)),
-        new Vertex(new(-0.5f, -0.5f, -0.5f), new(0.0f, 0.0f)),
-        new Vertex(new(-0.5f, -0.5f, 0.5f), new(0.0f, 0.0f)),
-        new Vertex(new(0.5f, -0.5f, 0.5f), new(1.0f, 0.0f)),
-        new Vertex(new(0.5f, 0.5f, 0.5f), new(1.0f, 1.0f)),
-        new Vertex(new(0.5f, 0.5f, 0.5f), new(1.0f, 1.0f)),
-        new Vertex(new(-0.5f, 0.5f, 0.5f), new(0.0f, 1.0f)),
-        new Vertex(new(-0.5f, -0.5f, 0.5f), new(0.0f, 0.0f)),
-        new Vertex(new(-0.5f, 0.5f, 0.5f), new(1.0f, 0.0f)),
-        new Vertex(new(-0.5f, 0.5f, -0.5f), new(1.0f, 1.0f)),
-        new Vertex(new(-0.5f, -0.5f, -0.5f), new(0.0f, 1.0f)),
-        new Vertex(new(-0.5f, -0.5f, -0.5f), new(0.0f, 1.0f)),
-        new Vertex(new(-0.5f, -0.5f, 0.5f), new(0.0f, 0.0f)),
-        new Vertex(new(-0.5f, 0.5f, 0.5f), new(1.0f, 0.0f)),
-        new Vertex(new(0.5f, 0.5f, 0.5f), new(1.0f, 0.0f)),
-        new Vertex(new(0.5f, 0.5f, -0.5f), new(1.0f, 1.0f)),
-        new Vertex(new(0.5f, -0.5f, -0.5f), new(0.0f, 1.0f)),
-        new Vertex(new(0.5f, -0.5f, -0.5f), new(0.0f, 1.0f)),
-        new Vertex(new(0.5f, -0.5f, 0.5f), new(0.0f, 0.0f)),
-        new Vertex(new(0.5f, 0.5f, 0.5f), new(1.0f, 0.0f)),
-        new Vertex(new(-0.5f, -0.5f, -0.5f), new(0.0f, 1.0f)),
-        new Vertex(new(0.5f, -0.5f, -0.5f), new(1.0f, 1.0f)),
-        new Vertex(new(0.5f, -0.5f, 0.5f), new(1.0f, 0.0f)),
-        new Vertex(new(0.5f, -0.5f, 0.5f), new(1.0f, 0.0f)),
-        new Vertex(new(-0.5f, -0.5f, 0.5f), new(0.0f, 0.0f)),
-        new Vertex(new(-0.5f, -0.5f, -0.5f), new(0.0f, 1.0f)),
-        new Vertex(new(-0.5f, 0.5f, -0.5f), new(0.0f, 1.0f)),
-        new Vertex(new(0.5f, 0.5f, -0.5f), new(1.0f, 1.0f)),
-        new Vertex(new(0.5f, 0.5f, 0.5f), new(1.0f, 0.0f)),
-        new Vertex(new(0.5f, 0.5f, 0.5f), new(1.0f, 0.0f)),
-        new Vertex(new(-0.5f, 0.5f, 0.5f), new(0.0f, 0.0f)),
-        new Vertex(new(-0.5f, 0.5f, -0.5f), new(0.0f, 1.0f))
+        new Vertex(new(0, .5f, 0), ColorF.Red),
+        new Vertex(new(.5f, -.5f, 0), ColorF.Lime),
+        new Vertex(new(-.5f, -.5f, 0), ColorF.Blue),
     ];
 
     public override void OnInitialize()
     {
-        ShaderCompiler.DumpShaders = true;
     }
 
     public override void OnRender(ICanvas canvas)
     {
         canvas.Clear(Color.Black);
 
-        var canvasShader = new TheCanvasShader()
-        {
-        };
-
-        var vertexShader = new CubeVertexShader()
-        {
-            world = Matrix4x4.CreateRotationY(Time.TotalTime * Angle.ToRadians(60)),
-            view = Matrix4x4.CreateLookAtLeftHanded(Vector3.One, Vector3.Zero, Vector3.UnitY),
-            proj = Matrix4x4.CreatePerspectiveFieldOfViewLeftHanded(MathF.PI / 3f, canvas.Width / (float)canvas.Height, 0.1f, 100f)
-        };
+        CanvasShader canvasShader = new TriangleCanvasShader();
+        VertexShader vertexShader = new TriangleVertexShader();
 
         canvas.Fill(canvasShader, vertexShader);
         canvas.DrawTriangles<Vertex>(vertices);
@@ -75,48 +33,39 @@ partial class Program : Simulation
 struct Vertex
 {
     public Vector3 Position;
-    public Vector2 Texture;
+    public ColorF Color;
 
-    public Vertex(Vector3 position, Vector2 texture)
+    public Vertex(Vector3 position, ColorF color)
     {
         this.Position = position;
-        this.Texture = texture;
+        this.Color = color;
     }
 }
 
-class TheCanvasShader : CanvasShader
+class TriangleCanvasShader : CanvasShader
 {
     [VertexShaderOutput]
-    Vector2 uv;
+    ColorF color;
 
     public override ColorF GetPixelColor(Vector2 position)
     {
-        return new(uv.X, uv.Y, 0, 1);
+        return color;
     }
 }
 
-class CubeVertexShader : VertexShader
+class TriangleVertexShader : VertexShader
 {
     [VertexData]
     Vertex vertex;
 
-    public Matrix4x4 world;
-    public Matrix4x4 view;
-    public Matrix4x4 proj;
-
     [VertexShaderOutput]
-    Vector2 uv;
+    ColorF color;
 
     [UseClipSpace]
     public override Vector4 GetVertexPosition()
     {
         Vector4 result = new(vertex.Position, 1);
-        result = Vector4.Transform(result, world);
-        result = Vector4.Transform(result, view);
-        result = Vector4.Transform(result, proj);
-
-        uv = new(vertex.Texture.X, vertex.Texture.Y);
-
+        color = vertex.Color;
         return result;
     }
 }

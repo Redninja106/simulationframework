@@ -899,7 +899,7 @@ public static class ShaderIntrinsics
     #region Textures
 
     /// <summary>
-    /// Samples a texture using UV coordinates ((0, 0) to (1, 1)).
+    /// Samples a texture using UV coordinates (from (0, 0) to (1, 1)).
     /// </summary>
     /// <param name="texture">The texture to sample.</param>
     /// <param name="uv">The uv coordinates to use to sample the texture.</param>
@@ -911,7 +911,7 @@ public static class ShaderIntrinsics
     }
 
     /// <summary>
-    /// Samples a texture using pixel coordinates ((0, 0) to (width, height)).
+    /// Samples a texture using pixel coordinates (from (0, 0) to (width, height)).
     /// </summary>
     /// <param name="texture">The texture to sample.</param>
     /// <param name="position">The texture position to use to sample the texture.</param>
