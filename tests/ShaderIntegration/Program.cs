@@ -17,7 +17,7 @@ partial class Program : Simulation
         ShaderCompiler.DumpShaders = true;
 
         List<CanvasShader> shaders = [];
-        foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetCustomAttribute<TestAttribute>() != null))
+        foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.GetCustomAttribute<ShaderTestAttribute>() != null))
         {
             shaders.Add((CanvasShader)Activator.CreateInstance(type)!);
         }

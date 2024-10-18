@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ShaderIntegration.Shaders;
 
-[Test]
+[ShaderTest]
 internal class LinearShader : CanvasShader
 {
     public override ColorF GetPixelColor(Vector2 position)

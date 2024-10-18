@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ShaderIntegration;
-internal class TestAttribute : Attribute
+internal class ShaderTestAttribute : Attribute
 {
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ShaderIntegration.Shaders;
 
-[Test]
+[ShaderTest]
 internal class Operators : CanvasShader
 {
     bool d = false;

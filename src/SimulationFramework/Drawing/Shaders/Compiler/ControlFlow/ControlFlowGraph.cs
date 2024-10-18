@@ -37,6 +37,7 @@ internal class ControlFlowGraph : ControlFlowNode
 
         EntryNode.AddSuccessor(GetBasicBlock(disassembly.instructions[0]));
 
+        Dump();
         DetectReturns(ExitNode);
         RecomputeDominators();
         ReplaceLoops();
@@ -259,7 +260,7 @@ internal class ControlFlowGraph : ControlFlowNode
         {
             node.postdominators.Clear();
 
-            if (node == ExitNode || node is BreakNode || node is ReturnNode)
+            if (node == ExitNode || node is BreakNode || node is ReturnNode || node is ContinueNode)
             {
                 node.postdominators.Add(node);
             }
@@ -468,12 +469,11 @@ internal class ControlFlowGraph : ControlFlowNode
         {
             // skip the loop this subgraph was created for
             // if not a subgraph, EntryNode is a dummy so this doesn't 
-            if (head == EntryNode)
+            if (head == EntryNode || !this.Nodes.Contains(head))
             {
                 continue;
             }
 
-            Dump();
             HashSet<ControlFlowNode> nodes = FindNodesInLoop(head, tail);
             ControlFlowNode breakTarget = head.Successors.Single(s => !nodes.Contains(s));
 
@@ -509,14 +509,16 @@ internal class ControlFlowGraph : ControlFlowNode
                 }
 
                 // the loop may have branches off it leading to return/break statements
-                if (pred != header)
+                foreach (var succ in block.Successors)
                 {
-                    foreach (var succ in pred.Successors)
+                    if (succ.Predecessors.Contains(header))
                     {
-                        if (succ != block)
-                        {
-                            AddSuccessorsToSet(nodes, succ, header);
-                        }
+                        continue;
+                    }
+
+                    if (nodes.Add(succ))
+                    {
+                        stack.Push(succ);
                     }
                 }
             }
@@ -649,7 +651,7 @@ internal class ControlFlowGraph : ControlFlowNode
                 conditionNodes.Add(node);
             }
         }
-
+        Dump();
         foreach (var node in conditionNodes)
         {
             if (!this.Nodes.Contains(node))
@@ -688,6 +690,12 @@ internal class ControlFlowGraph : ControlFlowNode
         HashSet<ControlFlowNode> nodes = [divergence];
         foreach (var successor in divergence.Successors)
         {
+            // skip nodes that the divergence doesn't dominate as they're not part of the conditional
+            if (!successor.dominators.Contains(divergence))
+            {
+                continue;
+            }
+
             Stack<ControlFlowNode> stack = [];
             nodes.Add(successor);
             stack.Push(successor);

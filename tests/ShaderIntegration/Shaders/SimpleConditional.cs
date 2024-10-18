@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ShaderIntegration.Shaders;
 
-[Test]
+[ShaderTest]
 internal class SimpleConditional : CanvasShader
 {
     float x;
