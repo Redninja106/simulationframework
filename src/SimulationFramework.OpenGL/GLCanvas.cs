@@ -116,9 +116,10 @@ internal class GLCanvas : ICanvas, IDisposable
 
     public void DrawLine(Vector2 p1, Vector2 p2)
     {
-        graphics.writers.GetWriter(in State, true).PushLine(CurrentStream, p1, p2);
+        bool isHairline = State.StrokeWidth == 0;
+        graphics.writers.GetWriter(in State, isHairline).PushLine(CurrentStream, p1, p2);
         var effect = graphics.effects.GetEffectFromCanvasState(in State);
-        AddRenderCommand(CreateChunk(CurrentStream, false), effect);
+        AddRenderCommand(CreateChunk(CurrentStream, !isHairline), effect);
     }
 
     public void DrawPolygon(ReadOnlySpan<Vector2> polygon, bool close = true)

@@ -70,13 +70,17 @@ partial class Program : Simulation
         canvas.DrawLine(50, -50, -50, 50);
 
         canvas.Translate(150, 0);
+        canvas.StrokeWidth(0);
+        canvas.DrawLine(-50, -50, 50, 50);
+        canvas.DrawLine(50, -50, -50, 50);
+
+        canvas.Translate(150, 0);
         canvas.Fill(Color.Aquamarine);
         canvas.DrawRoundedRect(0, 0, 100, 100, 25, Alignment.Center);
 
         canvas.Translate(150, 0);
         canvas.Fill(Color.Beige);
         canvas.DrawArc(0, 0, 50, 50, MathF.PI / 3f, 5 * MathF.PI / 3f, true, Alignment.Center);
-
 
         canvas.Translate(150, 0);
         canvas.Fill(Color.DarkOliveGreen);
