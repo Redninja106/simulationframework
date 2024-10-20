@@ -52,7 +52,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masks", "examples\Masks\Mas
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderIntegration", "tests\ShaderIntegration\ShaderIntegration.csproj", "{68267971-9F25-4BF3-8876-908DE53F1082}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationFramework.OpenGL.BindngsGenerator", "src\SimulationFramework.OpenGL.BindngsGenerator\SimulationFramework.OpenGL.BindngsGenerator.csproj", "{70BBCD27-DD68-4CDD-AB9E-1B3BDF87D1E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.OpenGL.BindngsGenerator", "src\SimulationFramework.OpenGL.BindngsGenerator\SimulationFramework.OpenGL.BindngsGenerator.csproj", "{70BBCD27-DD68-4CDD-AB9E-1B3BDF87D1E5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayingSounds", "examples\PlayingSounds\PlayingSounds.csproj", "{05D77FEE-79D2-4B65-9588-B5FE27FB1826}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -292,6 +294,18 @@ Global
 		{70BBCD27-DD68-4CDD-AB9E-1B3BDF87D1E5}.Release|arm64.Build.0 = Release|Any CPU
 		{70BBCD27-DD68-4CDD-AB9E-1B3BDF87D1E5}.Release|x86.ActiveCfg = Release|Any CPU
 		{70BBCD27-DD68-4CDD-AB9E-1B3BDF87D1E5}.Release|x86.Build.0 = Release|Any CPU
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Debug|arm64.Build.0 = Debug|Any CPU
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Debug|x86.Build.0 = Debug|Any CPU
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Release|arm64.ActiveCfg = Release|Any CPU
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Release|arm64.Build.0 = Release|Any CPU
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Release|x86.ActiveCfg = Release|Any CPU
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -315,6 +329,7 @@ Global
 		{A0E58F84-0ADF-4782-90DF-09BAE71E3288} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 		{68267971-9F25-4BF3-8876-908DE53F1082} = {813D5E58-CE77-4969-B74A-A724228D8F73}
 		{70BBCD27-DD68-4CDD-AB9E-1B3BDF87D1E5} = {70E789B1-29FB-421E-A968-1ED75F680090}
+		{05D77FEE-79D2-4B65-9588-B5FE27FB1826} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09D3B2BE-AC85-48C2-835F-6B781E265873}

@@ -12,7 +12,7 @@ internal sealed unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
     {
         get
         {
-            provider.al.GetSourceProperty(source, SourceFloat.Gain, out float gain);
+            provider.al.GetSourceProperty(source, SourceFloat.Pitch, out float gain);
             return gain;
         }
         set
@@ -22,6 +22,22 @@ internal sealed unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
             provider.al.SetSourceProperty(source, SourceFloat.Gain, value);
         }
     }
+
+    public override float PitchMultiplier
+    {
+        get
+        {
+            provider.al.GetSourceProperty(source, SourceFloat.Pitch, out float pitch);
+            return pitch;
+        }
+        set
+        {
+            if (value is < .5f or > 2f)
+                throw new ArgumentOutOfRangeException(nameof(Volume), "pitch must be between .5 and 2!");
+            provider.al.SetSourceProperty(source, SourceFloat.Pitch, value);
+        }
+    }
+
 
     public override bool IsStopped
     {

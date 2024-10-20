@@ -21,9 +21,14 @@ public abstract class SoundPlayback : IDisposable
     public bool IsPlaying => !IsPaused && !IsStopped;
 
     /// <summary>
-    /// The volume of the sound. Value range from 0 to 1, where 0 is no sound and 1 is full volume.
+    /// The volume of the sound. Value ranges from 0 to 1.
     /// </summary>
     public abstract float Volume { get; set; }
+
+    /// <summary>
+    /// The volume of the sound. Value ranges from .5 to 2.
+    /// </summary>
+    public abstract float PitchMultiplier { get; set; }
 
     /// <summary>
     /// Pauses the playback. To resume, use <see cref="Resume"/>.

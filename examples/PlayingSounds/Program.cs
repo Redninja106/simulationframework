@@ -43,7 +43,8 @@ partial class Program : Simulation
 
         if (Keyboard.IsKeyPressed(Key.Space) || Mouse.ScrollWheelDelta != 0)
         {
-            pop.Play(popVolume);
+            var playback = pop.Play(popVolume);
+            playback.PitchMultiplier = 1f - .1f * Random.Shared.NextSingle();
         }
     }
 }
