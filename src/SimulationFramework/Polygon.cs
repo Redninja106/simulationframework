@@ -21,7 +21,7 @@ public static class Polygon
     /// <summary>
     /// Creates an <see cref="IGeometry"/> from a polygon.
     /// </summary>
-    public static IGeometry ToGeometry(ReadOnlySpan<Vector2> polygon)
+    internal static IGeometry ToGeometry(ReadOnlySpan<Vector2> polygon)
     {
         throw new NotImplementedException();
     }
@@ -214,6 +214,17 @@ public static class Polygon
                 {
                     return true;
                 }
+            }   
+        }
+
+        if (polygon[0] != polygon[^1])
+        {
+            for (int i = 0; i < polygon.Length - 1; i++)
+            {
+                if (LineIntersect(polygon[^1], polygon[0], polygon[i], polygon[i + 1]))
+                {
+                    return true;
+                }
             }
         }
 
@@ -224,29 +235,35 @@ public static class Polygon
     static bool LineIntersect(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, out Vector2 position)
     {
         // https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line_segment
-        position = Vector2.Zero;
 
         float t_numerator = (p1.X - p3.X) * (p3.Y - p4.Y) - (p1.Y - p3.Y) * (p3.X - p4.X);
         float t_denominator = (p1.X - p2.X) * (p3.Y - p4.Y) - (p1.Y - p2.Y) * (p3.X - p4.X);
-        
-        if (t_numerator > t_denominator || t_denominator <= 0)
+
+        if (t_denominator == 0)
         {
+            position = Vector2.Zero;
             return false;
         }
 
         float t = t_numerator / t_denominator;
 
+        if (t <= 0 || t > 1)
+        {
+            position = Vector2.Zero;
+            return false;
+        }
+
         float u_numerator = (p1.X - p3.X) * (p1.Y - p2.Y) - (p1.Y - p3.Y) * (p1.X - p2.X);
         float u_denominator = (p1.X - p2.X) * (p3.Y - p4.Y) - (p1.Y - p2.Y) * (p3.X - p4.X);
 
-
-        if (u_numerator > u_denominator || u_denominator <= 0)
+        float u = u_numerator / u_denominator;
+        if (u <= 0 || u > 1)
         {
+            position = Vector2.Zero;
             return false;
         }
 
         position = p1 + t * (p2 - p1);
-
         return true;
     }
 
@@ -395,6 +412,16 @@ public static class Polygon
             ? PolygonLinkedList.StackAllocate(polygon, stackalloc PolygonLinkedList.Vertex[polygon.Length])
             : PolygonLinkedList.HeapAllocate(polygon);
 
+        int currentToRemove = list.First();
+        for (int i = 0; i < list.Length - 1; i++)
+        {
+            if (list[currentToRemove] == list[list.Next(currentToRemove)])
+            {
+                list.Remove(currentToRemove);
+            }
+            currentToRemove = list.Next(currentToRemove);
+        }
+
         int current;
         while (tris.Count < (polygon.Length - 2) * 3 && list.Length >= 3)
         {
@@ -447,6 +474,7 @@ public static class Polygon
             }
             if (!pushedTri)
             {
+                //Debug.Assert(pushedTri);
                 // error case: didn't find an ear
                 return;
             }

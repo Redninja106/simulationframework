@@ -37,7 +37,6 @@ internal class ControlFlowGraph : ControlFlowNode
 
         EntryNode.AddSuccessor(GetBasicBlock(disassembly.instructions[0]));
 
-        Dump();
         DetectReturns(ExitNode);
         RecomputeDominators();
         ReplaceLoops();
@@ -651,7 +650,7 @@ internal class ControlFlowGraph : ControlFlowNode
                 conditionNodes.Add(node);
             }
         }
-        Dump();
+        
         foreach (var node in conditionNodes)
         {
             if (!this.Nodes.Contains(node))

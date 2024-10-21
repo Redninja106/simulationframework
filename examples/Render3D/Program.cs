@@ -14,6 +14,9 @@ partial class Program : Simulation
         new Vertex(new(-.5f, -.5f, 0), ColorF.Blue),
     ];
 
+    CanvasShader canvasShader = new TriangleCanvasShader();
+    VertexShader vertexShader = new TriangleVertexShader();
+
     public override void OnInitialize()
     {
     }
@@ -21,10 +24,6 @@ partial class Program : Simulation
     public override void OnRender(ICanvas canvas)
     {
         canvas.Clear(Color.Black);
-
-        CanvasShader canvasShader = new TriangleCanvasShader();
-        VertexShader vertexShader = new TriangleVertexShader();
-
         canvas.Fill(canvasShader, vertexShader);
         canvas.DrawTriangles<Vertex>(vertices);
     }
