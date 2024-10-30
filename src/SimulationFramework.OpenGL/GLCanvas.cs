@@ -449,13 +449,13 @@ internal class GLCanvas : ICanvas, IDisposable
         }
         commandList.Clear();
 
-        graphics.bufferPool.Reset();
         vertexWriter.Reset();
     }
 
     public unsafe void Flush()
     {
         SubmitCommands();
+        graphics.bufferPool.Reset();
         glFlush();
     }
 

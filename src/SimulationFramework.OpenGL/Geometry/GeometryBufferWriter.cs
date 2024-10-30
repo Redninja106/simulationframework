@@ -40,7 +40,7 @@ class GeometryBufferWriter
             }
 
             currentBuffer = pool.Rent();
-
+             
             if (TryWriteBuffer(bytes, alignment, out offsetInBytes, out countInBytes))
             {
                 return currentBuffer;

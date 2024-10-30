@@ -15,6 +15,10 @@ internal class GeometryBufferPool : IDisposable
     private List<GeometryBuffer> usedLargeBuffers = [];
     private List<GeometryBuffer> freeLargeBuffers = [];
 
+    public GeometryBufferPool()
+    {
+    }
+
     public GeometryBuffer GetLargeBuffer(int size)
     {
         // 'bytes' is huge!
