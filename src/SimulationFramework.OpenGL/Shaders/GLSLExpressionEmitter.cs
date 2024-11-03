@@ -394,11 +394,14 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
     {
         if (expression.IsTernary)
         {
+            writer.Write("((");
             expression.Condition.Accept(this);
+            writer.Write(")");
             writer.Write(" ? ");
             expression.Success!.Accept(this);
             writer.Write(" : ");
             expression.Failure!.Accept(this);
+            writer.Write(")");
             return expression;
         }
 
