@@ -1,35 +1,136 @@
 ﻿using System;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using CXType = ClangSharp.Type;
-
-// welcome to the jungle
-
-// moved to my BindingGen project
-
-// Todo: Clean up code
-// Todo: Make into a usable api
-// Todo: Use that api in the BindingGen main project
-// Todo: Download xhtml files from https://github.com/BSVino/docs.gl and add the to the project
-// Todo: Use downloaded xhtml files to generate inline xml docs for opengl functions.
-
-
 using ClangSharp;
 using ClangSharp.Interop;
 using System.Xml;
 using System.Globalization;
+
+using CXType = ClangSharp.Type;
 
 HashSet<string> requiredFunctions = [
     "glCullFace",
     "glClearColor",
     "glClearDepth",
     "glClear",
-    "glGetNamedBufferSubData",
-    "glGenTextures"
+    "glGenTextures",
+    "glEnable",
+    "glGetIntegerv",
+    "glBindTexture",
+    "glTexImage2D",
+    "glTexParameteri",
+    "glPixelStorei",
+    "glTexSubImage2D",
+    "glUniformMatrix4fv",
+    "glActiveTexture",
+    "glUniform1i",
+    "glUniform4f",
+    "glUniform1f",
+    "glUniformMatrix4fv",
+    "glCreateShader",
+    "glCreateProgram",
+    "glAttachShader",
+    "glLinkProgram",
+    "glDeleteShader",
+    "glUseProgram",
+    "glFinish",
+    "glGenBuffers",
+    "glBindBuffer",
+    "glBufferData",
+    "glBufferSubData",
+    "glDeleteBuffers",
+    "glDrawArrays",
+    "glDrawElements",
+    "glDrawElementsInstanced",
+    "glDisable",
+    "glGenFramebuffers",
+    "glBindFramebuffer",
+    "glFramebufferTexture2D",
+    "glCheckFramebufferStatus",
+    "glBindFramebuffer",
+    "glGenVertexArrays",
+    "glBlendFunc",
+    "glDrawArraysInstanced",
+    "glBindVertexArray",
+    "glViewport",
+    "glFlush",
+    "glDeleteFramebuffers",
+    "glDeleteVertexArrays",
+    "glClearDepthf",
+    "glDepthFunc",
+    "glDepthMask",
+    "glDepthMask",
+    "glReadPixels",
+    "glMapBufferRange",
+    "glUnmapBuffer",
+    "glGenerateMipmap",
+    "glFramebufferTexture",
+    "glClearStencil",
+    "glDeleteTextures",
+    "glDeleteFramebuffers",
+    "glReadPixels",
+    "glStencilFunc",
+    "glStencilMask",
+    "glStencilOp",
+    "glBlitFramebuffer",
+    "glFramebufferTexture",
+    "glBlitFramebuffer",
+    "glMemoryBarrier",
+    "glFramebufferTexture",
+    "glStencilOp",
+    "glStencilOp",
+    "glStencilOp",
+    "glDeleteTextures",
+    "glReadPixels",
+    "glGetProgramiv",
+    "glGetProgramInfoLog",
+    "glShaderSource",
+    "glCompileShader",
+    "glGetShaderiv",
+    "glGetShaderInfoLog",
+    "glGetUniformLocation",
+    "glBindBufferBase",
+    "glGetProgramResourceIndex",
+    "glGetProgramResourceiv",
+    "glGetProgramResourceIndex",
+    "glGetProgramResourceiv",
+    "glGetBufferParameteriv",
+    "glMapBufferRange",
+    "glUnmapBuffer",
+    "glMapBufferRange",
+    "glUnmapBuffer",
+    "glGetUniformLocation",
+    "glUniform1ui",
+    "glBindBufferBase",
+    "glUniform1iv",
+    "glUniform2iv",
+    "glUniform3iv",
+    "glUniform4iv",
+    "glUniform1fv",
+    "glUniform2fv",
+    "glUniform3fv",
+    "glUniform4fv",
+    "glUniformMatrix3x2fv",
+    "glGetUniformLocation",
+    "glEnableVertexAttribArray",
+    "glVertexAttribPointer",
+    "glVertexAttribDivisor",
+    "glGenerateMipmap",
+    "glDeleteTextures",
+    "glReadPixels",
+    "glGetProgramiv",
+    "glGetProgramInfoLog",
+    "glShaderSource",
+    "glCompileShader",
+    "glGetShaderiv",
+    "glGetShaderInfoLog",
+    "glGetUniformLocation",
+];
+
+HashSet<string> optionalFunctions = [
+    "glDispatchCompute",
+    "glMemoryBarrier",
+    "glDebugMessageCallback",
+    "glMemoryBarrier",
 ];
 
 CXIndex index = CXIndex.Create();
@@ -40,7 +141,7 @@ TranslationUnit tu = TranslationUnit.GetOrCreate(CXTranslationUnit.CreateFromSou
 string source = File.ReadAllText(glHeader);
 
 StringWriter sw = new();
-Generator generator = new(source, tu, requiredFunctions, sw);
+Generator generator = new(source, tu, requiredFunctions, optionalFunctions, sw);
 generator.GenerateBindings();
 
 File.WriteAllText("./../../../../../SimulationFramework.OpenGL/OpenGL.gen.cs", sw.ToString());
@@ -49,16 +150,18 @@ class Generator
 {
     TranslationUnit translationUnit;
     HashSet<string> requiredFunctions;
+    HashSet<string> optionalFunctions;
     IndentedTextWriter writer;
     string source;
     private Dictionary<string, string> macroValues = [];
 
-    public Generator(string source, TranslationUnit translationUnit, HashSet<string> requiredFunctions, StringWriter writer)
+    public Generator(string source, TranslationUnit translationUnit, HashSet<string> requiredFunctions, HashSet<string> optionalFunctions, StringWriter writer)
     {
         this.source = source;
         this.writer = new(writer);
         this.translationUnit = translationUnit;
         this.requiredFunctions = requiredFunctions;
+        this.optionalFunctions = optionalFunctions;
 
         FindMacroValues();
     }
@@ -103,13 +206,19 @@ internal static unsafe class OpenGL
 
     public static void glInitialize(FunctionLoader functionLoader)
     {
-        static nint LoadFunction(FunctionLoader functionLoader, string name)
+        static nint LoadRequiredFunction(FunctionLoader functionLoader, string name)
         {
             nint value = functionLoader(name);
             if (value == 0)
             {
                 throw new Exception($"Could not load required opengl function '{name}'");
             }
+            return value;
+        }
+        
+        static nint LoadOptionalFunction(FunctionLoader functionLoader, string name)
+        {
+            nint value = functionLoader(name);
             return value;
         }
 """);   
@@ -121,7 +230,14 @@ internal static unsafe class OpenGL
         {
             if (ShouldEmitFunction(decl))
             {
-                writer.WriteLine("pfn_" + decl.Spelling + $" = LoadFunction(functionLoader, \"{decl.Spelling}\");");
+                if (requiredFunctions.Contains(decl.Spelling))
+                {
+                    writer.WriteLine("pfn_" + decl.Spelling + $" = LoadRequiredFunction(functionLoader, \"{decl.Spelling}\");");
+                }
+                if (optionalFunctions.Contains(decl.Spelling))
+                {
+                    writer.WriteLine("pfn_" + decl.Spelling + $" = LoadOptionalFunction(functionLoader, \"{decl.Spelling}\");");
+                }
             }
         }
         writer.Indent--;
@@ -159,10 +275,6 @@ internal static unsafe class OpenGL
 
     private bool ShouldEmitFunction(Cursor cursor)
     {
-        Console.WriteLine("function: " + cursor.Spelling);
-        if (cursor.Spelling == "GL_APIENTRY")
-            Console.WriteLine("hello");
-
         if (cursor is not FunctionDecl fn)
             return false;
 
@@ -171,8 +283,10 @@ internal static unsafe class OpenGL
         if (name.Length < 2)
             return false;
 
-        bool isExtension = char.IsUpper(name[^1]) && char.IsUpper(name[^2]);
-        return name.StartsWith("gl") && !isExtension;
+        if (char.IsUpper(name[^1]) && char.IsUpper(name[^2]))
+            return false;
+
+        return name.StartsWith("gl");
     }
 
     private void EmitFunction(FunctionDecl decl)

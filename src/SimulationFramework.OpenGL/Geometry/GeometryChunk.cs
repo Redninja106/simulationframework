@@ -18,7 +18,7 @@ struct GeometryChunk
     // draw info
     public int offset;
     public int count;
-    public int baseVertex;
+    //public int baseVertex;
     public int instanceCount;
 
     public unsafe void Draw()
@@ -54,11 +54,11 @@ struct GeometryChunk
 
             if (instanceBuffer == null)
             {
-                glDrawElementsBaseVertex(mode, count, GL_UNSIGNED_INT, (void*)indexOffset, baseVertex);
+                glDrawElements(mode, count, GL_UNSIGNED_INT, (void*)indexOffset);
             }
             else
             {
-                glDrawElementsInstancedBaseVertex(mode, count, GL_UNSIGNED_INT, (void*)indexOffset, instanceCount, baseVertex);
+                glDrawElementsInstanced(mode, count, GL_UNSIGNED_INT, (void*)indexOffset, instanceCount);
             }
         }
     }
