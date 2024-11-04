@@ -587,19 +587,7 @@ internal class ControlFlowGraph : ControlFlowNode
     {
         // special case: in debug builds, the compiler likes to save return values
         // to a local and then jump to a common return block which returns that local.
-
-        ControlFlowNode? returnVarTarget = null;
-        if (target.Predecessors.Count == 1)
-        {
-            var succ = target.Predecessors.Single();
-            if (succ is BasicBlockNode block)
-            {
-                if (block.Instructions.Count == 2)
-                {
-                    returnVarTarget = succ;
-                }
-            }
-        }
+        ControlFlowNode? returnVarTarget = FindReturnVarTarget(target);
 
         foreach (var node in Nodes.ToArray())
         {
@@ -616,6 +604,84 @@ internal class ControlFlowGraph : ControlFlowNode
             }
         }
         Trim();
+    }
+
+    private ControlFlowNode? FindReturnVarTarget(ControlFlowNode returnTarget)
+    {
+        if (returnTarget.Predecessors.Count != 1)
+        {
+            return null;
+        }
+
+        var pred = returnTarget.Predecessors.Single();
+        if (pred is not BasicBlockNode returnVarBB)
+        {
+            return null;
+        }
+
+        // return var blocks look exactly like this:
+        // ldloc.n 
+        // ret
+        // we need to handle them specially because they could be jumped to from anywhere on the cfg (they need to be treated as returns)
+
+        if (returnVarBB.Instructions.Count != 2) 
+        {
+            return null;
+        }
+        if (!IsLdloc(returnVarBB.Instructions[0].OpCode)) 
+        {
+            return null;
+        }
+        if (returnVarBB.Instructions[1].OpCode != OpCode.Ret)
+        {
+            return null;
+        }
+        var returnVarLocalIdx = GetLocalIdx(returnVarBB.Instructions[0]);
+
+        // final check: for a return var block, every jump to it is preceded by a stloc (possibly a stind?) instruction.
+        foreach (var returnStatementBlock in returnVarBB.Predecessors)
+        {
+            var bb = (BasicBlockNode)returnStatementBlock;
+            if (!IsStloc(bb.Instructions[^2].OpCode)) 
+            {
+                return null;
+            }
+            
+            var idx = GetLocalIdx(bb.Instructions[^2]);
+            if (idx != returnVarLocalIdx)
+            {
+                return null;
+            }
+        }
+
+        return returnVarBB;
+
+        static int GetLocalIdx(Instruction instruction) => instruction.OpCode switch
+        {
+            OpCode.Ldloc_0 or OpCode.Stloc_0 => 0,
+            OpCode.Ldloc_1 or OpCode.Stloc_1 => 1,
+            OpCode.Ldloc_2 or OpCode.Stloc_2 => 2,
+            OpCode.Ldloc_3 or OpCode.Stloc_3 => 3,
+            OpCode.Ldloc_S or OpCode.Stloc_S => (byte)instruction.Argument,
+            OpCode.Ldloc or OpCode.Stloc => (int)instruction.Argument,
+            _ => -1,
+        };
+
+        static bool IsLdloc(OpCode opcode) => opcode is
+            OpCode.Ldloc_0 or
+            OpCode.Ldloc_1 or
+            OpCode.Ldloc_2 or
+            OpCode.Ldloc_3 or
+            OpCode.Ldloc_S or
+            OpCode.Ldloc;
+
+        static bool IsStloc(OpCode opcode) => opcode is
+            OpCode.Stloc_0 or
+            OpCode.Stloc_1 or
+            OpCode.Stloc_2 or
+            OpCode.Stloc_3 or
+            OpCode.Stloc_S or
+            OpCode.Stloc;
     }
 
     private void Trim()
