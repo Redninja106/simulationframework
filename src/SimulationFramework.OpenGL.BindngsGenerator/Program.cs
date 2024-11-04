@@ -265,7 +265,10 @@ internal static unsafe class OpenGL
         {
             if (ShouldEmitFunction(decl))
             {
-                EmitFunction((FunctionDecl)decl);
+                if (requiredFunctions.Contains(decl.Spelling) || optionalFunctions.Contains(decl.Spelling))
+                {
+                    EmitFunction((FunctionDecl)decl);
+                }
             }
         }
 
