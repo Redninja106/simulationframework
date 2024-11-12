@@ -29,7 +29,7 @@ internal class ControlFlowGraph : ControlFlowNode
     public ControlFlowGraph(MethodDisassembly disassembly)
     {
         EntryNode = new DummyNode();
-        ExitNode = new DummyNode(true);
+        ExitNode = new DummyNode();
         AddNode(EntryNode);
         AddNode(ExitNode);
 
@@ -40,6 +40,7 @@ internal class ControlFlowGraph : ControlFlowNode
         DetectReturns(ExitNode);
         RecomputeDominators();
         ReplaceLoops();
+        Dump();
         ReplaceConditionals();
 
         if (ShaderCompiler.DumpShaders)
@@ -157,6 +158,7 @@ internal class ControlFlowGraph : ControlFlowNode
             }
 
             node.Instructions.Add(instructions.Read());
+            node.UpdateClonable();
 
             var branchBehavior = instruction.OpCode.GetBranchBehavior();
             if (branchBehavior is BranchBehavior.Branch or BranchBehavior.BranchOrContinue)
@@ -716,7 +718,8 @@ internal class ControlFlowGraph : ControlFlowNode
                 conditionNodes.Add(node);
             }
         }
-        
+
+        conditionNodes.Reverse();
         foreach (var node in conditionNodes)
         {
             if (!this.Nodes.Contains(node))
@@ -728,12 +731,13 @@ internal class ControlFlowGraph : ControlFlowNode
             HashSet<ControlFlowNode> nodes;
             
             var convergence = node.immediatePostDominator;
-            if (convergence != null)
+            if (false && convergence != null)
             {
                 nodes = GetNodesBetween(node, convergence);
             }
             else
             {
+                Dump();
                 nodes = FindConditionalNodes(node);
             }
 
@@ -756,14 +760,40 @@ internal class ControlFlowGraph : ControlFlowNode
         foreach (var successor in divergence.Successors)
         {
             // skip nodes that the divergence doesn't dominate as they're not part of the conditional
-            if (!successor.dominators.Contains(divergence))
+            Stack<ControlFlowNode> stack = [];
+            if (successor.dominators.Contains(divergence))
+            {
+                nodes.Add(successor);
+                stack.Push(successor);
+            }
+            else if (successor is BasicBlockNode bb && bb.IsTrivallyClonable)
+            {
+                // create a clone to take the place of the node
+                BasicBlockNode clone = bb.Clone();
+                AddNode(clone);
+
+                // move all incoming connections not from the divergent node to the clone
+                foreach (var pred in successor.Predecessors)
+                {
+                    if (pred != divergence)
+                    {
+                        clone.AddPredecessor(pred);
+                        successor.RemovePredecessor(pred);
+                    }
+                }
+
+                foreach (var succ in successor.Successors)
+                {
+                    clone.AddSuccessor(succ);
+                }
+
+                nodes.Add(successor);
+                stack.Push(successor);
+            }
+            else
             {
                 continue;
             }
-
-            Stack<ControlFlowNode> stack = [];
-            nodes.Add(successor);
-            stack.Push(successor);
 
             while (stack.Count > 0)
             {

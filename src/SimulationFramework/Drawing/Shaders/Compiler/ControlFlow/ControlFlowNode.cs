@@ -19,14 +19,6 @@ internal class ControlFlowNode
     public ControlFlowNode immediateDominator = null;
     public ControlFlowNode immediatePostDominator = null;
 
-    public virtual bool PrecedesExit 
-    {
-        get
-        {
-            return false;
-        }
-    }
-
     public IReadOnlySet<ControlFlowNode> Predecessors => predecessors;
     public IReadOnlySet<ControlFlowNode> Successors => successors;
 

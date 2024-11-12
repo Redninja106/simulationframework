@@ -11,23 +11,27 @@ internal class BasicBlockNode : ControlFlowNode
 {
     public readonly List<Instruction> Instructions = new();
 
-    public override bool PrecedesExit
-    {
-        get
-        {
-            if (Successors.Count == 1)
-            {
-                var succ = Successors.Single();
-                if (succ.Predecessors.Count == 1)
-                {
-                    return succ.PrecedesExit;
-                }
-            }
-            return false;
-        }
-    }
+    public bool IsTrivallyClonable { get; private set; }
 
     public BasicBlockNode() : base()
     {
+    }
+
+    public void UpdateClonable()
+    {
+        IsTrivallyClonable = Instructions.Count == 1 && Instructions[0].OpCode == OpCode.Ldc_I4_0;
+    }
+
+    // clones this basic block
+    // only the blocks instructions are cloned (not links)
+    public BasicBlockNode Clone()
+    {
+        if (!IsTrivallyClonable)
+            throw new Exception("Cannot clone non-trivial basic block");
+
+        BasicBlockNode result = new();
+        result.Instructions.AddRange(Instructions);
+        result.UpdateClonable();
+        return result;
     }
 }

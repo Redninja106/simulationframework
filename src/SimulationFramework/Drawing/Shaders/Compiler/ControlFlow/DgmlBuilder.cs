@@ -38,7 +38,7 @@ public static class DgmlBuilder
         void AddNode(ControlFlowNode node, ControlFlowNode? parent)
         {
             var id = GetNodeID(node);
-            nodes.Add(new(id, node.ToString(), node.PrecedesExit ? "ReturnNode" : node.GetType().Name, GetIl(node), GetGroup(node)));
+            nodes.Add(new(id, node.ToString(), node.GetType().Name, GetIl(node), GetGroup(node)));
 
             if (parent is not null)
                 links.Add(new Link(GetNodeID(parent), id, "", "Contains"));

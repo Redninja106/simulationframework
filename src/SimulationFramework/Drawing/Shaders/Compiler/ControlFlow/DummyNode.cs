@@ -1,6 +1,5 @@
 ﻿namespace SimulationFramework.Drawing.Shaders.Compiler.ControlFlow;
 
-class DummyNode(bool exit = false) : ControlFlowNode
+class DummyNode() : ControlFlowNode
 {
-    public override bool PrecedesExit => exit;
 }
