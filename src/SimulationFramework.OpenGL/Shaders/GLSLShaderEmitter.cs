@@ -645,7 +645,7 @@ internal class GLSLShaderEmitter
                 writer.Write("layout(std430, binding=");
                 writer.Write(nextBufferSlot);
                 writer.Write(") buffer _buf_");
-                writer.Write(nextBufferSlot);
+                writer.Write(variable.Name);
                 writer.WriteLine(" {");
                 writer.Indent++;
 

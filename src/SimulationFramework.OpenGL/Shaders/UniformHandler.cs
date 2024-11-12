@@ -123,8 +123,6 @@ class UniformHandler
         {
             arrayHandle.Free();
         }
-
-        bufferSlot++;
     }
 
     private void SetTextureUniform(uint id, int location)
@@ -199,6 +197,17 @@ class UniformHandler
         if (nameOverride != null && uniformLocations.TryGetValue(uniform, out int result))
         {
             return result;
+        }
+
+        var graphics = Application.GetComponent<GLGraphics>();
+        if (graphics.HasGLES31 && uniform.Type is ShaderArrayType arrayType)
+        {
+            fixed (byte* namePtr = Encoding.UTF8.GetBytes(nameOverride ?? ("_buf_" + uniform.Name.value)))
+            {
+                int index = (int)glGetProgramResourceIndex(program, GL_SHADER_STORAGE_BLOCK, namePtr);
+                uniformLocations[uniform] = index;
+                return index;
+            }
         }
 
         fixed (byte* namePtr = Encoding.UTF8.GetBytes(nameOverride ?? uniform.Name.value))
