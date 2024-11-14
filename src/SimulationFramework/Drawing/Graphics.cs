@@ -156,9 +156,9 @@ public static class Graphics
         return Provider.LoadFont(encodedData);
     }
 
-    public static void Dispatch(ComputeShader computeShader, int lengthI, int lengthJ, int lengthK)
+    public static void Dispatch(ComputeShader computeShader, int threadsI, int threadsJ, int threadsK)
     {
-        Provider.Dispatch(computeShader, lengthI, lengthJ, lengthK);
+        Provider.Dispatch(computeShader, threadsI, threadsJ, threadsK);
     }
 
     public static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices)
@@ -189,6 +189,10 @@ public static class Graphics
     public static void GenerateMipmaps(ITexture texture)
     {
         Provider.GenerateMipmaps(texture);
+    }
+
+    public static void SyncArray<T>(T[] array)
+    {
     }
 
     // TODO: optional manual buffer copies

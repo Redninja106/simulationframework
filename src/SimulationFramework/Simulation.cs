@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 
 namespace SimulationFramework;
 
-/// <summary>e
+/// <summary>
 /// The base class for all simulations. Inherit this class or use <see cref="Create(Action, Action{ICanvas})"/> to create a simulation.
 /// </summary>
 public abstract class Simulation

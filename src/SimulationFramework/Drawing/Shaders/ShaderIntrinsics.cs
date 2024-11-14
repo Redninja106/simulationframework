@@ -992,6 +992,15 @@ public static class ShaderIntrinsics
         throw new ArgumentException(null, nameof(buffer));
     }
 
+    [ShaderIntrinsic]
+    public static int BufferLength(object buffer, int dimension)
+    {
+        if (buffer is Array arr)
+            return arr.GetLength(dimension);
+
+        throw new ArgumentException(null, nameof(buffer));
+    }
+
     /// <summary>
     /// Loads a value from a buffer.
     /// </summary>
@@ -1009,6 +1018,42 @@ public static class ShaderIntrinsics
     }
 
     /// <summary>
+    /// Loads a value from a buffer.
+    /// </summary>
+    /// <param name="buffer">The buffer to load the value from.</param>
+    /// <param name="elementX">The x index of the element in the buffer.</param>
+    /// <param name="elementY">The y index of the element in the buffer.</param>
+    [ShaderIntrinsic]
+    public static T BufferLoad<T>(object buffer, int elementX, int elementY)
+    {
+        if (buffer is T[,] arr)
+        {
+            return arr[elementX, elementY];
+        }
+
+        throw new ArgumentException(null, nameof(buffer));
+    }
+
+    /// <summary>
+    /// Loads a value from a buffer.
+    /// </summary>
+    /// <param name="buffer">The buffer to load the value from.</param>
+    /// <param name="elementX">The x index of the element in the buffer.</param>
+    /// <param name="elementY">The y index of the element in the buffer.</param>
+    /// <param name="elementZ">The z index of the element in the buffer.</param>
+    [ShaderIntrinsic]
+    public static T BufferLoad<T>(object buffer, int elementX, int elementY, int elementZ)
+    {
+        if (buffer is T[,,] arr)
+        {
+            return arr[elementX, elementY, elementZ];
+        }
+
+        throw new ArgumentException(null, nameof(buffer));
+    }
+
+
+    /// <summary>
     /// Stores a value into a buffer. Buffer stores are only supported in compute shaders.
     /// </summary>
     [ShaderIntrinsic]
@@ -1017,6 +1062,36 @@ public static class ShaderIntrinsics
         if (buffer is T[] arr)
         {
             arr[element] = value;
+            return;
+        }
+
+        throw new ArgumentException(null, nameof(buffer));
+    }
+
+    /// <summary>
+    /// Stores a value into a buffer. Buffer stores are only supported in compute shaders.
+    /// </summary>
+    [ShaderIntrinsic]
+    public static void BufferStore<T>(object buffer, int elementX, int elementY, T value)
+    {
+        if (buffer is T[,] arr)
+        {
+            arr[elementX, elementY] = value;
+            return;
+        }
+
+        throw new ArgumentException(null, nameof(buffer));
+    }
+
+    /// <summary>
+    /// Stores a value into a buffer. Buffer stores are only supported in compute shaders.
+    /// </summary>
+    [ShaderIntrinsic]
+    public static void BufferStore<T>(object buffer, int elementX, int elementY, int elementZ, T value)
+    {
+        if (buffer is T[,,] arr)
+        {
+            arr[elementX, elementY, elementZ] = value;
             return;
         }
 

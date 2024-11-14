@@ -108,8 +108,25 @@ internal class CompilerContext
             return intrinsic;
         }
 
+        if ((method.DeclaringType?.IsArray ?? false) && method.Name == "Get")
+        {
+            int rank = method.DeclaringType.GetArrayRank();
+            switch (rank)
+            {
+                case 1:
+                    return typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLoad), [typeof(object), typeof(int)]);
+                case 2:
+                    return typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLoad), [typeof(object), typeof(int), typeof(int)]);
+                case 3:
+                    return typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLoad), [typeof(object), typeof(int), typeof(int), typeof(int)]);
+                default:
+                    throw new Exception($"Unsupported array type '{method.DeclaringType}'!");
+            }
+        }
+
         return null;
     }
+
     public ShaderType CompileType(Type type)
     {
         if (IsSelfType(type))

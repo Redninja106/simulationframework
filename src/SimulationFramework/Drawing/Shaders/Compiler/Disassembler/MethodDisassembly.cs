@@ -32,7 +32,7 @@ internal class MethodDisassembly
         if (ShaderCompiler.DumpShaders)
         {
             string methodStr = method.ToString()!;
-            Console.WriteLine($"===== Disassembly for {method.DeclaringType!.FullName}.{methodStr[methodStr.IndexOf(' ')..]} ====");
+            Console.WriteLine($"===== Disassembly for {method.DeclaringType!.FullName}.{methodStr[methodStr.IndexOf(' ')..].Trim()} ====");
 
             foreach (var instruction in instructions)
             {

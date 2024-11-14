@@ -458,7 +458,7 @@ internal class ExpressionBuilder
         var index = expressions.Pop();
         var array = expressions.Pop();
 
-        var method = typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLoad))!;
+        var method = typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLoad), [typeof(object), typeof(int)])!;
         expressions.Push(new ShaderIntrinsicCall(method, ((ShaderArrayType?)array.ExpressionType)!.ElementType, [array, index]));
     }
 
@@ -854,7 +854,19 @@ internal class ExpressionBuilder
         var intrinsic = context.ResolveMethodToIntrinsic(method);
         if (intrinsic != null)
         {
-            expressions.Push(new ShaderIntrinsicCall(intrinsic, context.CompileType(intrinsic.ReturnType), args));
+            // special case: BufferLoad and similar methods return a type parameters for flexibility.
+            // we compile the return type of the original method in that case.
+            ShaderType returnType;
+            if (intrinsic.ReturnType.IsGenericParameter && method is MethodInfo mi)
+            {
+                returnType = context.CompileType(mi.ReturnType);
+            }
+            else
+            {
+                returnType = context.CompileType(intrinsic.ReturnType);
+            }
+
+            expressions.Push(new ShaderIntrinsicCall(intrinsic, returnType, args));
         }
         else
         {
