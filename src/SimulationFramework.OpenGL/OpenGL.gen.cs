@@ -101,6 +101,7 @@ internal static unsafe class OpenGL
         pfn_glGenVertexArrays = LoadRequiredFunction(functionLoader, "glGenVertexArrays");
         pfn_glBindBufferBase = LoadRequiredFunction(functionLoader, "glBindBufferBase");
         pfn_glUniform1ui = LoadRequiredFunction(functionLoader, "glUniform1ui");
+        pfn_glUniform3ui = LoadRequiredFunction(functionLoader, "glUniform3ui");
         pfn_glDrawArraysInstanced = LoadRequiredFunction(functionLoader, "glDrawArraysInstanced");
         pfn_glDrawElementsInstanced = LoadRequiredFunction(functionLoader, "glDrawElementsInstanced");
         pfn_glVertexAttribDivisor = LoadRequiredFunction(functionLoader, "glVertexAttribDivisor");
@@ -1121,35 +1122,17 @@ internal static unsafe class OpenGL
     private static nint pfn_glAttachShader;
     public static void glAttachShader(uint program, uint shader) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glAttachShader)(program, shader);
     
-    private static nint pfn_glBindAttribLocation;
-    public static void glBindAttribLocation(uint program, uint index, byte* name) => ((delegate* unmanaged[Stdcall]<uint, uint, byte*, void>)pfn_glBindAttribLocation)(program, index, name);
-    
     private static nint pfn_glBindBuffer;
     public static void glBindBuffer(uint target, uint buffer) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBindBuffer)(target, buffer);
     
     private static nint pfn_glBindFramebuffer;
     public static void glBindFramebuffer(uint target, uint framebuffer) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBindFramebuffer)(target, framebuffer);
     
-    private static nint pfn_glBindRenderbuffer;
-    public static void glBindRenderbuffer(uint target, uint renderbuffer) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBindRenderbuffer)(target, renderbuffer);
-    
     private static nint pfn_glBindTexture;
     public static void glBindTexture(uint target, uint texture) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBindTexture)(target, texture);
     
-    private static nint pfn_glBlendColor;
-    public static void glBlendColor(float red, float green, float blue, float alpha) => ((delegate* unmanaged[Stdcall]<float, float, float, float, void>)pfn_glBlendColor)(red, green, blue, alpha);
-    
-    private static nint pfn_glBlendEquation;
-    public static void glBlendEquation(uint mode) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glBlendEquation)(mode);
-    
-    private static nint pfn_glBlendEquationSeparate;
-    public static void glBlendEquationSeparate(uint modeRGB, uint modeAlpha) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBlendEquationSeparate)(modeRGB, modeAlpha);
-    
     private static nint pfn_glBlendFunc;
     public static void glBlendFunc(uint sfactor, uint dfactor) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBlendFunc)(sfactor, dfactor);
-    
-    private static nint pfn_glBlendFuncSeparate;
-    public static void glBlendFuncSeparate(uint sfactorRGB, uint dfactorRGB, uint sfactorAlpha, uint dfactorAlpha) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, uint, void>)pfn_glBlendFuncSeparate)(sfactorRGB, dfactorRGB, sfactorAlpha, dfactorAlpha);
     
     private static nint pfn_glBufferData;
     public static void glBufferData(uint target, int size, void* data, uint usage) => ((delegate* unmanaged[Stdcall]<uint, int, void*, uint, void>)pfn_glBufferData)(target, size, data, usage);
@@ -1172,23 +1155,8 @@ internal static unsafe class OpenGL
     private static nint pfn_glClearStencil;
     public static void glClearStencil(int s) => ((delegate* unmanaged[Stdcall]<int, void>)pfn_glClearStencil)(s);
     
-    private static nint pfn_glColorMask;
-    public static void glColorMask(byte red, byte green, byte blue, byte alpha) => ((delegate* unmanaged[Stdcall]<byte, byte, byte, byte, void>)pfn_glColorMask)(red, green, blue, alpha);
-    
     private static nint pfn_glCompileShader;
     public static void glCompileShader(uint shader) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glCompileShader)(shader);
-    
-    private static nint pfn_glCompressedTexImage2D;
-    public static void glCompressedTexImage2D(uint target, int level, uint internalformat, int width, int height, int border, int imageSize, void* data) => ((delegate* unmanaged[Stdcall]<uint, int, uint, int, int, int, int, void*, void>)pfn_glCompressedTexImage2D)(target, level, internalformat, width, height, border, imageSize, data);
-    
-    private static nint pfn_glCompressedTexSubImage2D;
-    public static void glCompressedTexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, int imageSize, void* data) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, int, int, uint, int, void*, void>)pfn_glCompressedTexSubImage2D)(target, level, xoffset, yoffset, width, height, format, imageSize, data);
-    
-    private static nint pfn_glCopyTexImage2D;
-    public static void glCopyTexImage2D(uint target, int level, uint internalformat, int x, int y, int width, int height, int border) => ((delegate* unmanaged[Stdcall]<uint, int, uint, int, int, int, int, int, void>)pfn_glCopyTexImage2D)(target, level, internalformat, x, y, width, height, border);
-    
-    private static nint pfn_glCopyTexSubImage2D;
-    public static void glCopyTexSubImage2D(uint target, int level, int xoffset, int yoffset, int x, int y, int width, int height) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, int, int, int, int, void>)pfn_glCopyTexSubImage2D)(target, level, xoffset, yoffset, x, y, width, height);
     
     private static nint pfn_glCreateProgram;
     public static uint glCreateProgram() => ((delegate* unmanaged[Stdcall]<uint>)pfn_glCreateProgram)();
@@ -1205,12 +1173,6 @@ internal static unsafe class OpenGL
     private static nint pfn_glDeleteFramebuffers;
     public static void glDeleteFramebuffers(int n, uint* framebuffers) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glDeleteFramebuffers)(n, framebuffers);
     
-    private static nint pfn_glDeleteProgram;
-    public static void glDeleteProgram(uint program) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glDeleteProgram)(program);
-    
-    private static nint pfn_glDeleteRenderbuffers;
-    public static void glDeleteRenderbuffers(int n, uint* renderbuffers) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glDeleteRenderbuffers)(n, renderbuffers);
-    
     private static nint pfn_glDeleteShader;
     public static void glDeleteShader(uint shader) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glDeleteShader)(shader);
     
@@ -1223,17 +1185,8 @@ internal static unsafe class OpenGL
     private static nint pfn_glDepthMask;
     public static void glDepthMask(byte flag) => ((delegate* unmanaged[Stdcall]<byte, void>)pfn_glDepthMask)(flag);
     
-    private static nint pfn_glDepthRangef;
-    public static void glDepthRangef(float n, float f) => ((delegate* unmanaged[Stdcall]<float, float, void>)pfn_glDepthRangef)(n, f);
-    
-    private static nint pfn_glDetachShader;
-    public static void glDetachShader(uint program, uint shader) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glDetachShader)(program, shader);
-    
     private static nint pfn_glDisable;
     public static void glDisable(uint cap) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glDisable)(cap);
-    
-    private static nint pfn_glDisableVertexAttribArray;
-    public static void glDisableVertexAttribArray(uint index) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glDisableVertexAttribArray)(index);
     
     private static nint pfn_glDrawArrays;
     public static void glDrawArrays(uint mode, int first, int count) => ((delegate* unmanaged[Stdcall]<uint, int, int, void>)pfn_glDrawArrays)(mode, first, count);
@@ -1253,14 +1206,8 @@ internal static unsafe class OpenGL
     private static nint pfn_glFlush;
     public static void glFlush() => ((delegate* unmanaged[Stdcall]<void>)pfn_glFlush)();
     
-    private static nint pfn_glFramebufferRenderbuffer;
-    public static void glFramebufferRenderbuffer(uint target, uint attachment, uint renderbuffertarget, uint renderbuffer) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, uint, void>)pfn_glFramebufferRenderbuffer)(target, attachment, renderbuffertarget, renderbuffer);
-    
     private static nint pfn_glFramebufferTexture2D;
     public static void glFramebufferTexture2D(uint target, uint attachment, uint textarget, uint texture, int level) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, uint, int, void>)pfn_glFramebufferTexture2D)(target, attachment, textarget, texture, level);
-    
-    private static nint pfn_glFrontFace;
-    public static void glFrontFace(uint mode) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glFrontFace)(mode);
     
     private static nint pfn_glGenBuffers;
     public static void glGenBuffers(int n, uint* buffers) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glGenBuffers)(n, buffers);
@@ -1271,38 +1218,11 @@ internal static unsafe class OpenGL
     private static nint pfn_glGenFramebuffers;
     public static void glGenFramebuffers(int n, uint* framebuffers) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glGenFramebuffers)(n, framebuffers);
     
-    private static nint pfn_glGenRenderbuffers;
-    public static void glGenRenderbuffers(int n, uint* renderbuffers) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glGenRenderbuffers)(n, renderbuffers);
-    
     private static nint pfn_glGenTextures;
     public static void glGenTextures(int n, uint* textures) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glGenTextures)(n, textures);
     
-    private static nint pfn_glGetActiveAttrib;
-    public static void glGetActiveAttrib(uint program, uint index, int bufSize, int* length, int* size, uint* type, byte* name) => ((delegate* unmanaged[Stdcall]<uint, uint, int, int*, int*, uint*, byte*, void>)pfn_glGetActiveAttrib)(program, index, bufSize, length, size, type, name);
-    
-    private static nint pfn_glGetActiveUniform;
-    public static void glGetActiveUniform(uint program, uint index, int bufSize, int* length, int* size, uint* type, byte* name) => ((delegate* unmanaged[Stdcall]<uint, uint, int, int*, int*, uint*, byte*, void>)pfn_glGetActiveUniform)(program, index, bufSize, length, size, type, name);
-    
-    private static nint pfn_glGetAttachedShaders;
-    public static void glGetAttachedShaders(uint program, int maxCount, int* count, uint* shaders) => ((delegate* unmanaged[Stdcall]<uint, int, int*, uint*, void>)pfn_glGetAttachedShaders)(program, maxCount, count, shaders);
-    
-    private static nint pfn_glGetAttribLocation;
-    public static int glGetAttribLocation(uint program, byte* name) => ((delegate* unmanaged[Stdcall]<uint, byte*, int>)pfn_glGetAttribLocation)(program, name);
-    
-    private static nint pfn_glGetBooleanv;
-    public static void glGetBooleanv(uint pname, byte* data) => ((delegate* unmanaged[Stdcall]<uint, byte*, void>)pfn_glGetBooleanv)(pname, data);
-    
     private static nint pfn_glGetBufferParameteriv;
     public static void glGetBufferParameteriv(uint target, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetBufferParameteriv)(target, pname, @params);
-    
-    private static nint pfn_glGetError;
-    public static uint glGetError() => ((delegate* unmanaged[Stdcall]<uint>)pfn_glGetError)();
-    
-    private static nint pfn_glGetFloatv;
-    public static void glGetFloatv(uint pname, float* data) => ((delegate* unmanaged[Stdcall]<uint, float*, void>)pfn_glGetFloatv)(pname, data);
-    
-    private static nint pfn_glGetFramebufferAttachmentParameteriv;
-    public static void glGetFramebufferAttachmentParameteriv(uint target, uint attachment, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int*, void>)pfn_glGetFramebufferAttachmentParameteriv)(target, attachment, pname, @params);
     
     private static nint pfn_glGetIntegerv;
     public static void glGetIntegerv(uint pname, int* data) => ((delegate* unmanaged[Stdcall]<uint, int*, void>)pfn_glGetIntegerv)(pname, data);
@@ -1313,74 +1233,14 @@ internal static unsafe class OpenGL
     private static nint pfn_glGetProgramInfoLog;
     public static void glGetProgramInfoLog(uint program, int bufSize, int* length, byte* infoLog) => ((delegate* unmanaged[Stdcall]<uint, int, int*, byte*, void>)pfn_glGetProgramInfoLog)(program, bufSize, length, infoLog);
     
-    private static nint pfn_glGetRenderbufferParameteriv;
-    public static void glGetRenderbufferParameteriv(uint target, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetRenderbufferParameteriv)(target, pname, @params);
-    
     private static nint pfn_glGetShaderiv;
     public static void glGetShaderiv(uint shader, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetShaderiv)(shader, pname, @params);
     
     private static nint pfn_glGetShaderInfoLog;
     public static void glGetShaderInfoLog(uint shader, int bufSize, int* length, byte* infoLog) => ((delegate* unmanaged[Stdcall]<uint, int, int*, byte*, void>)pfn_glGetShaderInfoLog)(shader, bufSize, length, infoLog);
     
-    private static nint pfn_glGetShaderPrecisionFormat;
-    public static void glGetShaderPrecisionFormat(uint shadertype, uint precisiontype, int* range, int* precision) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, int*, void>)pfn_glGetShaderPrecisionFormat)(shadertype, precisiontype, range, precision);
-    
-    private static nint pfn_glGetShaderSource;
-    public static void glGetShaderSource(uint shader, int bufSize, int* length, byte* source) => ((delegate* unmanaged[Stdcall]<uint, int, int*, byte*, void>)pfn_glGetShaderSource)(shader, bufSize, length, source);
-    
-    private static nint pfn_glGetString;
-    public static int* glGetString(uint name) => ((delegate* unmanaged[Stdcall]<uint, int*>)pfn_glGetString)(name);
-    
-    private static nint pfn_glGetTexParameterfv;
-    public static void glGetTexParameterfv(uint target, uint pname, float* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, float*, void>)pfn_glGetTexParameterfv)(target, pname, @params);
-    
-    private static nint pfn_glGetTexParameteriv;
-    public static void glGetTexParameteriv(uint target, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetTexParameteriv)(target, pname, @params);
-    
-    private static nint pfn_glGetUniformfv;
-    public static void glGetUniformfv(uint program, int location, float* @params) => ((delegate* unmanaged[Stdcall]<uint, int, float*, void>)pfn_glGetUniformfv)(program, location, @params);
-    
-    private static nint pfn_glGetUniformiv;
-    public static void glGetUniformiv(uint program, int location, int* @params) => ((delegate* unmanaged[Stdcall]<uint, int, int*, void>)pfn_glGetUniformiv)(program, location, @params);
-    
     private static nint pfn_glGetUniformLocation;
     public static int glGetUniformLocation(uint program, byte* name) => ((delegate* unmanaged[Stdcall]<uint, byte*, int>)pfn_glGetUniformLocation)(program, name);
-    
-    private static nint pfn_glGetVertexAttribfv;
-    public static void glGetVertexAttribfv(uint index, uint pname, float* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, float*, void>)pfn_glGetVertexAttribfv)(index, pname, @params);
-    
-    private static nint pfn_glGetVertexAttribiv;
-    public static void glGetVertexAttribiv(uint index, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetVertexAttribiv)(index, pname, @params);
-    
-    private static nint pfn_glGetVertexAttribPointerv;
-    public static void glGetVertexAttribPointerv(uint index, uint pname, void** pointer) => ((delegate* unmanaged[Stdcall]<uint, uint, void**, void>)pfn_glGetVertexAttribPointerv)(index, pname, pointer);
-    
-    private static nint pfn_glHint;
-    public static void glHint(uint target, uint mode) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glHint)(target, mode);
-    
-    private static nint pfn_glIsBuffer;
-    public static byte glIsBuffer(uint buffer) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glIsBuffer)(buffer);
-    
-    private static nint pfn_glIsEnabled;
-    public static byte glIsEnabled(uint cap) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glIsEnabled)(cap);
-    
-    private static nint pfn_glIsFramebuffer;
-    public static byte glIsFramebuffer(uint framebuffer) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glIsFramebuffer)(framebuffer);
-    
-    private static nint pfn_glIsProgram;
-    public static byte glIsProgram(uint program) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glIsProgram)(program);
-    
-    private static nint pfn_glIsRenderbuffer;
-    public static byte glIsRenderbuffer(uint renderbuffer) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glIsRenderbuffer)(renderbuffer);
-    
-    private static nint pfn_glIsShader;
-    public static byte glIsShader(uint shader) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glIsShader)(shader);
-    
-    private static nint pfn_glIsTexture;
-    public static byte glIsTexture(uint texture) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glIsTexture)(texture);
-    
-    private static nint pfn_glLineWidth;
-    public static void glLineWidth(float width) => ((delegate* unmanaged[Stdcall]<float, void>)pfn_glLineWidth)(width);
     
     private static nint pfn_glLinkProgram;
     public static void glLinkProgram(uint program) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glLinkProgram)(program);
@@ -1388,26 +1248,8 @@ internal static unsafe class OpenGL
     private static nint pfn_glPixelStorei;
     public static void glPixelStorei(uint pname, int param) => ((delegate* unmanaged[Stdcall]<uint, int, void>)pfn_glPixelStorei)(pname, param);
     
-    private static nint pfn_glPolygonOffset;
-    public static void glPolygonOffset(float factor, float units) => ((delegate* unmanaged[Stdcall]<float, float, void>)pfn_glPolygonOffset)(factor, units);
-    
     private static nint pfn_glReadPixels;
     public static void glReadPixels(int x, int y, int width, int height, uint format, uint type, void* pixels) => ((delegate* unmanaged[Stdcall]<int, int, int, int, uint, uint, void*, void>)pfn_glReadPixels)(x, y, width, height, format, type, pixels);
-    
-    private static nint pfn_glReleaseShaderCompiler;
-    public static void glReleaseShaderCompiler() => ((delegate* unmanaged[Stdcall]<void>)pfn_glReleaseShaderCompiler)();
-    
-    private static nint pfn_glRenderbufferStorage;
-    public static void glRenderbufferStorage(uint target, uint internalformat, int width, int height) => ((delegate* unmanaged[Stdcall]<uint, uint, int, int, void>)pfn_glRenderbufferStorage)(target, internalformat, width, height);
-    
-    private static nint pfn_glSampleCoverage;
-    public static void glSampleCoverage(float value, byte invert) => ((delegate* unmanaged[Stdcall]<float, byte, void>)pfn_glSampleCoverage)(value, invert);
-    
-    private static nint pfn_glScissor;
-    public static void glScissor(int x, int y, int width, int height) => ((delegate* unmanaged[Stdcall]<int, int, int, int, void>)pfn_glScissor)(x, y, width, height);
-    
-    private static nint pfn_glShaderBinary;
-    public static void glShaderBinary(int count, uint* shaders, uint binaryformat, void* binary, int length) => ((delegate* unmanaged[Stdcall]<int, uint*, uint, void*, int, void>)pfn_glShaderBinary)(count, shaders, binaryformat, binary, length);
     
     private static nint pfn_glShaderSource;
     public static void glShaderSource(uint shader, int count, byte** @string, int* length) => ((delegate* unmanaged[Stdcall]<uint, int, byte**, int*, void>)pfn_glShaderSource)(shader, count, @string, length);
@@ -1415,35 +1257,17 @@ internal static unsafe class OpenGL
     private static nint pfn_glStencilFunc;
     public static void glStencilFunc(uint func, int @ref, uint mask) => ((delegate* unmanaged[Stdcall]<uint, int, uint, void>)pfn_glStencilFunc)(func, @ref, mask);
     
-    private static nint pfn_glStencilFuncSeparate;
-    public static void glStencilFuncSeparate(uint face, uint func, int @ref, uint mask) => ((delegate* unmanaged[Stdcall]<uint, uint, int, uint, void>)pfn_glStencilFuncSeparate)(face, func, @ref, mask);
-    
     private static nint pfn_glStencilMask;
     public static void glStencilMask(uint mask) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glStencilMask)(mask);
-    
-    private static nint pfn_glStencilMaskSeparate;
-    public static void glStencilMaskSeparate(uint face, uint mask) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glStencilMaskSeparate)(face, mask);
     
     private static nint pfn_glStencilOp;
     public static void glStencilOp(uint fail, uint zfail, uint zpass) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, void>)pfn_glStencilOp)(fail, zfail, zpass);
     
-    private static nint pfn_glStencilOpSeparate;
-    public static void glStencilOpSeparate(uint face, uint sfail, uint dpfail, uint dppass) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, uint, void>)pfn_glStencilOpSeparate)(face, sfail, dpfail, dppass);
-    
     private static nint pfn_glTexImage2D;
     public static void glTexImage2D(uint target, int level, int internalformat, int width, int height, int border, uint format, uint type, void* pixels) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, int, int, uint, uint, void*, void>)pfn_glTexImage2D)(target, level, internalformat, width, height, border, format, type, pixels);
     
-    private static nint pfn_glTexParameterf;
-    public static void glTexParameterf(uint target, uint pname, float param) => ((delegate* unmanaged[Stdcall]<uint, uint, float, void>)pfn_glTexParameterf)(target, pname, param);
-    
-    private static nint pfn_glTexParameterfv;
-    public static void glTexParameterfv(uint target, uint pname, float* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, float*, void>)pfn_glTexParameterfv)(target, pname, @params);
-    
     private static nint pfn_glTexParameteri;
     public static void glTexParameteri(uint target, uint pname, int param) => ((delegate* unmanaged[Stdcall]<uint, uint, int, void>)pfn_glTexParameteri)(target, pname, param);
-    
-    private static nint pfn_glTexParameteriv;
-    public static void glTexParameteriv(uint target, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glTexParameteriv)(target, pname, @params);
     
     private static nint pfn_glTexSubImage2D;
     public static void glTexSubImage2D(uint target, int level, int xoffset, int yoffset, int width, int height, uint format, uint type, void* pixels) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, int, int, uint, uint, void*, void>)pfn_glTexSubImage2D)(target, level, xoffset, yoffset, width, height, format, type, pixels);
@@ -1460,26 +1284,14 @@ internal static unsafe class OpenGL
     private static nint pfn_glUniform1iv;
     public static void glUniform1iv(int location, int count, int* value) => ((delegate* unmanaged[Stdcall]<int, int, int*, void>)pfn_glUniform1iv)(location, count, value);
     
-    private static nint pfn_glUniform2f;
-    public static void glUniform2f(int location, float v0, float v1) => ((delegate* unmanaged[Stdcall]<int, float, float, void>)pfn_glUniform2f)(location, v0, v1);
-    
     private static nint pfn_glUniform2fv;
     public static void glUniform2fv(int location, int count, float* value) => ((delegate* unmanaged[Stdcall]<int, int, float*, void>)pfn_glUniform2fv)(location, count, value);
-    
-    private static nint pfn_glUniform2i;
-    public static void glUniform2i(int location, int v0, int v1) => ((delegate* unmanaged[Stdcall]<int, int, int, void>)pfn_glUniform2i)(location, v0, v1);
     
     private static nint pfn_glUniform2iv;
     public static void glUniform2iv(int location, int count, int* value) => ((delegate* unmanaged[Stdcall]<int, int, int*, void>)pfn_glUniform2iv)(location, count, value);
     
-    private static nint pfn_glUniform3f;
-    public static void glUniform3f(int location, float v0, float v1, float v2) => ((delegate* unmanaged[Stdcall]<int, float, float, float, void>)pfn_glUniform3f)(location, v0, v1, v2);
-    
     private static nint pfn_glUniform3fv;
     public static void glUniform3fv(int location, int count, float* value) => ((delegate* unmanaged[Stdcall]<int, int, float*, void>)pfn_glUniform3fv)(location, count, value);
-    
-    private static nint pfn_glUniform3i;
-    public static void glUniform3i(int location, int v0, int v1, int v2) => ((delegate* unmanaged[Stdcall]<int, int, int, int, void>)pfn_glUniform3i)(location, v0, v1, v2);
     
     private static nint pfn_glUniform3iv;
     public static void glUniform3iv(int location, int count, int* value) => ((delegate* unmanaged[Stdcall]<int, int, int*, void>)pfn_glUniform3iv)(location, count, value);
@@ -1490,17 +1302,8 @@ internal static unsafe class OpenGL
     private static nint pfn_glUniform4fv;
     public static void glUniform4fv(int location, int count, float* value) => ((delegate* unmanaged[Stdcall]<int, int, float*, void>)pfn_glUniform4fv)(location, count, value);
     
-    private static nint pfn_glUniform4i;
-    public static void glUniform4i(int location, int v0, int v1, int v2, int v3) => ((delegate* unmanaged[Stdcall]<int, int, int, int, int, void>)pfn_glUniform4i)(location, v0, v1, v2, v3);
-    
     private static nint pfn_glUniform4iv;
     public static void glUniform4iv(int location, int count, int* value) => ((delegate* unmanaged[Stdcall]<int, int, int*, void>)pfn_glUniform4iv)(location, count, value);
-    
-    private static nint pfn_glUniformMatrix2fv;
-    public static void glUniformMatrix2fv(int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<int, int, byte, float*, void>)pfn_glUniformMatrix2fv)(location, count, transpose, value);
-    
-    private static nint pfn_glUniformMatrix3fv;
-    public static void glUniformMatrix3fv(int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<int, int, byte, float*, void>)pfn_glUniformMatrix3fv)(location, count, transpose, value);
     
     private static nint pfn_glUniformMatrix4fv;
     public static void glUniformMatrix4fv(int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<int, int, byte, float*, void>)pfn_glUniformMatrix4fv)(location, count, transpose, value);
@@ -1508,122 +1311,23 @@ internal static unsafe class OpenGL
     private static nint pfn_glUseProgram;
     public static void glUseProgram(uint program) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glUseProgram)(program);
     
-    private static nint pfn_glValidateProgram;
-    public static void glValidateProgram(uint program) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glValidateProgram)(program);
-    
-    private static nint pfn_glVertexAttrib1f;
-    public static void glVertexAttrib1f(uint index, float x) => ((delegate* unmanaged[Stdcall]<uint, float, void>)pfn_glVertexAttrib1f)(index, x);
-    
-    private static nint pfn_glVertexAttrib1fv;
-    public static void glVertexAttrib1fv(uint index, float* v) => ((delegate* unmanaged[Stdcall]<uint, float*, void>)pfn_glVertexAttrib1fv)(index, v);
-    
-    private static nint pfn_glVertexAttrib2f;
-    public static void glVertexAttrib2f(uint index, float x, float y) => ((delegate* unmanaged[Stdcall]<uint, float, float, void>)pfn_glVertexAttrib2f)(index, x, y);
-    
-    private static nint pfn_glVertexAttrib2fv;
-    public static void glVertexAttrib2fv(uint index, float* v) => ((delegate* unmanaged[Stdcall]<uint, float*, void>)pfn_glVertexAttrib2fv)(index, v);
-    
-    private static nint pfn_glVertexAttrib3f;
-    public static void glVertexAttrib3f(uint index, float x, float y, float z) => ((delegate* unmanaged[Stdcall]<uint, float, float, float, void>)pfn_glVertexAttrib3f)(index, x, y, z);
-    
-    private static nint pfn_glVertexAttrib3fv;
-    public static void glVertexAttrib3fv(uint index, float* v) => ((delegate* unmanaged[Stdcall]<uint, float*, void>)pfn_glVertexAttrib3fv)(index, v);
-    
-    private static nint pfn_glVertexAttrib4f;
-    public static void glVertexAttrib4f(uint index, float x, float y, float z, float w) => ((delegate* unmanaged[Stdcall]<uint, float, float, float, float, void>)pfn_glVertexAttrib4f)(index, x, y, z, w);
-    
-    private static nint pfn_glVertexAttrib4fv;
-    public static void glVertexAttrib4fv(uint index, float* v) => ((delegate* unmanaged[Stdcall]<uint, float*, void>)pfn_glVertexAttrib4fv)(index, v);
-    
     private static nint pfn_glVertexAttribPointer;
     public static void glVertexAttribPointer(uint index, int size, uint type, byte normalized, int stride, void* pointer) => ((delegate* unmanaged[Stdcall]<uint, int, uint, byte, int, void*, void>)pfn_glVertexAttribPointer)(index, size, type, normalized, stride, pointer);
     
     private static nint pfn_glViewport;
     public static void glViewport(int x, int y, int width, int height) => ((delegate* unmanaged[Stdcall]<int, int, int, int, void>)pfn_glViewport)(x, y, width, height);
     
-    private static nint pfn_glReadBuffer;
-    public static void glReadBuffer(uint src) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glReadBuffer)(src);
-    
-    private static nint pfn_glDrawRangeElements;
-    public static void glDrawRangeElements(uint mode, uint start, uint end, int count, uint type, void* indices) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int, uint, void*, void>)pfn_glDrawRangeElements)(mode, start, end, count, type, indices);
-    
-    private static nint pfn_glTexImage3D;
-    public static void glTexImage3D(uint target, int level, int internalformat, int width, int height, int depth, int border, uint format, uint type, void* pixels) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, int, int, int, uint, uint, void*, void>)pfn_glTexImage3D)(target, level, internalformat, width, height, depth, border, format, type, pixels);
-    
-    private static nint pfn_glTexSubImage3D;
-    public static void glTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, uint type, void* pixels) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, int, int, int, int, uint, uint, void*, void>)pfn_glTexSubImage3D)(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
-    
-    private static nint pfn_glCopyTexSubImage3D;
-    public static void glCopyTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int x, int y, int width, int height) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, int, int, int, int, int, void>)pfn_glCopyTexSubImage3D)(target, level, xoffset, yoffset, zoffset, x, y, width, height);
-    
-    private static nint pfn_glCompressedTexImage3D;
-    public static void glCompressedTexImage3D(uint target, int level, uint internalformat, int width, int height, int depth, int border, int imageSize, void* data) => ((delegate* unmanaged[Stdcall]<uint, int, uint, int, int, int, int, int, void*, void>)pfn_glCompressedTexImage3D)(target, level, internalformat, width, height, depth, border, imageSize, data);
-    
-    private static nint pfn_glCompressedTexSubImage3D;
-    public static void glCompressedTexSubImage3D(uint target, int level, int xoffset, int yoffset, int zoffset, int width, int height, int depth, uint format, int imageSize, void* data) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, int, int, int, int, uint, int, void*, void>)pfn_glCompressedTexSubImage3D)(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
-    
-    private static nint pfn_glGenQueries;
-    public static void glGenQueries(int n, uint* ids) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glGenQueries)(n, ids);
-    
-    private static nint pfn_glDeleteQueries;
-    public static void glDeleteQueries(int n, uint* ids) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glDeleteQueries)(n, ids);
-    
-    private static nint pfn_glIsQuery;
-    public static byte glIsQuery(uint id) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glIsQuery)(id);
-    
-    private static nint pfn_glBeginQuery;
-    public static void glBeginQuery(uint target, uint id) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBeginQuery)(target, id);
-    
-    private static nint pfn_glEndQuery;
-    public static void glEndQuery(uint target) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glEndQuery)(target);
-    
-    private static nint pfn_glGetQueryiv;
-    public static void glGetQueryiv(uint target, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetQueryiv)(target, pname, @params);
-    
-    private static nint pfn_glGetQueryObjectuiv;
-    public static void glGetQueryObjectuiv(uint id, uint pname, uint* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, uint*, void>)pfn_glGetQueryObjectuiv)(id, pname, @params);
-    
     private static nint pfn_glUnmapBuffer;
     public static byte glUnmapBuffer(uint target) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glUnmapBuffer)(target);
-    
-    private static nint pfn_glGetBufferPointerv;
-    public static void glGetBufferPointerv(uint target, uint pname, void** @params) => ((delegate* unmanaged[Stdcall]<uint, uint, void**, void>)pfn_glGetBufferPointerv)(target, pname, @params);
-    
-    private static nint pfn_glDrawBuffers;
-    public static void glDrawBuffers(int n, uint* bufs) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glDrawBuffers)(n, bufs);
-    
-    private static nint pfn_glUniformMatrix2x3fv;
-    public static void glUniformMatrix2x3fv(int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<int, int, byte, float*, void>)pfn_glUniformMatrix2x3fv)(location, count, transpose, value);
     
     private static nint pfn_glUniformMatrix3x2fv;
     public static void glUniformMatrix3x2fv(int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<int, int, byte, float*, void>)pfn_glUniformMatrix3x2fv)(location, count, transpose, value);
     
-    private static nint pfn_glUniformMatrix2x4fv;
-    public static void glUniformMatrix2x4fv(int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<int, int, byte, float*, void>)pfn_glUniformMatrix2x4fv)(location, count, transpose, value);
-    
-    private static nint pfn_glUniformMatrix4x2fv;
-    public static void glUniformMatrix4x2fv(int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<int, int, byte, float*, void>)pfn_glUniformMatrix4x2fv)(location, count, transpose, value);
-    
-    private static nint pfn_glUniformMatrix3x4fv;
-    public static void glUniformMatrix3x4fv(int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<int, int, byte, float*, void>)pfn_glUniformMatrix3x4fv)(location, count, transpose, value);
-    
-    private static nint pfn_glUniformMatrix4x3fv;
-    public static void glUniformMatrix4x3fv(int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<int, int, byte, float*, void>)pfn_glUniformMatrix4x3fv)(location, count, transpose, value);
-    
     private static nint pfn_glBlitFramebuffer;
     public static void glBlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, uint mask, uint filter) => ((delegate* unmanaged[Stdcall]<int, int, int, int, int, int, int, int, uint, uint, void>)pfn_glBlitFramebuffer)(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
     
-    private static nint pfn_glRenderbufferStorageMultisample;
-    public static void glRenderbufferStorageMultisample(uint target, int samples, uint internalformat, int width, int height) => ((delegate* unmanaged[Stdcall]<uint, int, uint, int, int, void>)pfn_glRenderbufferStorageMultisample)(target, samples, internalformat, width, height);
-    
-    private static nint pfn_glFramebufferTextureLayer;
-    public static void glFramebufferTextureLayer(uint target, uint attachment, uint texture, int level, int layer) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int, int, void>)pfn_glFramebufferTextureLayer)(target, attachment, texture, level, layer);
-    
     private static nint pfn_glMapBufferRange;
     public static void* glMapBufferRange(uint target, int offset, int length, uint access) => ((delegate* unmanaged[Stdcall]<uint, int, int, uint, void*>)pfn_glMapBufferRange)(target, offset, length, access);
-    
-    private static nint pfn_glFlushMappedBufferRange;
-    public static void glFlushMappedBufferRange(uint target, int offset, int length) => ((delegate* unmanaged[Stdcall]<uint, int, int, void>)pfn_glFlushMappedBufferRange)(target, offset, length);
     
     private static nint pfn_glBindVertexArray;
     public static void glBindVertexArray(uint array) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glBindVertexArray)(array);
@@ -1634,116 +1338,14 @@ internal static unsafe class OpenGL
     private static nint pfn_glGenVertexArrays;
     public static void glGenVertexArrays(int n, uint* arrays) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glGenVertexArrays)(n, arrays);
     
-    private static nint pfn_glIsVertexArray;
-    public static byte glIsVertexArray(uint array) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glIsVertexArray)(array);
-    
-    private static nint pfn_glGetIntegeri_v;
-    public static void glGetIntegeri_v(uint target, uint index, int* data) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetIntegeri_v)(target, index, data);
-    
-    private static nint pfn_glBeginTransformFeedback;
-    public static void glBeginTransformFeedback(uint primitiveMode) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glBeginTransformFeedback)(primitiveMode);
-    
-    private static nint pfn_glEndTransformFeedback;
-    public static void glEndTransformFeedback() => ((delegate* unmanaged[Stdcall]<void>)pfn_glEndTransformFeedback)();
-    
-    private static nint pfn_glBindBufferRange;
-    public static void glBindBufferRange(uint target, uint index, uint buffer, int offset, int size) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int, int, void>)pfn_glBindBufferRange)(target, index, buffer, offset, size);
-    
     private static nint pfn_glBindBufferBase;
     public static void glBindBufferBase(uint target, uint index, uint buffer) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, void>)pfn_glBindBufferBase)(target, index, buffer);
-    
-    private static nint pfn_glTransformFeedbackVaryings;
-    public static void glTransformFeedbackVaryings(uint program, int count, byte** varyings, uint bufferMode) => ((delegate* unmanaged[Stdcall]<uint, int, byte**, uint, void>)pfn_glTransformFeedbackVaryings)(program, count, varyings, bufferMode);
-    
-    private static nint pfn_glGetTransformFeedbackVarying;
-    public static void glGetTransformFeedbackVarying(uint program, uint index, int bufSize, int* length, int* size, uint* type, byte* name) => ((delegate* unmanaged[Stdcall]<uint, uint, int, int*, int*, uint*, byte*, void>)pfn_glGetTransformFeedbackVarying)(program, index, bufSize, length, size, type, name);
-    
-    private static nint pfn_glVertexAttribIPointer;
-    public static void glVertexAttribIPointer(uint index, int size, uint type, int stride, void* pointer) => ((delegate* unmanaged[Stdcall]<uint, int, uint, int, void*, void>)pfn_glVertexAttribIPointer)(index, size, type, stride, pointer);
-    
-    private static nint pfn_glGetVertexAttribIiv;
-    public static void glGetVertexAttribIiv(uint index, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetVertexAttribIiv)(index, pname, @params);
-    
-    private static nint pfn_glGetVertexAttribIuiv;
-    public static void glGetVertexAttribIuiv(uint index, uint pname, uint* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, uint*, void>)pfn_glGetVertexAttribIuiv)(index, pname, @params);
-    
-    private static nint pfn_glVertexAttribI4i;
-    public static void glVertexAttribI4i(uint index, int x, int y, int z, int w) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, int, void>)pfn_glVertexAttribI4i)(index, x, y, z, w);
-    
-    private static nint pfn_glVertexAttribI4ui;
-    public static void glVertexAttribI4ui(uint index, uint x, uint y, uint z, uint w) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, uint, uint, void>)pfn_glVertexAttribI4ui)(index, x, y, z, w);
-    
-    private static nint pfn_glVertexAttribI4iv;
-    public static void glVertexAttribI4iv(uint index, int* v) => ((delegate* unmanaged[Stdcall]<uint, int*, void>)pfn_glVertexAttribI4iv)(index, v);
-    
-    private static nint pfn_glVertexAttribI4uiv;
-    public static void glVertexAttribI4uiv(uint index, uint* v) => ((delegate* unmanaged[Stdcall]<uint, uint*, void>)pfn_glVertexAttribI4uiv)(index, v);
-    
-    private static nint pfn_glGetUniformuiv;
-    public static void glGetUniformuiv(uint program, int location, uint* @params) => ((delegate* unmanaged[Stdcall]<uint, int, uint*, void>)pfn_glGetUniformuiv)(program, location, @params);
-    
-    private static nint pfn_glGetFragDataLocation;
-    public static int glGetFragDataLocation(uint program, byte* name) => ((delegate* unmanaged[Stdcall]<uint, byte*, int>)pfn_glGetFragDataLocation)(program, name);
     
     private static nint pfn_glUniform1ui;
     public static void glUniform1ui(int location, uint v0) => ((delegate* unmanaged[Stdcall]<int, uint, void>)pfn_glUniform1ui)(location, v0);
     
-    private static nint pfn_glUniform2ui;
-    public static void glUniform2ui(int location, uint v0, uint v1) => ((delegate* unmanaged[Stdcall]<int, uint, uint, void>)pfn_glUniform2ui)(location, v0, v1);
-    
     private static nint pfn_glUniform3ui;
     public static void glUniform3ui(int location, uint v0, uint v1, uint v2) => ((delegate* unmanaged[Stdcall]<int, uint, uint, uint, void>)pfn_glUniform3ui)(location, v0, v1, v2);
-    
-    private static nint pfn_glUniform4ui;
-    public static void glUniform4ui(int location, uint v0, uint v1, uint v2, uint v3) => ((delegate* unmanaged[Stdcall]<int, uint, uint, uint, uint, void>)pfn_glUniform4ui)(location, v0, v1, v2, v3);
-    
-    private static nint pfn_glUniform1uiv;
-    public static void glUniform1uiv(int location, int count, uint* value) => ((delegate* unmanaged[Stdcall]<int, int, uint*, void>)pfn_glUniform1uiv)(location, count, value);
-    
-    private static nint pfn_glUniform2uiv;
-    public static void glUniform2uiv(int location, int count, uint* value) => ((delegate* unmanaged[Stdcall]<int, int, uint*, void>)pfn_glUniform2uiv)(location, count, value);
-    
-    private static nint pfn_glUniform3uiv;
-    public static void glUniform3uiv(int location, int count, uint* value) => ((delegate* unmanaged[Stdcall]<int, int, uint*, void>)pfn_glUniform3uiv)(location, count, value);
-    
-    private static nint pfn_glUniform4uiv;
-    public static void glUniform4uiv(int location, int count, uint* value) => ((delegate* unmanaged[Stdcall]<int, int, uint*, void>)pfn_glUniform4uiv)(location, count, value);
-    
-    private static nint pfn_glClearBufferiv;
-    public static void glClearBufferiv(uint buffer, int drawbuffer, int* value) => ((delegate* unmanaged[Stdcall]<uint, int, int*, void>)pfn_glClearBufferiv)(buffer, drawbuffer, value);
-    
-    private static nint pfn_glClearBufferuiv;
-    public static void glClearBufferuiv(uint buffer, int drawbuffer, uint* value) => ((delegate* unmanaged[Stdcall]<uint, int, uint*, void>)pfn_glClearBufferuiv)(buffer, drawbuffer, value);
-    
-    private static nint pfn_glClearBufferfv;
-    public static void glClearBufferfv(uint buffer, int drawbuffer, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, float*, void>)pfn_glClearBufferfv)(buffer, drawbuffer, value);
-    
-    private static nint pfn_glClearBufferfi;
-    public static void glClearBufferfi(uint buffer, int drawbuffer, float depth, int stencil) => ((delegate* unmanaged[Stdcall]<uint, int, float, int, void>)pfn_glClearBufferfi)(buffer, drawbuffer, depth, stencil);
-    
-    private static nint pfn_glGetStringi;
-    public static int* glGetStringi(uint name, uint index) => ((delegate* unmanaged[Stdcall]<uint, uint, int*>)pfn_glGetStringi)(name, index);
-    
-    private static nint pfn_glCopyBufferSubData;
-    public static void glCopyBufferSubData(uint readTarget, uint writeTarget, int readOffset, int writeOffset, int size) => ((delegate* unmanaged[Stdcall]<uint, uint, int, int, int, void>)pfn_glCopyBufferSubData)(readTarget, writeTarget, readOffset, writeOffset, size);
-    
-    private static nint pfn_glGetUniformIndices;
-    public static void glGetUniformIndices(uint program, int uniformCount, byte** uniformNames, uint* uniformIndices) => ((delegate* unmanaged[Stdcall]<uint, int, byte**, uint*, void>)pfn_glGetUniformIndices)(program, uniformCount, uniformNames, uniformIndices);
-    
-    private static nint pfn_glGetActiveUniformsiv;
-    public static void glGetActiveUniformsiv(uint program, int uniformCount, uint* uniformIndices, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, int, uint*, uint, int*, void>)pfn_glGetActiveUniformsiv)(program, uniformCount, uniformIndices, pname, @params);
-    
-    private static nint pfn_glGetUniformBlockIndex;
-    public static uint glGetUniformBlockIndex(uint program, byte* uniformBlockName) => ((delegate* unmanaged[Stdcall]<uint, byte*, uint>)pfn_glGetUniformBlockIndex)(program, uniformBlockName);
-    
-    private static nint pfn_glGetActiveUniformBlockiv;
-    public static void glGetActiveUniformBlockiv(uint program, uint uniformBlockIndex, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int*, void>)pfn_glGetActiveUniformBlockiv)(program, uniformBlockIndex, pname, @params);
-    
-    private static nint pfn_glGetActiveUniformBlockName;
-    public static void glGetActiveUniformBlockName(uint program, uint uniformBlockIndex, int bufSize, int* length, byte* uniformBlockName) => ((delegate* unmanaged[Stdcall]<uint, uint, int, int*, byte*, void>)pfn_glGetActiveUniformBlockName)(program, uniformBlockIndex, bufSize, length, uniformBlockName);
-    
-    private static nint pfn_glUniformBlockBinding;
-    public static void glUniformBlockBinding(uint program, uint uniformBlockIndex, uint uniformBlockBinding) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, void>)pfn_glUniformBlockBinding)(program, uniformBlockIndex, uniformBlockBinding);
     
     private static nint pfn_glDrawArraysInstanced;
     public static void glDrawArraysInstanced(uint mode, int first, int count, int instancecount) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, void>)pfn_glDrawArraysInstanced)(mode, first, count, instancecount);
@@ -1751,442 +1353,25 @@ internal static unsafe class OpenGL
     private static nint pfn_glDrawElementsInstanced;
     public static void glDrawElementsInstanced(uint mode, int count, uint type, void* indices, int instancecount) => ((delegate* unmanaged[Stdcall]<uint, int, uint, void*, int, void>)pfn_glDrawElementsInstanced)(mode, count, type, indices, instancecount);
     
-    private static nint pfn_glFenceSync;
-    public static void* glFenceSync(uint condition, uint flags) => ((delegate* unmanaged[Stdcall]<uint, uint, void*>)pfn_glFenceSync)(condition, flags);
-    
-    private static nint pfn_glIsSync;
-    public static byte glIsSync(void* sync) => ((delegate* unmanaged[Stdcall]<void*, byte>)pfn_glIsSync)(sync);
-    
-    private static nint pfn_glDeleteSync;
-    public static void glDeleteSync(void* sync) => ((delegate* unmanaged[Stdcall]<void*, void>)pfn_glDeleteSync)(sync);
-    
-    private static nint pfn_glClientWaitSync;
-    public static uint glClientWaitSync(void* sync, uint flags, int timeout) => ((delegate* unmanaged[Stdcall]<void*, uint, int, uint>)pfn_glClientWaitSync)(sync, flags, timeout);
-    
-    private static nint pfn_glWaitSync;
-    public static void glWaitSync(void* sync, uint flags, int timeout) => ((delegate* unmanaged[Stdcall]<void*, uint, int, void>)pfn_glWaitSync)(sync, flags, timeout);
-    
-    private static nint pfn_glGetInteger64v;
-    public static void glGetInteger64v(uint pname, int* data) => ((delegate* unmanaged[Stdcall]<uint, int*, void>)pfn_glGetInteger64v)(pname, data);
-    
-    private static nint pfn_glGetSynciv;
-    public static void glGetSynciv(void* sync, uint pname, int bufSize, int* length, int* values) => ((delegate* unmanaged[Stdcall]<void*, uint, int, int*, int*, void>)pfn_glGetSynciv)(sync, pname, bufSize, length, values);
-    
-    private static nint pfn_glGetInteger64i_v;
-    public static void glGetInteger64i_v(uint target, uint index, int* data) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetInteger64i_v)(target, index, data);
-    
-    private static nint pfn_glGetBufferParameteri64v;
-    public static void glGetBufferParameteri64v(uint target, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetBufferParameteri64v)(target, pname, @params);
-    
-    private static nint pfn_glGenSamplers;
-    public static void glGenSamplers(int count, uint* samplers) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glGenSamplers)(count, samplers);
-    
-    private static nint pfn_glDeleteSamplers;
-    public static void glDeleteSamplers(int count, uint* samplers) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glDeleteSamplers)(count, samplers);
-    
-    private static nint pfn_glIsSampler;
-    public static byte glIsSampler(uint sampler) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glIsSampler)(sampler);
-    
-    private static nint pfn_glBindSampler;
-    public static void glBindSampler(uint unit, uint sampler) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBindSampler)(unit, sampler);
-    
-    private static nint pfn_glSamplerParameteri;
-    public static void glSamplerParameteri(uint sampler, uint pname, int param) => ((delegate* unmanaged[Stdcall]<uint, uint, int, void>)pfn_glSamplerParameteri)(sampler, pname, param);
-    
-    private static nint pfn_glSamplerParameteriv;
-    public static void glSamplerParameteriv(uint sampler, uint pname, int* param) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glSamplerParameteriv)(sampler, pname, param);
-    
-    private static nint pfn_glSamplerParameterf;
-    public static void glSamplerParameterf(uint sampler, uint pname, float param) => ((delegate* unmanaged[Stdcall]<uint, uint, float, void>)pfn_glSamplerParameterf)(sampler, pname, param);
-    
-    private static nint pfn_glSamplerParameterfv;
-    public static void glSamplerParameterfv(uint sampler, uint pname, float* param) => ((delegate* unmanaged[Stdcall]<uint, uint, float*, void>)pfn_glSamplerParameterfv)(sampler, pname, param);
-    
-    private static nint pfn_glGetSamplerParameteriv;
-    public static void glGetSamplerParameteriv(uint sampler, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetSamplerParameteriv)(sampler, pname, @params);
-    
-    private static nint pfn_glGetSamplerParameterfv;
-    public static void glGetSamplerParameterfv(uint sampler, uint pname, float* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, float*, void>)pfn_glGetSamplerParameterfv)(sampler, pname, @params);
-    
     private static nint pfn_glVertexAttribDivisor;
     public static void glVertexAttribDivisor(uint index, uint divisor) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glVertexAttribDivisor)(index, divisor);
-    
-    private static nint pfn_glBindTransformFeedback;
-    public static void glBindTransformFeedback(uint target, uint id) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBindTransformFeedback)(target, id);
-    
-    private static nint pfn_glDeleteTransformFeedbacks;
-    public static void glDeleteTransformFeedbacks(int n, uint* ids) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glDeleteTransformFeedbacks)(n, ids);
-    
-    private static nint pfn_glGenTransformFeedbacks;
-    public static void glGenTransformFeedbacks(int n, uint* ids) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glGenTransformFeedbacks)(n, ids);
-    
-    private static nint pfn_glIsTransformFeedback;
-    public static byte glIsTransformFeedback(uint id) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glIsTransformFeedback)(id);
-    
-    private static nint pfn_glPauseTransformFeedback;
-    public static void glPauseTransformFeedback() => ((delegate* unmanaged[Stdcall]<void>)pfn_glPauseTransformFeedback)();
-    
-    private static nint pfn_glResumeTransformFeedback;
-    public static void glResumeTransformFeedback() => ((delegate* unmanaged[Stdcall]<void>)pfn_glResumeTransformFeedback)();
-    
-    private static nint pfn_glGetProgramBinary;
-    public static void glGetProgramBinary(uint program, int bufSize, int* length, uint* binaryFormat, void* binary) => ((delegate* unmanaged[Stdcall]<uint, int, int*, uint*, void*, void>)pfn_glGetProgramBinary)(program, bufSize, length, binaryFormat, binary);
-    
-    private static nint pfn_glProgramBinary;
-    public static void glProgramBinary(uint program, uint binaryFormat, void* binary, int length) => ((delegate* unmanaged[Stdcall]<uint, uint, void*, int, void>)pfn_glProgramBinary)(program, binaryFormat, binary, length);
-    
-    private static nint pfn_glProgramParameteri;
-    public static void glProgramParameteri(uint program, uint pname, int value) => ((delegate* unmanaged[Stdcall]<uint, uint, int, void>)pfn_glProgramParameteri)(program, pname, value);
-    
-    private static nint pfn_glInvalidateFramebuffer;
-    public static void glInvalidateFramebuffer(uint target, int numAttachments, uint* attachments) => ((delegate* unmanaged[Stdcall]<uint, int, uint*, void>)pfn_glInvalidateFramebuffer)(target, numAttachments, attachments);
-    
-    private static nint pfn_glInvalidateSubFramebuffer;
-    public static void glInvalidateSubFramebuffer(uint target, int numAttachments, uint* attachments, int x, int y, int width, int height) => ((delegate* unmanaged[Stdcall]<uint, int, uint*, int, int, int, int, void>)pfn_glInvalidateSubFramebuffer)(target, numAttachments, attachments, x, y, width, height);
-    
-    private static nint pfn_glTexStorage2D;
-    public static void glTexStorage2D(uint target, int levels, uint internalformat, int width, int height) => ((delegate* unmanaged[Stdcall]<uint, int, uint, int, int, void>)pfn_glTexStorage2D)(target, levels, internalformat, width, height);
-    
-    private static nint pfn_glTexStorage3D;
-    public static void glTexStorage3D(uint target, int levels, uint internalformat, int width, int height, int depth) => ((delegate* unmanaged[Stdcall]<uint, int, uint, int, int, int, void>)pfn_glTexStorage3D)(target, levels, internalformat, width, height, depth);
-    
-    private static nint pfn_glGetInternalformativ;
-    public static void glGetInternalformativ(uint target, uint internalformat, uint pname, int bufSize, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int, int*, void>)pfn_glGetInternalformativ)(target, internalformat, pname, bufSize, @params);
     
     private static nint pfn_glDispatchCompute;
     public static void glDispatchCompute(uint num_groups_x, uint num_groups_y, uint num_groups_z) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, void>)pfn_glDispatchCompute)(num_groups_x, num_groups_y, num_groups_z);
     
-    private static nint pfn_glDispatchComputeIndirect;
-    public static void glDispatchComputeIndirect(int indirect) => ((delegate* unmanaged[Stdcall]<int, void>)pfn_glDispatchComputeIndirect)(indirect);
-    
-    private static nint pfn_glDrawArraysIndirect;
-    public static void glDrawArraysIndirect(uint mode, void* indirect) => ((delegate* unmanaged[Stdcall]<uint, void*, void>)pfn_glDrawArraysIndirect)(mode, indirect);
-    
-    private static nint pfn_glDrawElementsIndirect;
-    public static void glDrawElementsIndirect(uint mode, uint type, void* indirect) => ((delegate* unmanaged[Stdcall]<uint, uint, void*, void>)pfn_glDrawElementsIndirect)(mode, type, indirect);
-    
-    private static nint pfn_glFramebufferParameteri;
-    public static void glFramebufferParameteri(uint target, uint pname, int param) => ((delegate* unmanaged[Stdcall]<uint, uint, int, void>)pfn_glFramebufferParameteri)(target, pname, param);
-    
-    private static nint pfn_glGetFramebufferParameteriv;
-    public static void glGetFramebufferParameteriv(uint target, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetFramebufferParameteriv)(target, pname, @params);
-    
-    private static nint pfn_glGetProgramInterfaceiv;
-    public static void glGetProgramInterfaceiv(uint program, uint programInterface, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int*, void>)pfn_glGetProgramInterfaceiv)(program, programInterface, pname, @params);
-    
     private static nint pfn_glGetProgramResourceIndex;
     public static uint glGetProgramResourceIndex(uint program, uint programInterface, byte* name) => ((delegate* unmanaged[Stdcall]<uint, uint, byte*, uint>)pfn_glGetProgramResourceIndex)(program, programInterface, name);
-    
-    private static nint pfn_glGetProgramResourceName;
-    public static void glGetProgramResourceName(uint program, uint programInterface, uint index, int bufSize, int* length, byte* name) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int, int*, byte*, void>)pfn_glGetProgramResourceName)(program, programInterface, index, bufSize, length, name);
     
     private static nint pfn_glGetProgramResourceiv;
     public static void glGetProgramResourceiv(uint program, uint programInterface, uint index, int propCount, uint* props, int bufSize, int* length, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int, uint*, int, int*, int*, void>)pfn_glGetProgramResourceiv)(program, programInterface, index, propCount, props, bufSize, length, @params);
     
-    private static nint pfn_glGetProgramResourceLocation;
-    public static int glGetProgramResourceLocation(uint program, uint programInterface, byte* name) => ((delegate* unmanaged[Stdcall]<uint, uint, byte*, int>)pfn_glGetProgramResourceLocation)(program, programInterface, name);
-    
-    private static nint pfn_glUseProgramStages;
-    public static void glUseProgramStages(uint pipeline, uint stages, uint program) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, void>)pfn_glUseProgramStages)(pipeline, stages, program);
-    
-    private static nint pfn_glActiveShaderProgram;
-    public static void glActiveShaderProgram(uint pipeline, uint program) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glActiveShaderProgram)(pipeline, program);
-    
-    private static nint pfn_glCreateShaderProgramv;
-    public static uint glCreateShaderProgramv(uint type, int count, byte** strings) => ((delegate* unmanaged[Stdcall]<uint, int, byte**, uint>)pfn_glCreateShaderProgramv)(type, count, strings);
-    
-    private static nint pfn_glBindProgramPipeline;
-    public static void glBindProgramPipeline(uint pipeline) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glBindProgramPipeline)(pipeline);
-    
-    private static nint pfn_glDeleteProgramPipelines;
-    public static void glDeleteProgramPipelines(int n, uint* pipelines) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glDeleteProgramPipelines)(n, pipelines);
-    
-    private static nint pfn_glGenProgramPipelines;
-    public static void glGenProgramPipelines(int n, uint* pipelines) => ((delegate* unmanaged[Stdcall]<int, uint*, void>)pfn_glGenProgramPipelines)(n, pipelines);
-    
-    private static nint pfn_glIsProgramPipeline;
-    public static byte glIsProgramPipeline(uint pipeline) => ((delegate* unmanaged[Stdcall]<uint, byte>)pfn_glIsProgramPipeline)(pipeline);
-    
-    private static nint pfn_glGetProgramPipelineiv;
-    public static void glGetProgramPipelineiv(uint pipeline, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetProgramPipelineiv)(pipeline, pname, @params);
-    
-    private static nint pfn_glProgramUniform1i;
-    public static void glProgramUniform1i(uint program, int location, int v0) => ((delegate* unmanaged[Stdcall]<uint, int, int, void>)pfn_glProgramUniform1i)(program, location, v0);
-    
-    private static nint pfn_glProgramUniform2i;
-    public static void glProgramUniform2i(uint program, int location, int v0, int v1) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, void>)pfn_glProgramUniform2i)(program, location, v0, v1);
-    
-    private static nint pfn_glProgramUniform3i;
-    public static void glProgramUniform3i(uint program, int location, int v0, int v1, int v2) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, int, void>)pfn_glProgramUniform3i)(program, location, v0, v1, v2);
-    
-    private static nint pfn_glProgramUniform4i;
-    public static void glProgramUniform4i(uint program, int location, int v0, int v1, int v2, int v3) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, int, int, void>)pfn_glProgramUniform4i)(program, location, v0, v1, v2, v3);
-    
-    private static nint pfn_glProgramUniform1ui;
-    public static void glProgramUniform1ui(uint program, int location, uint v0) => ((delegate* unmanaged[Stdcall]<uint, int, uint, void>)pfn_glProgramUniform1ui)(program, location, v0);
-    
-    private static nint pfn_glProgramUniform2ui;
-    public static void glProgramUniform2ui(uint program, int location, uint v0, uint v1) => ((delegate* unmanaged[Stdcall]<uint, int, uint, uint, void>)pfn_glProgramUniform2ui)(program, location, v0, v1);
-    
-    private static nint pfn_glProgramUniform3ui;
-    public static void glProgramUniform3ui(uint program, int location, uint v0, uint v1, uint v2) => ((delegate* unmanaged[Stdcall]<uint, int, uint, uint, uint, void>)pfn_glProgramUniform3ui)(program, location, v0, v1, v2);
-    
-    private static nint pfn_glProgramUniform4ui;
-    public static void glProgramUniform4ui(uint program, int location, uint v0, uint v1, uint v2, uint v3) => ((delegate* unmanaged[Stdcall]<uint, int, uint, uint, uint, uint, void>)pfn_glProgramUniform4ui)(program, location, v0, v1, v2, v3);
-    
-    private static nint pfn_glProgramUniform1f;
-    public static void glProgramUniform1f(uint program, int location, float v0) => ((delegate* unmanaged[Stdcall]<uint, int, float, void>)pfn_glProgramUniform1f)(program, location, v0);
-    
-    private static nint pfn_glProgramUniform2f;
-    public static void glProgramUniform2f(uint program, int location, float v0, float v1) => ((delegate* unmanaged[Stdcall]<uint, int, float, float, void>)pfn_glProgramUniform2f)(program, location, v0, v1);
-    
-    private static nint pfn_glProgramUniform3f;
-    public static void glProgramUniform3f(uint program, int location, float v0, float v1, float v2) => ((delegate* unmanaged[Stdcall]<uint, int, float, float, float, void>)pfn_glProgramUniform3f)(program, location, v0, v1, v2);
-    
-    private static nint pfn_glProgramUniform4f;
-    public static void glProgramUniform4f(uint program, int location, float v0, float v1, float v2, float v3) => ((delegate* unmanaged[Stdcall]<uint, int, float, float, float, float, void>)pfn_glProgramUniform4f)(program, location, v0, v1, v2, v3);
-    
-    private static nint pfn_glProgramUniform1iv;
-    public static void glProgramUniform1iv(uint program, int location, int count, int* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, int*, void>)pfn_glProgramUniform1iv)(program, location, count, value);
-    
-    private static nint pfn_glProgramUniform2iv;
-    public static void glProgramUniform2iv(uint program, int location, int count, int* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, int*, void>)pfn_glProgramUniform2iv)(program, location, count, value);
-    
-    private static nint pfn_glProgramUniform3iv;
-    public static void glProgramUniform3iv(uint program, int location, int count, int* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, int*, void>)pfn_glProgramUniform3iv)(program, location, count, value);
-    
-    private static nint pfn_glProgramUniform4iv;
-    public static void glProgramUniform4iv(uint program, int location, int count, int* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, int*, void>)pfn_glProgramUniform4iv)(program, location, count, value);
-    
-    private static nint pfn_glProgramUniform1uiv;
-    public static void glProgramUniform1uiv(uint program, int location, int count, uint* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, uint*, void>)pfn_glProgramUniform1uiv)(program, location, count, value);
-    
-    private static nint pfn_glProgramUniform2uiv;
-    public static void glProgramUniform2uiv(uint program, int location, int count, uint* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, uint*, void>)pfn_glProgramUniform2uiv)(program, location, count, value);
-    
-    private static nint pfn_glProgramUniform3uiv;
-    public static void glProgramUniform3uiv(uint program, int location, int count, uint* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, uint*, void>)pfn_glProgramUniform3uiv)(program, location, count, value);
-    
-    private static nint pfn_glProgramUniform4uiv;
-    public static void glProgramUniform4uiv(uint program, int location, int count, uint* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, uint*, void>)pfn_glProgramUniform4uiv)(program, location, count, value);
-    
-    private static nint pfn_glProgramUniform1fv;
-    public static void glProgramUniform1fv(uint program, int location, int count, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, float*, void>)pfn_glProgramUniform1fv)(program, location, count, value);
-    
-    private static nint pfn_glProgramUniform2fv;
-    public static void glProgramUniform2fv(uint program, int location, int count, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, float*, void>)pfn_glProgramUniform2fv)(program, location, count, value);
-    
-    private static nint pfn_glProgramUniform3fv;
-    public static void glProgramUniform3fv(uint program, int location, int count, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, float*, void>)pfn_glProgramUniform3fv)(program, location, count, value);
-    
-    private static nint pfn_glProgramUniform4fv;
-    public static void glProgramUniform4fv(uint program, int location, int count, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, float*, void>)pfn_glProgramUniform4fv)(program, location, count, value);
-    
-    private static nint pfn_glProgramUniformMatrix2fv;
-    public static void glProgramUniformMatrix2fv(uint program, int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, byte, float*, void>)pfn_glProgramUniformMatrix2fv)(program, location, count, transpose, value);
-    
-    private static nint pfn_glProgramUniformMatrix3fv;
-    public static void glProgramUniformMatrix3fv(uint program, int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, byte, float*, void>)pfn_glProgramUniformMatrix3fv)(program, location, count, transpose, value);
-    
-    private static nint pfn_glProgramUniformMatrix4fv;
-    public static void glProgramUniformMatrix4fv(uint program, int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, byte, float*, void>)pfn_glProgramUniformMatrix4fv)(program, location, count, transpose, value);
-    
-    private static nint pfn_glProgramUniformMatrix2x3fv;
-    public static void glProgramUniformMatrix2x3fv(uint program, int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, byte, float*, void>)pfn_glProgramUniformMatrix2x3fv)(program, location, count, transpose, value);
-    
-    private static nint pfn_glProgramUniformMatrix3x2fv;
-    public static void glProgramUniformMatrix3x2fv(uint program, int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, byte, float*, void>)pfn_glProgramUniformMatrix3x2fv)(program, location, count, transpose, value);
-    
-    private static nint pfn_glProgramUniformMatrix2x4fv;
-    public static void glProgramUniformMatrix2x4fv(uint program, int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, byte, float*, void>)pfn_glProgramUniformMatrix2x4fv)(program, location, count, transpose, value);
-    
-    private static nint pfn_glProgramUniformMatrix4x2fv;
-    public static void glProgramUniformMatrix4x2fv(uint program, int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, byte, float*, void>)pfn_glProgramUniformMatrix4x2fv)(program, location, count, transpose, value);
-    
-    private static nint pfn_glProgramUniformMatrix3x4fv;
-    public static void glProgramUniformMatrix3x4fv(uint program, int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, byte, float*, void>)pfn_glProgramUniformMatrix3x4fv)(program, location, count, transpose, value);
-    
-    private static nint pfn_glProgramUniformMatrix4x3fv;
-    public static void glProgramUniformMatrix4x3fv(uint program, int location, int count, byte transpose, float* value) => ((delegate* unmanaged[Stdcall]<uint, int, int, byte, float*, void>)pfn_glProgramUniformMatrix4x3fv)(program, location, count, transpose, value);
-    
-    private static nint pfn_glValidateProgramPipeline;
-    public static void glValidateProgramPipeline(uint pipeline) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glValidateProgramPipeline)(pipeline);
-    
-    private static nint pfn_glGetProgramPipelineInfoLog;
-    public static void glGetProgramPipelineInfoLog(uint pipeline, int bufSize, int* length, byte* infoLog) => ((delegate* unmanaged[Stdcall]<uint, int, int*, byte*, void>)pfn_glGetProgramPipelineInfoLog)(pipeline, bufSize, length, infoLog);
-    
-    private static nint pfn_glBindImageTexture;
-    public static void glBindImageTexture(uint unit, uint texture, int level, byte layered, int layer, uint access, uint format) => ((delegate* unmanaged[Stdcall]<uint, uint, int, byte, int, uint, uint, void>)pfn_glBindImageTexture)(unit, texture, level, layered, layer, access, format);
-    
-    private static nint pfn_glGetBooleani_v;
-    public static void glGetBooleani_v(uint target, uint index, byte* data) => ((delegate* unmanaged[Stdcall]<uint, uint, byte*, void>)pfn_glGetBooleani_v)(target, index, data);
-    
     private static nint pfn_glMemoryBarrier;
     public static void glMemoryBarrier(uint barriers) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glMemoryBarrier)(barriers);
-    
-    private static nint pfn_glMemoryBarrierByRegion;
-    public static void glMemoryBarrierByRegion(uint barriers) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glMemoryBarrierByRegion)(barriers);
-    
-    private static nint pfn_glTexStorage2DMultisample;
-    public static void glTexStorage2DMultisample(uint target, int samples, uint internalformat, int width, int height, byte fixedsamplelocations) => ((delegate* unmanaged[Stdcall]<uint, int, uint, int, int, byte, void>)pfn_glTexStorage2DMultisample)(target, samples, internalformat, width, height, fixedsamplelocations);
-    
-    private static nint pfn_glGetMultisamplefv;
-    public static void glGetMultisamplefv(uint pname, uint index, float* val) => ((delegate* unmanaged[Stdcall]<uint, uint, float*, void>)pfn_glGetMultisamplefv)(pname, index, val);
-    
-    private static nint pfn_glSampleMaski;
-    public static void glSampleMaski(uint maskNumber, uint mask) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glSampleMaski)(maskNumber, mask);
-    
-    private static nint pfn_glGetTexLevelParameteriv;
-    public static void glGetTexLevelParameteriv(uint target, int level, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, int, uint, int*, void>)pfn_glGetTexLevelParameteriv)(target, level, pname, @params);
-    
-    private static nint pfn_glGetTexLevelParameterfv;
-    public static void glGetTexLevelParameterfv(uint target, int level, uint pname, float* @params) => ((delegate* unmanaged[Stdcall]<uint, int, uint, float*, void>)pfn_glGetTexLevelParameterfv)(target, level, pname, @params);
-    
-    private static nint pfn_glBindVertexBuffer;
-    public static void glBindVertexBuffer(uint bindingindex, uint buffer, int offset, int stride) => ((delegate* unmanaged[Stdcall]<uint, uint, int, int, void>)pfn_glBindVertexBuffer)(bindingindex, buffer, offset, stride);
-    
-    private static nint pfn_glVertexAttribFormat;
-    public static void glVertexAttribFormat(uint attribindex, int size, uint type, byte normalized, uint relativeoffset) => ((delegate* unmanaged[Stdcall]<uint, int, uint, byte, uint, void>)pfn_glVertexAttribFormat)(attribindex, size, type, normalized, relativeoffset);
-    
-    private static nint pfn_glVertexAttribIFormat;
-    public static void glVertexAttribIFormat(uint attribindex, int size, uint type, uint relativeoffset) => ((delegate* unmanaged[Stdcall]<uint, int, uint, uint, void>)pfn_glVertexAttribIFormat)(attribindex, size, type, relativeoffset);
-    
-    private static nint pfn_glVertexAttribBinding;
-    public static void glVertexAttribBinding(uint attribindex, uint bindingindex) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glVertexAttribBinding)(attribindex, bindingindex);
-    
-    private static nint pfn_glVertexBindingDivisor;
-    public static void glVertexBindingDivisor(uint bindingindex, uint divisor) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glVertexBindingDivisor)(bindingindex, divisor);
-    
-    private static nint pfn_glBlendBarrier;
-    public static void glBlendBarrier() => ((delegate* unmanaged[Stdcall]<void>)pfn_glBlendBarrier)();
-    
-    private static nint pfn_glCopyImageSubData;
-    public static void glCopyImageSubData(uint srcName, uint srcTarget, int srcLevel, int srcX, int srcY, int srcZ, uint dstName, uint dstTarget, int dstLevel, int dstX, int dstY, int dstZ, int srcWidth, int srcHeight, int srcDepth) => ((delegate* unmanaged[Stdcall]<uint, uint, int, int, int, int, uint, uint, int, int, int, int, int, int, int, void>)pfn_glCopyImageSubData)(srcName, srcTarget, srcLevel, srcX, srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight, srcDepth);
-    
-    private static nint pfn_glDebugMessageControl;
-    public static void glDebugMessageControl(uint source, uint type, uint severity, int count, uint* ids, byte enabled) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int, uint*, byte, void>)pfn_glDebugMessageControl)(source, type, severity, count, ids, enabled);
-    
-    private static nint pfn_glDebugMessageInsert;
-    public static void glDebugMessageInsert(uint source, uint type, uint id, uint severity, int length, byte* buf) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, uint, int, byte*, void>)pfn_glDebugMessageInsert)(source, type, id, severity, length, buf);
     
     private static nint pfn_glDebugMessageCallback;
     public static void glDebugMessageCallback(delegate* unmanaged[Stdcall]<uint, uint, uint, uint, int, byte*, void*, void> callback, void* userParam) => ((delegate* unmanaged[Stdcall]<delegate* unmanaged[Stdcall]<uint, uint, uint, uint, int, byte*, void*, void>, void*, void>)pfn_glDebugMessageCallback)(callback, userParam);
     
-    private static nint pfn_glGetDebugMessageLog;
-    public static uint glGetDebugMessageLog(uint count, int bufSize, uint* sources, uint* types, uint* ids, uint* severities, int* lengths, byte* messageLog) => ((delegate* unmanaged[Stdcall]<uint, int, uint*, uint*, uint*, uint*, int*, byte*, uint>)pfn_glGetDebugMessageLog)(count, bufSize, sources, types, ids, severities, lengths, messageLog);
-    
-    private static nint pfn_glPushDebugGroup;
-    public static void glPushDebugGroup(uint source, uint id, int length, byte* message) => ((delegate* unmanaged[Stdcall]<uint, uint, int, byte*, void>)pfn_glPushDebugGroup)(source, id, length, message);
-    
-    private static nint pfn_glPopDebugGroup;
-    public static void glPopDebugGroup() => ((delegate* unmanaged[Stdcall]<void>)pfn_glPopDebugGroup)();
-    
-    private static nint pfn_glObjectLabel;
-    public static void glObjectLabel(uint identifier, uint name, int length, byte* label) => ((delegate* unmanaged[Stdcall]<uint, uint, int, byte*, void>)pfn_glObjectLabel)(identifier, name, length, label);
-    
-    private static nint pfn_glGetObjectLabel;
-    public static void glGetObjectLabel(uint identifier, uint name, int bufSize, int* length, byte* label) => ((delegate* unmanaged[Stdcall]<uint, uint, int, int*, byte*, void>)pfn_glGetObjectLabel)(identifier, name, bufSize, length, label);
-    
-    private static nint pfn_glObjectPtrLabel;
-    public static void glObjectPtrLabel(void* ptr, int length, byte* label) => ((delegate* unmanaged[Stdcall]<void*, int, byte*, void>)pfn_glObjectPtrLabel)(ptr, length, label);
-    
-    private static nint pfn_glGetObjectPtrLabel;
-    public static void glGetObjectPtrLabel(void* ptr, int bufSize, int* length, byte* label) => ((delegate* unmanaged[Stdcall]<void*, int, int*, byte*, void>)pfn_glGetObjectPtrLabel)(ptr, bufSize, length, label);
-    
-    private static nint pfn_glGetPointerv;
-    public static void glGetPointerv(uint pname, void** @params) => ((delegate* unmanaged[Stdcall]<uint, void**, void>)pfn_glGetPointerv)(pname, @params);
-    
-    private static nint pfn_glEnablei;
-    public static void glEnablei(uint target, uint index) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glEnablei)(target, index);
-    
-    private static nint pfn_glDisablei;
-    public static void glDisablei(uint target, uint index) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glDisablei)(target, index);
-    
-    private static nint pfn_glBlendEquationi;
-    public static void glBlendEquationi(uint buf, uint mode) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBlendEquationi)(buf, mode);
-    
-    private static nint pfn_glBlendEquationSeparatei;
-    public static void glBlendEquationSeparatei(uint buf, uint modeRGB, uint modeAlpha) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, void>)pfn_glBlendEquationSeparatei)(buf, modeRGB, modeAlpha);
-    
-    private static nint pfn_glBlendFunci;
-    public static void glBlendFunci(uint buf, uint src, uint dst) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, void>)pfn_glBlendFunci)(buf, src, dst);
-    
-    private static nint pfn_glBlendFuncSeparatei;
-    public static void glBlendFuncSeparatei(uint buf, uint srcRGB, uint dstRGB, uint srcAlpha, uint dstAlpha) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, uint, uint, void>)pfn_glBlendFuncSeparatei)(buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
-    
-    private static nint pfn_glColorMaski;
-    public static void glColorMaski(uint index, byte r, byte g, byte b, byte a) => ((delegate* unmanaged[Stdcall]<uint, byte, byte, byte, byte, void>)pfn_glColorMaski)(index, r, g, b, a);
-    
-    private static nint pfn_glIsEnabledi;
-    public static byte glIsEnabledi(uint target, uint index) => ((delegate* unmanaged[Stdcall]<uint, uint, byte>)pfn_glIsEnabledi)(target, index);
-    
-    private static nint pfn_glDrawElementsBaseVertex;
-    public static void glDrawElementsBaseVertex(uint mode, int count, uint type, void* indices, int basevertex) => ((delegate* unmanaged[Stdcall]<uint, int, uint, void*, int, void>)pfn_glDrawElementsBaseVertex)(mode, count, type, indices, basevertex);
-    
-    private static nint pfn_glDrawRangeElementsBaseVertex;
-    public static void glDrawRangeElementsBaseVertex(uint mode, uint start, uint end, int count, uint type, void* indices, int basevertex) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int, uint, void*, int, void>)pfn_glDrawRangeElementsBaseVertex)(mode, start, end, count, type, indices, basevertex);
-    
-    private static nint pfn_glDrawElementsInstancedBaseVertex;
-    public static void glDrawElementsInstancedBaseVertex(uint mode, int count, uint type, void* indices, int instancecount, int basevertex) => ((delegate* unmanaged[Stdcall]<uint, int, uint, void*, int, int, void>)pfn_glDrawElementsInstancedBaseVertex)(mode, count, type, indices, instancecount, basevertex);
-    
     private static nint pfn_glFramebufferTexture;
     public static void glFramebufferTexture(uint target, uint attachment, uint texture, int level) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int, void>)pfn_glFramebufferTexture)(target, attachment, texture, level);
-    
-    private static nint pfn_glPrimitiveBoundingBox;
-    public static void glPrimitiveBoundingBox(float minX, float minY, float minZ, float minW, float maxX, float maxY, float maxZ, float maxW) => ((delegate* unmanaged[Stdcall]<float, float, float, float, float, float, float, float, void>)pfn_glPrimitiveBoundingBox)(minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
-    
-    private static nint pfn_glGetGraphicsResetStatus;
-    public static uint glGetGraphicsResetStatus() => ((delegate* unmanaged[Stdcall]<uint>)pfn_glGetGraphicsResetStatus)();
-    
-    private static nint pfn_glReadnPixels;
-    public static void glReadnPixels(int x, int y, int width, int height, uint format, uint type, int bufSize, void* data) => ((delegate* unmanaged[Stdcall]<int, int, int, int, uint, uint, int, void*, void>)pfn_glReadnPixels)(x, y, width, height, format, type, bufSize, data);
-    
-    private static nint pfn_glGetnUniformfv;
-    public static void glGetnUniformfv(uint program, int location, int bufSize, float* @params) => ((delegate* unmanaged[Stdcall]<uint, int, int, float*, void>)pfn_glGetnUniformfv)(program, location, bufSize, @params);
-    
-    private static nint pfn_glGetnUniformiv;
-    public static void glGetnUniformiv(uint program, int location, int bufSize, int* @params) => ((delegate* unmanaged[Stdcall]<uint, int, int, int*, void>)pfn_glGetnUniformiv)(program, location, bufSize, @params);
-    
-    private static nint pfn_glGetnUniformuiv;
-    public static void glGetnUniformuiv(uint program, int location, int bufSize, uint* @params) => ((delegate* unmanaged[Stdcall]<uint, int, int, uint*, void>)pfn_glGetnUniformuiv)(program, location, bufSize, @params);
-    
-    private static nint pfn_glMinSampleShading;
-    public static void glMinSampleShading(float value) => ((delegate* unmanaged[Stdcall]<float, void>)pfn_glMinSampleShading)(value);
-    
-    private static nint pfn_glPatchParameteri;
-    public static void glPatchParameteri(uint pname, int value) => ((delegate* unmanaged[Stdcall]<uint, int, void>)pfn_glPatchParameteri)(pname, value);
-    
-    private static nint pfn_glTexParameterIiv;
-    public static void glTexParameterIiv(uint target, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glTexParameterIiv)(target, pname, @params);
-    
-    private static nint pfn_glTexParameterIuiv;
-    public static void glTexParameterIuiv(uint target, uint pname, uint* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, uint*, void>)pfn_glTexParameterIuiv)(target, pname, @params);
-    
-    private static nint pfn_glGetTexParameterIiv;
-    public static void glGetTexParameterIiv(uint target, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetTexParameterIiv)(target, pname, @params);
-    
-    private static nint pfn_glGetTexParameterIuiv;
-    public static void glGetTexParameterIuiv(uint target, uint pname, uint* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, uint*, void>)pfn_glGetTexParameterIuiv)(target, pname, @params);
-    
-    private static nint pfn_glSamplerParameterIiv;
-    public static void glSamplerParameterIiv(uint sampler, uint pname, int* param) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glSamplerParameterIiv)(sampler, pname, param);
-    
-    private static nint pfn_glSamplerParameterIuiv;
-    public static void glSamplerParameterIuiv(uint sampler, uint pname, uint* param) => ((delegate* unmanaged[Stdcall]<uint, uint, uint*, void>)pfn_glSamplerParameterIuiv)(sampler, pname, param);
-    
-    private static nint pfn_glGetSamplerParameterIiv;
-    public static void glGetSamplerParameterIiv(uint sampler, uint pname, int* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, int*, void>)pfn_glGetSamplerParameterIiv)(sampler, pname, @params);
-    
-    private static nint pfn_glGetSamplerParameterIuiv;
-    public static void glGetSamplerParameterIuiv(uint sampler, uint pname, uint* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, uint*, void>)pfn_glGetSamplerParameterIuiv)(sampler, pname, @params);
-    
-    private static nint pfn_glTexBuffer;
-    public static void glTexBuffer(uint target, uint internalformat, uint buffer) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, void>)pfn_glTexBuffer)(target, internalformat, buffer);
-    
-    private static nint pfn_glTexBufferRange;
-    public static void glTexBufferRange(uint target, uint internalformat, uint buffer, int offset, int size) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, int, int, void>)pfn_glTexBufferRange)(target, internalformat, buffer, offset, size);
-    
-    private static nint pfn_glTexStorage3DMultisample;
-    public static void glTexStorage3DMultisample(uint target, int samples, uint internalformat, int width, int height, int depth, byte fixedsamplelocations) => ((delegate* unmanaged[Stdcall]<uint, int, uint, int, int, int, byte, void>)pfn_glTexStorage3DMultisample)(target, samples, internalformat, width, height, depth, fixedsamplelocations);
     
 }

@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 namespace SimulationFramework.Drawing.Shaders.Compiler.ControlFlow;
 
 // https://stackoverflow.com/questions/8199600/c-sharp-directed-graph-generating-library
-public static class DgmlBuilder
+internal static class DgmlBuilder
 {
     internal static void WriteDGML(string path, ControlFlowGraph graph)
     {
@@ -123,19 +123,19 @@ public static class DgmlBuilder
 
     public record struct Category(
         [property: XmlAttribute] string Id,
-        [property: XmlAttribute] string Background = null,
-        [property: XmlAttribute] string Stroke = null,
-        [property: XmlAttribute] string Label = null,
-        [property: XmlAttribute] string CanBeDataDriven = null,
-        [property: XmlAttribute] string CanLinkedNodesBeDataDriven = null,
-        [property: XmlAttribute] string IncomingActionLabel = null,
-        [property: XmlAttribute] string IsContainment = null,
-        [property: XmlAttribute] string OutgoingActionLabel = null
+        [property: XmlAttribute] string? Background = null,
+        [property: XmlAttribute] string? Stroke = null,
+        [property: XmlAttribute] string? Label = null,
+        [property: XmlAttribute] string? CanBeDataDriven = null,
+        [property: XmlAttribute] string? CanLinkedNodesBeDataDriven = null,
+        [property: XmlAttribute] string? IncomingActionLabel = null,
+        [property: XmlAttribute] string? IsContainment = null,
+        [property: XmlAttribute] string? OutgoingActionLabel = null
         );
 
     public record struct Property(
         [property: XmlAttribute] string Id,
-        [property: XmlAttribute] string Label,
+        [property: XmlAttribute] string? Label,
         [property: XmlAttribute] string DataType
         );
 }

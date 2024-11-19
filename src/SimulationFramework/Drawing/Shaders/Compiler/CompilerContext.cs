@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +11,6 @@ namespace SimulationFramework.Drawing.Shaders.Compiler;
 
 internal class CompilerContext
 {
-    private readonly Dictionary<Type, ShaderType> primitiveTypeMap;
-
     public ShaderCompilation Compilation { get; }
     public Queue<MethodBase> MethodQueue { get; } = [];
     public Dictionary<MethodBase, ShaderMethod> Methods { get; } = [];
@@ -26,11 +24,10 @@ internal class CompilerContext
     public Type ShaderType { get; }
     public MethodInfo EntryPoint { get; }
 
-    public CompilerContext(Type shaderType, MethodInfo entryPoint, Dictionary<Type, ShaderType> primitiveTypeMap)
+    public CompilerContext(Type shaderType, MethodInfo entryPoint)
     {
         ShaderType = shaderType;
         EntryPoint = entryPoint;
-        this.primitiveTypeMap = primitiveTypeMap;
         MethodQueue = [];
         
         Compilation = new();
@@ -103,11 +100,12 @@ internal class CompilerContext
             }
         }
 
-        if (IntrinsicIntercepts.TryGetValue(method, out MethodInfo? intrinsic))
+        if (IntrinsicIntercepts.TryGetValue(GetGenericMethodDefinition(method), out MethodInfo? intrinsic))
         {
             return intrinsic;
         }
 
+        // array Get() methods
         if ((method.DeclaringType?.IsArray ?? false) && method.Name == "Get")
         {
             int rank = method.DeclaringType.GetArrayRank();
@@ -124,7 +122,33 @@ internal class CompilerContext
             }
         }
 
+        // array Set() methods
+        if ((method.DeclaringType?.IsArray ?? false) && method.Name == "Set")
+        {
+            int rank = method.DeclaringType.GetArrayRank();
+            return IntrinsicMethods.Single(m => m.Name == "BufferStore" && m.GetParameters().Length == rank + 2);
+        }
+
         return null;
+    }
+
+    private MethodBase GetGenericMethodDefinition(MethodBase method)
+    {
+        if (method is MethodInfo methodInfo)
+        {
+            if (method.IsConstructedGenericMethod)
+            {
+                return methodInfo.GetGenericMethodDefinition();
+            }
+            else if (method.DeclaringType!.IsConstructedGenericType)
+            {
+                return methodInfo.DeclaringType!
+                    .GetGenericTypeDefinition()
+                    .GetMethod(method.Name, methodInfo.GetParameters().Select(p => p.ParameterType).ToArray())!;
+            }
+        }
+        
+        return method;
     }
 
     public ShaderType CompileType(Type type)
@@ -141,7 +165,7 @@ internal class CompilerContext
 
         if (type.IsByRef)
         {
-            return new ShaderReferenceType(CompileType(type.GetElementType()));
+            return new ShaderReferenceType(CompileType(type.GetElementType()!));
         }
 
         if (type.IsEnum)
@@ -149,9 +173,19 @@ internal class CompilerContext
             return CompileType(Enum.GetUnderlyingType(type));
         }
 
-        if (this.primitiveTypeMap.TryGetValue(type, out ShaderType? primitive))
+        if (Compiler.ShaderType.PrimitiveTypeMap.TryGetValue(type, out ShaderType? primitive))
         {
             return primitive;
+        }
+
+        if (type.IsArray && type.GetElementType()!.IsValueType)
+        {
+            return new ShaderArrayType(CompileType(type.GetElementType()!), type.GetArrayRank());
+        }
+
+        if (type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(ImmutableArray<>))
+        {
+            return new ShaderArrayType(CompileType(type.GetGenericArguments()[0]), 1);
         }
 
         if (type.IsValueType)
@@ -161,11 +195,6 @@ internal class CompilerContext
             Structs.Add(type, shaderType);
             Compilation.Structures.Add(shaderType.structure);
             return shaderType;
-        }
-
-        if (type.IsArray && type.GetElementType()!.IsValueType)
-        {
-            return new ShaderArrayType(CompileType(type.GetElementType()!));
         }
 
         throw new Exception($"type {type} is not supported!");

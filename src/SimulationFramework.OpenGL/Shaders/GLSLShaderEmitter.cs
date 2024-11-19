@@ -437,22 +437,23 @@ internal class GLSLShaderEmitter
                 continue;
             }
 
-            var fields = TextureShaderArray.TexturePackedField.PackFields(buffer, out _, out int bufferStride);
+            ShaderTypeLayout layout = ShaderTypeLayout.Get((buffer.BackingMember as FieldInfo)!.FieldType.GetElementType()!);
 
+            // var fields = TextureShaderArray.TexturePackedField.PackFields(buffer, out _, out int bufferStride);
             EmitType(elementType);
             writer.WriteLine($" _bufferload_{buffer.Name}(int index) {{");
             writer.Indent++;
 
-            writer.WriteLine($"ivec2 pos = ivec2((index * {bufferStride / 16}) % {graphics.MaxTextureSize}, (index * {bufferStride / 16}) / {graphics.MaxTextureSize});");
+            writer.WriteLine($"ivec2 pos = ivec2((index * {layout.bufferStride / 16}) % {graphics.MaxTextureSize}, (index * {layout.bufferStride / 16}) / {graphics.MaxTextureSize});");
             EmitType(elementType);
             writer.WriteLine($" result;");
 
             int fieldIndex = 0;
             int elementOffset = -1;
-            while (fieldIndex < fields.Length)
+            while (fieldIndex < layout.fields.Length)
             {
-                var field = fields[fieldIndex];
-                if (elementOffset != field.elementOffset)
+                var field = layout.fields[fieldIndex];
+                if (elementOffset != field.bufferOffset)
                 {
                     if (elementOffset >= 0)
                     {
@@ -465,11 +466,11 @@ internal class GLSLShaderEmitter
                     writer.WriteLine($"uvec4 value{elementOffset} = texelFetch({buffer.Name}, pos, 0);");
                 }
 
-                ReadOnlySpan<char> swizzle = "xyzw".AsSpan(field.channelOffset, field.channelCount);
+                ReadOnlySpan<char> swizzle = "xyzw".AsSpan(field.bufferOffset % 4, field.bufferSize);
 
                 string baseName = "result";
 
-                if (field.NestedName.Length > 0)
+                if (field.fullName.Length > 0)
                 {
                     baseName += ".";
                 }
@@ -481,7 +482,7 @@ internal class GLSLShaderEmitter
                     ShaderPrimitiveKind.Float4
                     )
                 {
-                    writer.WriteLine($"{baseName}{field.NestedName} = uintBitsToFloat(value{elementOffset}.{swizzle});");
+                    writer.WriteLine($"{baseName}{field.fullName} = uintBitsToFloat(value{elementOffset}.{swizzle});");
                 }
                 else if(field.primitiveKind is
                     ShaderPrimitiveKind.Int or
@@ -491,16 +492,16 @@ internal class GLSLShaderEmitter
                     )
                 {
                     string type = swizzle.Length > 1 ? $"ivec{swizzle.Length}" : "int";
-                    writer.WriteLine($"{baseName}{field.NestedName} = {type}(value{elementOffset}.{swizzle});");
+                    writer.WriteLine($"{baseName}{field.fullName} = {type}(value{elementOffset}.{swizzle});");
                 }
                 else if (field.primitiveKind is ShaderPrimitiveKind.Bool)
                 {
-                    writer.WriteLine($"{baseName}{field.NestedName} = value{elementOffset}.{swizzle} != 0;");
+                    writer.WriteLine($"{baseName}{field.fullName} = value{elementOffset}.{swizzle} != 0;");
                 }
                 else // uint
                 {
                     string type = swizzle.Length > 1 ? $"uvec{swizzle.Length}" : "uint";
-                    writer.WriteLine($"{baseName}{field.NestedName} = {type}(value{elementOffset}.{swizzle});");
+                    writer.WriteLine($"{baseName}{field.fullName} = {type}(value{elementOffset}.{swizzle});");
                 }
 
                 fieldIndex++;
@@ -644,7 +645,7 @@ internal class GLSLShaderEmitter
             {
                 writer.Write("layout(std430, binding=");
                 writer.Write(nextBufferSlot);
-                writer.Write(") buffer _buf_");
+                writer.Write(") buffer _sf_");
                 writer.Write(variable.Name);
                 writer.WriteLine(" {");
                 writer.Indent++;
@@ -656,6 +657,23 @@ internal class GLSLShaderEmitter
 
                 writer.Indent--;
                 writer.WriteLine("};");
+
+                // multidimensional arrays need their size uploaded independently + a Get() function
+                if (bufferType.Dimensions > 1)
+                {
+                    // length uniforms
+                    for (int i = 0; i < bufferType.Dimensions; i++)
+                    {
+                        writer.Write("uniform uint _sf_");
+                        writer.Write(variable.Name);
+                        writer.Write("_size_");
+                        writer.Write("xyzw"[i]);
+                        writer.WriteLine(";");
+                    }
+
+                    EmitMultidimensionalArrayGet(variable, bufferType);
+                    EmitMultidimensionalArraySet(variable, bufferType);
+                }
 
                 nextBufferSlot++;
             }
@@ -715,6 +733,140 @@ internal class GLSLShaderEmitter
         writer.WriteLine(';');
     }
 
+    private void EmitMultidimensionalArrayGet(ShaderVariable variable, ShaderArrayType bufferType)
+    {
+        EmitType(bufferType.ElementType);
+        writer.Write(" _sf_");
+        writer.Write(variable.Name);
+        writer.Write("_Get(");
+        for (int i = 0; i < bufferType.Dimensions; i++)
+        {
+            if (i != 0)
+            {
+                writer.Write(", ");
+            }
+
+            writer.Write("uint ");
+            writer.Write("xyzw"[i]);
+        }
+        writer.WriteLine(") {");
+        writer.Indent++;
+
+        writer.Write("if (");
+        for (int i = 0; i < bufferType.Dimensions; i++)
+        {
+            if (i != 0)
+            {
+                writer.Write(" || ");
+            }
+
+            char dim = "xyzw"[i];
+            writer.Write(dim);
+            writer.Write(" >= _sf_");
+            writer.Write(variable.Name);
+            writer.Write("_size_");
+            writer.Write(dim);
+        }
+        writer.WriteLine(") {");
+        writer.Indent++;
+        writer.Write("return ");
+        new DefaultExpression(bufferType.ElementType).Accept(this.expressionEmitter);
+        writer.WriteLine(";");
+        writer.Indent--;
+        writer.WriteLine("}");
+
+        writer.Write("return ");
+        EmitName(variable.Name);
+        writer.Write("[");
+        for (int i = bufferType.Dimensions - 1; i >= 0; i--)
+        {
+            writer.Write("xyzw"[i]);
+
+            for (int j = 0; j < i; j++)
+            {
+                writer.Write(" * _sf_");
+                writer.Write(variable.Name);
+                writer.Write("_size_");
+                writer.Write("xyzw"[j]);
+            }
+
+            if (i != 0)
+            {
+                writer.Write(" + ");
+            }
+        }
+        writer.WriteLine("];");
+
+        writer.Indent--;
+        writer.WriteLine("}");
+    }
+    
+    private void EmitMultidimensionalArraySet(ShaderVariable variable, ShaderArrayType bufferType)
+    {
+        writer.Write("void _sf_");
+        writer.Write(variable.Name);
+        writer.Write("_Set(");
+        for (int i = 0; i < bufferType.Dimensions; i++)
+        {
+            if (i != 0)
+            {
+                writer.Write(", ");
+            }
+
+            writer.Write("uint ");
+            writer.Write("xyzw"[i]);
+        }
+        writer.Write(", ");
+        EmitType(bufferType.ElementType); 
+        writer.WriteLine(" value) {");
+
+        writer.Indent++;
+
+        writer.Write("if (");
+        for (int i = 0; i < bufferType.Dimensions; i++)
+        {
+            if (i != 0)
+            {
+                writer.Write(" || ");
+            }
+
+            char dim = "xyzw"[i];
+            writer.Write(dim);
+            writer.Write(" >= _sf_");
+            writer.Write(variable.Name);
+            writer.Write("_size_");
+            writer.Write(dim);
+        }
+        writer.WriteLine(") {");
+        writer.Indent++;
+        writer.WriteLine("return;");
+        writer.Indent--;
+        writer.WriteLine("}");
+
+        EmitName(variable.Name);
+        writer.Write("[");
+        for (int i = bufferType.Dimensions - 1; i >= 0; i--)
+        {
+            writer.Write("xyzw"[i]);
+
+            for (int j = 0; j < i; j++)
+            {
+                writer.Write(" * _sf_");
+                writer.Write(variable.Name);
+                writer.Write("_size_");
+                writer.Write("xyzw"[j]);
+            }
+
+            if (i != 0)
+            {
+                writer.Write(" + ");
+            }
+        }
+        writer.WriteLine("] = value;");
+
+        writer.Indent--;
+        writer.WriteLine("}");
+    }
     private void EmitVertexDeclaration(ShaderType type, string baseName, ref int location)
     {
         if (type is ShaderStructureType structType)

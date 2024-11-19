@@ -320,10 +320,35 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
                 return expression;
             }
 
+            writer.Write("_sf_");
             expression.Arguments[0].Accept(this);
-            writer.Write('[');
-            expression.Arguments[1].Accept(this);
-            writer.Write(']');
+            writer.Write("_Get(");
+            for (int i = 1; i < expression.Arguments.Count; i++)
+            {
+                if (i != 1)
+                {
+                    writer.Write(", ");
+                }
+                expression.Arguments[i].Accept(this);
+            }
+            writer.Write(")");
+            return expression;
+        }
+
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.BufferStore))
+        {
+            writer.Write("_sf_");
+            expression.Arguments[0].Accept(this);
+            writer.Write("_Set(");
+            for (int i = 1; i < expression.Arguments.Count; i++)
+            {
+                if (i != 1)
+                {
+                    writer.Write(", ");
+                }
+                expression.Arguments[i].Accept(this);
+            }
+            writer.Write(")");
             return expression;
         }
 
@@ -359,6 +384,18 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
             return expression;
         }
 
+        if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.Col4) && expression.Arguments.Count == 3)
+        {
+            writer.Write("vec4(");
+            expression.Arguments[0].Accept(this);
+            writer.Write(", ");
+            expression.Arguments[1].Accept(this);
+            writer.Write(", ");
+            expression.Arguments[2].Accept(this);
+            writer.Write(", 1)");
+            return expression;
+        }
+
         writer.Write(expression.Intrinsic.Name switch
         {
             nameof(ShaderIntrinsics.DDX) => "dFdx",
@@ -366,8 +403,7 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
             nameof(ShaderIntrinsics.Vec2) => "vec2",
             nameof(ShaderIntrinsics.Vec3) => "vec3",
             nameof(ShaderIntrinsics.Vec4) => "vec4",
-            // nameof(ShaderIntrinsics.MakeColorF) => "vec4",
-            nameof(ShaderIntrinsics.BufferLength) => "length",
+            nameof(ShaderIntrinsics.Col4) => "vec4",
             nameof(ShaderIntrinsics.Ceiling) => "ceil",
             nameof(ShaderIntrinsics.Atan2) => "atan",
             nameof(ShaderIntrinsics.Truncate) => "trunc",

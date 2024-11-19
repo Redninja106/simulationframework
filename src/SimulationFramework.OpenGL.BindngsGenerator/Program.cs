@@ -109,6 +109,7 @@ HashSet<string> requiredFunctions = [
     "glUniform2fv",
     "glUniform3fv",
     "glUniform4fv",
+    "glUniform3ui",
     "glUniformMatrix3x2fv",
     "glGetUniformLocation",
     "glEnableVertexAttribArray",

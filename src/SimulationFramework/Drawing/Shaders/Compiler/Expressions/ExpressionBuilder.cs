@@ -466,7 +466,7 @@ internal class ExpressionBuilder
     {
         var arg = expressions.Pop();
 
-        var method = typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLength))!;
+        var method = typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLength), [typeof(object)])!;
         expressions.Push(new ShaderIntrinsicCall(method, context.CompileType(method.ReturnType), [arg]));
     }
 
@@ -854,7 +854,7 @@ internal class ExpressionBuilder
         var intrinsic = context.ResolveMethodToIntrinsic(method);
         if (intrinsic != null)
         {
-            // special case: BufferLoad and similar methods return a type parameters for flexibility.
+            // special case: BufferLoad and similar methods return a generic parameter for flexibility.
             // we compile the return type of the original method in that case.
             ShaderType returnType;
             if (intrinsic.ReturnType.IsGenericParameter && method is MethodInfo mi)

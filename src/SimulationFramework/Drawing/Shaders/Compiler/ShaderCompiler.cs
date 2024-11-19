@@ -3,7 +3,9 @@ using SimulationFramework.Drawing.Shaders.Compiler.ControlFlow;
 using SimulationFramework.Drawing.Shaders.Compiler.Disassembler;
 using SimulationFramework.Drawing.Shaders.Compiler.Expressions;
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.SymbolStore;
@@ -19,7 +21,27 @@ namespace SimulationFramework.Drawing.Shaders.Compiler;
 
 public class ShaderCompiler
 {
-    private Dictionary<Type, ShaderType> primitiveTypeMap = [];
+    public static ImmutableDictionary<Type, ShaderType> primitiveTypeMap = new Dictionary<Type, ShaderType>()
+    {
+        [typeof(void)] = ShaderType.Void,
+        [typeof(bool)] = ShaderType.Bool,
+        [typeof(sbyte)] = ShaderType.Int,
+        [typeof(short)] = ShaderType.Int,
+        [typeof(int)] = ShaderType.Int,
+        [typeof(byte)] = ShaderType.UInt,
+        [typeof(ushort)] = ShaderType.UInt,
+        [typeof(uint)] = ShaderType.UInt,
+        [typeof(float)] = ShaderType.Float,
+        [typeof(Vector2)] = ShaderType.Float2,
+        [typeof(Vector3)] = ShaderType.Float3,
+        [typeof(Vector4)] = ShaderType.Float4,
+        [typeof(ColorF)] = ShaderType.Float4,
+        [typeof(Color)] = ShaderType.UInt,
+        [typeof(Matrix4x4)] = ShaderType.Matrix4x4,
+        [typeof(Matrix3x2)] = ShaderType.Matrix3x2,
+        [typeof(ITexture)] = ShaderType.Texture,
+        [typeof(IDepthMask)] = ShaderType.DepthMask,
+    }.ToImmutableDictionary();
 
     public static bool DumpShaders { get; set; } = false;
 
@@ -30,31 +52,13 @@ public class ShaderCompiler
 
     public ShaderCompiler()
     {
-        primitiveTypeMap[typeof(void)] = ShaderType.Void;
-        primitiveTypeMap[typeof(bool)] = ShaderType.Bool;
-        primitiveTypeMap[typeof(sbyte)] = ShaderType.Int;
-        primitiveTypeMap[typeof(short)] = ShaderType.Int;
-        primitiveTypeMap[typeof(int)] = ShaderType.Int;
-        primitiveTypeMap[typeof(byte)] = ShaderType.UInt;
-        primitiveTypeMap[typeof(ushort)] = ShaderType.UInt;
-        primitiveTypeMap[typeof(uint)] = ShaderType.UInt;
-        primitiveTypeMap[typeof(float)] = ShaderType.Float;
-        primitiveTypeMap[typeof(Vector2)] = ShaderType.Float2;
-        primitiveTypeMap[typeof(Vector3)] = ShaderType.Float3;
-        primitiveTypeMap[typeof(Vector4)] = ShaderType.Float4;
-        primitiveTypeMap[typeof(ColorF)] = ShaderType.Float4;
-        primitiveTypeMap[typeof(Color)] = ShaderType.UInt;
-        primitiveTypeMap[typeof(Matrix4x4)] = ShaderType.Matrix4x4;
-        primitiveTypeMap[typeof(Matrix3x2)] = ShaderType.Matrix3x2;
-        primitiveTypeMap[typeof(ITexture)] = ShaderType.Texture;
-        primitiveTypeMap[typeof(IDepthMask)] = ShaderType.DepthMask;
     }
 
     public ShaderCompilation Compile(Shader shader)
     {
         var shaderType = shader.GetType();
         ShaderKind kind;
-
+        
         MethodInfo entryPoint;
         if (shader is CanvasShader)
         {
@@ -85,12 +89,12 @@ public class ShaderCompiler
             throw new NotSupportedException(shader.GetType().Name);
         }
 
-        CompilerContext context = new(shaderType, entryPoint, primitiveTypeMap);
+        CompilerContext context = new(shaderType, entryPoint);
         context.Compilation.Kind = kind;
 
         foreach (var f in shaderType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
         {
-            // we need to get the field using the type that declared it so dictionary lookups don't fail (different ReflectedType values casue issues)
+            // we need to get the field using the type that declared it so dictionary lookups don't fail (different ReflectedType values cause issues)
             var field = f.DeclaringType!.GetField(f.Name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)!;
 
             ShaderVariableKind varKind = ShaderVariableKind.Uniform;
@@ -186,6 +190,15 @@ public class ShaderCompiler
         shaderMethod.Locals =  locals;
         shaderMethod.Parameters = parameters;
         shaderMethod.ReturnType = context.CompileType(expressionBuilder.ReturnType);
+    }
+
+    public static void LogShaderSource(string kind, string source)
+    {
+        if (DumpShaders)
+        {
+            Console.WriteLine($"{new string('=', 20)} {kind} {new string('=', 20)}");
+            Console.WriteLine(string.Join("\n", source.Split('\n').Select((s, i) => $"{i + 1,-3:d}|{s}")));
+        }
     }
 
     class RedundantVariableFinder : ShaderExpressionVisitor

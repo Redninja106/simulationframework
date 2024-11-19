@@ -1,6 +1,7 @@
 ﻿using SimulationFramework.Drawing.Shaders;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Numerics;
@@ -8,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SimulationFramework.Drawing.Shaders;
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
 /// <summary>
 /// Provides built-in shader methods.
@@ -85,7 +88,13 @@ public static class ShaderIntrinsics
 
     [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(Vector2))]
     public static Vector2 Vec2(float x, float y) => new(x, y);
-    
+
+    [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(ColorF))]
+    public static ColorF Col4(float r, float g, float b, float a) => new(r, g, b, a);
+
+    [ShaderIntrinsic, ShaderIntercept(ShaderInterceptAttribute.ConstructorName, typeof(ColorF))]
+    public static ColorF Col4(float r, float g, float b) => new(r, g, b);
+
     #endregion
 
     #region Equality
@@ -920,7 +929,7 @@ public static class ShaderIntrinsics
     {
         if (texture.Filter == TextureFilter.Point)
         {
-            return texture.GetPixel((int)MathF.Floor(position.X), (int)MathF.Floor(position.Y)).ToColorF();
+            return texture[(int)MathF.Floor(position.X), (int)MathF.Floor(position.Y)].ToColorF();
         }
         else if (texture.Filter == TextureFilter.Linear)
         {
@@ -930,14 +939,14 @@ public static class ShaderIntrinsics
             int bottom = (int)MathF.Ceiling(position.Y);
 
             ColorF a = SimulationFramework.ColorF.Lerp(
-                texture.GetPixel(left, top).ToColorF(), 
-                texture.GetPixel(left, bottom).ToColorF(),
+                texture[left, top].ToColorF(), 
+                texture[left, bottom].ToColorF(),
                 Fract(position.Y)
                 );
 
             ColorF b = SimulationFramework.ColorF.Lerp(
-                texture.GetPixel(right, top).ToColorF(),
-                texture.GetPixel(right, bottom).ToColorF(),
+                texture[right, top].ToColorF(),
+                texture[right, bottom].ToColorF(),
                 Fract(position.Y)
                 );
 
@@ -952,13 +961,13 @@ public static class ShaderIntrinsics
     [ShaderIntrinsic]
     public static ColorF TextureLoad(ITexture texture, int x, int y)
     {
-        return texture.GetPixel(x, y).ToColorF();
+        return texture[x, y].ToColorF();
     }
 
     [ShaderIntrinsic]
     public static void TextureStore(ITexture texture, int x, int y, ColorF color)
     {
-        texture.GetPixel(x, y) = color.ToColor();
+        texture[x, y] = color.ToColor();
     }
 
     /// <summary>
@@ -993,6 +1002,7 @@ public static class ShaderIntrinsics
     }
 
     [ShaderIntrinsic]
+    [ShaderIntercept("Length", typeof(ImmutableArray<>), ShaderInterceptAttribute.InterceptKind.Property)]
     public static int BufferLength(object buffer, int dimension)
     {
         if (buffer is Array arr)
@@ -1007,6 +1017,7 @@ public static class ShaderIntrinsics
     /// <param name="buffer">The buffer to load the value from.</param>
     /// <param name="element">The index of the element in the buffer.</param>
     [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.GetItemName, typeof(ImmutableArray<>), ShaderInterceptAttribute.InterceptKind.Method, IsInstanceMethod = true)]
     public static T BufferLoad<T>(object buffer, int element)
     {
         if (buffer is T[] arr)
@@ -1024,6 +1035,8 @@ public static class ShaderIntrinsics
     /// <param name="elementX">The x index of the element in the buffer.</param>
     /// <param name="elementY">The y index of the element in the buffer.</param>
     [ShaderIntrinsic]
+
+
     public static T BufferLoad<T>(object buffer, int elementX, int elementY)
     {
         if (buffer is T[,] arr)
@@ -1099,4 +1112,24 @@ public static class ShaderIntrinsics
     }
 
     #endregion
+
+    ///// <summary>
+    ///// Inserts platform-specific shader source code into the shader. This method should only be used when necessary.
+    ///// </summary>
+    ///// <param name="source">The shader source to insert. The expression will be checked at shader compile time to return type <typeparamref name="T"/>.</param>
+    //[ShaderIntrinsic]
+    //public static T InlineSource<T>(string source)
+    //{
+    //    throw new NotSupportedException();
+    //}
+
+    ///// <summary>
+    ///// Inserts platform-specific shader source code into the shader. This method should only be used when necessary.
+    ///// </summary>
+    ///// <param name="source">The shader source to insert.</param>
+    //[ShaderIntrinsic]
+    //public static void InlineSource(string source)
+    //{
+    //    throw new NotSupportedException();
+    //}
 }

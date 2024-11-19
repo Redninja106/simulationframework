@@ -55,7 +55,7 @@ internal class ControlFlowGraph : ControlFlowNode
         {
             try
             {
-                DgmlBuilder.WriteDGML(Disassembly.Method.DeclaringType.Name + "_" + Disassembly.Method.Name, this);
+                DgmlBuilder.WriteDGML(Disassembly.Method.DeclaringType!.Name + "_" + Disassembly.Method.Name, this);
             }
             catch
             {
@@ -305,7 +305,7 @@ internal class ControlFlowGraph : ControlFlowNode
         // immediate dominators
         foreach (var node in Nodes)
         {
-            node.immediatePostDominator = null;
+            node.immediatePostDominator = null!;
             if (node == ExitNode)
                 continue;
 
@@ -413,7 +413,7 @@ internal class ControlFlowGraph : ControlFlowNode
         HashSet<ControlFlowNode> visited = new();
 
         workingQueue.Enqueue(startNode);
-        while (workingQueue.TryDequeue(out ControlFlowNode node))
+        while (workingQueue.TryDequeue(out ControlFlowNode? node))
         {
             if (predicate(node))
                 return node;

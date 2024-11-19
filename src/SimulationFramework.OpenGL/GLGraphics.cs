@@ -8,6 +8,7 @@ using SimulationFramework.OpenGL.Geometry;
 using SimulationFramework.OpenGL.Geometry.Streams;
 using SimulationFramework.OpenGL.Geometry.Writers;
 using SimulationFramework.OpenGL.Shaders;
+using SimulationFramework.OpenGL.Shaders.Compute;
 using StbImageSharp;
 using System;
 using System.Collections.Generic;
@@ -27,10 +28,12 @@ public unsafe class GLGraphics : IGraphicsProvider
     private GLCanvas frameCanvas;
     private GLFrame frame;
 
-    private readonly Dictionary<Type, ComputeShaderEffect> computeShaders = [];
+    private readonly Dictionary<Type, ComputeShaderProgram> computeShaders = [];
     private readonly Dictionary<(Type, Type?), ProgrammableShaderProgram> shaderPrograms = [];
     private readonly Dictionary<string, GLFont> systemFontCache = [];
     internal ShaderCompiler ShaderCompiler = new();
+
+    internal ShaderArrayManager arrayManager;
 
     internal GeometryStreamCollection streams;
     internal GeometryBufferPool bufferPool;
@@ -85,6 +88,8 @@ public unsafe class GLGraphics : IGraphicsProvider
         streams = new(this);
         effects = new(this, shaderVersion);
         writers = new();
+
+        this.arrayManager = new(this);
     }
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
@@ -224,16 +229,31 @@ public unsafe class GLGraphics : IGraphicsProvider
         }
     }
 
-    public void Dispatch(ComputeShader computeShader, int threadCountI, int threadCountJ, int threadCountK)
+    public void Dispatch(ComputeShader computeShader, int threadCountX, int threadCountY, int threadCountZ)
     {
         if (!computeShaders.TryGetValue(computeShader.GetType(), out var glShader))
         {
             var compilation = ShaderCompiler.Compile(computeShader);
-            glShader = new ComputeShaderEffect(computeShader.GetType(), shaderVersion, compilation);
+
+            ThreadGroupSizeAttribute? groupSize = compilation.EntryPoint.BackingMethod?.GetCustomAttribute<ThreadGroupSizeAttribute>();
+            if (groupSize != null)
+            {
+                if (groupSize.CountX < 1 || groupSize.CountY < 1 || groupSize.CountZ < 1)
+                {
+                    throw new Exception("thread count must be greater than or equal to 1 in all dimensions!");
+                }
+
+                glShader = new ExplicitGroupSizeComputeShaderProgram(shaderVersion, compilation, groupSize);
+            }
+            else
+            {
+                glShader = new AutoGroupSizeComputeShaderProgram(shaderVersion, compilation);
+            }
+
             computeShaders[computeShader.GetType()] = glShader;
         }
 
-        glShader.Dispatch(computeShader, threadCountI, threadCountJ, threadCountK);
+        glShader.GetEffect(computeShader, threadCountX, threadCountY, threadCountZ).Dispatch(computeShader, threadCountX, threadCountY, threadCountZ);
     }
 
     public IMask CreateMask(int width, int height)
@@ -256,5 +276,19 @@ public unsafe class GLGraphics : IGraphicsProvider
         {
             return GLGeometry.CreateIndexed(this, vertices, indices);
         }
+    }
+
+    public void UploadArray(Array array)
+    {
+        ShaderArray shaderArray = arrayManager.Get(array);
+        arrayManager.UploadArray(array);
+        shaderArray.Synchronized = false;
+    }
+
+    public void SyncArray(Array array)
+    {
+        ShaderArray shaderArray = arrayManager.Get(array);
+        arrayManager.SyncArray(array);
+        shaderArray.Synchronized = true;
     }
 }

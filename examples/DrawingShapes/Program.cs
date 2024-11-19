@@ -5,6 +5,7 @@ using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders.Compiler;
 using SimulationFramework.Input;
 using SimulationFramework.OpenGL;
+using System.Diagnostics;
 using System.Numerics;
 
 Start<Program>(new DesktopPlatform());
@@ -36,7 +37,7 @@ partial class Program : Simulation
               50 * Angle.ToVector(.4f * MathF.Tau),
               50 * Angle.ToVector(.6f * MathF.Tau),
               50 * Angle.ToVector(.8f * MathF.Tau),
-         });
+        });
 
         canvas.Translate(150, 0);
         canvas.Fill(Color.Red);

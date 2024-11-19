@@ -3,24 +3,25 @@ using SimulationFramework.Drawing.Shaders;
 using SimulationFramework.Drawing.Shaders.Compiler;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Xml.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SimulationFramework.OpenGL;
 
 class UniformHandler
 {
-    private readonly Dictionary<ShaderVariable, int> uniformLocations = [];
-    private readonly Dictionary<ShaderVariable, ShaderArray> buffers = [];
+    private readonly Dictionary<ShaderVariable, int> variableUniformLocations = [];
+    private readonly Dictionary<string, int> stringUniformLocations = [];
     private readonly uint program;
     
     internal int textureSlot, bufferSlot;
+
+    public uint ShaderProgram => program;
 
     public UniformHandler(uint program)
     {
@@ -70,58 +71,51 @@ class UniformHandler
                 }
                 break;
             case ShaderArrayType arrayType:
-                SetArrayUniform(uniform, arrayType, value);
+                SetArrayUniform(uniform, value);
                 break;
         }
     }
 
-    private unsafe void SetArrayUniform(ShaderVariable uniform, ShaderArrayType arrayType, object value)
+    private unsafe void SetArrayUniform(ShaderVariable uniform, object? value)
     {
         var graphics = Application.GetComponent<GLGraphics>();
-        if (!buffers.TryGetValue(uniform, out ShaderArray? shaderArray))
+
+        Array? array = ShaderArrayManager.ResolveArray(value);
+
+        if (array is null)
         {
             if (graphics.HasGLES31)
             {
-                shaderArray = new SSBOShaderArray(program, uniform);
+                glBindBufferBase(GL_SHADER_STORAGE_BUFFER, (uint)bufferSlot, 0);
+                glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+                bufferSlot++;
             }
             else
             {
-                shaderArray = new TextureShaderArray(program, uniform);
+                glActiveTexture(GL_TEXTURE0 + (uint)textureSlot);
+                glBindTexture(GL_TEXTURE_2D, 0);
+                glUniform1i(GetUniformLocation(uniform), textureSlot);
+                glUniform1i(GetUniformLocation(uniform, $"_{uniform.Name}_length"), 0);
+                textureSlot++;
             }
-            buffers[uniform] = shaderArray;
+            return;
         }
 
-        Array array = (Array)value;
-        GCHandle arrayHandle = GCHandle.Alloc(array, GCHandleType.Pinned);
-        try
+        ShaderArray shaderArray = graphics.arrayManager.Get(array);
+        if (shaderArray.Synchronized)
         {
-            if (array != null)
-            {
-                void* ptr = Unsafe.AsPointer(ref MemoryMarshal.GetArrayDataReference(array));
-                shaderArray.WriteData(ptr, array.Length);
-                shaderArray.Bind(this);
-            }
-            else
-            {
-                if (graphics.HasGLES31)
-                {
-                    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, (uint)bufferSlot, 0);
-                    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-                    bufferSlot++;
-                }
-                else
-                {
-                    glActiveTexture(GL_TEXTURE0 + (uint)textureSlot);
-                    glBindTexture(GL_TEXTURE_2D, 0);
-                    glUniform1i(GetUniformLocation(uniform), textureSlot);
-                    glUniform1i(GetUniformLocation(uniform, $"_{uniform.Name}_length"), 0);
-                    textureSlot++;
-                }
-            }
+            graphics.arrayManager.UploadArray(array);
         }
-        finally
+
+        shaderArray.Bind(uniform, this);
+
+        if (array.Rank > 1)
         {
-            arrayHandle.Free();
+            for (int i = 0; i < array.Rank; i++)
+            {
+                int location = GetUniformLocation($"_sf_{uniform.Name}_size_{"xyzw"[i]}");
+                glUniform1ui(location, (uint)array.GetLength(i));
+            }
         }
     }
 
@@ -194,7 +188,7 @@ class UniformHandler
 
     internal unsafe int GetUniformLocation(ShaderVariable uniform, string? nameOverride = null)
     {
-        if (nameOverride != null && uniformLocations.TryGetValue(uniform, out int result))
+        if (nameOverride == null && variableUniformLocations.TryGetValue(uniform, out int result))
         {
             return result;
         }
@@ -205,7 +199,7 @@ class UniformHandler
             fixed (byte* namePtr = Encoding.UTF8.GetBytes(nameOverride ?? ("_buf_" + uniform.Name.value)))
             {
                 int index = (int)glGetProgramResourceIndex(program, GL_SHADER_STORAGE_BLOCK, namePtr);
-                uniformLocations[uniform] = index;
+                variableUniformLocations[uniform] = index;
                 return index;
             }
         }
@@ -213,14 +207,27 @@ class UniformHandler
         fixed (byte* namePtr = Encoding.UTF8.GetBytes(nameOverride ?? uniform.Name.value))
         {
             result = glGetUniformLocation(program, namePtr);
-            uniformLocations[uniform] = result;
+            variableUniformLocations[uniform] = result;
         }
 
         return result;
     }
 
-    internal ShaderArray GetShaderArray(ShaderVariable uniform)
+    public unsafe int GetUniformLocation(string name)
     {
-        return buffers[uniform];
+        int location;
+
+        if (stringUniformLocations.TryGetValue(name, out location))
+        {
+            return location;
+        }
+
+        fixed (byte* namePtr = Encoding.UTF8.GetBytes(name))
+        {
+            location = glGetUniformLocation(program, namePtr);
+            stringUniformLocations[name] = location;
+        }
+
+        return location;
     }
 }

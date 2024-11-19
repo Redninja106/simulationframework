@@ -45,11 +45,3 @@ class GeometryEffectCollection
         throw new NotImplementedException();
     }
 }
-
-class EffectPool
-{
-    public void Rent()
-    {
-
-    }
-}

@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="StbImageSharp" Version="2.27.14" />
+    <PackageReference Include="StbImageSharp" Version="2.30.15" />
     <PackageReference Include="StbImageWriteSharp" Version="1.16.7" />
     <PackageReference Include="StbTrueTypeSharp" Version="1.26.12" />
   </ItemGroup>

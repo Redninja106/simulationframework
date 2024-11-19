@@ -14,46 +14,47 @@ unsafe class TextureShaderArray : ShaderArray
     private uint tex;
     private int sizeInElements;
     private byte[] bufferData;
-    private ShaderVariable uniform;
-    private int lengthVarLocation;
+    // private ShaderVariable uniform;
+    private int? arrayLengthUniformLocation;
 
-    public unsafe TextureShaderArray(uint program, ShaderVariable uniform) : base(program, uniform)
+    public unsafe TextureShaderArray()
     {
-        this.uniform = uniform;
+        // this.uniform = uniform;
 
         fixed (uint* texPtr = &tex)
         {
             glGenTextures(1, texPtr);
         }
 
-        fixed (byte* namePtr = Encoding.UTF8.GetBytes($"_{uniform.Name}_length"))
-        {
-            lengthVarLocation = glGetUniformLocation(program, namePtr);
-        }
+        // fixed (byte* namePtr = Encoding.UTF8.GetBytes($"_{uniform.Name}_length"))
+        // {
+        //     lengthVarLocation = glGetUniformLocation(program, namePtr);
+        // }
     }
 
-    public override unsafe void Bind(UniformHandler handler)
+    public override unsafe void Bind(ShaderVariable uniform, UniformHandler handler)
     {
         var slot = handler.textureSlot++;
         glActiveTexture(GL_TEXTURE0 + (uint)slot);
         glBindTexture(GL_TEXTURE_2D, tex);
         glUniform1i(handler.GetUniformLocation(uniform), slot);
-        glUniform1ui(lengthVarLocation, (uint)sizeInElements);
+
+        if (arrayLengthUniformLocation is null)
+        {
+            fixed (byte* namePtr = Encoding.UTF8.GetBytes($"_{uniform.Name}_length"))
+            {
+                arrayLengthUniformLocation = glGetUniformLocation(handler.ShaderProgram, namePtr);
+            }
+        }
+
+        glUniform1ui(arrayLengthUniformLocation.Value, (uint)sizeInElements);
     }
 
-    protected override Field[] CreateFields(uint program, ShaderVariable uniform, out int arrayStride, out int bufferStride)
-    {
-        return TexturePackedField.PackFields(uniform, out arrayStride, out bufferStride)
-            .Select(f => f.GetField())
-            .ToArray();
-    }
-
-
-    private void SetTextureSize(int capacityInElements)
+    private void SetTextureSize(ShaderTypeLayout layout, int capacityInElements)
     {
         var graphics = Application.GetComponent<GLGraphics>();
 
-        int capacityInTexels = capacityInElements * (bufferStride / 16);
+        int capacityInTexels = capacityInElements * (layout.bufferStride / 16);
 
         int width = Math.Min(capacityInTexels, graphics.MaxTextureSize);
         int height = (int)MathF.Ceiling(capacityInTexels / (float)graphics.MaxTextureSize);
@@ -64,18 +65,18 @@ unsafe class TextureShaderArray : ShaderArray
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, (int)GL_NEAREST);
 
         sizeInElements = capacityInElements;
-        bufferData = new byte[sizeInElements * bufferStride];
+        bufferData = new byte[sizeInElements * layout.bufferStride];
     }
 
-    public override unsafe void ReadData(void* outData, int count)
+    public override unsafe void ReadData(ShaderTypeLayout layout, void* outData, int count)
     {
         throw new NotSupportedException("shader array reads not supported!");
     }
 
-    public override unsafe void WriteData(void* arrayData, int count)
+    public override unsafe void WriteData(ShaderTypeLayout layout, void* arrayData, int count)
     {
         if (sizeInElements < count)
-            SetTextureSize(count);
+            SetTextureSize(layout, count);
 
         sizeInElements = count;
 
@@ -84,7 +85,7 @@ unsafe class TextureShaderArray : ShaderArray
 
         var graphics = Application.GetComponent<GLGraphics>();
 
-        int capacityInTexels = count * (bufferStride / 16);
+        int capacityInTexels = count * (layout.bufferStride / 16);
 
         int width = Math.Min(capacityInTexels, graphics.MaxTextureSize);
         int height = (int)MathF.Ceiling(capacityInTexels / (float)graphics.MaxTextureSize);
@@ -92,7 +93,7 @@ unsafe class TextureShaderArray : ShaderArray
         glBindTexture(GL_TEXTURE_2D, this.tex);
         fixed (byte* bufferData = this.bufferData)
         {
-            CopyArrayToBuffer(arrayData, bufferData, count);
+            layout.CopyArrayToBuffer(arrayData, bufferData, count);
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RGBA_INTEGER, GL_UNSIGNED_INT, bufferData);
         }
     }
@@ -108,13 +109,13 @@ unsafe class TextureShaderArray : ShaderArray
         public ShaderPrimitiveKind primitiveKind;
         public ShaderVariable Variable;
 
-        public Field GetField()
+        public ShaderTypeLayout.Field GetField()
         {
             return new()
             {
                 arrayOffset = arrayOffset,
                 bufferOffset = elementOffset * 16 + channelOffset * 4,
-                size = channelCount * 4,
+                arraySize = channelCount * 4,
             };
         }
 
@@ -162,15 +163,22 @@ unsafe class TextureShaderArray : ShaderArray
                         ShaderPrimitiveKind.Bool => 1,
                         ShaderPrimitiveKind.Float => 1,
                         ShaderPrimitiveKind.Float2 => 2,
-                        ShaderPrimitiveKind.Float3 => 3,
+                        ShaderPrimitiveKind.Float3 => 4,
                         ShaderPrimitiveKind.Float4 => 4,
                         ShaderPrimitiveKind.Int => 1,
                         ShaderPrimitiveKind.Int2 => 2,
-                        ShaderPrimitiveKind.Int3 => 3,
+                        ShaderPrimitiveKind.Int3 => 4,
                         ShaderPrimitiveKind.Int4 => 4,
                         _ => throw new($"type {primitive} not allowed in array!"),
                     };
 
+                    // align to element size
+                    if (currentChannel % channels != 0)
+                    {
+                        currentChannel += channels - (currentChannel % channels);
+                    }
+
+                    // go to next vec4 if needed
                     if (currentChannel + channels > 4)
                     {
                         currentElement++;

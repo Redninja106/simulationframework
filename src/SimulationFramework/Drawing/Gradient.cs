@@ -1,4 +1,5 @@
 ﻿using SimulationFramework.Drawing.Shaders;
+using System.Collections.Immutable;
 using System.Numerics;
 
 namespace SimulationFramework.Drawing;
@@ -11,14 +12,26 @@ public abstract class Gradient : CanvasShader
     /// <summary>
     /// The gradient's stops.
     /// </summary>
-    public GradientStop[] Stops;
+    public ImmutableArray<GradientStop> Stops;
 
     /// <summary>
     /// The gradient's tile mode.
     /// </summary>
     public WrapMode TileMode;
 
+    /// <summary>
+    /// Creates a gradient from a <see cref="GradientStop"/> array and a <see cref="TileMode"/> value.
+    /// </summary>
     public Gradient(GradientStop[] stops, WrapMode tileMode)
+    {
+        Stops = stops.ToImmutableArray();
+        TileMode = tileMode;
+    }
+
+    /// <summary>
+    /// Creates a gradient from an <see cref="ImmutableArray{T}"/> of <see cref="GradientStop"/> and a <see cref="TileMode"/> value.
+    /// </summary>
+    public Gradient(ImmutableArray<GradientStop> stops, WrapMode tileMode)
     {
         Stops = stops;
         TileMode = tileMode;
@@ -39,6 +52,9 @@ public abstract class Gradient : CanvasShader
         return stops;
     }
 
+    /// <summary>
+    /// Computes the color at a position on the gradient. This method may be called from shaders.
+    /// </summary>
     protected ColorF GetGradientColor(float gradientProgress)
     {
         if (TileMode == WrapMode.Clamp)

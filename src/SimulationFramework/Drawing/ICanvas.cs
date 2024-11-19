@@ -70,14 +70,30 @@ public interface ICanvas
     /// Configures the canvas to fill shapes using the provided shader.
     /// </summary>
     void Fill(CanvasShader shader);
+
+    /// <summary>
+    /// Configures the canvas to fill shapes using the provided canvas and vertex shaders.
+    /// </summary>
     void Fill(CanvasShader shader, VertexShader vertexShader);
 
     /// <summary>
     /// Configures the canvas to outline shapes with the provided color.
     /// </summary>
     void Stroke(Color color) => Stroke(color.ToColorF());
+
+    /// <summary>
+    /// Configures the canvas to outline shapes with the provided color.
+    /// </summary>
     void Stroke(ColorF color);
+
+    /// <summary>
+    /// Configures the canvas to outline shapes using the provided shader.
+    /// </summary>
     void Stroke(CanvasShader shader);
+
+    /// <summary>
+    /// Configures the canvas to outline shapes using the provided canvas and vertex shaders.
+    /// </summary>
     void Stroke(CanvasShader shader, VertexShader vertexShader);
 
     /// <summary>
@@ -106,6 +122,12 @@ public interface ICanvas
     /// <param name="p2">The second point of the line.</param>
     void DrawLine(Vector2 p1, Vector2 p2);
 
+    /// <summary>
+    /// Draws an list of lines using a custom vertex type.
+    /// <para>
+    /// This method requires a custom vertex shader be set that accepts vertices of type <typeparamref name="TVertex"/>.
+    /// </para>
+    /// </summary>
     public void DrawLines<TVertex>(ReadOnlySpan<TVertex> vertices) where TVertex : unmanaged;
 
     /// <summary>
@@ -311,11 +333,32 @@ public interface ICanvas
     /// <param name="vertices">The list of triangles to draw. Every three vertices make a triangle.</param>
     void DrawTriangles<TVertex>(ReadOnlySpan<TVertex> vertices)
         where TVertex : unmanaged;
+
+    /// <summary>
+    /// Draws an array of indexed lines using a custom vertex type.
+    /// <para>
+    /// This method requires a custom vertex shader be set that accepts vertices of type <typeparamref name="TVertex"/>.
+    /// </para>
+    /// </summary>
     void DrawTriangles<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices)
         where TVertex : unmanaged;
+
+    /// <summary>
+    /// Draws multiples instances of an array of triangles using a custom vertex type.
+    /// <para>
+    /// This method requires a custom vertex shader be set that accepts vertices of type <typeparamref name="TVertex"/> and instances of type <typeparamref name="TInstance"/>.
+    /// </para>
+    /// </summary>
     void DrawInstancedTriangles<TVertex, TInstance>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<TInstance> instances)
         where TVertex : unmanaged
         where TInstance : unmanaged;
+
+    /// <summary>
+    /// Draws multiples instances of an array of indexed triangles using a custom vertex type.
+    /// <para>
+    /// This method requires a custom vertex shader be set that accepts vertices of type <typeparamref name="TVertex"/> and instances of type <typeparamref name="TInstance"/>.
+    /// </para>
+    /// </summary>
     void DrawInstancedTriangles<TVertex, TInstance>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices, ReadOnlySpan<TInstance> instances)
         where TVertex : unmanaged
         where TInstance : unmanaged;
@@ -459,21 +502,21 @@ public interface ICanvas
         where TInstance : unmanaged;
 
     /// <summary>
-    /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
+    /// Draws a set of characters to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="text">The text to draw.</param>
     /// <param name="size">The size of the text.</param>
-    /// <param name="baselineX">The X position of the text.</param>
-    /// <param name="baselineY">The Y position of the text.</param>
+    /// <param name="baselineX">The X baseline of the text. This is usually the bottom left corner. Some letters may extend below the baseline.</param>
+    /// <param name="baselineY">The Y baseline of the text. This is usually the bottom left corner. Some letters may extend below the baseline.</param>
     /// <param name="style">The style of the text.</param>
     sealed Vector2 DrawText(string text, float size, float baselineX, float baselineY, TextStyle style = TextStyle.Regular) => DrawText(text, size, new Vector2(baselineX, baselineY), style);
 
     /// <summary>
-    /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
+    /// Draws a set of characters to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="text">The text to draw.</param>
     /// <param name="size">The size of the text.</param>
-    /// <param name="baseline">The baseline for drawing the text. </param>
+    /// <param name="baseline">The baseline of the text. This is usually the bottom left corner. Some letters may extend below the baseline.</param>
     /// <param name="style">The style of the text.</param>
     sealed Vector2 DrawText(string text, float size, Vector2 baseline, TextStyle style = TextStyle.Regular)
     {
@@ -483,44 +526,79 @@ public interface ICanvas
     }
 
     /// <summary>
-    /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
+    /// Draws a set of characters to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="text">The text to draw.</param>
     /// <param name="size">The size of the text.</param>
-    /// <param name="baselineX">The X position of the text.</param>
-    /// <param name="baselineY">The Y position of the text.</param>
+    /// <param name="baselineX">The X baseline of the text. This is usually the bottom left corner. Some letters may extend below the baseline.</param>
+    /// <param name="baselineY">The Y baseline of the text. This is usually the bottom left corner. Some letters may extend below the baseline.</param>
     /// <param name="style">The style of the text.</param>
     sealed Vector2 DrawText(ReadOnlySpan<char> text, float size, float baselineX, float baselineY, TextStyle style = TextStyle.Regular)
     {
-        return DrawText(text, size, new Vector2(baselineX, baselineY));
+        return DrawText(text, size, new Vector2(baselineX, baselineY), style);
     }
 
     /// <summary>
-    /// Draws a set of text to the screen using the current font, transform, clipping, and drawing settings.
+    /// Draws a set of characters to the screen using the current font, transform, clipping, and drawing settings.
     /// </summary>
     /// <param name="text">The text to draw.</param>
     /// <param name="size">The size of the text.</param>
-    /// <param name="baseline">The baseline of the text.</param>
+    /// <param name="baseline">The baseline of the text. This is usually the bottom left corner. Some letters may extend below the baseline.</param>
     /// <param name="style">The style of the text.</param>
+    /// <returns>The new baseline after the text is rendered.</returns>
     Vector2 DrawText(ReadOnlySpan<char> text, float size, Vector2 baseline, TextStyle style = TextStyle.Regular);
 
+    /// <summary>
+    /// Draws a set of characters with string's bounding box adjusted to align to the screen aligned to a spec
+    /// </summary>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="size">The size of the text.</param>
+    /// <param name="x">The x position of the text.</param>
+    /// <param name="y">The y position of the text.</param>
+    /// <param name="alignment">The alignment of the text relative to <paramref name="x"/> and <paramref name="y"/>.</param>
+    /// <param name="style">The style of the text.</param>
     sealed void DrawAlignedText(string text, float size, float x, float y, Alignment alignment, TextStyle style = TextStyle.Regular)
     {
         ArgumentNullException.ThrowIfNull(text);
         DrawAlignedText(text.AsSpan(), size, new Vector2(x, y), alignment, style);
     }
 
+    /// <summary>
+    /// Draws a set of characters with string's bounding box adjusted to align to the screen aligned to a spec
+    /// </summary>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="size">The size of the text.</param>
+    /// <param name="position">The position of the text.</param>
+    /// <param name="alignment">The alignment of the text relative to <paramref name="position"/>.</param>
+    /// <param name="style">The style of the text.</param>
     sealed void DrawAlignedText(string text, float size, Vector2 position, Alignment alignment, TextStyle style = TextStyle.Regular)
     {
         ArgumentNullException.ThrowIfNull(text);
         DrawAlignedText(text.AsSpan(), size, position, alignment, style);
     }
 
+    /// <summary>
+    /// Draws a set of characters with string's bounding box adjusted to align to the screen aligned to a spec
+    /// </summary>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="size">The size of the text.</param>
+    /// <param name="x">The x position of the text.</param>
+    /// <param name="y">The y position of the text.</param>
+    /// <param name="alignment">The alignment of the text relative to <paramref name="x"/> and <paramref name="y"/>.</param>
+    /// <param name="style">The style of the text.</param>
     sealed void DrawAlignedText(ReadOnlySpan<char> text, float size, float x, float y, Alignment alignment, TextStyle style = TextStyle.Regular)
     {
         DrawAlignedText(text, size, new Vector2(x, y), alignment, style);
     }
 
+    /// <summary>
+    /// Draws a set of characters with string's bounding box adjusted to align to the screen aligned to a spec
+    /// </summary>
+    /// <param name="text">The text to draw.</param>
+    /// <param name="size">The size of the text.</param>
+    /// <param name="position">The position of the text.</param>
+    /// <param name="alignment">The alignment of the text relative to <paramref name="position"/>.</param>
+    /// <param name="style">The style of the text.</param>
     sealed void DrawAlignedText(ReadOnlySpan<char> text, float size, Vector2 position, Alignment alignment, TextStyle style = TextStyle.Regular)
     {
         var bounds = MeasureText(text, size);
@@ -528,6 +606,14 @@ public interface ICanvas
         DrawText(text, size, destination.Position, style);
     }
 
+    /// <summary>
+    /// Draws a unicode codepoint.
+    /// </summary>
+    /// <param name="codepoint">The codepoint to draw.</param>
+    /// <param name="size">The size of the codepoint.</param>
+    /// <param name="baseline">The baseline to draw to codepoint at.</param>
+    /// <param name="style">The style of the codepoint.</param>
+    /// <returns>The new baseline after the codepoint is rendered.</returns>
     Vector2 DrawCodepoint(int codepoint, float size, Vector2 baseline, TextStyle style = TextStyle.Regular);
 
     Rectangle MeasureText(ReadOnlySpan<char> text, float size, TextStyle style = TextStyle.Regular) => State.Font.MeasureText(text, size, style);

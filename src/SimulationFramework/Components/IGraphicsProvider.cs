@@ -42,12 +42,29 @@ public interface IGraphicsProvider : ISimulationComponent
     /// </summary>
     IFont LoadSystemFont(string name);
     
+    /// <summary>
+    /// Invokes a compute shader with the provided number of threads on each axis. 
+    /// </summary>
     void Dispatch(ComputeShader computeShader, int lengthI, int lengthJ, int lengthK);
+
+    /// <summary>
+    /// Creates a screen-space mask.
+    /// </summary>
     IMask CreateMask(int width, int height);
+
+    /// <summary>
+    /// Creates a screen-space mask with an additional depth channel.
+    /// </summary>
     IDepthMask CreateDepthMask(int width, int height);
 
     IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices, ReadOnlySpan<uint> indices) 
         where TVertex : unmanaged;
 
+    /// <summary>
+    /// Generates mipmaps for a texture. Set <see cref="ITexture.Filter"/> to a mipmap filter to use them.
+    /// </summary>
     void GenerateMipmaps(ITexture texture);
+
+    void UploadArray(Array array);
+    void SyncArray(Array array);
 }

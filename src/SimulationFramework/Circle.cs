@@ -169,6 +169,9 @@ public struct Circle : IEquatable<Circle>
         return !(left == right);
     }
 
+    /// <summary>
+    /// Creates a circular polygon with the specified number of vertices.
+    /// </summary>
     public Vector2[] ToPolygon(int vertices)
     {
         if (vertices < 3)

@@ -173,11 +173,17 @@ public static class Graphics
         return Provider.CreateGeometry(vertices, indices);
     }
 
+    /// <summary>
+    /// Creates a screen-space mask.
+    /// </summary>
     public static IMask CreateMask(int width, int height)
     {
         return Provider.CreateMask(width, height);
     }
 
+    /// <summary>
+    /// Creates a screen-space mask with an additional depth channel.
+    /// </summary>
     public static IDepthMask CreateDepthMask(int width, int height)
     {
         return Provider.CreateDepthMask(width, height);
@@ -191,11 +197,23 @@ public static class Graphics
         Provider.GenerateMipmaps(texture);
     }
 
-    public static void SyncArray<T>(T[] array)
+    /// <summary>
+    /// Synchronizes an array. Synchronized arrays are kept in-sync automatically. If changes were made on both the CPU and GPU, the GPU version is kept.
+    /// </summary>
+    public static void SyncArray(Array array)
     {
+        ArgumentNullException.ThrowIfNull(array);
+
+        Provider.SyncArray(array);
     }
 
-    // TODO: optional manual buffer copies
-    // public static void CopyToGPU<T>(T[] array) { }
-    // public static void CopyFromGPU<T>(T[] array) { }
+    /// <summary>
+    /// Uploads an array to the GPU. This method desychronizes the array, meaning this method must be called again for any changes to be visible from shaders.
+    /// </summary>
+    public static void UploadArray(Array array)
+    {
+        ArgumentNullException.ThrowIfNull(array);
+
+        Provider.UploadArray(array);
+    }
 }
