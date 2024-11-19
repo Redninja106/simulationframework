@@ -661,15 +661,12 @@ internal class GLSLShaderEmitter
                 // multidimensional arrays need their size uploaded independently + a Get() function
                 if (bufferType.Dimensions > 1)
                 {
-                    // length uniforms
-                    for (int i = 0; i < bufferType.Dimensions; i++)
-                    {
-                        writer.Write("uniform uint _sf_");
-                        writer.Write(variable.Name);
-                        writer.Write("_size_");
-                        writer.Write("xyzw"[i]);
-                        writer.WriteLine(";");
-                    }
+                    // length uniform
+                    writer.Write("uniform uvec");
+                    writer.Write(bufferType.Dimensions);
+                    writer.Write(" _sf_");
+                    writer.Write(variable.Name);
+                    writer.WriteLine("_size;");
 
                     EmitMultidimensionalArrayGet(variable, bufferType);
                     EmitMultidimensionalArraySet(variable, bufferType);
@@ -764,7 +761,7 @@ internal class GLSLShaderEmitter
             writer.Write(dim);
             writer.Write(" >= _sf_");
             writer.Write(variable.Name);
-            writer.Write("_size_");
+            writer.Write("_size.");
             writer.Write(dim);
         }
         writer.WriteLine(") {");
@@ -786,7 +783,7 @@ internal class GLSLShaderEmitter
             {
                 writer.Write(" * _sf_");
                 writer.Write(variable.Name);
-                writer.Write("_size_");
+                writer.Write("_size.");
                 writer.Write("xyzw"[j]);
             }
 
@@ -834,7 +831,7 @@ internal class GLSLShaderEmitter
             writer.Write(dim);
             writer.Write(" >= _sf_");
             writer.Write(variable.Name);
-            writer.Write("_size_");
+            writer.Write("_size.");
             writer.Write(dim);
         }
         writer.WriteLine(") {");
@@ -853,7 +850,7 @@ internal class GLSLShaderEmitter
             {
                 writer.Write(" * _sf_");
                 writer.Write(variable.Name);
-                writer.Write("_size_");
+                writer.Write("_size.");
                 writer.Write("xyzw"[j]);
             }
 

@@ -28,3 +28,24 @@ internal class SimpleConditional : CanvasShader
         return new(y, y, y);
     }
 }
+
+[ShaderTest]
+internal class ShortCircuitConditional : CanvasShader
+{
+    float x;
+
+    public override ColorF GetPixelColor(Vector2 position)
+    {
+        float y = 0;
+        if (x == 1 || x == 2 || x == 3 || x == 4)
+        {
+            y = 12;
+        }
+        if (x == 1 && x >= 2 && x < 3 && x > 4)
+        {
+            y = 12;
+        }
+        return new(y, y, y);
+    }
+}
+

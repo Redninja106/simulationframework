@@ -23,10 +23,10 @@ internal class Array2DShader : CanvasShader
 [ShaderTest]
 internal class Array3DShader : CanvasShader
 {
-    float[,,] testArray = new float[10, 10, 10];
+    float[,,,] testArray = new float[10, 10, 10, 1];
 
     public override ColorF GetPixelColor(Vector2 position)
     {
-        return ColorF.White * testArray[(int)position.X, (int)position.Y, (int)position.Y];
+        return ColorF.White * testArray[(int)position.X, (int)position.Y, (int)position.Y, 1];
     }
 }

@@ -19,7 +19,11 @@ internal class BasicBlockNode : ControlFlowNode
 
     public void UpdateClonable()
     {
-        IsTrivallyClonable = Instructions.Count == 1 && Instructions[0].OpCode == OpCode.Ldc_I4_0;
+        // only case that we need basic block clone is chained && and || operators in conditionals
+        // these are the only two instructions that need to be cloneable for those cases.
+        IsTrivallyClonable = 
+            Instructions.Count == 1 && 
+            Instructions[0].OpCode is OpCode.Ldc_I4_0 or OpCode.Ldc_I4_1;
     }
 
     // clones this basic block

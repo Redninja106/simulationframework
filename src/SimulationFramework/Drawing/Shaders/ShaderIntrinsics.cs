@@ -993,6 +993,7 @@ public static class ShaderIntrinsics
     /// </summary>
     /// <param name="buffer">The buffer to determine to length of.</param>
     [ShaderIntrinsic]
+    [ShaderIntercept("Length", typeof(ImmutableArray<>), ShaderInterceptAttribute.InterceptKind.Property)]
     public static int BufferLength(object buffer)
     {
         if (buffer is Array arr)
@@ -1002,7 +1003,7 @@ public static class ShaderIntrinsics
     }
 
     [ShaderIntrinsic]
-    [ShaderIntercept("Length", typeof(ImmutableArray<>), ShaderInterceptAttribute.InterceptKind.Property)]
+    [ShaderIntercept("GetLength", typeof(Array), ShaderInterceptAttribute.InterceptKind.Method, IsInstanceMethod = true)]
     public static int BufferLength(object buffer, int dimension)
     {
         if (buffer is Array arr)
@@ -1065,6 +1066,17 @@ public static class ShaderIntrinsics
         throw new ArgumentException(null, nameof(buffer));
     }
 
+    [ShaderIntrinsic]
+    public static T BufferLoad<T>(object buffer, int elementX, int elementY, int elementZ, int elementW)
+    {
+        if (buffer is T[,,,] arr)
+        {
+            return arr[elementX, elementY, elementZ, elementW];
+        }
+
+        throw new ArgumentException(null, nameof(buffer));
+    }
+
 
     /// <summary>
     /// Stores a value into a buffer. Buffer stores are only supported in compute shaders.
@@ -1110,6 +1122,22 @@ public static class ShaderIntrinsics
 
         throw new ArgumentException(null, nameof(buffer));
     }
+
+    /// <summary>
+    /// Stores a value into a buffer. Buffer stores are only supported in compute shaders.
+    /// </summary>
+    [ShaderIntrinsic]
+    public static void BufferStore<T>(object buffer, int elementX, int elementY, int elementZ, int elementW, T value)
+    {
+        if (buffer is T[,,,] arr)
+        {
+            arr[elementX, elementY, elementZ, elementW] = value;
+            return;
+        }
+
+        throw new ArgumentException(null, nameof(buffer));
+    }
+
 
     #endregion
 

@@ -10,8 +10,6 @@ Start<Program>();
 
 partial class Program : Simulation
 {
-    ColorF[,] myArray = new ColorF[100, 100];
-
     public override unsafe void OnInitialize()
     {
         ShaderCompiler.DumpShaders = true;
@@ -20,32 +18,27 @@ partial class Program : Simulation
     public override void OnRender(ICanvas canvas)
     {
         canvas.Clear(Color.Black);
-
-        canvas.Fill(Color.Red);
-
-        Graphics.Dispatch(new ComputeShaderForMyArray() { array = myArray }, 100, 100, 1);
-        canvas.Fill(new ShaderThatUsesArray() { array = myArray });
-
-        canvas.DrawRect(0, 0, canvas.Width, canvas.Height);
+        canvas.Fill(new Shader());
+        canvas.DrawRect(1, 1, 1, 1);
     }
 }
 
-class ComputeShaderForMyArray : ComputeShader
+class Shader : CanvasShader
 {
-    public ColorF[,] array;
-
-    public override void RunThread(int i, int j, int k)
-    {
-        array[i, j] = new ColorF(i / 100f, j / 100f, 0);
-    }
-}
-
-class ShaderThatUsesArray : CanvasShader
-{
-    public ColorF[,] array;
+    int[,] array = new int[100, 100];
 
     public override ColorF GetPixelColor(Vector2 position)
     {
-        return array[(int)position.X, (int)position.Y];
+        ColorF r = ColorF.Red;
+
+        for (int i = 0; i < array.GetLength(0); i++)
+        {
+            for (int j = 0; j < array.GetLength(1); j++)
+            {
+                r.R += array[i, j];
+            }
+        }
+
+        return r;
     }
 }

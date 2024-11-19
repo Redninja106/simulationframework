@@ -297,8 +297,20 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
                 return expression;
             }
 
-            expression.Arguments.Single().Accept(this);
-            writer.Write(".length()");
+            if (expression.Arguments.Count == 1)
+            {
+                expression.Arguments.Single().Accept(this);
+                writer.Write(".length()");
+            }
+            else
+            {
+                writer.Write("_sf_");
+                expression.Arguments[0].Accept(this);
+                writer.Write("_size[");
+                expression.Arguments[1].Accept(this);
+                writer.Write("]");
+            }
+
             return expression;
         }
 
@@ -320,35 +332,57 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
                 return expression;
             }
 
-            writer.Write("_sf_");
-            expression.Arguments[0].Accept(this);
-            writer.Write("_Get(");
-            for (int i = 1; i < expression.Arguments.Count; i++)
+            if (expression.Arguments.Count == 2)
             {
-                if (i != 1)
-                {
-                    writer.Write(", ");
-                }
-                expression.Arguments[i].Accept(this);
+                expression.Arguments[0].Accept(this);
+                writer.Write('[');
+                expression.Arguments[1].Accept(this);
+                writer.Write(']');
             }
-            writer.Write(")");
+            else
+            {
+                writer.Write("_sf_");
+                expression.Arguments[0].Accept(this);
+                writer.Write("_Get(");
+                for (int i = 1; i < expression.Arguments.Count; i++)
+                {
+                    if (i != 1)
+                    {
+                        writer.Write(", ");
+                    }
+                    expression.Arguments[i].Accept(this);
+                }
+                writer.Write(")");
+            }
             return expression;
         }
 
         if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.BufferStore))
         {
-            writer.Write("_sf_");
-            expression.Arguments[0].Accept(this);
-            writer.Write("_Set(");
-            for (int i = 1; i < expression.Arguments.Count; i++)
+            if (expression.Arguments.Count == 3)
             {
-                if (i != 1)
-                {
-                    writer.Write(", ");
-                }
-                expression.Arguments[i].Accept(this);
+                expression.Arguments[0].Accept(this);
+                writer.Write('[');
+                expression.Arguments[1].Accept(this);
+                writer.Write("] = ");
+                expression.Arguments[2].Accept(this);
             }
-            writer.Write(")");
+            else
+            {
+                writer.Write("_sf_");
+                expression.Arguments[0].Accept(this);
+                writer.Write("_Set(");
+                for (int i = 1; i < expression.Arguments.Count; i++)
+                {
+                    if (i != 1)
+                    {
+                        writer.Write(", ");
+                    }
+                    expression.Arguments[i].Accept(this);
+                }
+                writer.Write(")");
+            }
+
             return expression;
         }
 

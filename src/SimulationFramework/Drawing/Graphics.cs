@@ -156,9 +156,15 @@ public static class Graphics
         return Provider.LoadFont(encodedData);
     }
 
-    public static void Dispatch(ComputeShader computeShader, int threadsI, int threadsJ, int threadsK)
+    /// <summary>
+    /// Dispatches a compute shader with the provided number of threads. 
+    /// <para>
+    /// Any arrays written to by the shader will be desynchronized. To resynchronize an array see <see cref="SyncArray(Array)"/>
+    /// </para>
+    /// </summary>
+    public static void Dispatch(ComputeShader computeShader, int threadCountX, int threadCountY, int threadCountZ)
     {
-        Provider.Dispatch(computeShader, threadsI, threadsJ, threadsK);
+        Provider.Dispatch(computeShader, threadCountX, threadCountY, threadCountZ);
     }
 
     public static IGeometry CreateGeometry<TVertex>(ReadOnlySpan<TVertex> vertices)

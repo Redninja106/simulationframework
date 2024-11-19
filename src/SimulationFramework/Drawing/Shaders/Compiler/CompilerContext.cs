@@ -117,6 +117,8 @@ internal class CompilerContext
                     return typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLoad), [typeof(object), typeof(int), typeof(int)]);
                 case 3:
                     return typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLoad), [typeof(object), typeof(int), typeof(int), typeof(int)]);
+                case 4:
+                    return typeof(ShaderIntrinsics).GetMethod(nameof(ShaderIntrinsics.BufferLoad), [typeof(object), typeof(int), typeof(int), typeof(int), typeof(int)]);
                 default:
                     throw new Exception($"Unsupported array type '{method.DeclaringType}'!");
             }

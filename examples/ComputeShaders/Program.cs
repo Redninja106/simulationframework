@@ -3,6 +3,7 @@ using Silk.NET.Core.Native;
 using SimulationFramework;
 using SimulationFramework.Drawing;
 using SimulationFramework.Drawing.Shaders;
+using SimulationFramework.Drawing.Shaders.Compiler;
 using SimulationFramework.Input;
 using System.Numerics;
 
@@ -19,7 +20,9 @@ partial class Program : Simulation
 
     public override void OnInitialize()
     {
-        particles = new Particle[100_000];
+        ShaderCompiler.DumpShaders = true;
+
+        particles = new Particle[1000];
         for (int i = 0; i < particles.Length; i++)
         {
             particles[i].position = Random.Shared.NextVector2() * Window.Size;
@@ -38,6 +41,7 @@ partial class Program : Simulation
         Window.Title = Performance.Framerate.ToString();
 
         Graphics.Dispatch(particleShader, particleShader.particles.Length, 1, 1);
+        Graphics.SyncArray(particleShader.particles);
 
         for (int i = 0; i < particles.Length; i++)
         {
@@ -46,6 +50,7 @@ partial class Program : Simulation
             canvas.DrawRect(0, 0, 10, 10, Alignment.Center);
             canvas.PopState();
         }
+
     }
 }
 
