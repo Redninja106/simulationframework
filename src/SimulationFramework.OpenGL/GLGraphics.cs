@@ -35,6 +35,8 @@ public unsafe class GLGraphics : IGraphicsProvider
 
     internal ShaderArrayManager arrayManager;
 
+    internal GLDeleteQueue deleteQueue;
+
     internal GeometryStreamCollection streams;
     internal GeometryBufferPool bufferPool;
     internal GeometryEffectCollection effects;
@@ -90,6 +92,8 @@ public unsafe class GLGraphics : IGraphicsProvider
         writers = new();
 
         this.arrayManager = new(this);
+
+        deleteQueue = new();
     }
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
@@ -122,6 +126,8 @@ public unsafe class GLGraphics : IGraphicsProvider
     public void Initialize(MessageDispatcher dispatcher)
     {
         frameCanvas = new GLCanvas(this, frame);
+
+        dispatcher.Subscribe<AfterRenderMessage>(m => deleteQueue.DestroyQueuedObjects());
     }
 
     public IFont LoadFont(ReadOnlySpan<byte> encodedData)

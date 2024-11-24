@@ -72,4 +72,10 @@ unsafe class SSBOShaderArray : ShaderArray
         layout.CopyBufferToArray(outData, mappedBuf, count);
         glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
     }
+
+    ~SSBOShaderArray()
+    {
+        var graphics = Application.GetComponent<GLGraphics>();
+        graphics.deleteQueue.AddBuffer(this.buffer);
+    }
 }

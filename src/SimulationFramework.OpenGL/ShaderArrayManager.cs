@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -18,6 +19,7 @@ internal class ShaderArrayManager
 
     public ShaderArrayManager(GLGraphics graphics)
     {
+        DependentHandle handle;
         this.graphics = graphics;
     }
 
