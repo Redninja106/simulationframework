@@ -450,7 +450,7 @@ internal class ExpressionBuilder
     }
     private void BuildPop(Instruction instruction, ExpressionStack expressions)
     {
-        expressions.Pop();
+        expressions.PushStatement(expressions.Pop());
     }
 
     private void BuildLoadElement(Instruction instruction, ExpressionStack expressions)

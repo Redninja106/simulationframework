@@ -11,6 +11,7 @@ internal class DesktopSimulationController : ISimulationController
     private readonly IWindow window;
     
     private bool isRunning;
+    private bool isFirstFrame = true;
 
     private readonly Glfw glfw = Glfw.GetApi();
 
@@ -41,8 +42,11 @@ internal class DesktopSimulationController : ISimulationController
 
         glfw.SetWindowRefreshCallback((WindowHandle*)window.Native!.Glfw!.Value, (window) =>
         {
-            runFrame();
-            this.window.GLContext!.SwapBuffers();
+            if (!isFirstFrame)
+            {
+                runFrame();
+                this.window.GLContext!.SwapBuffers();
+            }
         });
 
         window.Resize += size =>
@@ -70,6 +74,8 @@ internal class DesktopSimulationController : ISimulationController
 
             window.GLContext!.SwapBuffers();
             gl.Finish();
+
+            isFirstFrame = false;
         }
     }
 
