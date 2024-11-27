@@ -29,6 +29,7 @@
   </ItemGroup>
   <PropertyGroup>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<PackageLicenseExpression>MIT</PackageLicenseExpression>	
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<NuGetAuditMode>direct</NuGetAuditMode>	
   </PropertyGroup>
 </Project>

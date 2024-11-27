@@ -33,12 +33,8 @@ internal class ContinueStatement : CanvasShader
         float y = 2;
         while (y < 10)
         {
-            y /= 1.5f;
-
-            if (y == 6)
+            if (y++ == 6)
                 continue;
-
-            y *= 2;
         }
         return new(y, y, y);
     }
@@ -55,8 +51,7 @@ internal class BreakStatement : CanvasShader
         float y = 1;
         for (int i = 0; i < x; i++)
         {
-            y *= 1.5f;
-            if (y < 23)
+            if (y < 6)
             {
                 break;
             }

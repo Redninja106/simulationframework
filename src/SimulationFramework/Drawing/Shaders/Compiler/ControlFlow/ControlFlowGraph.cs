@@ -49,7 +49,7 @@ internal class ControlFlowGraph : ControlFlowNode
         }
     }
 
-    [Conditional("DEBUG")]
+    //[Conditional("DEBUG")]
     private void Dump()
     {
         if (Disassembly != null)

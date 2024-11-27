@@ -13,11 +13,13 @@ namespace ShaderIntegration.Shaders;
 internal class Operators : CanvasShader
 {
     bool d = false;
+    bool b = false, c = false;
+    int y = 0, z = 0;
 
     public override ColorF GetPixelColor(Vector2 position)
     {
-        int x = 0, y = 0, z = 0;
-        bool a = false, b = false, c = false;
+        int x;
+        bool a;
 
         // basic arithmetic operators
         x = -y;
