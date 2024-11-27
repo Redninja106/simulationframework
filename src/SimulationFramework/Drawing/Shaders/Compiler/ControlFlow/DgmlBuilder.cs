@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 namespace SimulationFramework.Drawing.Shaders.Compiler.ControlFlow;
 
 // https://stackoverflow.com/questions/8199600/c-sharp-directed-graph-generating-library
-internal static class DgmlBuilder
+public static class DgmlBuilder
 {
     internal static void WriteDGML(string path, ControlFlowGraph graph)
     {
@@ -38,10 +38,17 @@ internal static class DgmlBuilder
         void AddNode(ControlFlowNode node, ControlFlowNode? parent)
         {
             var id = GetNodeID(node);
-            nodes.Add(new(id, node.ToString(), node.GetType().Name, GetIl(node), GetGroup(node)));
+            string name = node.ToString();
+            if (node is ControlFlowGraph cfg && cfg.SubgraphKind != null)
+            {
+                name = cfg.SubgraphKind.Value + " Subgraph " + node.DebugID;
+            }
+            nodes.Add(new(id, name, node.GetType().Name, GetIl(node), GetGroup(node)));
 
             if (parent is not null)
+            {
                 links.Add(new Link(GetNodeID(parent), id, "", "Contains"));
+            }
 
             foreach (var successor in node.Successors)
             {

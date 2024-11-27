@@ -10,7 +10,7 @@ namespace SimulationFramework.OpenGL;
 unsafe class SSBOShaderArray : ShaderArray
 {
     private uint buffer;
-    private int size = 128;
+    private nint size = 128;
 
     public SSBOShaderArray()
     {
@@ -27,15 +27,24 @@ unsafe class SSBOShaderArray : ShaderArray
         return buffer;
     }
 
-    private void SetBufferSize(int sizeInBytes)
+    private void SetBufferSize(nint sizeInBytes)
     {
         fixed (uint* bufferPtr = &buffer)
         {
-            int currentSize = 0;
+            nint currentSize = 0;
             if (buffer != 0)
             {
                 glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
-                glGetBufferParameteriv(GL_SHADER_STORAGE_BUFFER, GL_BUFFER_SIZE, &currentSize);
+                 
+                if (nint.Size == sizeof(long))
+                {
+                    glGetBufferParameteri64v(GL_SHADER_STORAGE_BUFFER, GL_BUFFER_SIZE, (long*)&currentSize);
+                }
+                else
+                {
+                    glGetBufferParameteriv(GL_SHADER_STORAGE_BUFFER, GL_BUFFER_SIZE, (int*)&currentSize);
+                }
+               
             }
             if (sizeInBytes != currentSize)
             {
@@ -54,7 +63,7 @@ unsafe class SSBOShaderArray : ShaderArray
 
     public override void WriteData(ShaderTypeLayout layout, void* data, int count)
     {
-        SetBufferSize(count * layout.bufferStride * 4);
+        SetBufferSize((nint)count * layout.bufferStride * 4);
 
         if (count != 0)
         {

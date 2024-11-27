@@ -32,6 +32,15 @@ class Shader : CanvasShader
     public override ColorF GetPixelColor(Vector2 position)
     {
         ColorF r = ColorF.Red;
+        if (position == new Vector2(0, 0))
+        {
+            r = ColorF.Green;
+        }
+        else
+        {
+            r = ColorF.Orange;
+        }
+        
         raycast(default, out float t, out var n, out var v);
 
         return r;
@@ -86,8 +95,7 @@ class Shader : CanvasShader
         //outNormal = default;
         //outVoxel = default;
         //return false;
-        bool b = --dist > 0 && t < ray.MaxT;
-        while (b)
+        while (--dist > 0 && t < ray.MaxT)
         {
             int3 v = voxel;
 
@@ -135,8 +143,6 @@ class Shader : CanvasShader
                     outNormal = Vec3(0, 0, -step.z);
                 }
             }
-
-            b = --dist > 0 && t < ray.MaxT;
         }
 
         outT = default;

@@ -19,7 +19,6 @@ internal class ShaderArrayManager
 
     public ShaderArrayManager(GLGraphics graphics)
     {
-        DependentHandle handle;
         this.graphics = graphics;
     }
 

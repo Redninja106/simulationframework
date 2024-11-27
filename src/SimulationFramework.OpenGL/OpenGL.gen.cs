@@ -101,9 +101,12 @@ internal static unsafe class OpenGL
         pfn_glGenVertexArrays = LoadRequiredFunction(functionLoader, "glGenVertexArrays");
         pfn_glBindBufferBase = LoadRequiredFunction(functionLoader, "glBindBufferBase");
         pfn_glUniform1ui = LoadRequiredFunction(functionLoader, "glUniform1ui");
+        pfn_glUniform2ui = LoadRequiredFunction(functionLoader, "glUniform2ui");
         pfn_glUniform3ui = LoadRequiredFunction(functionLoader, "glUniform3ui");
+        pfn_glUniform4ui = LoadRequiredFunction(functionLoader, "glUniform4ui");
         pfn_glDrawArraysInstanced = LoadRequiredFunction(functionLoader, "glDrawArraysInstanced");
         pfn_glDrawElementsInstanced = LoadRequiredFunction(functionLoader, "glDrawElementsInstanced");
+        pfn_glGetBufferParameteri64v = LoadRequiredFunction(functionLoader, "glGetBufferParameteri64v");
         pfn_glVertexAttribDivisor = LoadRequiredFunction(functionLoader, "glVertexAttribDivisor");
         pfn_glDispatchCompute = LoadOptionalFunction(functionLoader, "glDispatchCompute");
         pfn_glGetProgramResourceIndex = LoadRequiredFunction(functionLoader, "glGetProgramResourceIndex");
@@ -1135,10 +1138,10 @@ internal static unsafe class OpenGL
     public static void glBlendFunc(uint sfactor, uint dfactor) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBlendFunc)(sfactor, dfactor);
     
     private static nint pfn_glBufferData;
-    public static void glBufferData(uint target, int size, void* data, uint usage) => ((delegate* unmanaged[Stdcall]<uint, int, void*, uint, void>)pfn_glBufferData)(target, size, data, usage);
+    public static void glBufferData(uint target, nint size, void* data, uint usage) => ((delegate* unmanaged[Stdcall]<uint, nint, void*, uint, void>)pfn_glBufferData)(target, size, data, usage);
     
     private static nint pfn_glBufferSubData;
-    public static void glBufferSubData(uint target, int offset, int size, void* data) => ((delegate* unmanaged[Stdcall]<uint, int, int, void*, void>)pfn_glBufferSubData)(target, offset, size, data);
+    public static void glBufferSubData(uint target, int offset, nint size, void* data) => ((delegate* unmanaged[Stdcall]<uint, int, nint, void*, void>)pfn_glBufferSubData)(target, offset, size, data);
     
     private static nint pfn_glCheckFramebufferStatus;
     public static uint glCheckFramebufferStatus(uint target) => ((delegate* unmanaged[Stdcall]<uint, uint>)pfn_glCheckFramebufferStatus)(target);
@@ -1327,7 +1330,7 @@ internal static unsafe class OpenGL
     public static void glBlitFramebuffer(int srcX0, int srcY0, int srcX1, int srcY1, int dstX0, int dstY0, int dstX1, int dstY1, uint mask, uint filter) => ((delegate* unmanaged[Stdcall]<int, int, int, int, int, int, int, int, uint, uint, void>)pfn_glBlitFramebuffer)(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
     
     private static nint pfn_glMapBufferRange;
-    public static void* glMapBufferRange(uint target, int offset, int length, uint access) => ((delegate* unmanaged[Stdcall]<uint, int, int, uint, void*>)pfn_glMapBufferRange)(target, offset, length, access);
+    public static void* glMapBufferRange(uint target, int offset, nint length, uint access) => ((delegate* unmanaged[Stdcall]<uint, int, nint, uint, void*>)pfn_glMapBufferRange)(target, offset, length, access);
     
     private static nint pfn_glBindVertexArray;
     public static void glBindVertexArray(uint array) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glBindVertexArray)(array);
@@ -1344,14 +1347,23 @@ internal static unsafe class OpenGL
     private static nint pfn_glUniform1ui;
     public static void glUniform1ui(int location, uint v0) => ((delegate* unmanaged[Stdcall]<int, uint, void>)pfn_glUniform1ui)(location, v0);
     
+    private static nint pfn_glUniform2ui;
+    public static void glUniform2ui(int location, uint v0, uint v1) => ((delegate* unmanaged[Stdcall]<int, uint, uint, void>)pfn_glUniform2ui)(location, v0, v1);
+    
     private static nint pfn_glUniform3ui;
     public static void glUniform3ui(int location, uint v0, uint v1, uint v2) => ((delegate* unmanaged[Stdcall]<int, uint, uint, uint, void>)pfn_glUniform3ui)(location, v0, v1, v2);
+    
+    private static nint pfn_glUniform4ui;
+    public static void glUniform4ui(int location, uint v0, uint v1, uint v2, uint v3) => ((delegate* unmanaged[Stdcall]<int, uint, uint, uint, uint, void>)pfn_glUniform4ui)(location, v0, v1, v2, v3);
     
     private static nint pfn_glDrawArraysInstanced;
     public static void glDrawArraysInstanced(uint mode, int first, int count, int instancecount) => ((delegate* unmanaged[Stdcall]<uint, int, int, int, void>)pfn_glDrawArraysInstanced)(mode, first, count, instancecount);
     
     private static nint pfn_glDrawElementsInstanced;
     public static void glDrawElementsInstanced(uint mode, int count, uint type, void* indices, int instancecount) => ((delegate* unmanaged[Stdcall]<uint, int, uint, void*, int, void>)pfn_glDrawElementsInstanced)(mode, count, type, indices, instancecount);
+    
+    private static nint pfn_glGetBufferParameteri64v;
+    public static void glGetBufferParameteri64v(uint target, uint pname, long* @params) => ((delegate* unmanaged[Stdcall]<uint, uint, long*, void>)pfn_glGetBufferParameteri64v)(target, pname, @params);
     
     private static nint pfn_glVertexAttribDivisor;
     public static void glVertexAttribDivisor(uint index, uint divisor) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glVertexAttribDivisor)(index, divisor);

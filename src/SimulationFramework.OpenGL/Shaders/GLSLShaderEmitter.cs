@@ -775,11 +775,16 @@ internal class GLSLShaderEmitter
         writer.Write("return ");
         EmitName(variable.Name);
         writer.Write("[");
-        for (int i = bufferType.Dimensions - 1; i >= 0; i--)
+        for (int i = 0; i < bufferType.Dimensions; i++)
         {
+            if (i != 0)
+            {
+                writer.Write(" + ");
+            }
+
             writer.Write("xyzw"[i]);
 
-            for (int j = 0; j < i; j++)
+            for (int j = 0; j < (bufferType.Dimensions - 1 - i); j++)
             {
                 writer.Write(" * _sf_");
                 writer.Write(variable.Name);
@@ -787,10 +792,6 @@ internal class GLSLShaderEmitter
                 writer.Write("xyzw"[j]);
             }
 
-            if (i != 0)
-            {
-                writer.Write(" + ");
-            }
         }
         writer.WriteLine("];");
 

@@ -763,13 +763,13 @@ public static class ShaderIntrinsics
     public static float Sign(float x) => MathF.Sign(x);
     
     [ShaderIntrinsic]
-    public static Vector2 Sign(Vector2 vector) => new(MathF.Round(vector.X), MathF.Round(vector.Y));
+    public static Vector2 Sign(Vector2 vector) => new(MathF.Sign(vector.X), MathF.Sign(vector.Y));
     
     [ShaderIntrinsic]
-    public static Vector3 Sign(Vector3 vector) => new(MathF.Round(vector.X), MathF.Round(vector.Y), MathF.Round(vector.Z));
+    public static Vector3 Sign(Vector3 vector) => new(MathF.Sign(vector.X), MathF.Sign(vector.Y), MathF.Sign(vector.Z));
     
     [ShaderIntrinsic]
-    public static Vector4 Sign(Vector4 vector) => new(MathF.Round(vector.X), MathF.Round(vector.Y), MathF.Round(vector.Z), MathF.Round(vector.W));
+    public static Vector4 Sign(Vector4 vector) => new(MathF.Sign(vector.X), MathF.Sign(vector.Y), MathF.Sign(vector.Z), MathF.Sign(vector.W));
 
     #endregion
 

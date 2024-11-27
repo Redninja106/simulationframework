@@ -122,17 +122,17 @@ internal class ExpressionBuilder
                 var headNode = graph.EntryNode;
                 // var tailNode = headNode.Predecessors.Single();
 
-                BuildNode(headNode, expressions);
 
-                var cond = expressions.Pop();
-                ShaderExpression condition = new ConditionalExpression(false, new UnaryExpression(UnaryOperation.Not, cond, null), new BreakExpression(), null);
-                
+                // var cond = expressions.Pop();
+                // ShaderExpression condition = new ConditionalExpression(false, new UnaryExpression(UnaryOperation.Not, cond, null), new BreakExpression(), null);
+                // expressions.PushStatement(cond);
+
                 ExpressionStack exprs = new();
-                BuildNodeChain(headNode.Successors.Single(n => n != graph.ExitNode), graph.ExitNode, exprs);
+                BuildNodeChain(headNode, graph.ExitNode, exprs);
 
                 expressions.PushStatement(
                     new LoopExpression(
-                        CreateBlockExpressionIfNeeded([condition, ..exprs.GetExpressions()])
+                        CreateBlockExpressionIfNeeded([.. exprs.GetExpressions()])
                         )
                     );
             }

@@ -111,10 +111,20 @@ class UniformHandler
 
         if (array.Rank > 1)
         {
-            for (int i = 0; i < array.Rank; i++)
+            int location = GetUniformLocation($"_sf_{uniform.Name}_size");
+            switch (array.Rank)
             {
-                int location = GetUniformLocation($"_sf_{uniform.Name}_size_{"xyzw"[i]}");
-                glUniform1ui(location, (uint)array.GetLength(i));
+                case 2:
+                    glUniform2ui(location, (uint)array.GetLength(0), (uint)array.GetLength(1));
+                    break;
+                case 3:
+                    glUniform3ui(location, (uint)array.GetLength(0), (uint)array.GetLength(1), (uint)array.GetLength(2));
+                    break;
+                case 4:
+                    glUniform4ui(location, (uint)array.GetLength(0), (uint)array.GetLength(1), (uint)array.GetLength(2), (uint)array.GetLength(3));
+                    break;
+                default:
+                    throw new NotSupportedException();
             }
         }
     }

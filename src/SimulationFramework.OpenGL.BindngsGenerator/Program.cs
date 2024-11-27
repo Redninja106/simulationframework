@@ -94,13 +94,17 @@ HashSet<string> requiredFunctions = [
     "glGetProgramResourceIndex",
     "glGetProgramResourceiv",
     "glGetBufferParameteriv",
+    "glGetBufferParameteri64v",
     "glMapBufferRange",
     "glUnmapBuffer",
     "glMapBufferRange",
     "glUnmapBuffer",
     "glGetUniformLocation",
-    "glUniform1ui",
     "glBindBufferBase",
+    "glUniform1ui",
+    "glUniform2ui",
+    "glUniform3ui",
+    "glUniform4ui",
     "glUniform1iv",
     "glUniform2iv",
     "glUniform3iv",
@@ -109,7 +113,6 @@ HashSet<string> requiredFunctions = [
     "glUniform2fv",
     "glUniform3fv",
     "glUniform4fv",
-    "glUniform3ui",
     "glUniformMatrix3x2fv",
     "glGetUniformLocation",
     "glEnableVertexAttribArray",
@@ -350,10 +353,19 @@ internal static unsafe class OpenGL
 
     private void EmitType(CXType type)
     {
-        if (type.AsString == "GLfloat")
+        switch (type.AsString)
         {
-            writer.Write("float");
-            return;
+            case "GLfloat":
+                writer.Write("float");
+                return;
+            case "GLint64":
+                writer.Write("long");
+                return;
+            case "GLsizeiptr":
+                writer.Write("nint");
+                return;
+            default:
+                break;
         }
 
         if (type.IsSugared)
