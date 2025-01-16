@@ -20,10 +20,6 @@ unsafe class GeometryBuffer : IDisposable
         }
     }
 
-    public void Reset()
-    {
-    }
-
     public void Upload<T>(ReadOnlySpan<T> data)
         where T : unmanaged
     {

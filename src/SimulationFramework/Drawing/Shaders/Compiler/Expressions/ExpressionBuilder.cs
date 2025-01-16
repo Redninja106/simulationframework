@@ -591,7 +591,6 @@ internal class ExpressionBuilder
             OpCode.And => BinaryOperation.And,
             OpCode.Xor => BinaryOperation.XOr,
             OpCode.Or => BinaryOperation.Or,
-            OpCode.Not => BinaryOperation.Not,
             OpCode.Shr => BinaryOperation.RightShift,
             OpCode.Shr_Un => BinaryOperation.RightShift,
             OpCode.Shl => BinaryOperation.LeftShift,

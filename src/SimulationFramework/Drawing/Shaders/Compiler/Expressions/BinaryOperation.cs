@@ -19,5 +19,4 @@ public enum BinaryOperation
     XOr,
     Or,
     And,
-    Not,
 }

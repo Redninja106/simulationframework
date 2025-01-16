@@ -210,8 +210,8 @@ public class SimulationHost
             interceptor?.BeforeRender();
             Dispatcher.ImmediateDispatch<RenderMessage>(new(canvas));
             simulation?.OnRender(canvas);
-            interceptor?.AfterRender();
             canvas.Flush();
+            interceptor?.AfterRender();
         }
         else 
         {

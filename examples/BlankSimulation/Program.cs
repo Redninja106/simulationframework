@@ -21,7 +21,7 @@ partial class Program : Simulation
     {
         canvas.Clear(Color.Black);
         canvas.Fill(new Shader());
-        canvas.DrawRect(1, 1, 1, 1);
+        canvas.DrawRect(1, 1, 100, 100);
     }
 }
 

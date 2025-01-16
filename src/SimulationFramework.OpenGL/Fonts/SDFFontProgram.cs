@@ -1,4 +1,6 @@
-﻿namespace SimulationFramework.OpenGL.Fonts;
+﻿ using SimulationFramework.OpenGL.Geometry;
+
+namespace SimulationFramework.OpenGL.Fonts;
 
 class SDFFontProgram : ShaderProgram
 {
@@ -51,3 +53,10 @@ void main()
     {
     }
 }
+
+//class Backend
+//{
+//    public void SubmitCommand(GeometryBuffer buffer, )
+//    {
+//    }
+//}

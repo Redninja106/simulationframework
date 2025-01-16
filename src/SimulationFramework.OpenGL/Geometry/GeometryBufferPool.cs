@@ -9,11 +9,11 @@ internal class GeometryBufferPool : IDisposable
 {
     public const int BufferSize = 1024 * 64; // 64kb
 
-    private Queue<GeometryBuffer> usedBuffers = [];
-    private Queue<GeometryBuffer> freeBuffers = [];
+    private HashSet<GeometryBuffer> usedBuffers = [];
+    private HashSet<GeometryBuffer> freeBuffers = [];
 
-    private List<GeometryBuffer> usedLargeBuffers = [];
-    private List<GeometryBuffer> freeLargeBuffers = [];
+    private HashSet<GeometryBuffer> usedLargeBuffers = [];
+    private HashSet<GeometryBuffer> freeLargeBuffers = [];
 
     public GeometryBufferPool()
     {
@@ -24,9 +24,9 @@ internal class GeometryBufferPool : IDisposable
         // 'bytes' is huge!
         GeometryBuffer? largeBuffer = null;
         int smallestSizeDifference = int.MaxValue;
-        for (int i = 0; i < freeLargeBuffers.Count; i++)
+
+        foreach (var gb in freeLargeBuffers)
         {
-            GeometryBuffer gb = freeLargeBuffers[i];
             int sizeDifference = gb.size - size;
             if (sizeDifference < smallestSizeDifference)
             {
@@ -50,12 +50,13 @@ internal class GeometryBufferPool : IDisposable
 
     public GeometryBuffer Rent()
     {
-        if (!freeBuffers.TryDequeue(out GeometryBuffer? buffer))
+        if (freeBuffers.FirstOrDefault() is not GeometryBuffer buffer)
         {
             buffer = new GeometryBuffer(BufferSize);
         }
 
-        usedBuffers.Enqueue(buffer);
+        freeBuffers.Remove(buffer);
+        usedBuffers.Add(buffer);
         return buffer;
     }
 
@@ -73,13 +74,16 @@ internal class GeometryBufferPool : IDisposable
 
     public void Reset()
     {
-        while (usedBuffers.Count > 0)
+        foreach (var buffer in usedBuffers)
         {
-            var buffer = usedBuffers.Dequeue();
-            freeBuffers.Enqueue(buffer);
+            freeBuffers.Add(buffer);
         }
+        usedBuffers.Clear();
 
-        freeLargeBuffers.AddRange(usedLargeBuffers);
+        foreach (var largeBuffer in usedLargeBuffers)
+        {
+            freeLargeBuffers.Add(largeBuffer);
+        }
         usedLargeBuffers.Clear();
     }
 
@@ -100,6 +104,26 @@ internal class GeometryBufferPool : IDisposable
         foreach (var buffer in usedLargeBuffers)
         {
             buffer.Dispose();
+        }
+    }
+
+    public void Return(GeometryBuffer? buffer)
+    {
+        if (buffer is null)
+        {
+            return;
+        }
+
+        if (usedBuffers.Remove(buffer))
+        {
+            freeBuffers.Add(buffer);
+            return;
+        }
+
+        if (usedLargeBuffers.Remove(buffer))
+        {
+            freeLargeBuffers.Add(buffer);
+            return;
         }
     }
 }

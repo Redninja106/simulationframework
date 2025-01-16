@@ -37,22 +37,20 @@ internal class ControlFlowGraph : ControlFlowNode
 
         EntryNode.AddSuccessor(GetBasicBlock(disassembly.instructions[0]));
 
+        Dump();
+
         DetectReturns(ExitNode);
         RecomputeDominators();
         ReplaceLoops();
-        Dump();
         ReplaceConditionals();
 
-        if (ShaderCompiler.DumpShaders)
-        {
-            Dump();
-        }
+        Dump();
     }
 
     //[Conditional("DEBUG")]
     private void Dump()
     {
-        if (Disassembly != null)
+        if (ShaderCompiler.DumpShaders && Disassembly != null)
         {
             try
             {
@@ -491,6 +489,14 @@ internal class ControlFlowGraph : ControlFlowNode
             DetectContinuesAndBreaks(nodes, head, breakTarget);
 
             var subgraph = InsertSubgraph(nodes, ControlFlow.SubgraphKind.Loop, null);
+            
+            // all breaktarget preds will have been removed by DetectContinuesAndBreaks(),
+            // so we have to reinsert it into the graph manually
+            if (breakTarget != null)
+            {
+                subgraph.AddSuccessor(breakTarget);
+            }
+
             subgraph.ReplaceLoops();
         }
     }
@@ -571,7 +577,7 @@ internal class ControlFlowGraph : ControlFlowNode
         if (breakTarget != null)
         {
             // replace every edge to the break target with a break node
-            foreach (var brk in breakTarget.Predecessors.Except([header]))
+            foreach (var brk in breakTarget.Predecessors)
             {
                 brk.RemoveSuccessor(breakTarget);
 

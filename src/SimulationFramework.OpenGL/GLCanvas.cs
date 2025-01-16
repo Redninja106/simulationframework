@@ -78,7 +78,6 @@ internal class GLCanvas : ICanvas, IDisposable
 
         currentState = new();
 
-
         vertexWriter = new(graphics.bufferPool);
     }
 
@@ -447,22 +446,28 @@ internal class GLCanvas : ICanvas, IDisposable
         {
             commandList[i].Execute(this, transform4x4);
         }
-        commandList.Clear();
 
+        for (int i = 0; i < commandList.Count; i++)
+        {
+            graphics.bufferPool.Return(commandList[i].chunk.indexBuffer);
+            graphics.bufferPool.Return(commandList[i].chunk.vertexBuffer);
+            graphics.bufferPool.Return(commandList[i].chunk.instanceBuffer);
+        }
+
+        commandList.Clear();
         vertexWriter.Reset();
     }
 
     public unsafe void Flush()
     {
         SubmitCommands();
-        graphics.bufferPool.Reset();
-        glFlush();
+        // graphics.bufferPool.Reset();
     }
 
     public void DrawGeometry(IGeometry geometry)
     {
         ArgumentNullException.ThrowIfNull(geometry);
-
+        
         var glGeometry = (GLGeometry)geometry;
         var effect = graphics.effects.GetEffectFromCanvasState(in State);
         AddRenderCommand(glGeometry.chunk with { wireframe = !State.Fill }, effect);
@@ -508,7 +513,7 @@ internal class GLCanvas : ICanvas, IDisposable
     public void AddRenderCommand(GeometryChunk chunk, GeometryEffect effect)
     {
         Debug.Assert(chunk.count != 0);
-
+        
         RenderCommand command = new()
         {
             chunk = chunk,

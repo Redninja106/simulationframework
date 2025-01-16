@@ -43,7 +43,7 @@ public class DesktopPlatform : ISimulationPlatform
 
         GlfwWindowing.Use();
 
-        Window = Silk.NET.Windowing.Window.Create(windowOptions.Value with { IsVisible = false });
+        Window = Silk.NET.Windowing.Window.Create(windowOptions.Value with { IsVisible = false, });
         Window.Initialize();
 
         inputContext = Window.CreateInput();

@@ -70,7 +70,7 @@ partial class Program : Simulation
         {
             Mouse.Visible = true;
         }
-
+        
         // easy CPU debugging!
         if (Mouse.IsButtonDown(MouseButton.Right))
         {
@@ -118,7 +118,6 @@ partial class Program : Simulation
         canvas.Clear(Color.Black);
         canvas.Fill(shader);
         canvas.DrawRect(0, 0, canvas.Width, canvas.Height);
-        //canvas.DrawCircle(Mouse.Position, 100);
     }
 }
 
@@ -249,12 +248,12 @@ class RayTracerShader : CanvasShader
 
     private Vector3 RandomUnit3(Vector3 p)
     {
-        Vector3 rand = p * 2f - Vector3.One;
+        Vector3 rand = Random3(p.Normalized()) * 2f - Vector3.One;
         do
         {
             rand = Random3(rand) * 2f - Vector3.One;
         }
-        while (rand.LengthSquared() >= 1);
+        while (rand.Length() > 1);
 
         return rand.Normalized();
     }
