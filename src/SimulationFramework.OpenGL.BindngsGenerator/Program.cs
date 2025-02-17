@@ -117,6 +117,7 @@ HashSet<string> requiredFunctions = [
     "glGetUniformLocation",
     "glEnableVertexAttribArray",
     "glVertexAttribPointer",
+    "glVertexAttribIPointer",
     "glVertexAttribDivisor",
     "glGenerateMipmap",
     "glDeleteTextures",

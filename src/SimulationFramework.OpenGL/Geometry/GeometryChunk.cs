@@ -1,8 +1,9 @@
 ﻿using SimulationFramework.OpenGL.Geometry.Streams;
+using System;
 
 namespace SimulationFramework.OpenGL.Geometry;
 
-struct GeometryChunk
+struct GeometryChunk : IDisposable
 {
     // buffers
     public GeometryBuffer vertexBuffer;
@@ -86,5 +87,12 @@ struct GeometryChunk
             vertexLayout = vertexLayout,
             indexBuffer = indexBuffer,
         };
+    }
+
+    public void Dispose()
+    {
+        vertexBuffer.Dispose();
+        indexBuffer?.Dispose();
+        instanceBuffer?.Dispose();
     }
 }

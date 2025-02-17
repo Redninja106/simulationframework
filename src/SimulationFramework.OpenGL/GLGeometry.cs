@@ -52,22 +52,24 @@ unsafe internal class GLGeometry : IGeometry
 
     public void Dispose()
     {
-    //    if (indexBuffer != 0)
-    //    {
-    //        uint idxBuf = indexBuffer;  
-    //        glDeleteBuffers(1, &idxBuf);
-    //    }
+        //    if (indexBuffer != 0)
+        //    {
+        //        uint idxBuf = indexBuffer;  
+        //        glDeleteBuffers(1, &idxBuf);
+        //    }
 
-    //    foreach (var (_, vb) in vertexBuffers)
-    //    {
-    //        glDeleteBuffers(1, &vb.buffer);
-    //    }
+        //    foreach (var (_, vb) in vertexBuffers)
+        //    {
+        //        glDeleteBuffers(1, &vb.buffer);
+        //    }
+        chunk.Dispose();
     }
 
     public uint[]? GetIndices()
     {
         throw new NotImplementedException();
     }
+
     public TVertex[] GetVertices<TVertex>() where TVertex : unmanaged
     {
         TVertex[] array = new TVertex[chunk.vertexBuffer.size / Unsafe.SizeOf<TVertex>()];
@@ -79,37 +81,6 @@ unsafe internal class GLGeometry : IGeometry
             glUnmapBuffer(GL_ARRAY_BUFFER);
         }
         return array;
-    }
-
-    //public void Draw(ref readonly CanvasState state)
-    //{
-    //    var vb = vertexBuffers.Single().Value;
-    //    var stream = graphics.streams.GetCustomVertexGeometryStream(vb.type, in state);
-    //    glBindBuffer(GL_ARRAY_BUFFER, vb.buffer);
-    //    if (indexBuffer != 0)
-    //    {
-    //        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    //    }
-
-    //    stream.BindVertexArray();
-    //    if (indexBuffer != 0)
-    //    {
-    //        glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, null);
-    //    }
-    //    else
-    //    {
-    //        glDrawArrays(GL_TRIANGLES, 0, count);
-    //    }
-    //}
-
-    internal void DrawInstances<TInstances>(GLCanvas canvas, ReadOnlySpan<Matrix3x2> instances)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal void DrawInstances<TInstance>(GLCanvas canvas, ReadOnlySpan<TInstance> instances) where TInstance : unmanaged
-    {
-        throw new NotImplementedException();
     }
 
     internal static GLGeometry Create<TVertex>(GLGraphics graphics, ReadOnlySpan<TVertex> vertices) where TVertex : unmanaged

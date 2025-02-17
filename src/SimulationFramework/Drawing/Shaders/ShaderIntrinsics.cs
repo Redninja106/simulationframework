@@ -310,6 +310,34 @@ public static class ShaderIntrinsics
 
     #endregion
 
+    #region Matrix Elements
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.GetItemName, typeof(Matrix4x4))]
+    public static float GetElement(Matrix4x4 matrix, int row, int column) => matrix[row, column];
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.GetItemName, typeof(Matrix3x2))]
+    public static float GetElement(Matrix3x2 matrix, int row, int column) => matrix[row, column];
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.SetItemName, typeof(Matrix4x4))]
+    public static void SetElement(Matrix4x4 matrix, int row, int column, float element) => matrix[row, column] = element;
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(ShaderInterceptAttribute.SetItemName, typeof(Matrix3x2))]
+    public static void SetElement(Matrix3x2 matrix, int row, int column, float element) => matrix[row, column] = element;
+
+    #endregion
+
+    #region Matrix Methods
+
+    [ShaderIntrinsic]
+    [ShaderIntercept(nameof(Transpose), typeof(Matrix4x4))]
+    public static Matrix4x4 Transpose(Matrix4x4 matrix) => Matrix4x4.Transpose(matrix);
+
+    #endregion
+
     #region Abs
 
     [ShaderIntrinsic]

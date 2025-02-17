@@ -95,7 +95,7 @@ class VertexLayout
             {
                 foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
-                    AddAttributes(field.FieldType); ;
+                    AddAttributes(field.FieldType);
                 }
             }
         }
@@ -112,7 +112,15 @@ class VertexLayout
             VertexAttribute attr = attributes[i];
             uint location = (uint)(baseIndex + i);
             glEnableVertexAttribArray(location);
-            glVertexAttribPointer(location, attr.channels, attr.attribType, (byte)(attr.normalized ? GL_TRUE : GL_FALSE), VertexSize, (void*)attr.offset);
+            // int attribs require us to use special AttribI function
+            if (attr.attribType is GL_UNSIGNED_INT or GL_INT)
+            {
+                glVertexAttribIPointer(location, attr.channels, attr.attribType, VertexSize, (void*)attr.offset);
+            }
+            else // floating point attribs
+            {
+                glVertexAttribPointer(location, attr.channels, attr.attribType, (byte)(attr.normalized ? GL_TRUE : GL_FALSE), VertexSize, (void*)attr.offset);
+            }
             glVertexAttribDivisor(location, (uint)(instanceBuffer ? 1 : 0));
         }
     }
