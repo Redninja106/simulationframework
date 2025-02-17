@@ -38,10 +38,10 @@ class ShaderProgram
         glGetProgramiv(programID, GL_LINK_STATUS, &success);
         if (success == 0)
         {
-            byte[] infoLog = new byte[512];
+            byte[] infoLog = new byte[1024];
             fixed (byte* infoLogPtr = infoLog)
             {
-                glGetProgramInfoLog(programID, 512, null, infoLogPtr);
+                glGetProgramInfoLog(programID, 1024, null, infoLogPtr);
                 throw new(Marshal.PtrToStringUTF8((nint)infoLogPtr));
             }
         }

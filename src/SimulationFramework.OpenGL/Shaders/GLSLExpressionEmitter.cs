@@ -221,9 +221,12 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
         if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.GetElement))
         {
             expression.Arguments[0].Accept(this);
-            writer.Write('[');
-            expression.Arguments[1].Accept(this);
-            writer.Write(']');
+            for (int i = 1; i < expression.Arguments.Count; i++)
+            {
+                writer.Write('[');
+                expression.Arguments[i].Accept(this);
+                writer.Write(']');
+            }
             return expression;
         }
 
@@ -404,10 +407,22 @@ class GLSLExpressionEmitter(IndentedTextWriter writer, GLSLShaderEmitter emitter
 
         if (expression.Intrinsic.Name == nameof(ShaderIntrinsics.Transform))
         {
+            // glsl uses column major matrices, but System.Numerics uses row major.
+            // emit multiplication backwards to account for this
             writer.Write('(');
             expression.Arguments[1].Accept(this);
             writer.Write(" * ");
-            expression.Arguments[0].Accept(this);
+            // matrix3x2 has an implied 3rd column (0, 0, 1), so we expand to vec3
+            if (expression.Arguments[1].ExpressionType == ShaderType.Matrix3x2)
+            {
+                writer.Write("vec3(");
+                expression.Arguments[0].Accept(this);
+                writer.Write(", 1)");
+            }
+            else
+            {
+                expression.Arguments[0].Accept(this);
+            }
             writer.Write(')');
             return expression;
         }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -57,6 +58,8 @@ unsafe class ShaderTypeLayout
                     ShaderPrimitiveKind.Float2 or ShaderPrimitiveKind.Int2 or ShaderPrimitiveKind.UInt2 => 2,
                     ShaderPrimitiveKind.Float3 or ShaderPrimitiveKind.Int3 or ShaderPrimitiveKind.UInt3 => 3,
                     ShaderPrimitiveKind.Float4 or ShaderPrimitiveKind.Int4 or ShaderPrimitiveKind.UInt4 => 4,
+                    ShaderPrimitiveKind.Matrix3x2 => 8,
+                    ShaderPrimitiveKind.Matrix4x4 => 16,
                     _ => throw new NotSupportedException("type " + memberType.Name + " is not supported!"),
                 };
                 

@@ -100,6 +100,7 @@ internal static unsafe class OpenGL
         pfn_glDeleteVertexArrays = LoadRequiredFunction(functionLoader, "glDeleteVertexArrays");
         pfn_glGenVertexArrays = LoadRequiredFunction(functionLoader, "glGenVertexArrays");
         pfn_glBindBufferBase = LoadRequiredFunction(functionLoader, "glBindBufferBase");
+        pfn_glVertexAttribIPointer = LoadRequiredFunction(functionLoader, "glVertexAttribIPointer");
         pfn_glUniform1ui = LoadRequiredFunction(functionLoader, "glUniform1ui");
         pfn_glUniform2ui = LoadRequiredFunction(functionLoader, "glUniform2ui");
         pfn_glUniform3ui = LoadRequiredFunction(functionLoader, "glUniform3ui");
@@ -1343,6 +1344,9 @@ internal static unsafe class OpenGL
     
     private static nint pfn_glBindBufferBase;
     public static void glBindBufferBase(uint target, uint index, uint buffer) => ((delegate* unmanaged[Stdcall]<uint, uint, uint, void>)pfn_glBindBufferBase)(target, index, buffer);
+    
+    private static nint pfn_glVertexAttribIPointer;
+    public static void glVertexAttribIPointer(uint index, int size, uint type, int stride, void* pointer) => ((delegate* unmanaged[Stdcall]<uint, int, uint, int, void*, void>)pfn_glVertexAttribIPointer)(index, size, type, stride, pointer);
     
     private static nint pfn_glUniform1ui;
     public static void glUniform1ui(int location, uint v0) => ((delegate* unmanaged[Stdcall]<int, uint, void>)pfn_glUniform1ui)(location, v0);
