@@ -32,6 +32,8 @@ SimulationFramework is a cross-platform library for creative coding, game develo
 
 - **Built-in [Dear ImGui](https://github.com/ocornut/imgui) Support**: Dear ImGui is completely built-in with zero setup.
 
+- **Shaders**: Write shaders in C#! SimulationFramework compiles C# into GLSL at runtime (in beta, check out the canvas-shader branch).
+
 With more on the way! See [Planned Features](https://github.com/Redninja106/simulationframework#planned-features).
 
 > Note: SimulationFramework is still changing with every new version. Breaking changes are frequent.
@@ -135,3 +137,4 @@ Most SimulationFramework features are exposed through static classes. Here is a 
 ## Planned Features
 - **C# shaders**: .NET CIL to HLSL/GLSL compilation to write any kind of shader in plain C# (or any other .NET language!). (Coming in v0.3.0, alpha out now!)
 - **WebAssembly and Mobile Support**: Any simulations you write will run on a web browser or mobile device, no code changes needed.
+
