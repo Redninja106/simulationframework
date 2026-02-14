@@ -1,5 +1,4 @@
 <h1 align="center">
-<img src="https://raw.githubusercontent.com/Redninja106/simulationframework/master/assets/logo-128x128.png"/>
 <br>SimulationFramework</br>
 </h1>
 
@@ -137,4 +136,5 @@ Most SimulationFramework features are exposed through static classes. Here is a 
 ## Planned Features
 - **C# shaders**: .NET CIL to HLSL/GLSL compilation to write any kind of shader in plain C# (or any other .NET language!). (Coming in v0.3.0, alpha out now!)
 - **WebAssembly and Mobile Support**: Any simulations you write will run on a web browser or mobile device, no code changes needed.
+
 
