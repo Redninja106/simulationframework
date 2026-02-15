@@ -82,6 +82,12 @@ unsafe class SSBOShaderArray : ShaderArray
         glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
     }
 
+    public override void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        base.Dispose();
+    }
+
     ~SSBOShaderArray()
     {
         var graphics = Application.GetComponent<GLGraphics>();

@@ -8,9 +8,12 @@ internal unsafe class DesktopAudioProvider : IAudioProvider
 {
     public ALContext alc = ALContext.GetApi();
     public AL al = AL.GetApi();
+    internal bool disposed;
 
     Device* device;
     Context* context;
+    internal readonly List<DesktopSound> loadedSounds = [];
+
     public float MasterVolume
     {
         get
@@ -26,6 +29,13 @@ internal unsafe class DesktopAudioProvider : IAudioProvider
 
     public void Dispose()
     {
+        foreach (var sound in loadedSounds)
+        {
+            sound.Dispose();
+        }
+        loadedSounds.Clear();
+
+        disposed = true;
         alc.DestroyContext(context);
         alc.CloseDevice(device);
     }
@@ -45,6 +55,8 @@ internal unsafe class DesktopAudioProvider : IAudioProvider
 
     public ISound LoadSound(ReadOnlySpan<byte> encodedData, SoundFileKind kind)
     {
-        return new DesktopSound(this, encodedData, kind);
+        var sound = new DesktopSound(this, encodedData, kind);
+        loadedSounds.Add(sound);
+        return sound;
     }
 }

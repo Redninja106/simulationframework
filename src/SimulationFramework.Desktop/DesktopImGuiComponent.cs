@@ -51,7 +51,7 @@ internal class DesktopImGuiComponent : ISimulationComponent
 
     public void Dispose()
     {
-        gl.Dispose();
         imGuiController.Dispose();
+        gl.Dispose();
     }
 }

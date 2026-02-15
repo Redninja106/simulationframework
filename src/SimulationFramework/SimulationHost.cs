@@ -192,6 +192,14 @@ public class SimulationHost
         Dispatcher.ImmediateDispatch<InitializeMessage>(new());
         appController.Start(RunFrame);
         Dispatcher.ImmediateDispatch<UninitializeMessage>(new());
+
+        foreach (var component in components.Reverse<ISimulationComponent>())
+        {
+            component.Dispose();
+        }
+        components.Clear();
+
+        Current = null;
     }
 
     private void RunFrame()

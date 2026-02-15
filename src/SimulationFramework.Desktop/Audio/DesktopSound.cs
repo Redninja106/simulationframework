@@ -121,6 +121,15 @@ internal sealed class DesktopSound : ISound
 
     public void Dispose()
     {
-        provider.al.DeleteBuffer(this.buffer);
+        foreach (var playback in activePlaybacks)
+        {
+            playback.Dispose();
+        }
+        activePlaybacks.Clear();
+
+        if (!provider.disposed)
+        {
+            provider.al.DeleteBuffer(this.buffer);
+        }
     }
 }

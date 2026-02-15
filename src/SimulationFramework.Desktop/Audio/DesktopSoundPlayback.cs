@@ -85,10 +85,11 @@ internal sealed unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
 
     public override void Dispose()
     {
-        GC.SuppressFinalize(this);
-
         _ = sound.activePlaybacks.Remove(this);
-        provider.al.DeleteSource(source);
+        if (!provider.disposed)
+        {
+            provider.al.DeleteSource(source);
+        }
     }
 
     public override void Pause()
@@ -112,10 +113,5 @@ internal sealed unsafe class DesktopSoundPlayback : SoundPlayback, IDisposable
     {
         provider.al.SourceRewind(source);
         provider.al.SourcePlay(source);
-    }
-
-    ~DesktopSoundPlayback()
-    {
-        this.Dispose();
     }
 }

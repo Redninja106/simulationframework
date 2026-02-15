@@ -52,6 +52,8 @@ public class DesktopPlatform : ISimulationPlatform
     public virtual void Dispose()
     {
         GC.SuppressFinalize(this);
+        inputContext.Dispose();
+        Window.Dispose();
     }
 
     public virtual void Initialize(MessageDispatcher dispatcher)

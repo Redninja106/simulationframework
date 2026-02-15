@@ -89,7 +89,7 @@ class IterationsInversions2 : CanvasShader
         for (int m = 0; m < AA; m++)
             for (int n = 0; n < AA; n++)
             {
-                Vector2 uv = (position + new Vector2(m, n) * (1f / AA) + mousePosition) / new Vector2(width, height);
+                Vector2 uv = (position + new Vector2(m, n) * (1f / AA)) / new Vector2(width, height);
                 Vector3 col = Shape(uv);
                 float f = Dot(col, Vec3(0.333f));
                 Vector3 nor = Normalize(Vec3(Dot(Shape(uv + Vec2(e, 0.0f)), Vec3(0.333f)) - f,
@@ -104,7 +104,9 @@ class IterationsInversions2 : CanvasShader
         tot = Pow(Clamp(tot, Vec3(0.0f), Vec3(1.0f)), Vec3(0.8f, 1.1f, 1.3f));
 
         Vector2 uv2 = position / Vec2(width, height);
-        tot *= 0.4f + 0.6f * Pow(16.0f * uv2.X * uv2.Y * (1.0f - uv2.X) * (1.0f - uv2.Y), 0.1f);
+        float v = (0.4f + 0.6f * Pow(16.0f * uv2.X * uv2.Y * (1.0f - uv2.X) * (1.0f - uv2.Y), 0.1f));
+        v = v * v / v;
+        tot *= v;
 
         return new ColorF(tot.X, tot.Y, tot.Z, 1.0f);
     }
