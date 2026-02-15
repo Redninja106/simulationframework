@@ -10,6 +10,8 @@ if ($(Read-Host("correct? (y/n)")) -ne "y") {
 
 dotnet clean
 if (-not $?) { Exit }
+dotnet build -c release
+if (-not $?) { Exit }
 dotnet pack
 if (-not $?) { Exit }
 dotnet test
