@@ -65,6 +65,11 @@ public struct CanvasState
     public IFont Font { get; set; }
 
     /// <summary>
+    /// The BlendMode to use while rendering.
+    /// </summary>
+    public BlendMode BlendMode { get; set; }
+
+    /// <summary>
     /// Resets this <see cref="CanvasState"/> to default settings.
     /// </summary>
     public void Reset()

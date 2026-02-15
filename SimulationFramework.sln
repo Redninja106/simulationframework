@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.2.11415.280 d18.0
+VisualStudioVersion = 18.2.11415.280
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{DEF0CFA4-7823-4702-A5B6-264CF0895BA7}"
 EndProject
@@ -56,6 +56,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationFramework.OpenGL.BindngsGenerator", "src\SimulationFramework.OpenGL.BindngsGenerator\SimulationFramework.OpenGL.BindngsGenerator.csproj", "{70BBCD27-DD68-4CDD-AB9E-1B3BDF87D1E5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlayingSounds", "examples\PlayingSounds\PlayingSounds.csproj", "{05D77FEE-79D2-4B65-9588-B5FE27FB1826}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlendModes", "examples\BlendModes\BlendModes.csproj", "{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -307,6 +309,18 @@ Global
 		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Release|arm64.Build.0 = Release|Any CPU
 		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Release|x86.ActiveCfg = Release|Any CPU
 		{05D77FEE-79D2-4B65-9588-B5FE27FB1826}.Release|x86.Build.0 = Release|Any CPU
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}.Debug|arm64.Build.0 = Debug|Any CPU
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}.Debug|x86.Build.0 = Debug|Any CPU
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}.Release|arm64.ActiveCfg = Release|Any CPU
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}.Release|arm64.Build.0 = Release|Any CPU
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}.Release|x86.ActiveCfg = Release|Any CPU
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -331,6 +345,7 @@ Global
 		{68267971-9F25-4BF3-8876-908DE53F1082} = {813D5E58-CE77-4969-B74A-A724228D8F73}
 		{70BBCD27-DD68-4CDD-AB9E-1B3BDF87D1E5} = {70E789B1-29FB-421E-A968-1ED75F680090}
 		{05D77FEE-79D2-4B65-9588-B5FE27FB1826} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
+		{5ADEC57E-00CF-4312-9276-DD6DEEB274E2} = {DEF0CFA4-7823-4702-A5B6-264CF0895BA7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {09D3B2BE-AC85-48C2-835F-6B781E265873}

@@ -107,6 +107,12 @@ public interface ICanvas
     void Clip(Rectangle? rectangle);
 
     /// <summary>
+    /// Sets the blend mode used for subsequent drawing operations.
+    /// </summary>
+    /// <param name="blendMode">The blend mode to apply. Determines how source and destination colors are combined during rendering.</param>
+    void BlendMode(BlendMode blendMode);
+
+    /// <summary>
     /// Draws a line to the canvas, using the current transform, clipping, and drawing settings. To change the thickness of the line, see <see cref="StrokeWidth(float)"/>.
     /// </summary>
     /// <param name="x1">The x-coordinate of the first point of the line.</param>

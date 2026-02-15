@@ -353,6 +353,11 @@ internal class GLCanvas : ICanvas, IDisposable
         currentState.VertexShader = vertexShader;
     }
 
+    public void BlendMode(BlendMode blendMode)
+    {
+        currentState.BlendMode = blendMode;
+    }
+
     public void Stroke(ColorF color)
     {
         currentState.Color = color;
@@ -436,8 +441,6 @@ internal class GLCanvas : ICanvas, IDisposable
         vertexWriter.UploadCurrentBuffer();
 
         glBindVertexArray(vao); 
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glEnable(GL_BLEND);
         glDisable(GL_CULL_FACE);
         glViewport(0, 0, Target.Width, Target.Height);
         glBindFramebuffer(GL_FRAMEBUFFER, this.fbo);
@@ -521,7 +524,8 @@ internal class GLCanvas : ICanvas, IDisposable
             clipRect = currentState.ClipRectangle,
             readMask = currentState.Mask,
             writeMask = currentState.WriteMask,
-            writeMaskValue = currentState.WriteMaskValue
+            writeMaskValue = currentState.WriteMaskValue,
+            blendMode = currentState.BlendMode
         };
 
         if (commandList.Count > 0)

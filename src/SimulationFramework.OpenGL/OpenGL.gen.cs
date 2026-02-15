@@ -30,6 +30,7 @@ internal static unsafe class OpenGL
         pfn_glBindBuffer = LoadRequiredFunction(functionLoader, "glBindBuffer");
         pfn_glBindFramebuffer = LoadRequiredFunction(functionLoader, "glBindFramebuffer");
         pfn_glBindTexture = LoadRequiredFunction(functionLoader, "glBindTexture");
+        pfn_glBlendEquation = LoadRequiredFunction(functionLoader, "glBlendEquation");
         pfn_glBlendFunc = LoadRequiredFunction(functionLoader, "glBlendFunc");
         pfn_glBufferData = LoadRequiredFunction(functionLoader, "glBufferData");
         pfn_glBufferSubData = LoadRequiredFunction(functionLoader, "glBufferSubData");
@@ -1134,6 +1135,9 @@ internal static unsafe class OpenGL
     
     private static nint pfn_glBindTexture;
     public static void glBindTexture(uint target, uint texture) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBindTexture)(target, texture);
+    
+    private static nint pfn_glBlendEquation;
+    public static void glBlendEquation(uint mode) => ((delegate* unmanaged[Stdcall]<uint, void>)pfn_glBlendEquation)(mode);
     
     private static nint pfn_glBlendFunc;
     public static void glBlendFunc(uint sfactor, uint dfactor) => ((delegate* unmanaged[Stdcall]<uint, uint, void>)pfn_glBlendFunc)(sfactor, dfactor);

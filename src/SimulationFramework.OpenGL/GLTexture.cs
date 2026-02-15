@@ -40,7 +40,7 @@ internal sealed class GLTexture : IGLImage, ITexture
         {
             wrapModeX = value;
             glBindTexture(GL_TEXTURE_2D, id);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, (int)MapTileMode(value));
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, (int)MapTileMode(value));
             glBindTexture(GL_TEXTURE_2D, 0);
         }
     }

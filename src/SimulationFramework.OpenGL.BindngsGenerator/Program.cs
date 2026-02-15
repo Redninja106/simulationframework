@@ -49,6 +49,7 @@ HashSet<string> requiredFunctions = [
     "glBindFramebuffer",
     "glGenVertexArrays",
     "glBlendFunc",
+    "glBlendEquation",
     "glDrawArraysInstanced",
     "glBindVertexArray",
     "glViewport",
