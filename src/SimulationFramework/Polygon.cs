@@ -146,6 +146,7 @@ public static class Polygon
     /// <returns><see langword="true"/> if <paramref name="polygon"/> is convex; otherwise <see langword="false"/></returns>
     public static bool IsConvex(ReadOnlySpan<Vector2> polygon, [NotNullWhen(true)] out bool? isClockwise)
     {
+        isClockwise = null;
         // for a convex polygon every point will have the same winding value
         bool isAllClockwise = IsClockwiseWinding(polygon, 0);
         for (int i = 0; i < polygon.Length; i++)
@@ -157,7 +158,6 @@ public static class Polygon
             }
         }
 
-        isClockwise = null;
         return false;
 
         // determines the winding order at a specific vertex
